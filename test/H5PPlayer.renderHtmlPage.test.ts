@@ -15,9 +15,9 @@ describe('Rendering the HTML page', () => {
             .then((html) => {
                 expect(html.replace(/ /g, '')).toBe(
                     `<!doctype html>
-                <html class="h5p-iframe">
+                <html class="h5p-iframe"data-reactroot="">
                 <head>
-                    <meta charset="utf-8">
+                    <meta charset="utf-8"/>
                     
                     <link rel="stylesheet" href="/h5p/core/styles/h5p.css"/>
                     <link rel="stylesheet" href="/h5p/core/styles/h5p-confirmation-dialog.css"/>
@@ -149,7 +149,7 @@ describe('Rendering the HTML page', () => {
                 </head>
                 <body>
                     <div class="h5p-content" data-content-id="foo"></div>
-                    <a href="/h5p/download/foo">Download</button>
+                    <a href="/h5p/download/foo">Download</a>
                 </body>
                 </html>`.replace(/ /g, '')
                 );

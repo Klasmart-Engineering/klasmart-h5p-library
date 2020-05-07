@@ -1616,7 +1616,7 @@ export interface IHubInfo {
 
 export interface IPlayerModel {
     contentId: ContentParameters;
-    customScripts: string;
+    customScripts: string[];
     downloadPath: string;
     integration: IIntegration;
     scripts: string[];

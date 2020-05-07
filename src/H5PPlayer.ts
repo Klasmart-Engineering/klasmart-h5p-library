@@ -91,9 +91,7 @@ export default class H5PPlayer {
 
         const model: IPlayerModel = {
             contentId,
-            customScripts: this.globalCustomScripts
-                .map((script) => `<script src="${script}"></script>`)
-                .join('\n'),
+            customScripts: this.globalCustomScripts,
             downloadPath: this.getDownloadPath(contentId),
             integration: this.generateIntegration(
                 contentId,

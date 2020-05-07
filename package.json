@@ -78,6 +78,8 @@
         "nanoid": "^3.1.10",
         "promisepipe": "^3.0.0",
         "qs": "^6.9.3",
+        "react": "^16.13.1",
+        "react-dom": "^16.13.1",
         "sanitize-filename": "^1.6.3",
         "stream-buffers": "^3.0.2",
         "tmp-promise": "^3.0.0",

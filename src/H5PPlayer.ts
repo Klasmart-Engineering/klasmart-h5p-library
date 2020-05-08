@@ -93,6 +93,7 @@ export default class H5PPlayer {
             contentId,
             customScripts: this.globalCustomScripts,
             downloadPath: this.getDownloadPath(contentId),
+            // integrationPath: `${contentId}/integration.js`,
             integration: this.generateIntegration(
                 contentId,
                 parameters,

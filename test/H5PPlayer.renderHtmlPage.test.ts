@@ -13,9 +13,8 @@ describe('Rendering the HTML page', () => {
         return new H5PPlayer(undefined, undefined, new H5PConfig(undefined))
             .render(contentId, contentObject, h5pObject as any)
             .then((html) => {
-                expect(html.replace(/ /g, '')).toBe(
-                    `<!doctype html>
-                <html class="h5p-iframe"data-reactroot="">
+                expect(html.replace(/\n */g, '')).toBe(
+                    `<html class="h5p-iframe" data-reactroot="">
                 <head>
                     <meta charset="utf-8"/>
                     
@@ -138,7 +137,7 @@ describe('Rendering the HTML page', () => {
                   "postUserStatistics": false,
                   "saveFreq": false,
                   "url": "/h5p"
-                };
+                }
                     </script>
 
                 </head>
@@ -146,7 +145,7 @@ describe('Rendering the HTML page', () => {
                     <div class="h5p-content" data-content-id="foo"></div>
                     <a href="/h5p/download/foo">Download</a>
                 </body>
-                </html>`.replace(/ /g, '')
+                </html>`.replace(/\n */g, '')
                 );
             });
     });
@@ -188,33 +187,6 @@ describe('Rendering the HTML page', () => {
             });
     });
 
-    it('includes custom scripts', () => {
-        const contentId = 'foo';
-        const contentObject = {};
-        const h5pObject = {};
-
-        const mockLibraryStorage: any = {
-            getLibrary: async (libName: ILibraryName) => {
-                return {};
-            }
-        };
-
-        return new H5PPlayer(
-            mockLibraryStorage,
-            undefined,
-            new H5PConfig(undefined),
-            undefined,
-            ['/test']
-        )
-            .setRenderer((model) => model)
-            .render(contentId, contentObject, h5pObject as any)
-            .then((model) => {
-                expect((model as any).customScripts).toBe(
-                    '<script src="/test"></script>'
-                );
-            });
-    });
-
     it('includes custom integration', () => {
         const contentId = 'foo';
         const contentObject = {};
@@ -246,11 +218,10 @@ describe('Rendering the HTML page', () => {
         )
             .render(contentId, contentObject, h5pObject as any)
             .then((html) => {
-                expect(html.replace(/ /g, '')).toBe(
-                    `<!doctype html>
-                    <html class="h5p-iframe">
+                expect(html.replace(/\n */g, '')).toBe(
+                    `<html class="h5p-iframe" data-reactroot="">
                     <head>
-                        <meta charset="utf-8">
+                        <meta charset="utf-8"/>
                         
                         <link rel="stylesheet" href="/h5p/core/styles/h5p.css"/>
                         <link rel="stylesheet" href="/h5p/core/styles/h5p-confirmation-dialog.css"/>
@@ -372,15 +343,15 @@ describe('Rendering the HTML page', () => {
                       "postUserStatistics": false,
                       "saveFreq": false,
                       "url": "/h5p"
-                    };
+                    }
                         </script>
                         <script src="/test"></script>
                     </head>
                     <body>
                         <div class="h5p-content" data-content-id="foo"></div>
-                        <a href="/h5p/download/foo">Download</button>
+                        <a href="/h5p/download/foo">Download</a>
                     </body>
-                    </html>`.replace(/ /g, '')
+                    </html>`.replace(/\n */g, '')
                 );
             });
     });

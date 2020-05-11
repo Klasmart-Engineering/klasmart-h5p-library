@@ -109,7 +109,6 @@ function Editor(props: any):any {
                     $('#h5p-content-form').submit(function(event) {
                         if (h5peditor !== undefined) {
                             var params = h5peditor.getParams();
-
                             if (params.params !== undefined) {
                                 // Validate mandatory main title. Prevent submitting if that's not set.
                                 // Deliberately doing it after getParams(), so that any other validation

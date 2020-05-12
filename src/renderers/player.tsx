@@ -1,4 +1,3 @@
-// tslint:disable-next-line: no-submodule-imports
 import ReactDOMServer from 'react-dom/server';
 import React, { useState, useEffect } from "react";
 import { IPlayerModel } from "../types"

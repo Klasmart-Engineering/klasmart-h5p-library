@@ -10,7 +10,7 @@ function Editor(props: any):any {
     return (
         <html>
             <head>
-                <meta charset="utf-8" />
+                <meta charSet="utf-8" />
 
                 <script dangerouslySetInnerHTML={{__html: `window.H5PIntegration = parent.H5PIntegration || ${JSON.stringify(props.model.integration, null, 2)}`}} />
 
@@ -23,7 +23,7 @@ function Editor(props: any):any {
                 ))}
             </head>
             <body>
-                <form method="post" enctype="multipart/form-data" id="h5p-content-form">
+                <form method="post" encType="multipart/form-data" id="h5p-content-form">
                     <div id="post-body-content">
                         <div className="h5p-create">
                             <div className="h5p-editor"></div>

@@ -1,0 +1,15 @@
+{
+    "content-not-found": "您尝试访问的内容不存在。.",
+    "deleting-content-error": "删除内容对象时出错.",
+    "deleting-file-error": "删除内容对象中的文件{{filename}}时出现错误",
+    "filename-too-long": ": {{filename}}文件名过长",
+    "illegal-filename": " {{filename}} 的文件名不允许被使用.",
+    "listing-content-error": "获取内容对象列表时出错",
+    "missing-delete-permission": "您无权删除此内容对象.",
+    "missing-list-content-permission": "您无权列出内容对象.",
+    "missing-view-permission": "您无权查看此内容对象.",
+    "missing-write-permission": "您无权更改此内容对象.",
+    "mongo-add-update-error": "在数据库中添加或更新内容时发生错误.",
+    "mongo-replace-error": "更新数据库中的内容时出错.",
+    "s3-upload-error": "将{{filename}}文件上传到S3时出错"
+}

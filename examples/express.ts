@@ -92,6 +92,15 @@ const start = async () => {
         })
     );
 
+    server.use((req, res, next) => {
+        const jwtV = `eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE1OTQ5NDgwMzksImV4cCI6MTYyNjQ4NDAzOSwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsInVzZXJJZCI6InVzZXIxMjMiLCJncm91cElkIjoiZ3JvdXA3ODkifQ.YbjOwVKj91Qt_cEuqwzcmkJKodcOaSWZetc7A3vOVFhA9lC45ajNfuuNBxRJOT2bhgKH5UspzADaJDJWaMdp8A`;
+        if(!getAppCookies(req)['token']) {
+            res.cookie('token',jwtV, { maxAge: 900000, httpOnly: true });
+            console.log('cookie created successfully');
+        }
+        next();
+    });
+
     // It is important that you inject a user object into the request object!
     // The Express adapter below (H5P.adapters.express) expects the user
     // object to be present in requests.
@@ -99,6 +108,8 @@ const start = async () => {
     // JSON webtokens or some other means.
     server.use((req: H5P.IRequestWithUser, res, next) => {
         req.user = new User();
+        req.user.token = getAppCookies(req)['token'];
+        // console.log("USER: ", req.user);
         next();
     });
 
@@ -170,6 +181,21 @@ const start = async () => {
     displayIps(port);
 
     server.listen(port);
+};
+
+// For testing purposes. If needed, this should be moved to a helper file
+const getAppCookies = (req) => {
+    // We extract the raw cookies from the request headers
+    const rawCookies = req.headers.cookie.split('; ');
+    // rawCookies = ['myapp=secretcookie, 'analytics_cookie=beacon;']
+   
+    const parsedCookies = {};
+    rawCookies.forEach(rawCookie=>{
+        const parsedCookie = rawCookie.split('=');
+        // parsedCookie = ['myapp', 'secretcookie'], ['analytics_cookie', 'beacon']
+        parsedCookies[parsedCookie[0]] = parsedCookie[1];
+    });
+    return parsedCookies;
 };
 
 // We can't use await outside a an async function, so we use the start()

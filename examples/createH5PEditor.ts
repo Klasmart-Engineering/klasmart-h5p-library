@@ -52,7 +52,21 @@ export default async function createH5PEditor(
                                 process.env.AWS_S3_MAX_FILE_LENGTH,
                                 10
                             )
-                          : undefined
+                          : undefined,
+                      getPermissions: (contentId: string, user: H5P.IUser): Promise<H5P.Permission[]> => {
+                        console.log("MongoS3ContentStorage INSIDE CREATE H5P EDITOR: ", contentId, user);
+                        const perms: H5P.Permission[] = [
+                            H5P.Permission.Delete, 
+                            H5P.Permission.Download, 
+                            H5P.Permission.Edit, 
+                            H5P.Permission.Embed, 
+                            H5P.Permission.List, 
+                            H5P.Permission.View
+                        ];
+                        return new Promise<H5P.Permission[]>((resolve) => {
+                            resolve(perms);
+                        });
+                      }
                   }
               ),
         process.env.TEMPORARYSTORAGE === 's3'
@@ -68,7 +82,21 @@ export default async function createH5PEditor(
                                 process.env.AWS_S3_MAX_FILE_LENGTH,
                                 10
                             )
-                          : undefined
+                          : undefined,
+                      getPermissions: (userId: string, filename: string):   Promise<H5P.Permission[]> => {
+                      console.log("S3TemporaryFileStorage INSIDE CREATE H5P EDITOR: ",   userId, filename);
+                      const perms: H5P.Permission[] = [
+                          H5P.Permission.Delete, 
+                          H5P.Permission.Download, 
+                          H5P.Permission.Edit, 
+                          H5P.Permission.Embed, 
+                          H5P.Permission.List, 
+                          H5P.Permission.View
+                      ];
+                      return new Promise<H5P.Permission[]>((resolve) => {
+                          resolve(perms);
+                      });
+                      }
                   }
               )
             : new H5P.fsImplementations.DirectoryTemporaryFileStorage(

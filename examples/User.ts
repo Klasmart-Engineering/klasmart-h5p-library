@@ -11,6 +11,8 @@ export default class User implements IUser {
         this.canUpdateAndInstallLibraries = true;
         this.canCreateRestricted = true;
         this.type = 'local';
+        this.token = '';
+        this.groupId = '';
     }
 
     public canCreateRestricted: boolean;
@@ -19,4 +21,6 @@ export default class User implements IUser {
     public id: string;
     public name: string;
     public type: 'local';
+    public token: string; // For usage with ACL API 
+    public groupId: string; // For usage with ACL API
 }

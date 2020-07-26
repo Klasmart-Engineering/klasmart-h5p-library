@@ -508,6 +508,16 @@ export interface IUser {
      * Specifies type of user. Possible values other than 'local' are unknown as of this time.
      */
     type: 'local' | string;
+
+    /**
+     * Stores the raw JWT token taken from cookie. For usage with ACL API
+     */
+    token: string;
+
+    /**
+     * Stores group Id (if present). For usage with ACL API
+     */
+    groupId: string;
 }
 
 /**

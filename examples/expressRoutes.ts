@@ -88,7 +88,6 @@ export default function (
         // Create ACL obj in acl API for permissions
         const aclApi = new ACLPermission(req.user.token);
         const aclRes = await aclApi.createACL(req.user.id, contentId, 'Full');
-        console.log('ACL CREATED: ', aclRes);
 
         res.send(JSON.stringify({ contentId }));
         res.status(200).end();
@@ -101,7 +100,6 @@ export default function (
             // Delete acl obj from acl api
             const aclApi = new ACLPermission(req.user.token);
             const aclRes = await aclApi.rmACL(req.params.contentId);
-            console.log(`ACL WITH ID '${aclRes['rmACL']}' DELETED.`);
 
             // we can verify permissions here and throw an error if the user doesn't have proper permissions for the obj.
         } catch (error) {

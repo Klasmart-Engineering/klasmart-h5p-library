@@ -111,7 +111,7 @@ const start = async () => {
                 req.user.token = token;
             } catch(e) {
                 // IF THE TOKEN IS INVALID, WE SHOULD REDIRECT THE USER TO A LOGIN PAGE HERE.
-                console.log('jwt verify failed. Error: ', e);
+                console.error('jwt verify failed. Error: ', e);
             }
         } else {
             // IF THE TOKEN IS NOT PRESENT, WE SHOULD REDIRECT THE USER TO A LOGIN PAGE HERE.

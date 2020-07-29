@@ -110,11 +110,13 @@ const start = async () => {
                 req.user.groupId = user['groupId'] || '';
                 req.user.token = token;
             } catch(e) {
-                // IF THE TOKEN IS INVALID, WE SHOULD REDIRECT THE USER TO A LOGIN PAGE HERE.
                 console.error('jwt verify failed. Error: ', e);
+                res.status(401).send('Invalid credentials. Please login.').end();
+                return;
             }
         } else {
-            // IF THE TOKEN IS NOT PRESENT, WE SHOULD REDIRECT THE USER TO A LOGIN PAGE HERE.
+            res.status(401).send('Invalid credentials. Please login.').end();
+            return;
         }
 
         next();

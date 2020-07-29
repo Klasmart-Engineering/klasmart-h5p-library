@@ -4,6 +4,7 @@ import fileUpload from 'express-fileupload';
 import i18next from 'i18next';
 import i18nextHttpMiddleware from 'i18next-http-middleware';
 import i18nextFsBackend from 'i18next-fs-backend';
+import jwt from 'jsonwebtoken';
 import path from 'path';
 
 import * as H5P from '../src';
@@ -92,15 +93,6 @@ const start = async () => {
         })
     );
 
-    server.use((req, res, next) => {
-        const jwtV = `eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE1OTQ5NDgwMzksImV4cCI6MTYyNjQ4NDAzOSwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsInVzZXJJZCI6InVzZXIxMjMiLCJncm91cElkIjoiZ3JvdXA3ODkifQ.YbjOwVKj91Qt_cEuqwzcmkJKodcOaSWZetc7A3vOVFhA9lC45ajNfuuNBxRJOT2bhgKH5UspzADaJDJWaMdp8A`;
-        if(!getAppCookies(req)['token']) {
-            res.cookie('token',jwtV, { maxAge: 900000, httpOnly: true });
-            console.log('cookie created successfully');
-        }
-        next();
-    });
-
     // It is important that you inject a user object into the request object!
     // The Express adapter below (H5P.adapters.express) expects the user
     // object to be present in requests.
@@ -108,8 +100,39 @@ const start = async () => {
     // JSON webtokens or some other means.
     server.use((req: H5P.IRequestWithUser, res, next) => {
         req.user = new User();
-        req.user.token = getAppCookies(req)['token'];
-        // console.log("USER: ", req.user);
+        const token = getAppCookies(req)['token'];
+
+        if (token) {
+            try {
+                const publicKey = process.env.JWT_PUBLIC_KEY || '';
+                const user = jwt.verify(token, publicKey, { algorithms: ['RS256'] }) as object;
+                req.user.id = user['userId'];
+                req.user.groupId = user['groupId'] || '';
+                req.user.token = token;
+            } catch(e) {
+                // IF THE TOKEN IS INVALID, WE SHOULD REDIRECT THE USER TO A LOGIN PAGE HERE.
+                console.log('jwt verify failed. Error: ', e);
+            }
+        } else {
+            // IF THE TOKEN IS NOT PRESENT, WE SHOULD REDIRECT THE USER TO A LOGIN PAGE HERE.
+        }
+
+        next();
+    });
+
+    // TEMPORARY MIDDLEWARE TO SET HARD-CODED TOKEN
+    server.use((req, res, next) => {
+        if(!getAppCookies(req)['token']) {
+            const jwtV = `eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxIiwiaWF0IjoxNTk1OTc5NzU1LCJleHAiOjE2Mjc1MzczNTV9.gzJALPl0s1HGPkj5Ku7g2OswVULG-yDKBpU-ft8OhLmKbNlQJSv8bL6uybSXSMMgfYVGG-sqjK-GWJeE0HJvzr2a3r2SL0meqLHoJM844MSY4zDRnqa1XVA8KsyqWovPsRXcGOJzGI4iPZ_2uyzZLVXMAtRD3zx7LU6OFu-GogsoNKJGjXUfP1_5or1nNhNVky5ywLB0ifcFWtZ8cSUJTlykukQbNg-g4Tv19X3iEaznsQwAws0Pqk0J0K6VvdcOoqjqrGuuL5f0iLju0HL19w6Dptvpiy-9mNyCxPoMKNSU_xg4ANienSYTA8XRHj5g512__og5lIYScv69w1fUMw6RCYO5D_rwH65KvlZFVcx9xMHPTqDoyhO6dlUbo9XhHsur_jle42XiiiBbpEDG7gg7n24OS_-DqYMlksZXNRKrOoVLazBw2BwLa7ApsaGdUuMznTiMFpzwg_FW5UjSw2RZf00dkRZZN89Rk13zQHkSp5EXXhp1JYZMbOh1JUMPURdQ_ppy2mhb9Z6ndM8bE_cjli3I892j3tXTNib-08HC1_3xVrgRDQsffgeW11bueNKbSmzuKqD9arskfYQ6bXU7V9lbewkFlTWuxsVjjAfNsgw5hfCJ7ZAd4_rVeBKWtc8LwuOVuhGLfOJnEp_UOiE-ComhBYdcbI0s41rqGA4`;
+            res.cookie('token',jwtV, { maxAge: 900000, httpOnly: true });
+
+            // WITHOUT THIS LINE, IF THERE IS AT LEAST ONE CONTENT ELEMENT 
+            // LISTED, AND THE PAGE IS LOADED FROM SCRATCH (i.e. a browser 
+            // in privacy mode), THE CODE CRASHES. REDIRECTION TO A LOGIN 
+            // PAGE IF THE TOKEN IS NOT PRESENT IN COOKIES IN THE PREVIOUS 
+            // MIDDLEWARE IS NEEDED TO ADDRESS THIS
+            req['user'].token = jwtV;
+        }
         next();
     });
 
@@ -185,11 +208,17 @@ const start = async () => {
 
 // For testing purposes. If needed, this should be moved to a helper file
 const getAppCookies = (req) => {
+    const parsedCookies = {};
+
+    if (undefined === req.headers.cookie) {
+        return parsedCookies;
+    }
     // We extract the raw cookies from the request headers
+    // console.log('req.headers: ', req.headers);
+    // console.log('req.headers.cookie: ', req.headers.cookie);
     const rawCookies = req.headers.cookie.split('; ');
     // rawCookies = ['myapp=secretcookie, 'analytics_cookie=beacon;']
    
-    const parsedCookies = {};
     rawCookies.forEach(rawCookie=>{
         const parsedCookie = rawCookie.split('=');
         // parsedCookie = ['myapp', 'secretcookie'], ['analytics_cookie', 'beacon']

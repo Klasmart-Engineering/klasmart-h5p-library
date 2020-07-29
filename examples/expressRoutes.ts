@@ -32,7 +32,6 @@ export default function (
     router.get(
         '/edit/:contentId',
         async (req: H5P.IRequestWithLanguage, res) => {
-            console.log(`CHECK FOR PERMISSIONS HERE <GET /edit/${req.params.contentId.toString()}>?`);
             const page = await h5pEditor.render(
                 req.params.contentId,
                 languageOverride === 'auto'
@@ -45,7 +44,6 @@ export default function (
     );
 
     router.post('/edit/:contentId', async (req: H5P.IRequestWithUser, res) => {
-        console.log(`CHECK FOR PERMISSIONS HERE <POST /edit/${req.params.contentId.toString()}>?`);
         const contentId = await h5pEditor.saveOrUpdateContent(
             req.params.contentId.toString(),
             req.body.params.params,
@@ -91,7 +89,7 @@ export default function (
 
         // Create ACL obj in acl API for permissions
         const aclApi = new ACLPermission(req.user.token);
-        const aclRes = await aclApi.createACL(req.user.id, `h5p:${contentId}`, 'Full');
+        const aclRes = await aclApi.createACL(req.user.id, contentId, 'Full');
         console.log('ACL CREATED: ', aclRes);
 
         res.send(JSON.stringify({ contentId }));
@@ -100,12 +98,11 @@ export default function (
 
     router.get('/delete/:contentId', async (req: H5P.IRequestWithUser, res) => {
         try {
-            console.log(`CHECK FOR PERMISSIONS HERE <GET /delete/${req.params.contentId}>?`);
             await h5pEditor.deleteContent(req.params.contentId, req.user);
 
             // Delete acl obj from acl api
             const aclApi = new ACLPermission(req.user.token);
-            const aclRes = await aclApi.rmACL(`h5p:${req.params.contentId}`);
+            const aclRes = await aclApi.rmACL(req.params.contentId);
             console.log(`ACL WITH ID '${aclRes['rmACL']}' DELETED.`);
 
             // we can verify permissions here and throw an error if the user doesn't have proper permissions for the obj.

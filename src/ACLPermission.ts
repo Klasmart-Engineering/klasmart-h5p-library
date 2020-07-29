@@ -11,11 +11,11 @@ global.fetch = require('node-fetch');
 /** Contains logic to make request to the ACL Permissions API using graphql */
 export default class ACLPermission {
   private graphQLClient: GraphQLClient;
-  // private token: string = process.env.ACL_PERMISSION_AUTHORIZATION_TOKEN || 
+  private aclPrefix: string = process.env.ACL_OBJECT_ID_PREFIX || 'h5p:';
 
   constructor(
     private token: string,
-    private endpoint: string = "http://localhost:8000/graphql"
+    private endpoint: string = "http://localhost:8000/graphql",
   ) {
       // endpoint = process.env.ACL_PERMISSION_ENDPOINT || ;
       this.graphQLClient = new GraphQLClient(
@@ -55,7 +55,7 @@ export default class ACLPermission {
           }`
 
         const variables = {
-            objectId: objectId,
+            objectId: `${this.aclPrefix}${objectId}`,
             ownerId: ownerId,
             defaultLevel: defaultLevel
         }
@@ -99,7 +99,7 @@ export default class ACLPermission {
       }`
 
       const variables = {
-          objectId: objectId
+          objectId: `${this.aclPrefix}${objectId}`
       }
 
       return await this.graphQLClient.request(query, variables);
@@ -112,7 +112,7 @@ export default class ACLPermission {
         }
       `
       const variables = {
-        objectId: objectId
+        objectId: `${this.aclPrefix}${objectId}`
       }
 
       try {

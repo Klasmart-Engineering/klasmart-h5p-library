@@ -213,15 +213,10 @@ const getAppCookies = (req) => {
     if (undefined === req.headers.cookie) {
         return parsedCookies;
     }
-    // We extract the raw cookies from the request headers
-    // console.log('req.headers: ', req.headers);
-    // console.log('req.headers.cookie: ', req.headers.cookie);
     const rawCookies = req.headers.cookie.split('; ');
-    // rawCookies = ['myapp=secretcookie, 'analytics_cookie=beacon;']
    
     rawCookies.forEach(rawCookie=>{
         const parsedCookie = rawCookie.split('=');
-        // parsedCookie = ['myapp', 'secretcookie'], ['analytics_cookie', 'beacon']
         parsedCookies[parsedCookie[0]] = parsedCookie[1];
     });
     return parsedCookies;

@@ -2,7 +2,6 @@ import express from 'express';
 
 import * as H5P from '../src';
 
-// import getACLPermission from '../src/GetACLPermission';
 import ACLPermission from '../src/ACLPermission';
 
 /**
@@ -57,7 +56,6 @@ export default function (
     });
 
     router.get('/new', async (req: H5P.IRequestWithLanguage, res) => {
-        // Don't check for permissions. This renders the Content Type list.
         const page = await h5pEditor.render(
             undefined,
             languageOverride === 'auto'

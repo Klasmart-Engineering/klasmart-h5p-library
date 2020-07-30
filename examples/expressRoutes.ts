@@ -95,13 +95,10 @@ export default function (
 
     router.get('/delete/:contentId', async (req: H5P.IRequestWithUser, res) => {
         try {
-            await h5pEditor.deleteContent(req.params.contentId, req.user);
-
-            // Delete acl obj from acl api
             const aclApi = new ACLPermission(req.user.token);
             const aclRes = await aclApi.rmACL(req.params.contentId);
 
-            // we can verify permissions here and throw an error if the user doesn't have proper permissions for the obj.
+            await h5pEditor.deleteContent(req.params.contentId, req.user);
         } catch (error) {
             res.send(
                 `Error deleting content with id ${req.params.contentId}: ${error.message}<br/><a href="javascript:window.location=document.referrer">Go Back</a>`

@@ -54,12 +54,7 @@ export default async function createH5PEditor(
                                 10
                             )
                           : undefined,
-                      getPermissions: (contentId: string, user: H5P.IUser): Promise<H5P.Permission[]> => {
-
-                        // USER SHOULD BE REDIRECTED TO A LOGIN PAGE IF NO PERMISSIONS ARE RECEIVED.
-                        
-                        return GetACLPermission(contentId, user);
-                      }
+                      getPermissions: GetACLPermission
                   }
               ),
         process.env.TEMPORARYSTORAGE === 's3'
@@ -75,7 +70,7 @@ export default async function createH5PEditor(
                                 process.env.AWS_S3_MAX_FILE_LENGTH,
                                 10
                             )
-                          : undefined,
+                          : undefined
                   }
               )
             : new H5P.fsImplementations.DirectoryTemporaryFileStorage(

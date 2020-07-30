@@ -11,13 +11,15 @@ export const GetACLPermission = async (
 ): Promise<Permission[]> => {
     let perms: Permission[];
 
+    // If either contentId or user obj are not present, there is nothing to validate. Send full access
     if(undefined === contentId || 'undefined' === contentId || undefined === user) {
-        console.info(`GetACLPermission not needed. Sending full access.`);
         perms = [Permission.Delete, Permission.Download, Permission.Edit, Permission.Embed, Permission.List, Permission.View];
         return new Promise<Permission[]>((resolve) => {
             resolve(perms);
         });
     }
+
+    console.info(contentId, user);
 
     try {
         const aclAPI = new ACLPermission(user.token);
@@ -30,8 +32,7 @@ export const GetACLPermission = async (
         } else if ('ReadWrite' === response || 'Full' === response) {
             perms = [Permission.Delete, Permission.Download, Permission.Edit, Permission.Embed, Permission.List, Permission.View];
         } else {
-            console.log("No permission: ", response, apiPermission);
-            perms = [];
+            perms = []; // No permissions
         }
         return new Promise<Permission[]>((resolve) => {
             resolve(perms);

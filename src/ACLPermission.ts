@@ -17,7 +17,6 @@ export default class ACLPermission {
     private token: string,
     private endpoint: string = "http://localhost:8000/graphql",
   ) {
-      // endpoint = process.env.ACL_PERMISSION_ENDPOINT || ;
       this.graphQLClient = new GraphQLClient(
           endpoint,
           {
@@ -115,13 +114,7 @@ export default class ACLPermission {
         objectId: `${this.aclPrefix}${objectId}`
       }
 
-      try {
-        const res = await this.graphQLClient.request(query, variables);
-        return res;
-      } catch(e) {
-        console.log(e);
-        return null;
-      }
+      return await this.graphQLClient.request(query, variables);
     }
     
 }

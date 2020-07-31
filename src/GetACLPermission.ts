@@ -3,7 +3,10 @@ import {
     IUser, 
     Permission 
 } from './types';
+import H5pError from './helpers/H5pError';
 import ACLPermission from './ACLPermission';
+import Logger from './helpers/Logger';
+const log = new Logger('GetACLPermission');
 
 export const GetACLPermission = async (
     contentId: ContentId, 
@@ -13,13 +16,8 @@ export const GetACLPermission = async (
 
     // If either contentId or user obj are not present, there is nothing to validate. Send full access
     if(undefined === contentId || 'undefined' === contentId || undefined === user) {
-        perms = [Permission.Delete, Permission.Download, Permission.Edit, Permission.Embed, Permission.List, Permission.View];
-        return new Promise<Permission[]>((resolve) => {
-            resolve(perms);
-        });
+        return [Permission.Delete, Permission.Download, Permission.Edit, Permission.Embed, Permission.List, Permission.View];
     }
-
-    console.info(contentId, user);
 
     try {
         const aclAPI = new ACLPermission(user.token);
@@ -34,13 +32,13 @@ export const GetACLPermission = async (
         } else {
             perms = []; // No permissions
         }
-        return new Promise<Permission[]>((resolve) => {
-            resolve(perms);
-        });
+        return perms;
     } catch(e) {
-        return new Promise<Permission[]>((resolve, reject) => {
-            console.log(`GetACLPermission error: ${e}`);
-            reject(new Error(`GetACLPermission error. Make sure that the token is part of the user object, that a valid contentId value was sent, and that the ACL API is online.`));
-        });
+        log.error(e);
+        throw new H5pError(
+            'h5p-permission:server-error',
+            {},
+            500
+        );
     }
 }

@@ -2,6 +2,8 @@ import express from 'express';
 
 import * as H5P from '../src';
 
+import ACLPermission from '../src/ACLPermission';
+
 /**
  * @param h5pEditor
  * @param h5pPlayer
@@ -83,18 +85,27 @@ export default function (
             req.user
         );
 
+        // Create ACL obj in acl API for permissions
+        const aclApi = new ACLPermission(req.user.token);
+        const aclRes = await aclApi.createACL(req.user.id, contentId, 'Full');
+
         res.send(JSON.stringify({ contentId }));
         res.status(200).end();
     });
 
     router.get('/delete/:contentId', async (req: H5P.IRequestWithUser, res) => {
         try {
+            
             await h5pEditor.deleteContent(req.params.contentId, req.user);
+
+            const aclApi = new ACLPermission(req.user.token);
+            const aclRes = await aclApi.rmACL(req.params.contentId);
         } catch (error) {
             res.send(
                 `Error deleting content with id ${req.params.contentId}: ${error.message}<br/><a href="javascript:window.location=document.referrer">Go Back</a>`
             );
-            res.status(500).end();
+
+            res.status(error.httpStatusCode).end();
             return;
         }
 

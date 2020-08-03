@@ -4,6 +4,7 @@ import fileUpload from 'express-fileupload';
 import i18next from 'i18next';
 import i18nextHttpMiddleware from 'i18next-http-middleware';
 import i18nextFsBackend from 'i18next-fs-backend';
+import jwt from 'jsonwebtoken';
 import path from 'path';
 
 import * as H5P from '../src';
@@ -14,6 +15,10 @@ import createH5PEditor from './createH5PEditor';
 import { displayIps } from './utils';
 
 const start = async () => {
+    if(!process.env.JWT_PUBLIC_KEY) {
+        throw new Error('Please set JWT_PUBLIC_KEY environment variable.');
+    }
+
     // We use i18next to localize messages sent to the user. You can use any
     // localization library you like.
     const translationFunction = await i18next
@@ -99,6 +104,33 @@ const start = async () => {
     // JSON webtokens or some other means.
     server.use((req: H5P.IRequestWithUser, res, next) => {
         req.user = new User();
+
+        // change to const when the login service is active
+        let token = getAppCookies(req)['token'];
+
+        if (!token) {
+            // ENABLE WHEN THE LOGIN SERVICE IS ACTIVE
+            // res.status(401).send('Invalid credentials. Please login.').end();
+            // return;
+
+            // TEMPORARY
+            token = `eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxIiwiaWF0IjoxNTk1OTc5NzU1LCJleHAiOjE2Mjc1MzczNTV9.gzJALPl0s1HGPkj5Ku7g2OswVULG-yDKBpU-ft8OhLmKbNlQJSv8bL6uybSXSMMgfYVGG-sqjK-GWJeE0HJvzr2a3r2SL0meqLHoJM844MSY4zDRnqa1XVA8KsyqWovPsRXcGOJzGI4iPZ_2uyzZLVXMAtRD3zx7LU6OFu-GogsoNKJGjXUfP1_5or1nNhNVky5ywLB0ifcFWtZ8cSUJTlykukQbNg-g4Tv19X3iEaznsQwAws0Pqk0J0K6VvdcOoqjqrGuuL5f0iLju0HL19w6Dptvpiy-9mNyCxPoMKNSU_xg4ANienSYTA8XRHj5g512__og5lIYScv69w1fUMw6RCYO5D_rwH65KvlZFVcx9xMHPTqDoyhO6dlUbo9XhHsur_jle42XiiiBbpEDG7gg7n24OS_-DqYMlksZXNRKrOoVLazBw2BwLa7ApsaGdUuMznTiMFpzwg_FW5UjSw2RZf00dkRZZN89Rk13zQHkSp5EXXhp1JYZMbOh1JUMPURdQ_ppy2mhb9Z6ndM8bE_cjli3I892j3tXTNib-08HC1_3xVrgRDQsffgeW11bueNKbSmzuKqD9arskfYQ6bXU7V9lbewkFlTWuxsVjjAfNsgw5hfCJ7ZAd4_rVeBKWtc8LwuOVuhGLfOJnEp_UOiE-ComhBYdcbI0s41rqGA4`;
+            res.cookie('token',token, { maxAge: 900000, httpOnly: true });
+
+        }
+
+        try {
+            const publicKey = process.env.JWT_PUBLIC_KEY || '';
+            const user = jwt.verify(token, publicKey, { algorithms: ['RS256'] }) as object;
+            req.user.id = user['userId'];
+            req.user.groupId = user['groupId'] || '';
+            req.user.token = token;
+        } catch(e) {
+            console.error('jwt verify failed. Error: ', e);
+            res.status(401).send('Invalid credentials. Please login.').end();
+            return;
+        }
+
         next();
     });
 
@@ -170,6 +202,22 @@ const start = async () => {
     displayIps(port);
 
     server.listen(port);
+};
+
+// For testing purposes. If needed, this should be moved to a helper file
+const getAppCookies = (req) => {
+    const parsedCookies = {};
+
+    if (undefined === req.headers.cookie) {
+        return parsedCookies;
+    }
+    const rawCookies = req.headers.cookie.split('; ');
+   
+    rawCookies.forEach(rawCookie=>{
+        const parsedCookie = rawCookie.split('=');
+        parsedCookies[parsedCookie[0]] = parsedCookie[1];
+    });
+    return parsedCookies;
 };
 
 // We can't use await outside a an async function, so we use the start()

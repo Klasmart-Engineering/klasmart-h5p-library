@@ -16,7 +16,7 @@ describe('Rendering the HTML page', () => {
                 expect(html.replace(/\n */g, '')).toBe(
                     `<html class="h5p-iframe" data-reactroot="">
                 <head>
-                    <meta charset="utf-8"/>
+                    <meta charSet="utf-8"/>
                     
                     <link rel="stylesheet" href="/h5p/core/styles/h5p.css"/>
                     <link rel="stylesheet" href="/h5p/core/styles/h5p-confirmation-dialog.css"/>
@@ -221,7 +221,7 @@ describe('Rendering the HTML page', () => {
                 expect(html.replace(/\n */g, '')).toBe(
                     `<html class="h5p-iframe" data-reactroot="">
                     <head>
-                        <meta charset="utf-8"/>
+                        <meta charSet="utf-8"/>
                         
                         <link rel="stylesheet" href="/h5p/core/styles/h5p.css"/>
                         <link rel="stylesheet" href="/h5p/core/styles/h5p-confirmation-dialog.css"/>

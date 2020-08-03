@@ -1,4 +1,5 @@
 import * as H5P from '../src';
+import { GetACLPermission } from '../src/GetACLPermission';
 import dbImplementations from '../src/implementation/db';
 
 /**
@@ -52,7 +53,8 @@ export default async function createH5PEditor(
                                 process.env.AWS_S3_MAX_FILE_LENGTH,
                                 10
                             )
-                          : undefined
+                          : undefined,
+                      getPermissions: GetACLPermission
                   }
               ),
         process.env.TEMPORARYSTORAGE === 's3'

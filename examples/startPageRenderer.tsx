@@ -66,8 +66,9 @@ function ContentList(props: any):any {
 
 export default function render(editor: H5P.H5PEditor): (req: any, res: any) => any {
     return async (req, res) => {
-        const contentIds = await editor.contentManager.listContent();
-        const contentObjects = await Promise.all(
+        try {
+            const contentIds = await editor.contentManager.listContent();
+            const contentObjects = await Promise.all(
             contentIds.map(async (id) => ({
                 content: await editor.contentManager.getContentMetadata(
                     id,
@@ -75,8 +76,12 @@ export default function render(editor: H5P.H5PEditor): (req: any, res: any) => a
                 ),
                 id
             }))
-        );
-        res.send(`${ReactDOMServer.renderToString(<ContentList editor={editor} contentObjects={contentObjects} />)}`
-        );
+            );
+            res.send(`${ReactDOMServer.renderToString(<ContentList editor={editor} contentObjects={contentObjects} />)}`
+            );
+        } catch (e) {
+            res.status(e.httpStatusCode).send(e.errorId).end();
+            return
+        }
     };
 }

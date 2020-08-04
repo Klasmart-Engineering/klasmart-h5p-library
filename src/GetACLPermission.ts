@@ -16,6 +16,7 @@ export const GetACLPermission = async (
 
     // If either contentId or user obj are not present, there is nothing to validate. Send full access
     if(undefined === contentId || 'undefined' === contentId || undefined === user) {
+        log.debug(`Undefined user (${JSON.stringify(user)}) and/or contentId (${contentId}). Returning all permissions.`);
         return [Permission.Delete, Permission.Download, Permission.Edit, Permission.Embed, Permission.List, Permission.View];
     }
 
@@ -32,6 +33,7 @@ export const GetACLPermission = async (
         } else {
             perms = []; // No permissions
         }
+        log.debug(`Permission '${response}' in ACP API. Returning: '${JSON.stringify(perms)}' for contentId '${contentId}' and user '${user.id}'. `);
         return perms;
     } catch(e) {
         log.error(e);

@@ -7,6 +7,9 @@ export interface GlobalWithCognitoFix extends Global {
 declare const global: GlobalWithCognitoFix;
 global.fetch = require('node-fetch');
 
+import Logger from './helpers/Logger';
+const log = new Logger('ACLPermission');
+
 
 /** Contains logic to make request to the ACL Permissions API using graphql */
 export default class ACLPermission {
@@ -29,6 +32,7 @@ export default class ACLPermission {
   }
 
     async createACL(ownerId: string, objectId: string, defaultLevel: string): Promise<any> {
+        log.debug(`Creating new ACL document for contentId '${objectId}', user '${ownerId}' and level '${defaultLevel}'.`)
         const query = `
         mutation createACL($ownerId: ID!, $objectId: ID!, $defaultLevel: AccessLevel){
             createACL(
@@ -63,6 +67,7 @@ export default class ACLPermission {
     }
 
     async getACL(id: string): Promise<any> {
+      log.debug(`Getting ACL document with id ${id}.`);
         const query = `
         query {
             getACL(_id: $id)
@@ -92,6 +97,7 @@ export default class ACLPermission {
     }
 
     async rmACL(objectId: string): Promise<string> {
+      log.debug(`Deleting ACL document with contentId ${objectId}.`)
       const query = `
       mutation rmACL($objectId: ID!){
         rmACL(objectId: $objectId)
@@ -105,6 +111,7 @@ export default class ACLPermission {
     }
 
     public async getMyAcessLevel(objectId: string): Promise<string> {
+      log.debug(`Getting access Level for document with contentId ${objectId}.`)
       const query = `
         query getMyAccessLevel($objectId: ID!) {
           getMyAccessLevel(objectId: $objectId)

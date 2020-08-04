@@ -15,6 +15,8 @@ import {
 } from './types';
 import generateFilename from './helpers/FilenameGenerator';
 
+import ACLPermission from '../src/ACLPermission';
+
 const log = new Logger('ContentStorer');
 
 /**
@@ -75,6 +77,15 @@ export default class ContentStorer {
             user,
             contentId
         );
+
+        // When creating new content with media stored in S3, 
+        // we need to add a permission entry, otherwise when attempting to 
+        // add the media to the new content, we will receive a permission error msg.
+        if (!isUpdate && process.env.CONTENTSTORAGE === 'mongos3') {
+            const aclApi = new ACLPermission(user.token);
+            const aclRes = await aclApi.createACL(user.id, newContentId, 'Full');
+            log.debug(`ACL document created for contentId ${newContentId}.`);
+        }
 
         // All files added to the piece of content during the editor session are only stored
         // in temporary storage. We need to copy them over from there. In some

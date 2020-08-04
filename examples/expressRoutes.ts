@@ -85,10 +85,6 @@ export default function (
             req.user
         );
 
-        // Create ACL obj in acl API for permissions
-        const aclApi = new ACLPermission(req.user.token);
-        const aclRes = await aclApi.createACL(req.user.id, contentId, 'Full');
-
         res.send(JSON.stringify({ contentId }));
         res.status(200).end();
     });

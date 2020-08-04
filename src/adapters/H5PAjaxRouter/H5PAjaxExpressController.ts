@@ -10,6 +10,8 @@ import {
     IUser
 } from '../../types';
 
+import dbImplementations from '../../implementation/db';
+
 interface IActionRequest extends IRequestWithUser, IRequestWithTranslator {
     files: {
         file: {
@@ -364,6 +366,34 @@ export default class H5PAjaxExpressController {
             end = range[0].end;
         }
 
+        // If the content is no longer temporary, if it's stored in S3 already, 
+        // create temp link and redirect to it.
+        if(contentId) { 
+            const s3 = dbImplementations.initS3({
+                s3ForcePathStyle: true,
+                signatureVersion: 'v4'
+            });
+    
+            const myKey = `${contentId}/${file}`;
+            const signedUrlExpireSeconds = 60;
+
+            try {
+    
+                const url = await s3.getSignedUrlPromise('getObject', {
+                    Bucket: process.env.CONTENT_AWS_S3_BUCKET, 
+                    Key: myKey,
+                    Expires: signedUrlExpireSeconds
+                });
+        
+                res.redirect(307, url);
+            } catch (e) {
+                console.error(e);
+                res.status(500).send('Internal server error.').end();
+            }
+            return;
+        }
+
+        // Content is temporary. Process file in H5P server temp folder. 
         const stream = await this.h5pEditor.getContentFileStream(
             contentId,
             file,

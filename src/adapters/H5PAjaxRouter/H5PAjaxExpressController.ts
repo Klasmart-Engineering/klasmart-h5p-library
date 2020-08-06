@@ -3,14 +3,13 @@ import { H5PEditor, LibraryName, H5pError, ContentId } from '../..';
 import { lookup as mimeLookup } from 'mime-types';
 import AjaxSuccessResponse from '../../helpers/AjaxSuccessResponse';
 import { Readable } from 'stream';
+import fetch from 'node-fetch';
 import {
     IFileStats,
     IRequestWithUser,
     IRequestWithTranslator,
     IUser
 } from '../../types';
-
-import dbImplementations from '../../implementation/db';
 
 interface IActionRequest extends IRequestWithUser, IRequestWithTranslator {
     files: {
@@ -369,22 +368,49 @@ export default class H5PAjaxExpressController {
         // If the content is no longer temporary, if it's stored in S3 already, 
         // create temp link and redirect to it.
         if(contentId) { 
-            const s3 = dbImplementations.initS3({
-                s3ForcePathStyle: true,
-                signatureVersion: 'v4'
-            });
-    
-            const myKey = `${contentId}/${file}`;
-            const signedUrlExpireSeconds = 60;
-
+           
             try {
-    
-                const url = await s3.getSignedUrlPromise('getObject', {
-                    Bucket: process.env.CONTENT_AWS_S3_BUCKET, 
-                    Key: myKey,
-                    Expires: signedUrlExpireSeconds
+                const myKey = `${contentId}/${file}`;
+                
+                const body = { 
+                    "domain": process.env.CLOUDFRONT_DOMAIN, 
+                    "durationSeconds": 600,
+                    "filePaths": [
+                        myKey
+                    ],
+                };
+
+                const response = await fetch("https://raven.dev.badanamu.net/cloudfront", {
+                    method: "post",
+                    body: JSON.stringify(body),
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${process.env.CLOUDFRONT_TOKEN}`
+                    },
                 });
-        
+
+                if (!response.ok) { // res.status !(>= 200 && res.status < 300)
+                    throw new H5pError(
+                        'cloudfront-request-error',
+                        {
+                            statusCode: response.status.toString(),
+                            statusText: response.statusText
+                        },
+                        500
+                    );
+                }
+
+                const data = await response.json();
+                if(!data || !data['result'] || 0 === data['result'].length) {
+                    throw new H5pError(
+                        'cloudfront-request-key-not-found',
+                        {}, 
+                        404
+                    );
+                }
+
+                const url = data['result'][0]['signedUrl'];
+
                 res.redirect(307, url);
             } catch (e) {
                 console.error(e);

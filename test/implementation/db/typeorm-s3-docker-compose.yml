@@ -1,0 +1,44 @@
+version: "3.7"
+
+services:
+    postgres:
+        image: postgres:13.4
+        restart: always
+        environment:
+            POSTGRES_DB: h5p
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: h5pnodejs
+        ports:
+            - 5444:5432
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+    minio1:
+        image: minio/minio
+        volumes:
+            - minio_data:/data
+        ports:
+            - "9000:9000"
+        command: ["server", "/data"]
+        environment:
+            MINIO_ACCESS_KEY: minioaccesskey
+            MINIO_SECRET_KEY: miniosecret
+    h5p:
+        image: h5p:latest
+        ports: 
+            - 8080:8080
+        environment:
+            CONTENTSTORAGE: typeorms3
+            LIBRARYSTORAGE: typeorms3
+            TYPEORM_LIBRARY_S3_ENDPOINT: http://localhost:9000
+            TYPEORM_LIBRARY_REGION: us-east-2
+            S3_STORAGE_BUCKET: kidsloop-h5p-content-storage
+            H5P_STORAGE_ENV: postgres
+            H5P_PG_HOST: http://localhost
+            H5P_PG_USER: postgres
+            H5P_PG_PORT: 5444
+            H5P_PG_DATABASE: h5p
+            H5P_PG_PASSWORD: h5pnodejs
+            
+volumes:
+    pgdata:
+    minio_data:

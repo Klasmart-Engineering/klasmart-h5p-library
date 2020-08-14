@@ -1,6 +1,6 @@
 {
     "extends": "./tsconfig.base.json",
-    "include": ["src/**/*.ts", "examples/**/*.ts"],
+    "include": ["src/**/*", "examples/**/*"],
     "exclude": ["examples/client/**"],
     "compilerOptions": {
         "declaration": true,

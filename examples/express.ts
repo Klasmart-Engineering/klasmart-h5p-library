@@ -161,8 +161,10 @@ const start = async () => {
 
     // The startPageRenderer displays a list of content objects and shows
     // buttons to display, edit, delete and download existing content.
-    server.get('/', startPageRenderer(h5pEditor));
+    //server.get('/', startPageRenderer(h5pEditor));
 
+    server.get('/.well-known/express/server-health', (req, res) => {res.sendStatus(200)});
+    
     server.use(
         '/client',
         express.static(path.resolve('build/examples/client'))

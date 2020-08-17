@@ -12,7 +12,7 @@ function Editor(props: any):any {
             <head>
                 <meta charSet="utf-8" />
 
-                <script dangerouslySetInnerHTML={{__html: `window.H5PIntegration = parent.H5PIntegration || ${JSON.stringify(props.model.integration, null, 2)}`}} />
+                <script dangerouslySetInnerHTML={{__html: `window.H5PIntegration = ${JSON.stringify(props.model.integration, null, 2)}`}} />
 
                 { props.model.styles.map((style) => (
                     <link rel="stylesheet" href={style} />

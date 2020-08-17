@@ -29,7 +29,6 @@ function Player(props: any):any {
             </head>
             <body>
                 <div className="h5p-content" data-content-id={props.model.contentId}></div>
-                <a href={props.model.downloadPath}>Download</a>
             </body>
         </html>
     );

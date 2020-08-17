@@ -16,6 +16,6 @@ docker push 494634321140.dkr.ecr.ap-northeast-2.amazonaws.com/kidsloop-beta-h5p:
 docker push 494634321140.dkr.ecr.eu-west-2.amazonaws.com/kidsloop-beta-h5p:latest
 docker push 494634321140.dkr.ecr.ap-south-1.amazonaws.com/kidsloop-beta-h5p:latest
 
-aws ecs update-service --force-new-deployment --cluster kidsloop-beta --no-paginate true --region ap-northeast-2 --service arn:aws:ecs:ap-northeast-2:494634321140:service/kidsloop-beta/kidsloop-h5p-beta 
-aws ecs update-service --force-new-deployment --cluster kidsloop-beta --no-paginate true --region eu-west-2 --service arn:aws:ecs:eu-west-2:494634321140:service/kidsloop-beta/kidsloop-h5p-beta 
-aws ecs update-service --force-new-deployment --cluster kidsloop-beta --no-paginate true --region ap-south-1 --service arn:aws:ecs:ap-south-1:494634321140:service/kidsloop-beta/kidsloop-h5p-beta 
+aws ecs update-service --force-new-deployment --cluster kidsloop-beta --no-paginate --region ap-northeast-2 --service arn:aws:ecs:ap-northeast-2:494634321140:service/kidsloop-beta/kidsloop-h5p-beta 
+aws ecs update-service --force-new-deployment --cluster kidsloop-beta --no-paginate --region eu-west-2 --service arn:aws:ecs:eu-west-2:494634321140:service/kidsloop-beta/kidsloop-h5p-beta 
+aws ecs update-service --force-new-deployment --cluster kidsloop-beta --no-paginate --region ap-south-1 --service arn:aws:ecs:ap-south-1:494634321140:service/kidsloop-beta/kidsloop-h5p-beta 

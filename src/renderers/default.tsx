@@ -136,6 +136,7 @@ function Editor(props: any):any {
                                 }).then((result) => {
                                     const parsedResult = JSON.parse(result)
                                     if(parsedResult.contentId) {
+                                        window.parent.postMessage({contentId: parsedResult.contentId}, "*")
                                         window.location.href = '${props.model.urlGenerator.play()}/' + parsedResult.contentId;
                                     }
                                 });

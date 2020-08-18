@@ -4,11 +4,11 @@
  */
 
 // Grab common resources set in parent window, but avoid sharing back resources set in iframe)
-window.ns = window.H5PEditor = H5P.jQuery.extend(false, {}, window.parent.H5PEditor);
+window.ns = window.H5PEditor = H5P.jQuery.extend(false, {}, window.parent.H5PEditor || window.self.H5PEditor);
 ns.$ = H5P.jQuery;
 
 // Load needed resources from parent.
-H5PIntegration = H5P.jQuery.extend(false, {}, window.parent.H5PIntegration);
+H5PIntegration = H5P.jQuery.extend(false, {}, window.parent.H5PIntegration || window.self.H5PIntegration);
 H5PIntegration.loadedJs = [];
 H5PIntegration.loadedCss = [];
 
@@ -256,16 +256,16 @@ ns.updateCommonFieldsDefault = function (semantics, translation, parentIsCommon)
   for (let i = 0; i < semantics.length; i++) {
     const isCommon = (semantics[i].common === true || parentIsCommon);
     if (isCommon && semantics[i].default !== undefined &&
-        translation[i] !== undefined && translation[i].default !== undefined) {
+      translation[i] !== undefined && translation[i].default !== undefined) {
       // Update value
       semantics[i].default = translation[i].default;
     }
     if (semantics[i].fields !== undefined && semantics[i].fields.length &&
-        translation[i].fields !== undefined && translation[i].fields.length) {
+      translation[i].fields !== undefined && translation[i].fields.length) {
       // Look into sub fields
       ns.updateCommonFieldsDefault(semantics[i].fields, translation[i].fields, isCommon);
     }
-    if (semantics[i].field !== undefined && translation[i].field !== undefined ) {
+    if (semantics[i].field !== undefined && translation[i].field !== undefined) {
       // Look into sub field
       ns.updateCommonFieldsDefault([semantics[i].field], [translation[i].field], isCommon);
     }
@@ -420,10 +420,10 @@ ns.processSemanticsChunk = function (semanticsChunk, params, $wrapper, parent, m
 
     // Check generic field properties.
     if (field.name === undefined) {
-      throw ns.t('core', 'missingProperty', {':index': i, ':property': 'name'});
+      throw ns.t('core', 'missingProperty', { ':index': i, ':property': 'name' });
     }
     if (field.type === undefined) {
-      throw ns.t('core', 'missingProperty', {':index': i, ':property': 'type'});
+      throw ns.t('core', 'missingProperty', { ':index': i, ':property': 'type' });
     }
 
     // Set default value.
@@ -629,11 +629,11 @@ ns.removeChildren = function (children) {
   for (var i = 0; i < children.length; i++) {
     // Common fields will be removed by library.
     var isCommonField = (children[i].field === undefined ||
-                         children[i].field.common === undefined ||
-                         !children[i].field.common);
+      children[i].field.common === undefined ||
+      !children[i].field.common);
 
     var hasRemove = (children[i].remove instanceof Function ||
-                     typeof children[i].remove === 'function');
+      typeof children[i].remove === 'function');
 
     if (isCommonField && hasRemove) {
       children[i].remove();
@@ -743,10 +743,10 @@ ns.followField = function (parent, path, callback) {
     var field = ns.findField(path, parent);
 
     if (!field) {
-      throw ns.t('core', 'unknownFieldPath', {':path': path});
+      throw ns.t('core', 'unknownFieldPath', { ':path': path });
     }
     if (field.changes === undefined) {
-      throw ns.t('core', 'noFollow', {':path': path});
+      throw ns.t('core', 'noFollow', { ':path': path });
     }
 
     var params = (field.params === undefined ? def : field.params);
@@ -793,11 +793,11 @@ ns.createImportance = function (importance) {
  */
 ns.createItem = function (type, label, description, content) {
   return '<div class="field ' + type + '">' +
-           (label ? label : '') +
-           (description ? '<div class="h5peditor-field-description">' + description + '</div>' : '') +
-           (content ? content : '') +
-           '<div class="h5p-errors"></div>' +
-         '</div>';
+    (label ? label : '') +
+    (description ? '<div class="h5peditor-field-description">' + description + '</div>' : '') +
+    (content ? content : '') +
+    '<div class="h5p-errors"></div>' +
+    '</div>';
 };
 
 /**
@@ -935,7 +935,7 @@ ns.getNextFieldId = (function (counter) {
    * @return {number}
    */
   return function (field) {
-    return 'field-' + field.name.toLowerCase() +  '-' + (counter++);
+    return 'field-' + field.name.toLowerCase() + '-' + (counter++);
   };
 })(-1);
 
@@ -964,7 +964,7 @@ ns.createLabel = function (field, content, inputId) {
   if (inputId !== undefined) {
     html += ' for="' + inputId + '"';
   }
-  html+= '>'
+  html += '>'
 
   // Temporary fix for the old version of CoursePresentation's custom editor
   if (field.widget === 'coursepresentation' && field.name === 'presentation') {
@@ -1006,44 +1006,44 @@ ns.createImportantDescription = function (importantDescription) {
 
   if (importantDescription !== undefined) {
     html += '<div class="h5peditor-field-important-description">' +
-              '<div class="important-description-tail">' +
-              '</div>' +
-              '<div class="important-description-close" role="button" tabindex="0" aria-label="' + ns.t('core', 'hideImportantInstructions') + '">' +
-                '<span>' +
-                   ns.t('core', 'hide') +
-                '</span>' +
-              '</div>' +
-              '<span class="h5p-info-icon">' +
-              '</span>' +
-              '<span class="important-description-title">' +
-                 ns.t('core', 'importantInstructions') +
-              '</span>';
+      '<div class="important-description-tail">' +
+      '</div>' +
+      '<div class="important-description-close" role="button" tabindex="0" aria-label="' + ns.t('core', 'hideImportantInstructions') + '">' +
+      '<span>' +
+      ns.t('core', 'hide') +
+      '</span>' +
+      '</div>' +
+      '<span class="h5p-info-icon">' +
+      '</span>' +
+      '<span class="important-description-title">' +
+      ns.t('core', 'importantInstructions') +
+      '</span>';
 
     if (importantDescription.description !== undefined) {
       html += '<div class="important-description-content">' +
-                 importantDescription.description +
-              '</div>';
+        importantDescription.description +
+        '</div>';
     }
 
     if (importantDescription.example !== undefined) {
       html += '<div class="important-description-example">' +
-                '<div class="important-description-example-title">' +
-                  '<span>' +
-                     ns.t('core', 'example') +
-                  ':</span>' +
-                '</div>' +
-                '<div class="important-description-example-text">' +
-                  '<span>' +
-                     importantDescription.example +
-                  '</span>' +
-                '</div>' +
-              '</div>';
+        '<div class="important-description-example-title">' +
+        '<span>' +
+        ns.t('core', 'example') +
+        ':</span>' +
+        '</div>' +
+        '<div class="important-description-example-text">' +
+        '<span>' +
+        importantDescription.example +
+        '</span>' +
+        '</div>' +
+        '</div>';
     }
 
     html += '</div>' +
-            '<span class="important-description-show" role="button" tabindex="0">' +
-              ns.t('core', 'showImportantInstructions') +
-            '</span><span class="important-description-clear-right"></span>';
+      '<span class="important-description-show" role="button" tabindex="0">' +
+      ns.t('core', 'showImportantInstructions') +
+      '</span><span class="important-description-clear-right"></span>';
   }
 
   return html;
@@ -1066,7 +1066,7 @@ ns.bindImportantDescriptionEvents = function (widget, fieldName, parent) {
   var librarySelector = ns.findLibraryAncestor(parent);
   if (librarySelector.currentLibrary !== undefined) {
     var lib = librarySelector.currentLibrary.split(' ')[0];
-    context = (lib + '-' + fieldName).replace(/\.|_/g,'-') + '-important-description-open';
+    context = (lib + '-' + fieldName).replace(/\.|_/g, '-') + '-important-description-open';
   }
 
   // Set first occurance to visible
@@ -1112,9 +1112,9 @@ ns.bindImportantDescriptionEvents = function (widget, fieldName, parent) {
  */
 ns.createCopyPasteButtons = function () {
   return '<div class="h5peditor-copypaste-wrap">' +
-           '<button class="h5peditor-copy-button disabled" title="' + H5PEditor.t('core', 'copyToClipboard') + '" disabled>' + ns.t('core', 'copyButton') + '</button>' +
-           '<button class="h5peditor-paste-button disabled" title="' + H5PEditor.t('core', 'pasteFromClipboard') + '" disabled>' + ns.t('core', 'pasteButton') + '</button>' +
-         '</div><div class="h5peditor-clearfix"></div>';
+    '<button class="h5peditor-copy-button disabled" title="' + H5PEditor.t('core', 'copyToClipboard') + '" disabled>' + ns.t('core', 'copyButton') + '</button>' +
+    '<button class="h5peditor-paste-button disabled" title="' + H5PEditor.t('core', 'pasteFromClipboard') + '" disabled>' + ns.t('core', 'pasteButton') + '</button>' +
+    '</div><div class="h5peditor-clearfix"></div>';
 };
 
 /**
@@ -1387,7 +1387,7 @@ ns.canPastePlus = function (clipboard, libs) {
     return ('' + candidate.majorVersion + '.' + candidate.minorVersion) === versionClip;
   });
   if (match) {
-    return {canPaste: true};
+    return { canPaste: true };
   }
 
   // Sort remaining candidates by version number
@@ -1410,7 +1410,7 @@ ns.canPastePlus = function (clipboard, libs) {
   // Clipboard library is newer than latest available local library
   const candidateMax = candidates.slice(-1)[0];
   if (+candidateMax.split('.')[0] < +versionClip.split('.')[0] ||
-      (+candidateMax.split('.')[0] === +versionClip.split('.')[0] &&
+    (+candidateMax.split('.')[0] === +versionClip.split('.')[0] &&
       +candidateMax.split('.')[1] < +versionClip.split('.')[1])) {
     return {
       canPaste: false,
@@ -1425,8 +1425,8 @@ ns.canPastePlus = function (clipboard, libs) {
   // Clipboard library is older than latest available local library
   const candidateMin = candidates.slice(0, 1)[0];
   if (+candidateMin.split('.')[0] > +versionClip.split('.')[0] ||
-      (+candidateMin.split('.')[0] === +versionClip.split('.')[0] &&
-       +candidateMin.split('.')[1] > +versionClip.split('.')[1])) {
+    (+candidateMin.split('.')[0] === +versionClip.split('.')[0] &&
+      +candidateMin.split('.')[1] > +versionClip.split('.')[1])) {
     return {
       canPaste: false,
       reason: 'pasteTooOld',
@@ -1533,7 +1533,7 @@ ns.ContentType.getPossibleUpgrade = function (library, libraries) {
 ns.ContentType.isHigherVersion = function (candiate, original) {
   return (ns.ContentType.getMajorVersion(candiate) > ns.ContentType.getMajorVersion(original) ||
     (ns.ContentType.getMajorVersion(candiate) == ns.ContentType.getMajorVersion(original) &&
-     ns.ContentType.getMinorVersion(candiate) > ns.ContentType.getMinorVersion(original)));
+      ns.ContentType.getMinorVersion(candiate) > ns.ContentType.getMinorVersion(original)));
 };
 
 /**
@@ -1630,11 +1630,11 @@ ns.upgradeContent = (function () {
             let message = 'Could not upgrade content';
             switch (err.type) {
               case 'errorTooHighVersion':
-                message += ': ' + ns.t('core', 'errorTooHighVersion', {'%used': err.used, '%supported': err.supported});
+                message += ': ' + ns.t('core', 'errorTooHighVersion', { '%used': err.used, '%supported': err.supported });
                 break;
 
               case 'errorNotSupported':
-                message += ': ' + ns.t('core', 'errorNotSupported', {'%used': err.used});
+                message += ': ' + ns.t('core', 'errorNotSupported', { '%used': err.used });
                 break;
 
               case 'errorParamsBroken':
@@ -1642,11 +1642,11 @@ ns.upgradeContent = (function () {
                 break;
 
               case 'libraryMissing':
-                message += ': ' +  ns.t('core', 'libraryMissing', {'%lib': err.library});
+                message += ': ' + ns.t('core', 'libraryMissing', { '%lib': err.library });
                 break;
 
               case 'scriptMissing':
-                message += ': ' + ns.t('core', 'scriptMissing', {'%lib': err.library});
+                message += ': ' + ns.t('core', 'scriptMissing', { '%lib': err.library });
                 break;
             }
 

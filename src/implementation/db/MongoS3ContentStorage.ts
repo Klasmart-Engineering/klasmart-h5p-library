@@ -92,7 +92,7 @@ export default class MongoS3ContentStorage implements IContentStorage {
      * @returns the S3 key
      */
     private static getS3Key(contentId: ContentId, filename: string): string {
-        const key = `${contentId}/${filename}`;
+        const key = `h5p/content/${contentId}/${filename}`;
         if (key.length > 1024) {
             log.error(
                 `The S3 key for "${filename}" in content object with id ${contentId} is ${key.length} bytes long, but only 1024 are allowed.`

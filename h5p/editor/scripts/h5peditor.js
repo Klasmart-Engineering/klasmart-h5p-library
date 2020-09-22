@@ -203,6 +203,10 @@ ns.loadLibrary = function (libraryName, callback) {
       ns.$.ajax({
         url: url,
         success: function (libraryData) {
+          // Remove custom css
+          ns.$('#extracss').remove();
+          ns.$('#extracss', window.parent.document).remove();
+          ns.$('.activity-content').remove();
           libraryData.translation = { // Used to cache all the translations
             en: libraryData.semantics
           };

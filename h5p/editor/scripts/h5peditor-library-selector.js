@@ -8,6 +8,15 @@
  * @returns {ns.LibrarySelector}
  */
 ns.LibrarySelector = function (libraries, defaultLibrary, defaultParams) {
+  // Loading content list (now activity list)
+  if(!defaultLibrary) {
+    var filename = "/h5p/editor/styles/css/calmisland.css";
+
+    // load custom css into parent document
+    ns.$("head", window.parent.document).append("<link rel='stylesheet' id='extracss' href='"+filename+"' type='text/css' />");
+    // load custom css into iframe
+    ns.$("head").append("<link rel='stylesheet' id='extracss' href='"+filename+"' type='text/css' />");
+  }
   var that = this;
 
   this.libraries = libraries;
@@ -31,6 +40,9 @@ ns.LibrarySelector = function (libraries, defaultLibrary, defaultParams) {
   //Add tutorial and example link:
   this.$tutorialUrl = ns.$('<a class="h5p-tutorial-url" target="_blank">' + ns.t('core', 'tutorial') + '</a>').hide();
   this.$exampleUrl = ns.$('<a class="h5p-example-url" target="_blank">' + ns.t('core', 'example') + '</a>').hide();
+
+  //Add Activity text
+  this.$activitiesHeader = ns.$('<div class="activity-content"><p class="activities-title">All Activities at a Glance</p><div class="activities-subtitle"><ul><li>Provides 20+ activity templates that can be used in lessons</li><li>HTML5 based, intuitive and easy to implement functionalities</li></ul></div></div>');
 
   // Create confirm dialog
   var changeLibraryDialog = new H5P.ConfirmationDialog({
@@ -129,6 +141,7 @@ ns.LibrarySelector.prototype.appendTo = function ($element) {
   var self = this;
   this.$parent = $element;
 
+  this.$activitiesHeader.appendTo($element);
   this.$selector.appendTo($element);
   this.$tutorialUrl.appendTo($element);
   this.$exampleUrl.appendTo($element);

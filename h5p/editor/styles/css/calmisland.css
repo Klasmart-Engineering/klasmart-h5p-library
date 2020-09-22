@@ -1,0 +1,422 @@
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: url('/h5p/editor/fonts/source-sans-pro-v14-latin-regular.eot'); /* IE9 Compat Modes */
+    src: local('Source Sans Pro Regular'), local('SourceSansPro-Regular'),
+         url('/h5p/editor/fonts/source-sans-pro-v14-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('/h5p/editor/fonts/source-sans-pro-v14-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+         url('/h5p/editor/fonts/source-sans-pro-v14-latin-regular.woff') format('woff'), /* Modern Browsers */
+         url('/h5p/editor/fonts/SourceSansPro-Regular.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('/h5p/editor/fonts/source-sans-pro-v14-latin-regular.svg#SourceSansPro') format('svg'); /* Legacy iOS */
+  }
+
+.activity-content, .media .media-heading {
+    font-family: "Source Sans Pro", serif;
+}
+.activities-title {
+    font-size: 2.2em;
+    color: #85b1df;
+    font-weight: bold;
+    margin: 0em 0.5em;
+}
+.activities-subtitle {
+    font-size: 1.1em;
+    color: #2f5496;
+    margin: 0em;
+}
+.activities-subtitle ul {
+    margin: 0em;
+}
+.media .media-heading {
+    font-size: 1.5em;
+    color: #2b2e33;
+}
+
+html, body {
+    max-width: none;
+}
+
+.h5p-hub .panel.h5p-section-content-types.open {
+    border: none;
+}
+
+.h5p-hub .panel.h5p-section-content-types.open {
+    max-height: none;
+}
+
+.h5p-hub nav, .h5p-hub .navbar, .search-wrapper, .content-type-update-info, .h5p-hub .content-type-list:before, div.icon-hub-icon, input {
+    display:none;
+}
+
+.h5p-hub .content-type-list {
+    height: 100%;
+}
+
+/* List element styling */
+.h5p-hub .content-type-list .media {
+    width: 100%;
+    display: inline-table;
+}
+.h5p-hub .content-type-list .button, .h5p-hub .content-type-list .description {
+    display: none;
+}
+.h5p-hub .content-type-list .media:not(:last-child) {
+    border-bottom: none;
+}
+.media .media-left .media-object {
+    display: none;
+    content: none;
+}
+.h5p-hub .content-type-list ol {
+    margin: 0.5em;
+}
+
+/** default png image */
+.media-left:after {
+    background-image: url('/h5p/editor/icons/Icon45_default.png');
+    background-size: 40px;
+    display: inline-block;
+    width: 40px; 
+    height: 40px;
+    content:"";
+}
+
+#h5p-interactivevideo .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon41_interactive_video.png');
+}
+#h5p-coursepresentation .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon42_course_presentation.png');
+}
+#h5p-multichoice .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon30_multiple_choice.png');
+}
+#h5p-questionset .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon33_quiz.png');
+}
+#h5p-blanks .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon14_fill_in_the_blanks.png');
+}
+#h5p-dragtext .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon12_drag_the_words.png');
+}
+#h5p-column .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon07_column.png');
+}
+#h5p-dragquestion .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon11_drag_and_drop.png');
+}
+#h5p-imagehotspots .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon21_image_hotspots.png');
+}
+#h5p-accordion .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon01_accordion.png');
+}
+#h5p-dialogcards .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon08_dialog_cards.png');
+}
+#h5p-singlechoiceset .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon34_single_choice_set.png');
+}
+#h5p-memorygame .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon29_memory_game.png');
+}
+#h5p-flashcards .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon18_flashcards.png');
+}
+#h5p-documentationtool .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon10_documentation_tool.png');
+}
+#h5p-truefalse .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon39_true_false_question.png');
+}
+#h5p-markthewords .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon28_mark_the_words.png');
+}
+#h5p-imageslider .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon25_image_slider.png');
+}
+#h5p-iframeembed .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon20_iframe_embedder.png');
+}
+#h5p-audio .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon04_audio_recorder.png');
+}
+#h5p-essay .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon13_essay.png');
+}
+#h5p-arithmeticquiz .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon03_arithmetic_quiz.png');
+}
+#h5p-timeline .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon38_timeline.png');
+}
+#h5p-speakthewordsset .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon36_speak_the_words_set.png');
+}
+#h5p-imagemultiplehotspotquestion .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon15_find_multiple_hotspots.png');
+}
+#h5p-speakthewords .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon35_speak_the_words.png');
+}
+#h5p-imagehotspotquestion .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon16_find_the_hotspot.png');
+}
+#h5p-imagesequencing .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon24_image_sequencing.png');
+}
+#h5p-findthewords .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon17_find_the_words.png');
+}
+#h5p-imagejuxtaposition .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon22_image_juxtaposition.png');
+}
+#h5p-summary .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon37_summary.png');
+}
+#h5p-imagepair .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon23_image_pairing.png');
+}
+#h5p-audiorecorder .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon04_audio_recorder.png');
+}
+#h5p-agamotto .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon02_agamotto.png');
+}
+#h5p-dictation .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon09_dictation.png');
+}
+#h5p-guesstheanswer .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon19_guess_the_answer.png');
+}
+#h5p-collage .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon06_collage.png');
+}
+#h5p-branchingscenario .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon43_branching_scenario.png');
+}
+#h5p-personalityquiz .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon31_personality_quiz.png');
+}
+#h5p-questionnaire .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon32_questionnaire.png');
+}
+#h5p-threeimage .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon40_virtual_tour.png');
+}
+#h5p-chart .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon05_chart.png');
+}
+#h5p-interactivebook .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon27_interactive_book.png');
+}
+#h5p-appearin .media-left:after {
+    /*Missing icon. Use default for now */
+    /* background-image: url('/h5p/editor/icons/PLACEHOLDERPLACEHOLDER.png'); */
+}
+#h5p-twitteruserfeed .media-left:after {
+    /*Missing icon. Use default for now */
+    /* background-image: url('/h5p/editor/icons/PLACEHOLDERPLACEHOLDER.png'); */
+}
+
+/** hover */
+#h5p-interactivevideo:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon41_interactive_video_blue.png');
+}
+#h5p-coursepresentation:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon42_course_presentation_blue.png');
+}
+#h5p-multichoice:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon30_multiple_choice_blue.png');
+}
+#h5p-questionset:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon33_quiz_blue.png');
+}
+#h5p-blanks:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon14_fill_in_the_blanks_blue.png');
+}
+#h5p-dragtext:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon12_drag_the_words_blue.png');
+}
+#h5p-column:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon07_column_blue.png');
+}
+#h5p-dragquestion:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon11_drag_and_drop_blue.png');
+}
+#h5p-imagehotspots:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon21_image_hotspots_blue.png');
+}
+#h5p-accordion:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon01_accordion_blue.png');
+}
+#h5p-dialogcards:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon08_dialog_cards_blue.png');
+}
+#h5p-singlechoiceset:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon34_single_choice_set_blue.png');
+}
+#h5p-memorygame:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon29_memory_game_blue.png');
+}
+#h5p-flashcards:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon18_flashcards_blue.png');
+}
+#h5p-documentationtool:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon10_documentation_tool_blue.png');
+}
+#h5p-truefalse:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon39_true_false_question_blue.png');
+}
+#h5p-markthewords:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon28_mark_the_words_blue.png');
+}
+#h5p-imageslider:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon25_image_slider_blue.png');
+}
+#h5p-iframeembed:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon20_iframe_embedder_blue.png');
+}
+#h5p-audio:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon04_audio_recorder_blue.png');
+}
+#h5p-essay:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon13_essay_blue.png');
+}
+#h5p-arithmeticquiz:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon03_arithmetic_quiz_blue.png');
+}
+#h5p-timeline:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon38_timeline_blue.png');
+}
+#h5p-speakthewordsset:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon36_speak_the_words_set_blue.png');
+}
+#h5p-imagemultiplehotspotquestion:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon15_find_multiple_hotspots_blue.png');
+}
+#h5p-speakthewords:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon35_speak_the_words_blue.png');
+}
+#h5p-imagehotspotquestion:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon16_find_the_hotspot_blue.png');
+}
+#h5p-imagesequencing:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon24_image_sequencing_blue.png');
+}
+#h5p-findthewords:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon17_find_the_words_blue.png');
+}
+#h5p-imagejuxtaposition:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon22_image_juxtaposition_blue.png');
+}
+#h5p-summary:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon37_summary_blue.png');
+}
+#h5p-imagepair:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon23_image_pairing_blue.png');
+}
+#h5p-audiorecorder:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon04_audio_recorder_blue.png');
+}
+#h5p-agamotto:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon02_agamotto_blue.png');
+}
+#h5p-dictation:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon09_dictation_blue.png');
+}
+#h5p-guesstheanswer:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon19_guess_the_answer_blue.png');
+}
+#h5p-collage:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon06_collage_blue.png');
+}
+#h5p-branchingscenario:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon43_branching_scenario_blue.png');
+}
+#h5p-personalityquiz:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon31_personality_quiz_blue.png');
+}
+#h5p-questionnaire:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon32_questionnaire_blue.png');
+}
+#h5p-threeimage:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon40_virtual_tour_blue.png');
+}
+#h5p-chart:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon05_chart_blue.png');
+}
+#h5p-interactivebook:hover .media-left:after {
+    background-image: url('/h5p/editor/icons/Icon27_interactive_book_blue.png');
+}
+#h5p-appearin:hover .media-left:after {
+    /*Missing icon. Use default for now */
+    /* background-image: url('/h5p/editor/icons/PLACEHOLDERPLACEHOLDER_blue.png'); */
+}
+#h5p-twitteruserfeed:hover .media-left:after {
+    /*Missing icon. Use default for now */
+    /* background-image: url('/h5p/editor/icons/PLACEHOLDERPLACEHOLDER_blue.png'); */
+}
+
+@media only screen and (min-width: 576px) {
+    /* small devices */
+    /* 3 images per row */
+    /* (2*(margin+border)+3(border+margin_right+padding+ image_width))
+    /* (2*(10+2))+4((2+2)+(12)+(6+6)+(156))== 552 */
+
+    .activities-title {
+        font-size: 3em;
+        margin: 0em 0.5em;
+    }
+    .activities-subtitle {
+        font-size: 1.3em;
+        margin: 0.5em;
+    }
+    .media-left:after {
+        background-size: 80px;
+        width: 80px; 
+        height: 80px;
+    }
+    .media .media-heading {
+        font-size: 1.8em;
+    }
+  }
+  @media only screen and (min-width: 768px) {
+    /* Medium devices */
+    /* 4 images per row */
+    /* (2*(margin+border)+4(border+margin_right+padding+ image_width))
+    /* (2*(10+2))+4((2+2)+(12)+(6+6)+(158))== 768 */
+      /* .sequencing-item {
+          width: 158px;
+      } */
+    .activities-subtitle ul {
+        margin: 0.8em 0em;
+    }
+    .h5p-hub .content-type-list .media {
+        width: 23em;
+    }
+  }
+  @media only screen and (min-width: 992px) {
+    /* large devices */
+    /* 5 images per row */
+    /* (2*(10+2))+5((2+2)+(12)+(6+6)+(165.6))== 992 */
+      /* .sequencing-item {
+          width: 165.6px;
+      } */
+    .activities-title {
+        font-size: 4em;
+    }
+    .activities-subtitle {
+        font-size: 1.6em;
+    }
+  }
+  @media only screen and (min-width: 1200) {
+      /* For Extra large devices */
+      /* 6 images per row */
+      /* (2*(10+2))+6((2+2)+(12)+(6+6)+(168))== 1200 */
+
+      /* .sequencing-item {
+          width: 168px;
+      } */
+  }

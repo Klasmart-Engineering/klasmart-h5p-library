@@ -1,10 +1,11 @@
-import express from 'express';
+import express, {Request, RequestHandler} from 'express';
 
 import * as H5P from '../src';
 import {
     IRequestWithUser,
     IRequestWithLanguage
 } from '../src/adapters/expressTypes';
+import { verifyToken } from './jwt';
 
 /**
  * @param h5pEditor
@@ -105,5 +106,103 @@ export default function (
         res.status(200).end();
     });
 
+
+    router.get('/token/:token', requireTokenParameter, async (req: IRequestWithUser&IRequestWithLanguage, res, next) => {
+        try {
+            if(typeof res.locals["token"] !== "object") { res.sendStatus(401).end(); return}
+            const subject = res.locals["token"]["sub"]
+            if(typeof subject !== "string") { res.sendStatus(400).end(); return}
+
+            let contentId: string | undefined = undefined
+            switch(subject) {
+                case "edit":
+                    contentId = res.locals["token"]["contentId"]
+                    if(typeof contentId !== "string") { res.sendStatus(400).end(); return}
+                case "new":
+                    const page = await h5pEditor.render(
+                        contentId,
+                        languageOverride === 'auto'
+                            ? req.language ?? 'en'
+                            : languageOverride
+                    );
+                    res.status(200)
+                        .send(page)
+                        .end();
+                    return
+                case "delete":
+                    contentId = res.locals["token"]["contentId"]
+                    if(typeof contentId !== "string") { res.sendStatus(400).end(); return}
+                    await h5pEditor.deleteContent(contentId, req.user);
+                    res.sendStatus(200).end()
+                    return
+                case "download":
+                    contentId = res.locals["token"]["contentId"]
+                    if(typeof contentId !== "string") { res.sendStatus(400).end(); return}
+                    const {h5p: {title}} = await h5pEditor.getContent(contentId)
+                    const filename = encodeURI(`${title}.h5p`)
+                    res.setHeader("Content-Disposition", `attachment; filename=${filename}`)
+                    await h5pEditor.exportContent(contentId, res, req.user);
+                    return
+            }
+        } catch(e) {
+            console.error(e)
+        }
+        res.sendStatus(500).end()
+    })
+
+    router.post('/token/:token', requireTokenParameter, async (req: IRequestWithUser&IRequestWithLanguage, res, next) => {
+        try {
+            if(typeof res.locals["token"] !== "object") { res.sendStatus(401).end(); return}
+            const subject = res.locals["token"]["sub"]
+            if(typeof subject !== "string") { res.sendStatus(400).end(); return}
+            
+            let contentId: string | undefined = undefined
+            switch(subject) {
+                case "edit":
+                    contentId = res.locals["token"]["contentId"]
+                    if(typeof contentId !== "string") { res.sendStatus(400).end(); return}
+                case "new":
+                    if (
+                        !req.body.params ||
+                        !req.body.params.params ||
+                        !req.body.params.metadata ||
+                        !req.body.library ||
+                        !req.user
+                    ) {
+                        res.sendStatus(400).end();
+                        return;
+                    }
+                    const newContentId = await h5pEditor.saveOrUpdateContent(
+                        contentId,
+                        req.body.params.params,
+                        req.body.params.metadata,
+                        req.body.library,
+                        req.user
+                    );
+                    res.status(200)
+                        .send(JSON.stringify({ contentId: newContentId }))
+                        .end();
+                        return
+            }
+        } catch(e) {
+            console.error(e)
+        }
+        res.sendStatus(500).end()
+    })
+
     return router;
+}
+
+const requireTokenParameter: RequestHandler = async (req, res, next) => {
+    try {
+        const encodedToken = req.params.token
+        if(typeof encodedToken !== "string") { res.sendStatus(401).end(); return }
+        res.locals["token"] = await verifyToken(encodedToken)
+        next()
+    } catch(e) {
+        console.error(e)
+        res.sendStatus(403).end()
+        return
+    }
+
 }

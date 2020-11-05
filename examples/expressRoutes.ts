@@ -115,6 +115,12 @@ export default function (
 
             let contentId: string | undefined = undefined
             switch(subject) {
+                case "view":
+                    const h5pPage = await h5pPlayer.render(req.params.contentId);
+                    res.status(200)
+                        .send(h5pPage)
+                        .end();
+                    return
                 case "edit":
                     contentId = res.locals["token"]["contentId"]
                     if(typeof contentId !== "string") { res.sendStatus(400).end(); return}

@@ -20,7 +20,7 @@
         "lint": "npx tslint --project tsconfig.json --config tslint.json",
         "semantic-release": "semantic-release",
         "start:dbs": "docker-compose -f test/implementation/db/mongo-s3-docker-compose.yml up -d",
-        "start": "npx ts-node examples/express.ts",
+        "start": "ts-node examples/express.ts",
         "stop:dbs": "docker-compose -f test/implementation/db/mongo-s3-docker-compose.yml down",
         "test:coverage": "npx jest --config jest.coverage.config.js --collect-coverage --testTimeout=120000",
         "test:db": "npx jest --config jest.db.config.js --maxWorkers=${BUILD_WORKERS-`nproc`} --logHeapUsage",

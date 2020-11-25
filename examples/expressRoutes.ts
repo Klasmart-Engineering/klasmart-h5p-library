@@ -112,19 +112,22 @@ export default function (
             if(typeof res.locals["token"] !== "object") { res.sendStatus(401).end(); return}
             const subject = res.locals["token"]["sub"]
             if(typeof subject !== "string") { res.sendStatus(400).end(); return}
+            const contentId = res.locals["token"]["contentId"]
 
-            let contentId: string | undefined = undefined
+
             switch(subject) {
                 case "view":
-                    const h5pPage = await h5pPlayer.render(req.params.contentId);
+                    if(typeof contentId !== "string") { res.sendStatus(400).end(); return}
+                    const h5pPage = await h5pPlayer.render(contentId);
                     res.status(200)
                         .send(h5pPage)
                         .end();
                     return
+
                 case "edit":
-                    contentId = res.locals["token"]["contentId"]
                     if(typeof contentId !== "string") { res.sendStatus(400).end(); return}
                 case "new":
+                    if(subject === "new" && typeof contentId !== "undefined") { res.sendStatus(400).end(); return}
                     const page = await h5pEditor.render(
                         contentId,
                         languageOverride === 'auto'
@@ -135,14 +138,14 @@ export default function (
                         .send(page)
                         .end();
                     return
+
                 case "delete":
-                    contentId = res.locals["token"]["contentId"]
                     if(typeof contentId !== "string") { res.sendStatus(400).end(); return}
                     await h5pEditor.deleteContent(contentId, req.user);
                     res.sendStatus(200).end()
                     return
+
                 case "download":
-                    contentId = res.locals["token"]["contentId"]
                     if(typeof contentId !== "string") { res.sendStatus(400).end(); return}
                     const {h5p: {title}} = await h5pEditor.getContent(contentId)
                     const filename = encodeURI(`${title}.h5p`)
@@ -161,13 +164,13 @@ export default function (
             if(typeof res.locals["token"] !== "object") { res.sendStatus(401).end(); return}
             const subject = res.locals["token"]["sub"]
             if(typeof subject !== "string") { res.sendStatus(400).end(); return}
+            const contentId = res.locals["token"]["contentId"]
             
-            let contentId: string | undefined = undefined
             switch(subject) {
                 case "edit":
-                    contentId = res.locals["token"]["contentId"]
                     if(typeof contentId !== "string") { res.sendStatus(400).end(); return}
                 case "new":
+                    if(subject === "new" && typeof contentId !== "undefined") { res.sendStatus(400).end(); return}
                     if (
                         !req.body.params ||
                         !req.body.params.params ||

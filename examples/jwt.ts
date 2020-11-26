@@ -26,20 +26,23 @@ FwIDAQAB
         },
     ],
     [
-        "KidsLoopChinaUser-live",
+        "kl2-h5p",
         {
             options: {
                 audience: process.env.JWT_AUDIENCE,
-                issuer: "KidsLoopChinaUser-live",
+                issuer: "kl2-h5p",
                 algorithms: ["RS512"],
             },
             secretOrPublicKey: [
                 "-----BEGIN PUBLIC KEY-----",
-                "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDAGN9KAcc61KBz8EQAH54bFwGK",
-                "6PEQNVXXlsObwFd3Zos83bRm+3grzP0pKWniZ6TL/y7ZgFh4OlUMh9qJjIt6Lpz9",
-                "l4uDxkgDDrKHn8IrflBxjJKq0OyXqwIYChnFoi/HGjcRtJhi8oTFToSvKMqIeUuL",
-                "mWmLA8nXdDnMl7zwoQIDAQAB",
-                "-----END PUBLIC KEY-----"
+                "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsq6fWM27ag9FZ4NPREnL",
+                "RTlD7iCvyb85qhHETG23+4k+/tYXvxbNgiqL9/5GqhzPo7NWKl9crDKmGAh3g97h",
+                "S9m+Rm4oXkBLhhg3Y2BfZpdi63mgDZepKXGJIAS2msA+VRcfg/CaRloYZ1DqwmWr",
+                "4bkvUYTfs4498Nyl8RJ5xgICyjstVG2mzreDHv4cIy8bLrUzP0H2OSdDbWBTVm9j",
+                "0rDqDEEWqQKMdVokmO/MtrV0OxlBrgixDlvPrjVlNUA9bVFGySXMU4Zyw1XAujo4",
+                "oSAO221X0GIuL3VeC/U9u7jhRMdGtA7Fvx3W8/qWmgNG0UaXDAAHjyl3NctinLE5",
+                "RQIDAQAB",
+                "-----END PUBLIC KEY-----",
             ].join("\n")
         }
     ]

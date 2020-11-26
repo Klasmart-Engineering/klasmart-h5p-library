@@ -127,9 +127,9 @@ export default function (
                 case "edit":
                     if(typeof contentId !== "string") { res.sendStatus(400).end(); return}
                 case "new":
-                    if(subject === "new" && typeof contentId !== "undefined") { res.sendStatus(400).end(); return}
+                    if(subject === "new" && contentId) { res.sendStatus(400).end(); return}
                     const page = await h5pEditor.render(
-                        contentId,
+                        contentId?contentId:undefined,
                         languageOverride === 'auto'
                             ? req.language ?? 'en'
                             : languageOverride
@@ -170,7 +170,7 @@ export default function (
                 case "edit":
                     if(typeof contentId !== "string") { res.sendStatus(400).end(); return}
                 case "new":
-                    if(subject === "new" && typeof contentId !== "undefined") { res.sendStatus(400).end(); return}
+                    if(subject === "new" && contentId) { res.sendStatus(400).end(); return}
                     if (
                         !req.body.params ||
                         !req.body.params.params ||
@@ -182,7 +182,7 @@ export default function (
                         return;
                     }
                     const newContentId = await h5pEditor.saveOrUpdateContent(
-                        contentId,
+                        contentId?contentId:undefined,
                         req.body.params.params,
                         req.body.params.metadata,
                         req.body.library,

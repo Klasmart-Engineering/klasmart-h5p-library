@@ -125,6 +125,7 @@ export default function (
                     return
 
                 case "edit":
+                case "clone":
                     if(typeof contentId !== "string") { res.sendStatus(400).end(); return}
                 case "new":
                     if(subject === "new" && contentId) { res.sendStatus(400).end(); return}
@@ -165,33 +166,55 @@ export default function (
             const subject = res.locals["token"]["sub"]
             if(typeof subject !== "string") { res.sendStatus(400).end(); return}
             const contentId = res.locals["token"]["contentId"]
-            
+          
+            if (
+                !req.body.params ||
+                !req.body.params.params ||
+                !req.body.params.metadata ||
+                !req.body.library ||
+                !req.user
+            ) {
+                res.sendStatus(400).end();
+                return;
+            }
+
             switch(subject) {
                 case "edit":
-                    if(typeof contentId !== "string") { res.sendStatus(400).end(); return}
+                    if(typeof contentId !== "string" && contentId) { res.sendStatus(400).end(); return; }
                 case "new":
-                    if(subject === "new" && contentId) { res.sendStatus(400).end(); return}
-                    if (
-                        !req.body.params ||
-                        !req.body.params.params ||
-                        !req.body.params.metadata ||
-                        !req.body.library ||
-                        !req.user
-                    ) {
-                        res.sendStatus(400).end();
-                        return;
+                    if(subject === "new" && contentId) { res.sendStatus(400).end(); return; }
+                    {
+                        const newContentId =
+                            await h5pEditor.saveOrUpdateContent(
+                                // When subject is 'edit', save the update with the previous contentId
+                                // Otherwise subject is 'new', allow h5p to create new contentId
+                                subject === "edit" ? contentId : undefined,
+                                req.body.params.params,
+                                req.body.params.metadata,
+                                req.body.library,
+                                req.user
+                            );
+                        res.status(200)
+                            .send(JSON.stringify({ contentId: newContentId }))
+                            .end();
                     }
-                    const newContentId = await h5pEditor.saveOrUpdateContent(
-                        contentId?contentId:undefined,
-                        req.body.params.params,
-                        req.body.params.metadata,
-                        req.body.library,
-                        req.user
-                    );
-                    res.status(200)
-                        .send(JSON.stringify({ contentId: newContentId }))
-                        .end();
-                        return
+                    return
+                case "clone":
+                    if(typeof contentId !== "string" && contentId) { res.sendStatus(400).end(); return; }
+                    {
+                        const newContentId =
+                            await h5pEditor.cloneContent(
+                            contentId,
+                            req.body.params.params,
+                            req.body.params.metadata,
+                            req.body.library,
+                            req.user
+                        );
+                        res.status(200)
+                            .send(JSON.stringify({ contentId: newContentId }))
+                            .end();
+                    }
+                    return
             }
         } catch(e) {
             console.error(e)

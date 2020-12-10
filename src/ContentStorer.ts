@@ -128,6 +128,99 @@ export default class ContentStorer {
     }
 
     /**
+     * Saves content in the persistence system. Also copies over files from temporary storage
+     * or from other content if the content was pasted from there.
+     * @param contentId the contentId (can be undefined if previously unsaved)
+     * @param parameters the parameters of teh content (= content.json)
+     * @param metadata = content of h5p.json
+     * @param mainLibraryName the library name
+     * @param user the user who wants to save the file
+     */
+    public async cloneContent(
+        contentId: ContentId,
+        parameters: any,
+        metadata: IContentMetadata,
+        mainLibraryName: ILibraryName,
+        user: IUser
+    ): Promise<ContentId> {
+        // Get the list of files used in the old version of the content (if the content was saved before).
+        // This list will later be compared against the files referenced in the new params.
+        const filesInOldParams = await this.getFilesInParams(
+            contentId,
+            user,
+        )
+
+        // We check in the new params object for file references. From this we can determine which
+        // files must be copied from temporary storage into permanent storage and which files
+        // were deleted in the editor by the user.
+        const fileReferencesInNewParams = await this.contentFileScanner.scanForFiles(
+            parameters,
+            mainLibraryName,
+        );
+        const filesToCopyFromTemporaryStorage = await this.determineFilesToCopyFromTemporaryStorage(
+            fileReferencesInNewParams,
+            filesInOldParams,
+        );
+
+        // Store the content in persistent storage / update the content there.
+        const newContentId = await this.contentManager.createOrUpdateContent(
+            metadata,
+            parameters,
+            user,
+            undefined,
+        );
+        
+        //Copy file from old content to new content
+        const oldFilesToCopy = fileReferencesInNewParams.filter(
+            (newFile) => 
+                !newFile.temporary &&
+                filesInOldParams.some((oldFile) => newFile.filePath === oldFile),
+        )
+        let dirty = await this.copyFilesFromContent(
+            oldFilesToCopy,
+            user,
+            contentId,
+            newContentId,
+        );
+
+        // All files added to the piece of content during the editor session are only stored
+        // in temporary storage. We need to copy them over from there. In some
+        // edge cases this might involve changing the paths of the filenames
+        // in the parameters, so we set the dirty flag accordingly.
+        dirty = (await this.copyFilesFromTemporaryStorage(
+            filesToCopyFromTemporaryStorage,
+            user,
+            newContentId,
+            false, // If new content is stored, the temporary
+            // files might still be needed, e.g. if the user accidentally presses save twice. They will be deleted through
+            // the regular expiration mechanism at some point.
+        )) || dirty;
+
+        // We copy over files that were pasted from another piece of content. This might requires changing the paths
+        // in the parameters, so we have to update them by setting the dirty flag.
+        dirty = (await this.copyFilesFromPasteSource(
+            fileReferencesInNewParams,
+            user,
+            newContentId,
+        )) || dirty;
+
+        // If any paths to files were changed before (dirty === true), we have
+        // to save the content once more.
+        // TODO: In the future we might want to avoid updating content right after it was saved.
+        if (dirty) {
+            await this.contentManager.createOrUpdateContent(
+                metadata,
+                parameters,
+                user,
+                newContentId,
+            );
+        }
+
+        return newContentId;
+    }
+
+
+    /**
      * Scans through the parameters of the content and copies all referenced files into
      * temporary storage.
      * @param packageDirectory
@@ -334,6 +427,65 @@ export default class ContentStorer {
         }
         return dirty;
     }
+
+    /**
+     * Copies files from temporary storage into permanent storage
+     * @param files the list of filenames to copy
+     * @param user the user who is saving the content
+     * @param contentId the content id of the object
+     * @param deleteTemporaryFiles true if temporary files should be deleted after copying
+     * @returns true if paths were updated in the parameters and the content
+     * parameters must be saved again
+     */
+    private async copyFilesFromContent(
+        files: IFileReference[],
+        user: IUser,
+        oldContentId: string,
+        newContentId: string,
+    ): Promise<boolean> {
+        const contentExists = await this.contentManager.contentExists(oldContentId)
+        if(!contentExists) {
+            log.error(
+                `content(${oldContentId}) does not exist`
+            );
+            files.map((file) => file.context.params.path = '')
+            return true
+        }
+
+        let dirty = false;
+        for (const fileToCopy of files) {
+            try {
+                const exists = await this.contentManager.contentFileExists(oldContentId, fileToCopy.filePath)
+                if (!exists) { throw  new Error(`File does not exist in content(${oldContentId})`) }
+                const readable = await this.contentManager.getContentFileStream(
+                    oldContentId,
+                    fileToCopy.filePath,
+                    user
+                );
+                try {
+                    log.debug( `Adding file ${fileToCopy} to content id ${newContentId}`);
+                    await this.contentManager.addContentFile(
+                        newContentId,
+                        fileToCopy.filePath,
+                        readable,
+                        user
+                    );
+                } finally {
+                    if(readable) {
+                        readable.destroy();
+                    }
+                }
+            } catch(e) {
+                    log.error(
+                        `Failed to copy file(${fileToCopy}): ${e}`
+                    );
+                    fileToCopy.context.params.path = '';
+                    dirty = true;
+            }
+        }
+        return dirty;
+    }
+
 
     /**
      * Removes old files by comparing the two lists and removing those files that

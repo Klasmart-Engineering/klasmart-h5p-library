@@ -558,6 +558,50 @@ export default class H5PEditor {
         ).id;
     }
 
+    public async cloneContent(
+        contentId: ContentId,
+        parameters: ContentParameters,
+        metadata: IContentMetadata,
+        mainLibraryName: string,
+        user: IUser
+    ): Promise<ContentId> {
+        if (contentId !== undefined) {
+            log.info(`saving h5p content for ${contentId}`);
+        } else {
+            log.info('saving new content');
+        }
+
+        // validate library name
+        let parsedLibraryName: ILibraryName;
+        try {
+            parsedLibraryName = LibraryName.fromUberName(mainLibraryName, {
+                useWhitespace: true
+            });
+        } catch (error) {
+            throw new H5pError(
+                'invalid-main-library-name',
+                { message: error.message },
+                400
+            );
+        }
+
+        const h5pJson: IContentMetadata = await this.generateContentMetadata(
+            metadata,
+            parsedLibraryName,
+            this.findLibrariesInParameters(parameters)
+        );
+
+        const newContentId = await this.contentStorer.cloneContent(
+            contentId,
+            parameters,
+            h5pJson,
+            parsedLibraryName,
+            user
+        );
+        return newContentId;
+
+    }
+
     /**
      * Stores new content or updates existing content.
      * Copies over files from temporary storage if necessary.

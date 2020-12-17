@@ -11,6 +11,7 @@ COPY --chown=node:node h5p h5p
 COPY --chown=node:node examples examples
 COPY --chown=node:node src src
 COPY --chown=node:node package.json package.json
+COPY --chown=node:node package-lock.json package-lock.json
 
 RUN npm install
 RUN rm -rf h5p/content

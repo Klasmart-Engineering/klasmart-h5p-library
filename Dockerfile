@@ -14,8 +14,11 @@ COPY --chown=node:node package.json package.json
 COPY --chown=node:node package-lock.json package-lock.json
 
 RUN npm install
+RUN npm audit fix
 RUN rm -rf h5p/content
 RUN rm -rf h5p/temporary-storage
+
+RUN wget https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
 
 EXPOSE 8080
 CMD [ "npm", "start" ]

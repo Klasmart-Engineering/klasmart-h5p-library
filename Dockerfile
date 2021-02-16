@@ -13,8 +13,9 @@ COPY --chown=node:node src src
 COPY --chown=node:node package.json package.json
 COPY --chown=node:node package-lock.json package-lock.json
 
-RUN npm audit fix || true
-RUN npm install
+RUN npm audit fix --production || true
+RUN npm install --production
+RUN npm install ts-node
 RUN rm -rf h5p/content
 RUN rm -rf h5p/temporary-storage
 

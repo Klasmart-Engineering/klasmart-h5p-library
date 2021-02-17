@@ -19,7 +19,8 @@ RUN npm install ts-node
 RUN rm -rf h5p/content
 RUN rm -rf h5p/temporary-storage
 
-RUN wget https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
+RUN curl 'https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem' -o './rds-combined-ca-bundle.pem'
+RUN sha256sum rds-combined-ca-bundle.pem
 
 EXPOSE 8080
 CMD [ "npm", "start" ]

@@ -182,7 +182,7 @@ H5PEditor.language.core = {
   copiedButton: '已复制',
   pasteButton: '粘贴',
   pasteAndReplaceButton: '粘贴并替代',
-  pasteContent: '替代内容'
+  pasteContent: '替代内容',
   confirmPasteContent: '这样您将用剪贴板中的内容替换当前内容，当前内容将丢失。您确定要继续吗',
   confirmPasteButtonText: '替代内容',
   copyToClipboard: '将H5P内容复制到剪贴板',

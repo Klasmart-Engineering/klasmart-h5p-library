@@ -427,6 +427,14 @@
         {
           "label": "Texto del cuerpo a mostrar si el navegador no soporta reconocimiento del habla",
           "default": "Por favor inténtelo nuevamente en otro navegador como por ejemplo Chrome"
+        },
+        {
+          "label": "Descripción de tecnología asistiva para botón \"Mostrar solución\" ",
+          "default": "Mostrar la solución. El trabajo será marcado con su solución correcta."
+        },
+        {
+          "label": "Descripción de tecnología asistiva para botón \"Reintentar\" ",
+          "default": "Reintentar el trabajo. Reiniciar todas las respuestas e iniciar el trabajo de nuevo."
         }
       ]
     }

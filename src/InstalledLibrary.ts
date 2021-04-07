@@ -75,7 +75,7 @@ export default class InstalledLibrary implements IInstalledLibrary {
      */
     public compare(otherLibrary: IInstalledLibrary): number {
         return (
-            this.title.localeCompare(otherLibrary.title) ||
+            this.machineName.localeCompare(otherLibrary.machineName) ||
             this.majorVersion - otherLibrary.majorVersion ||
             this.minorVersion - otherLibrary.minorVersion
         );

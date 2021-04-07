@@ -19,11 +19,28 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
     that.isAttempted = false;
     that.score = 0;
 
+    // Set defaults
     that.params = $.extend(true, {}, {
-      l10n:{
-        showSolution: "ShowSolution",
-        resume: "Resume",
-        audioNotSupported: "Audio Error"
+      taskDescription: 'Drag to arrange the images in the correct sequence',
+      altTaskDescription: 'Make the following list be ordered correctly. Use the cursor keys to navigate through the list items, use space to activate or deactivate an item and the cursor keys to move it',
+      sequenceImages: [],
+      behaviour: {
+        enableSolution: true,
+        enableRetry: true,
+        enableResume: true
+      },
+      l10n: {
+        totalMoves: 'Total Moves',
+        timeSpent: 'Time spent',
+        score: 'You got @score of @total points',
+        checkAnswer: 'Check',
+        tryAgain: 'Retry',
+        showSolution: 'Show Solution',
+        resume: 'Resume',
+        audioNotSupported: 'Audio Error',
+        ariaPlay: 'Play the corresponding audio',
+        ariaMoveDescription: 'Moved @cardDesc from @posSrc to @posDes',
+        ariaCardDesc: 'sequencing item'
       }
     }, parameters);
 

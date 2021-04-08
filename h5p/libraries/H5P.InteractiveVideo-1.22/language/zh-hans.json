@@ -154,6 +154,10 @@
                         ]
                       },
                       {
+                        "label": "Continue automatically",
+                        "description": "If set, video will continue automatically after task is complete. Will not continue if full score is required, but user has not achieved full score."
+                      },
+                      {
                         "label": "继续前需要全部答对",
                         "description": "注意若要此功能正常运作，请为互动影片启用「防止跳播影片」的设定项。"
                       }
@@ -251,8 +255,16 @@
           "description": "在连接影片后自动播放"
         },
         {
+          "label": "Auto-fullscreen on play",
+          "description": "Go to fullscreen when playing video"
+        },
+        {
           "label": "影片循环播放",
           "description": "在影片播放完后会重新播放"
+        },
+        {
+          "label": "Frames per second",
+          "description": "Set the video's frames per second explicitly using frame based timecodes."
         },
         {
           "label": "覆写「显示正解」按钮",

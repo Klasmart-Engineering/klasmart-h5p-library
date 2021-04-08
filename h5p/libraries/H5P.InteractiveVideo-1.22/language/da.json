@@ -154,6 +154,10 @@
                         ]
                       },
                       {
+                        "label": "Continue automatically",
+                        "description": "If set, video will continue automatically after task is complete. Will not continue if full score is required, but user has not achieved full score."
+                      },
+                      {
                         "label": "Kræv at alle opgaver er rigtige før der kan fortsættes",
                         "description": "For at opnå den bedste funktionalitet bør denne indstilling bruges sammen med indstillingen \"Undgå at spole frem i en video\" af den interaktive video."
                       }
@@ -251,8 +255,16 @@
           "description": "Begynd afspilning af video automatisk"
         },
         {
+          "label": "Auto-fullscreen on play",
+          "description": "Go to fullscreen when playing video"
+        },
+        {
           "label": "Kør video i loop",
           "description": "Aktiver at video skal køre i loop"
+        },
+        {
+          "label": "Frames per second",
+          "description": "Set the video's frames per second explicitly using frame based timecodes."
         },
         {
           "label": "Overskriv \"Vi svar\"-knap",

@@ -265,28 +265,32 @@
 .h5p-interactive-video .h5p-text-interaction > .h5p-interaction-button,
 .h5p-interactive-video .h5p-table-interaction > .h5p-interaction-button,
 .h5p-interactive-video .h5p-link-interaction > .h5p-interaction-button,
-.h5p-interactive-video .h5p-image-interaction > .h5p-interaction-button {
+.h5p-interactive-video .h5p-image-interaction > .h5p-interaction-button,
+.h5p-interactive-video .h5p-audio-interaction > .h5p-interaction-button {
   background-color: #1d5cff;
 }
 
 .h5p-interactive-video .h5p-text-interaction:hover > .h5p-interaction-button,
 .h5p-interactive-video .h5p-table-interaction:hover > .h5p-interaction-button,
 .h5p-interactive-video .h5p-link-interaction:hover > .h5p-interaction-button,
-.h5p-interactive-video .h5p-image-interaction:hover > .h5p-interaction-button {
+.h5p-interactive-video .h5p-image-interaction:hover > .h5p-interaction-button,
+.h5p-interactive-video .h5p-audio-interaction:hover > .h5p-interaction-button {
   background-color: #003fdf;
 }
 
 .h5p-interactive-video .h5p-text-interaction:focus > .h5p-interaction-button,
 .h5p-interactive-video .h5p-table-interaction:focus > .h5p-interaction-button,
 .h5p-interactive-video .h5p-link-interaction:focus > .h5p-interaction-button,
-.h5p-interactive-video .h5p-image-interaction:focus > .h5p-interaction-button {
+.h5p-interactive-video .h5p-image-interaction:focus > .h5p-interaction-button,
+.h5p-interactive-video .h5p-audio-interaction:focus > .h5p-interaction-button {
   border-color: #70b0ff;
 }
 
 .h5p-interactive-video .h5p-text-interaction:active > .h5p-interaction-button,
 .h5p-interactive-video .h5p-table-interaction:active > .h5p-interaction-button,
 .h5p-interactive-video .h5p-link-interaction:active > .h5p-interaction-button,
-.h5p-interactive-video .h5p-image-interaction:active > .h5p-interaction-button {
+.h5p-interactive-video .h5p-image-interaction:active > .h5p-interaction-button,
+.h5p-interactive-video .h5p-audio-interaction:active > .h5p-interaction-button {
   background-color: #163c9b;
   box-shadow: 0 0.15em 0.25em 0 rgba(0, 0, 0, 0.5);
 }
@@ -294,7 +298,8 @@
 .h5p-interactive-video .h5p-text-interaction > .h5p-interaction-button:before,
 .h5p-interactive-video .h5p-table-interaction > .h5p-interaction-button:before,
 .h5p-interactive-video .h5p-link-interaction > .h5p-interaction-button:before,
-.h5p-interactive-video .h5p-image-interaction > .h5p-interaction-button:before {
+.h5p-interactive-video .h5p-image-interaction > .h5p-interaction-button:before,
+.h5p-interactive-video .h5p-audio-interaction > .h5p-interaction-button:before {
   font-family: 'H5PFontAwesome4';
   content: "\f055";
 }
@@ -1048,6 +1053,7 @@
 .h5p-interactive-video .h5p-seekbar-interaction.h5p-ivhotspot-interaction:before,
 .h5p-interactive-video .h5p-seekbar-interaction.h5p-goto-timecode:before,
 .h5p-interactive-video .h5p-seekbar-interaction.h5p-image-interaction:before,
+.h5p-interactive-video .h5p-seekbar-interaction.h5p-audio-interaction:before,
 .h5p-interactive-video .h5p-seekbar-interaction.h5p-text-interaction:before,
 .h5p-interactive-video .h5p-seekbar-interaction.h5p-link-interaction:before,
 .h5p-interactive-video .h5p-seekbar-interaction.h5p-table-interaction:before {
@@ -1717,6 +1723,14 @@
   width: 100%;
 }
 
+.h5p-interactive-video .h5p-interaction.h5p-poster.h5p-dragquestion-interaction.h5p-overflow-hidden-interaction .h5p-interaction-outer {
+  overflow: hidden;
+}
+
+.h5p-interactive-video .h5p-dragquestion-interaction .h5p-dragquestion.h5p-compact-mode .h5p-question-buttons {
+  width: calc(100% - 2em);
+}
+
 /* Center images in big dialog */
 
 .h5p-interactive-video .h5p-dialog.h5p-big[data-lib="H5P.Image"] .h5p-dialog-inner {
@@ -2035,6 +2049,31 @@
 
 .h5p-interactive-video .h5p-control:not(.h5p-no-tooltip):hover > .h5p-interactive-video-tooltip {
   visibility: visible;
+}
+
+.h5p-interactive-video .h5p-interaction.h5p-poster.h5p-audio-interaction {
+  background: rgba(255, 255, 255, 0);
+  box-shadow: none;
+}
+
+.h5p-interactive-video .h5p-interaction.h5p-audio-interaction .h5p-audio-wrapper {
+  height: 100%;
+}
+
+.h5p-interactive-video .h5p-dialog-interaction.h5p-audio-wrapper {
+  height: 54px;
+  /* Fixed height used in H5P.Audio */
+}
+
+.h5p-interactive-video.mobile .h5p-dialog-interaction.h5p-audio-wrapper .h5p-audio-inner {
+  height: 4em;
+  width: 4em;
+}
+
+.h5p-interactive-video.mobile .h5p-dialog-interaction.h5p-audio-wrapper .h5p-audio-inner .h5p-audio-minimal-button {
+  font-size: 2em;
+  height: 100%;
+  width: 100%;
 }.h5p-iv-interactions-announcer {
   position: absolute;
   top: 0;

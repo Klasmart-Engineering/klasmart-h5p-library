@@ -154,6 +154,10 @@
                         ]
                       },
                       {
+                        "label": "Continue automatically",
+                        "description": "If set, video will continue automatically after task is complete. Will not continue if full score is required, but user has not achieved full score."
+                      },
+                      {
                         "label": "Requerir puntuación máxima para la tarea antes de seguir",
                         "description": "Para una mejor funcionalidad, esta opción debe utilizarse junto con la opción \"Evitar saltar hacia adelante en un vídeo\" del vídeo interactivo."
                       }
@@ -247,12 +251,32 @@
           "description": "Introduzca el código de tiempo en el formato M:SS"
         },
         {
+          "label": "Auto-play video",
+          "description": "Start playing the video automatically"
+        },
+        {
+          "label": "Auto-fullscreen on play",
+          "description": "Go to fullscreen when playing video"
+        },
+        {
           "label": "Reproducir en loop",
           "description": "Seleccionar si el vídeo debería reproducirse en loop"
         },
         {
+          "label": "Frames per second",
+          "description": "Set the video's frames per second explicitly using frame based timecodes."
+        },
+        {
           "label": "Sobre-escribir botón \"Mostrar solución\"",
           "description": "Esta opción determina si el botón \"Mostrar solución\" se mostrará para todas las preguntas, se desactivará para todos o se configurará para cada pregunta individualmente."
+          "options": [
+            {
+              "label": "Habilitado"
+            },
+            {
+              "label": "Desactivado"
+            }
+          ]
         },
         {
           "label": "Sobre-escribir botón  \"Reintentar\"",
@@ -269,18 +293,6 @@
         {
           "label": "Mostrar el menú de marcadores en la carga",
           "description": "Esta función no está disponible en iPad cuando se utiliza YouTube como fuente de video",
-          "options": [
-            {
-              "label": "Habilitado"
-            },
-            {
-              "label": "Deshabilitado"
-            }
-          ]
-        },
-        {
-          "label": "Iniciar con el menú de marcadores abierto",
-          "description": "Esta función no está disponible en iPad cuando se utiliza YouTube como fuente de video"
         },
         {
           "label": "Mostrar botón para rebobinar 10 segundos"

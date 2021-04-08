@@ -190,6 +190,10 @@
 .h5p-image-interaction-icon:before {
   content: "\f03e";
 }
+.h5p-interactive-video-dragnbar .h5p-dragnbar-audio-button:before,
+.h5p-audio-interaction-icon:before {
+  content: "\f028";
+}
 .h5p-interactive-video-dragnbar .h5p-dragnbar-gotoquestion-button:before,
 .h5p-gotoquestion-interaction-icon:before {
   content: "\f277";

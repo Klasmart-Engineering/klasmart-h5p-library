@@ -63,6 +63,8 @@ H5PEditor.widgets.imageMultipleHotspotQuestion = H5PEditor.ImageMultipleHotspotQ
      */
     this.dialogOpen = false;
 
+    // OMG! I am not cleaning that up now ...
+
     /**
      * Task description semantics. Used to create task description field in editor.
      * @type {*[]}
@@ -97,7 +99,7 @@ H5PEditor.widgets.imageMultipleHotspotQuestion = H5PEditor.ImageMultipleHotspotQ
      * Hotspot settings semantics, used to make the popup on hotspots.
      * @type {Object|Array}
      */
-    this.elementFields = H5P.cloneObject(field.fields[3].field.fields[0].fields, true);
+    this.elementFields = H5P.cloneObject(field.fields[4].field.fields[0].fields, true);
 
     this.initQuestion();
   }
@@ -125,6 +127,15 @@ H5PEditor.widgets.imageMultipleHotspotQuestion = H5PEditor.ImageMultipleHotspotQ
           self.hideDialog();
         }
       });
+    });
+
+    // Check for rotation scale distortion
+    this.parent.on('stepChanged', function(event) {
+      if (event.data.id === 1) {
+        self.elements.forEach(function(element) {
+          self.toolbar.checkScaleDistortion(element.$element);
+        });
+      }
     });
 
     // Make sure widget can pass readies (used when processing semantics)
@@ -306,7 +317,9 @@ H5PEditor.widgets.imageMultipleHotspotQuestion = H5PEditor.ImageMultipleHotspotQ
     }
 
     // Activate toolbar, add buttons and attach it to $wrapper
-    this.toolbar = new H5P.DragNBar(this.createButtons(), this.$gui, this.$guiWrapper);
+    this.toolbar = new H5P.DragNBar(this.createButtons(), this.$gui, this.$guiWrapper, {
+      disableRotate: false
+    });
 
     // Must set containerEm
     self.toolbar.dnr.setContainerEm(parseFloat(self.$gui.css('font-size')));
@@ -348,6 +361,33 @@ H5PEditor.widgets.imageMultipleHotspotQuestion = H5PEditor.ImageMultipleHotspotQ
 
       // Apply new position
       self.toolbar.$element.css(newElementStyles);
+
+      self.fitElement(self.toolbar.$element, hotspotParams.computedSettings);
+    });
+
+    // Stopped rotation listener
+    self.toolbar.dnr.on('stoppedRotating', function (event) {
+      const id = self.toolbar.$element.data('id');
+      const hotspotParams = self.params.hotspot[id];
+
+      hotspotParams.computedSettings.angle = event.data.angle;
+
+      const sizeNPosition = self.toolbar.getElementSizeNPosition();
+
+      self.toolbar.dnr.trigger('stoppedResizing', {
+        useBrowserSize: false,
+        height: sizeNPosition.height / self.toolbar.dnr.containerEm,
+        width: sizeNPosition.width / self.toolbar.dnr.containerEm
+      });
+    });
+
+    // Stopped rotation listener
+    self.toolbar.dnr.on('updatedTransform', function (event) {
+      const id = self.toolbar.$element.data('id');
+      const hotspotParams = self.params.hotspot[id];
+
+      hotspotParams.computedSettings.scaleX = event.data.scale.x;
+      hotspotParams.computedSettings.scaleY = event.data.scale.y;
     });
 
     this.toolbar.stopMovingCallback = function (x, y) {
@@ -472,10 +512,15 @@ H5PEditor.widgets.imageMultipleHotspotQuestion = H5PEditor.ImageMultipleHotspotQ
     // Create inner figure
     $('<div>', {
       'class': 'h5p-hotspot-element ' + elementParams.computedSettings.figure
-    }).appendTo(element.$element);
+    }).css({
+      transform: 'rotate(' + elementParams.computedSettings.angle + 'deg) scale(' + elementParams.computedSettings.scaleX + ', ' + elementParams.computedSettings.scaleY + ')'
+    })
+    .appendTo(element.$element);
 
     // Make it possible to focus and move element
-    var dnbElement = this.toolbar.add(element.$element);
+    var dnbElement = this.toolbar.add(element.$element, undefined, {
+      disableRotate: false
+    });
 
     dnbElement.contextMenu.on('contextMenuEdit', function () {
       self.editElement(element, elementParams.computedSettings.x, elementParams.computedSettings.y);
@@ -760,6 +805,47 @@ H5PEditor.widgets.imageMultipleHotspotQuestion = H5PEditor.ImageMultipleHotspotQ
     // Set containerEm
     this.toolbar.dnr.setContainerEm(parseFloat(this.$gui.css('font-size')));
     this.toolbar.blurAll();
+  };
+
+  /**
+   * Applies the updated position and size properties to the given element.
+   *
+   * All properties are converted to percentage.
+   *
+   * @param {H5P.jQuery} $element
+   * @param {Object} elementParams
+   */
+  ImageMultipleHotspotQuestionEditor.prototype.fitElement = function ($element, elementParams) {
+    var sizeNPosition = this.toolbar.getElementSizeNPosition($element);
+    var updated = H5P.DragNBar.fitElementInside(sizeNPosition);
+
+    var pW = (sizeNPosition.containerWidth / 100);
+    var pH = (sizeNPosition.containerHeight / 100);
+
+    // Set the updated properties
+    var style = {};
+
+    if (updated.width !== undefined) {
+      elementParams.width = updated.width / pW;
+      style.width = elementParams.width + '%';
+      updated.width = updated.width / this.toolbar.dnr.containerEm;
+    }
+    if (updated.left !== undefined) {
+      elementParams.x = updated.left / pW;
+      style.left = elementParams.x + '%';
+    }
+    if (updated.height !== undefined) {
+      elementParams.height = updated.height / pH;
+      style.height = elementParams.height + '%';
+      updated.height = updated.height / this.toolbar.dnr.containerEm;
+    }
+    if (updated.top !== undefined) {
+      elementParams.y = updated.top / pH;
+      style.top = elementParams.y + '%';
+    }
+
+    // Apply style
+    $element.css(style);
   };
 
   /**

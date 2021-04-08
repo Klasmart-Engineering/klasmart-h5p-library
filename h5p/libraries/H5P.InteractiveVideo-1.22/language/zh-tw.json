@@ -154,6 +154,10 @@
                         ]
                       },
                       {
+                        "label": "Continue automatically",
+                        "description": "If set, video will continue automatically after task is complete. Will not continue if full score is required, but user has not achieved full score."
+                      },
+                      {
                         "label": "繼續前需要完成任務的分數",
                         "description": "為獲得最佳效果，此選像應與選項─影像中不能點擊跳過結合使用."
                       }
@@ -251,8 +255,16 @@
           "description": "自動開始撥放影像"
         },
         {
+          "label": "Auto-fullscreen on play",
+          "description": "Go to fullscreen when playing video"
+        },
+        {
           "label": "循環播放",
           "description": "確認影像是否應循環播放"
+        },
+        {
+          "label": "Frames per second",
+          "description": "Set the video's frames per second explicitly using frame based timecodes."
         },
         {
           "label": "“查看解法”功能鈕",

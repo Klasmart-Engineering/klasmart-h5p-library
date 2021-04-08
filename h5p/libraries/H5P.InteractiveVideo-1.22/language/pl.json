@@ -154,6 +154,10 @@
                         ]
                       },
                       {
+                        "label": "Continue automatically",
+                        "description": "If set, video will continue automatically after task is complete. Will not continue if full score is required, but user has not achieved full score."
+                      },
+                      {
                         "label": "Wymagaj w pełni poprawnie wykonanego zadania przed kontynuacją",
                         "description": "Najlepszy efekt uzyskasz używając tej opcji razem z opcją 'Zapobiegaj przeskakiwaniu do przodu'."
                       }
@@ -251,8 +255,16 @@
           "description": "Automatycznie zacznij odtwarzanie"
         },
         {
+          "label": "Auto-fullscreen on play",
+          "description": "Go to fullscreen when playing video"
+        },
+        {
           "label": "Pętla",
           "description": "Odtwarzaj wideo w pętli: gdy dojdzie do końca, zacznie się znów od początku"
+        },
+        {
+          "label": "Frames per second",
+          "description": "Set the video's frames per second explicitly using frame based timecodes."
         },
         {
           "label": "Przycisk 'Pokaż rozwiązanie' (globalny)",

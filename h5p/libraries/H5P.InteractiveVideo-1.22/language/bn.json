@@ -154,6 +154,10 @@
                         ]
                       },
                       {
+                        "label": "Continue automatically",
+                        "description": "If set, video will continue automatically after task is complete. Will not continue if full score is required, but user has not achieved full score."
+                      },
+                      {
                         "label": "সামনে যাওয়ার জন্য পুরো নম্বর পেতে হবে",
                         "description": "সবচেয়ে ভালো ফল পাওয়ার জন্য \"ভিডিওতে সামনে উল্লম্ফন বন্ধ করুন\" অপশনের সাথে যুক্তভাবে ব্যবহার করতে হবে।"
                       }
@@ -251,8 +255,16 @@
           "description": "আপনা থেকেই ভিডিও চালু করো।"
         },
         {
+          "label": "Auto-fullscreen on play",
+          "description": "Go to fullscreen when playing video"
+        },
+        {
           "label": "লুপ ভিডিও",
           "description": "ভিডিওটা লুপ আকারে বারবার চলবে"
+        },
+        {
+          "label": "Frames per second",
+          "description": "Set the video's frames per second explicitly using frame based timecodes."
         },
         {
           "label": "\"সমাধান দেখাও\" বাটনকে ওভাররাইড করো",

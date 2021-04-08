@@ -154,6 +154,10 @@
                         ]
                       },
                       {
+                        "label": "Continue automatically",
+                        "description": "If set, video will continue automatically after task is complete. Will not continue if full score is required, but user has not achieved full score."
+                      },
+                      {
                         "label": "Απαιτείται να έχει ολοκληρώσει ο χρήστης την άσκηση προτού συνεχίσει",
                         "description": "Για βέλτιστη λειτουργικότητα αυτή η επιλογή πρέπει να χρησιμοποιηθεί σε συνδυασμό με την επιλογή \"Να μην επιτρέπεται η παράκαμψη ενός τμήματος του βίντεο\"."
                       }
@@ -251,8 +255,16 @@
           "description": "Το βίντεο ξεκινά να παίζει αυτόματα"
         },
         {
+          "label": "Auto-fullscreen on play",
+          "description": "Go to fullscreen when playing video"
+        },
+        {
           "label": "Αυτόματη επανάληψη αναπαραγωγής",
           "description": "Επιλέξτε εάν η αναπαραγωγή του βίντεο θα επαναλαμβάνεται κάθε φορά που τελειώνει"
+        },
+        {
+          "label": "Frames per second",
+          "description": "Set the video's frames per second explicitly using frame based timecodes."
         },
         {
           "label": "Αντικατάσταση προεπιλεγμένων ρυθμίσεων κουμπιού \"Λύση\"",

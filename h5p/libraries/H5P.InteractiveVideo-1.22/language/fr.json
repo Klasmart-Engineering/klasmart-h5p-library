@@ -154,6 +154,10 @@
                         ]
                       },
                       {
+                        "label": "Continue automatically",
+                        "description": "If set, video will continue automatically after task is complete. Will not continue if full score is required, but user has not achieved full score."
+                      },
+                      {
                         "label": "Exiger la complétude de la tâche avant d'avancer",
                         "description": "Pour un meilleur fonctionnement cette option doit être utilisée avec \"Empêcher de sauter en avant dans la vidéo\"."
                       }
@@ -251,8 +255,16 @@
           "description": "Démarrer la vidéo automatiquement"
         },
         {
+          "label": "Auto-fullscreen on play",
+          "description": "Go to fullscreen when playing video"
+        },
+        {
           "label": "Vidéo en boucle",
           "description": "Cochez cette case pour que la vidéo tourne en boucle"
+        },
+        {
+          "label": "Frames per second",
+          "description": "Set the video's frames per second explicitly using frame based timecodes."
         },
         {
           "label": "Cacher le bouton \"Voir la solution\"",

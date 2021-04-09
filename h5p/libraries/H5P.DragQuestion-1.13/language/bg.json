@@ -29,7 +29,7 @@
         },
         {
           "label": "Задача",
-          "description": "Започнете със задаване на на зоните за пускане.<br/>След това поставете елементите, които могат да се пускат, и отметнете подходящите зони на пускане.<br/>Последно редактирайте отново зоните за пускане и посочете верните отговори.",
+          "description": "Започнете със задаване на на зоните за пускане.<br />След това поставете елементите, които могат да се пускат, и отметнете подходящите зони на пускане.<br />Последно редактирайте отново зоните за пускане и посочете верните отговори.",
           "fields": [
             {
               "label": "Елементи",
@@ -53,6 +53,20 @@
                   {
                     "label": "Безкраен брой инстанции на елементи",
                     "description": "Копира този елемент, така че да може да се плъзга в няколко зони на пускане."
+                  },
+                  {
+                    "label": "Audio",
+                    "description": "Audio samples",
+                    "fields": [
+                      {
+                        "label": "Picked up",
+                        "description": "Custom audio to play when draggable is picked up. Will override general audio setting."
+                      },
+                      {
+                        "label": "Dropped",
+                        "description": "Custom audio to play when draggable is dropped. Will override general audio setting."
+                      }
+                    ]
                   }
                 ]
               }
@@ -134,6 +148,28 @@
               }
             ]
           }
+        }
+      ]
+    },
+    {
+      "label": "Audio",
+      "description": "Audio samples",
+      "fields": [
+        {
+          "label": "Picked up",
+          "description": "Audio to play when draggable is picked up."
+        },
+        {
+          "label": "Dropped",
+          "description": "Audio to generally play when draggable is dropped."
+        },
+        {
+          "label": "Dropped correctly",
+          "description": "Audio to play when draggable is dropped on correct dropzone."
+        },
+        {
+          "label": "Dropped wrong",
+          "description": "Audio to play when draggable is dropped on wrong dropzone."
         }
       ]
     },
@@ -254,6 +290,14 @@
     {
       "label": "Текстово представяне на бутона за обяснение на резултатите",
       "default": "Покажи обяснение на резултата"
+    },
+    {
+      "label": "Етикет за помощни технологии бутон \"Провери\" ",
+      "default": "Провери отговорите. Отговорите ще бъдат маркирани като правилни, неправилни, или некоректни."
+    },
+    {
+      "label": "Етикет за помощни технологии бутон \"Опитай отново\" ",
+      "default": "Опитай отново задачата. Всички отговори ще бъдат изчистени и задачата ще може да бъде решена отново."
     }
   ]
 }

@@ -29,7 +29,7 @@
         },
         {
           "label": "Opgave",
-          "description": "Begin met het bepalen van je neerzetgebieden.<br/>Vervolgens, plaats je de sleepbare onderdelen en markeer je de juiste neerzetgebieden.<br/>Tenslotte, bewerk je het element opnieuw en vink je de juiste neerzetgebieden aan.",
+          "description": "Begin met het bepalen van je neerzetgebieden.<br />Vervolgens, plaats je de sleepbare onderdelen en markeer je de juiste neerzetgebieden.<br />Tenslotte, bewerk je het element opnieuw en vink je de juiste neerzetgebieden aan.",
           "fields": [
             {
               "label": "Elementen",
@@ -53,6 +53,20 @@
                   {
                     "label": "Oneindig aantal elementen",
                     "description": "Kloon dit element zodat het naar meerdere neerzetgebieden kan worden gesleept."
+                  },
+                  {
+                    "label": "Audio",
+                    "description": "Audio samples",
+                    "fields": [
+                      {
+                        "label": "Picked up",
+                        "description": "Custom audio to play when draggable is picked up. Will override general audio setting."
+                      },
+                      {
+                        "label": "Dropped",
+                        "description": "Custom audio to play when draggable is dropped. Will override general audio setting."
+                      }
+                    ]
                   }
                 ]
               }
@@ -134,6 +148,28 @@
               }
             ]
           }
+        }
+      ]
+    },
+    {
+      "label": "Audio",
+      "description": "Audio samples",
+      "fields": [
+        {
+          "label": "Picked up",
+          "description": "Audio to play when draggable is picked up."
+        },
+        {
+          "label": "Dropped",
+          "description": "Audio to generally play when draggable is dropped."
+        },
+        {
+          "label": "Dropped correctly",
+          "description": "Audio to play when draggable is dropped on correct dropzone."
+        },
+        {
+          "label": "Dropped wrong",
+          "description": "Audio to play when draggable is dropped on wrong dropzone."
         }
       ]
     },
@@ -244,7 +280,7 @@
       "default": "Onjuist antwoord"
     },
     {
-      "label": "Titel voor het onderdeel dat feedback bevat over juiste/ onjuiste antwoorden",
+      "label": "Titel voor het onderdeel dat feedback bevat over juiste/onjuiste antwoorden",
       "default": "Feedback"
     },
     {
@@ -254,6 +290,14 @@
     {
       "label": "Tekstuele omschrijving van de score uitleg knop",
       "default": "Toon uitleg score"
+    },
+    {
+      "label": "Ondersteunende technologie label voor \"Controleer\" knop",
+      "default": "Controleer de antwoorden. De antwoorden worden genmarkeerd als juist, onjuist, of niet-beantwoord."
+    },
+    {
+      "label": "Ondersteunende technologie label voor \"Opnieuw\" knop",
+      "default": "Probeer de taak opnieuw. Reset alle antwoorden en start de taak opnieuw."
     }
   ]
 }

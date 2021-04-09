@@ -95,8 +95,9 @@
                   "description": "Choose the type of content you would like to add.",
                   "importance": "medium",
                   "options": [
-                      "H5P.AdvancedText 1.1",
-                      "H5P.Image 1.1"
+                    "H5P.AdvancedText 1.1",
+                    "H5P.Image 1.1",
+                    "H5P.Audio 1.4"
                   ]
                 },
                 {
@@ -145,6 +146,30 @@
                   "importance": "low",
                   "description": "Clones this element so that it can be dragged to multiple drop zones.",
                   "default": false
+                },
+                {
+                  "name": "audio",
+                  "type": "group",
+                  "label": "Audio",
+                  "importance": "low",
+                  "description": "Audio samples",
+                  "optional": true,
+                  "fields": [
+                    {
+                      "name": "pickedUp",
+                      "type": "audio",
+                      "label": "Picked up",
+                      "description": "Custom audio to play when draggable is picked up. Will override general audio setting.",
+                      "importance": "low"
+                    },
+                    {
+                      "name": "dropped",
+                      "type": "audio",
+                      "label": "Dropped",
+                      "description": "Custom Custom audio to play when draggable is dropped. Will override general audio setting.",
+                      "importance": "low"
+                    }
+                  ]
                 }
               ]
             }
@@ -340,6 +365,44 @@
     ]
   },
   {
+    "name": "audio",
+    "type": "group",
+    "label": "Audio",
+    "importance": "low",
+    "description": "Audio samples",
+    "optional": true,
+    "fields": [
+      {
+        "name": "pickedUp",
+        "type": "audio",
+        "label": "Picked up",
+        "description": "Audio to play when draggable is picked up.",
+        "importance": "low"
+      },
+      {
+        "name": "dropped",
+        "type": "audio",
+        "label": "Dropped",
+        "description": "Audio to generally play when draggable is dropped.",
+        "importance": "low"
+      },
+      {
+        "name": "droppedCorrect",
+        "type": "audio",
+        "label": "Dropped correctly",
+        "description": "Audio to play when draggable is dropped on correct dropzone.",
+        "importance": "low"
+      },
+      {
+        "name": "droppedWrong",
+        "type": "audio",
+        "label": "Dropped wrong",
+        "description": "Audio to play when draggable is dropped on wrong dropzone.",
+        "importance": "low"
+      }
+    ]
+  },
+  {
     "name": "behaviour",
     "type": "group",
     "label": "Behavioural settings",
@@ -404,6 +467,24 @@
         }
       },
       {
+        "name": "autoCheckSolutions",
+        "type": "boolean",
+        "label": "Check solution automatically",
+        "importance": "low",
+        "description": "If this field is set, the content type will check for completion automatically without showing the check button.",
+        "default": false,
+        "optional": true
+      },
+      {
+        "name": "compactMode",
+        "type": "boolean",
+        "label": "Compact mode",
+        "importance": "low",
+        "description": "If this field is set, the content will use the full area defined by the task size ratio and not show detailed feedback.",
+        "default": false,
+        "optional": true
+      },
+      {
         "name": "backgroundOpacity",
         "type": "text",
         "label": "Background opacity for draggables",
@@ -464,7 +545,7 @@
         "label": "Show Title",
         "importance": "low",
         "description": "Uncheck this option if you do not want this title to be displayed. The title will only be displayed in summaries, statistics etc.",
-        "default": true
+        "default": false
       }
     ]
   },
@@ -573,6 +654,22 @@
     "type": "text",
     "label": "Textual representation of the score explanation button",
     "default": "Show score explanation",
+    "importance": "low",
+    "common": true
+  },
+  {
+    "name": "a11yCheck",
+    "type": "text",
+    "label": "Assistive technology label for \"Check\" button",
+    "default": "Check the answers. The responses will be marked as correct, incorrect, or unanswered.",
+    "importance": "low",
+    "common": true
+  },
+  {
+    "name": "a11yRetry",
+    "type": "text",
+    "label": "Assistive technology label for \"Retry\" button",
+    "default": "Retry the task. Reset all responses and start the task over again.",
     "importance": "low",
     "common": true
   }

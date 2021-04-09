@@ -6,7 +6,10 @@ npm-debug.log*
 # Compiled files
 build
 build-ide
-h5p
+h5p/content
+h5p/core
+h5p/editor
+h5p/temporary-storage
 coverage
 
 # vscode

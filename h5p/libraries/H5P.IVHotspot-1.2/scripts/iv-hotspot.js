@@ -18,7 +18,8 @@ H5P.IVHotspot = (function ($, EventDispatcher) {
     parameters = $.extend(true, {
       destination: {
         type: 'timecode',
-        time: '0'
+        time: '0',
+        autojump: false
       },
       visuals: {
         shape: 'rectangular',
@@ -100,6 +101,13 @@ H5P.IVHotspot = (function ($, EventDispatcher) {
         else if (parameters.texts.labelColor) {
           $a.css('color', parameters.texts.labelColor);
         }
+      }
+
+      if (parameters.destination.autojump && parameters.destination.type === 'timecode' && !self.parent.editor) {
+        // Timeout needed because IV expects visible interactions
+        setTimeout(function () {
+          self.trigger('goto', parameters.destination.time);
+        }, 0);
       }
     };
   }

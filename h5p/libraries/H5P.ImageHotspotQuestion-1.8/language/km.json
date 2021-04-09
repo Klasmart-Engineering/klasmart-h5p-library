@@ -61,6 +61,10 @@
                 {
                   "label": "Close button text",
                   "default": "បិទ"
+                },
+                {
+                  "label": "Default message for correct hotspots",
+                  "default": "Correct!"
                 }
               ]
             }
@@ -71,6 +75,10 @@
     {
       "label": "Textual representation of the score bar for those using a readspeaker",
       "default": "អ្នកទទួលបានពិន្ទុ :num លើ :total"
+    },
+    {
+      "label": "Assistive technology description for \"Retry\" button",
+      "default": "Retry the task. Reset all responses and start the task over again."
     }
   ]
 }

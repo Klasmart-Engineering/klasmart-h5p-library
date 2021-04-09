@@ -61,6 +61,10 @@
                 {
                   "label": "Tekst sluit-knop",
                   "default": "Sluit"
+                },
+                {
+                  "label": "Default message for correct hotspots",
+                  "default": "Correct!"
                 }
               ]
             }
@@ -69,8 +73,12 @@
       ]
     },
     {
-      "label": "Textual representation of the score bar for those using a readspeaker",
+      "label": "Tekstuele weergave van de scorebalk voor wie een readspeaker gebruikt",
       "default": "Je hebt :num van de :total points"
+    },
+    {
+      "label": "Assistive technology description for \"Retry\" button",
+      "default": "Retry the task. Reset all responses and start the task over again."
     }
   ]
 }

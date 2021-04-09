@@ -61,6 +61,10 @@
                 {
                   "label": "Itxi botoiaren testua",
                   "default": "Itxi"
+                },
+                {
+                  "label": "Default message for correct hotspots",
+                  "default": "Correct!"
                 }
               ]
             }
@@ -71,6 +75,10 @@
     {
       "label": "Puntuazio barraren testu adierazpena irakurgailua erabiltzen dutenentzat",
       "default": ":total puntutik :num lortu dituzu"
+    },
+    {
+      "label": "Assistive technology description for \"Retry\" button",
+      "default": "Retry the task. Reset all responses and start the task over again."
     }
   ]
 }

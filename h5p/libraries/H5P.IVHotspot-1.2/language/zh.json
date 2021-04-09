@@ -42,6 +42,10 @@
               "label": "網路位址"
             }
           ]
+        },
+        {
+          "label": "Autojump",
+          "description": "If checked, video will jump to timecode without user interaction. Does not work for URLs."
         }
       ]
     },

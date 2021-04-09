@@ -81,6 +81,14 @@
             "optional": true
           }
         ]
+      },
+      {
+        "name": "autojump",
+        "type": "boolean",
+        "label": "Autojump",
+        "importance": "high",
+        "description": "If checked, video will jump to timecode without user interaction. Does not work for URLs.",
+        "optional": true
       }
     ]
   },

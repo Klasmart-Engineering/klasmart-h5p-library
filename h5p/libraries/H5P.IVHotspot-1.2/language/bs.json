@@ -42,6 +42,10 @@
               "label": "URL"
             }
           ]
+        },
+        {
+          "label": "Autojump",
+          "description": "If checked, video will jump to timecode without user interaction. Does not work for URLs."
         }
       ]
     },

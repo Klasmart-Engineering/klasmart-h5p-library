@@ -61,6 +61,10 @@
                 {
                   "label": "Sulge nupu tekst",
                   "default": "Sulge"
+                },
+                {
+                  "label": "Default message for correct hotspots",
+                  "default": "Correct!"
                 }
               ]
             }
@@ -71,6 +75,10 @@
     {
       "label": "Punktisumma riba tekstiline esitamine neile, kes kasutavad tekstilugerit",
       "default": "Sa said :num punkti :total punktist"
+    },
+    {
+      "label": "Assistive technology description for \"Retry\" button",
+      "default": "Retry the task. Reset all responses and start the task over again."
     }
   ]
 }

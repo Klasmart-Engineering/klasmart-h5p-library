@@ -61,6 +61,10 @@
                 {
                   "label": "Ετικέτα κουμπιού κλεισίματος",
                   "default": "Κλείσιμο"
+                },
+                {
+                  "label": "Default message for correct hotspots",
+                  "default": "Correct!"
                 }
               ]
             }
@@ -71,6 +75,10 @@
     {
       "label": "Κειμενική απόδοση της μπάρας βαθμολογίας για όσους χρησιμοποιούν ακουστική υποβοήθηση",
       "default": "Έχεις :num από :total βαθμούς"
+    },
+    {
+      "label": "Assistive technology description for \"Retry\" button",
+      "default": "Retry the task. Reset all responses and start the task over again."
     }
   ]
 }

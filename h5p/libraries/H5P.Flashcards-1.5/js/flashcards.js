@@ -31,6 +31,8 @@ H5P.Flashcards = (function ($, XapiGenerator) {
       showSolutionText: "Correct answer",
       answerShortText: "A:",
       informationText: "Information",
+      useSpeechRecognition: false,
+      inputLanguage: 'en-US',
       caseSensitive: false,
       results: "Results",
       ofCorrect: "@score of @total correct",
@@ -38,9 +40,17 @@ H5P.Flashcards = (function ($, XapiGenerator) {
       retry : "Retry",
       cardAnnouncement: 'Incorrect answer. Correct answer was @answer',
       pageAnnouncement: 'Page @current of @total',
+      audioNotSupported: 'Your browser does not support this audio.',
+      listening: 'Listening ...',
+      noMicrophoneAccess: 'No microphone access',
+      pushToSpeak: 'Push to speak',
+      or: 'or'
     }, options);
     this.$images = [];
     this.hasBeenReset = false;
+
+    this.audioButtons = [];
+    this.speechRecognitions = [];
 
     this.on('resize', this.resize, this);
   }
@@ -135,7 +145,7 @@ H5P.Flashcards = (function ($, XapiGenerator) {
       userAnswer = (userAnswer ? userAnswer.toLowerCase() : userAnswer);
     }
 
-    return answer === userAnswer;
+    return C.splitAlternatives(answer).indexOf(userAnswer, '') !== -1;
   }
 
   /**
@@ -155,7 +165,11 @@ H5P.Flashcards = (function ($, XapiGenerator) {
    * @return {number}
    */
   C.prototype.getMaxScore = function () {
-    return this.options.cards.length;
+    return this.options.cards
+      .filter( function (card) {
+        return typeof card.answer !== 'undefined';
+      })
+      .length;
   };
 
   /**
@@ -269,6 +283,7 @@ H5P.Flashcards = (function ($, XapiGenerator) {
 
     $showResults
       .on('click', function () {
+        that.resetAudio();
         that.enableResultScreen();
       })
       .appendTo($inner.parent());
@@ -308,7 +323,64 @@ H5P.Flashcards = (function ($, XapiGenerator) {
       '</div>')
       .appendTo($inner);
 
-    $card.find('.h5p-imageholder').prepend(this.$images[index]);
+    // Cards may not require an answer and thus no extra fields
+    if (!card.answer) {
+      $card.find('.h5p-answer').addClass('h5p-hidden');
+      $card.find('.h5p-foot').addClass('h5p-no-answer');
+
+      if (!card.text) {
+        $card.find('.h5p-imageholder').addClass('h5p-image-only');
+        $card.find('.h5p-foot').addClass('h5p-hidden');
+        $card.find('.h5p-flashcard-overlay').addClass('h5p-hidden');
+      }
+    }
+
+    const audioButton = new H5P.Flashcards.AudioButton(
+      that.contentId,
+      {
+        sample: card.audio,
+        audioNotSupported: that.options.audioNotSupported,
+        a11y: {
+          play: that.options.audioPlay,
+          pause: that.options.audioPause
+        }
+      },
+      {} // Prepared for previous state
+    );
+
+    // Keep track for silencing
+    this.audioButtons.push(audioButton);
+
+    $card.find('.h5p-imageholder')
+      .prepend(this.$images[index])
+      .prepend(audioButton.getDOM());
+
+    // Add speech recognition to retrieve answer from microphone
+    if (this.options.useSpeechRecognition) {
+      const speechRecognition = new H5P.SpeechRecognition(
+        {
+          language: this.options.inputLanguage,
+          l10n: {
+            listening: this.options.listening,
+            pushToSpeak: this.options.pushToSpeak,
+            noMicrophoneAccess: this.options.noMicrophoneAccess
+          },
+          showLabel: false
+        },
+        {
+          onResult: (result) => {
+            $card.find('.h5p-textinput').val(result.phrases[0]).focus();
+          }
+        }
+      );
+      $card.find('.h5p-input').prepend(speechRecognition.getButtonDOM());
+
+      // Keep track for disabling/enabling
+      this.speechRecognitions.push(speechRecognition);
+
+      // Give button space next to text input field
+      $card.find('.h5p-textinput').addClass('h5p-uses-speech-recognition');
+    }
 
     $card.prepend($('<div class="h5p-flashcard-overlay"></div>').on('click', function () {
       if ($(this).parent().hasClass('h5p-previous')) {
@@ -332,6 +404,8 @@ H5P.Flashcards = (function ($, XapiGenerator) {
     var $input = $card.find('.h5p-textinput');
 
     var handleClick = function () {
+      that.resetAudio();
+
       var card = that.options.cards[index];
       var userAnswer = $input.val().trim();
       var userCorrect = isCorrectAnswer(card, userAnswer, that.options.caseSensitive);
@@ -343,6 +417,11 @@ H5P.Flashcards = (function ($, XapiGenerator) {
 
       if (!that.options.showSolutionsRequiresInput || userAnswer !== '' || userCorrect) {
         that.numAnswered++;
+
+        // Deactivate input options
+        if (that.speechRecognitions && that.speechRecognitions.length > index) {
+          that.speechRecognitions[index].disableButton();
+        }
         $input.add(this).attr('disabled', true);
 
         that.answers[index] = userAnswer;
@@ -368,7 +447,10 @@ H5P.Flashcards = (function ($, XapiGenerator) {
 
           $('<div class="h5p-solution">' +
             '<span class="solution-icon h5p-rotate-in"></span>' +
-            '<span class="solution-text">' + (that.options.cards[index].answer ? that.options.showSolutionText + ': <span>' + that.options.cards[index].answer + '</span>' : '') + '</span>' +
+            '<span class="solution-text">' +
+              (that.options.cards[index].answer ?
+                that.options.showSolutionText + ': <span>' + C.splitAlternatives(that.options.cards[index].answer).join('<span> ' + that.options.or + ' </span>') + '</span>' :
+                '') + '</span>' +
           '</div>').appendTo($card.find('.h5p-imageholder'));
 
           const ariaText = that.options.cardAnnouncement.replace(
@@ -378,7 +460,7 @@ H5P.Flashcards = (function ($, XapiGenerator) {
           that.$ariaAnnouncer.html(ariaText);
         }
 
-        done = (that.numAnswered >= that.options.cards.length);
+        done = (that.numAnswered >= that.getMaxScore());
 
         if (!done) {
           that.nextTimer = setTimeout(that.next.bind(that), 3500);
@@ -389,7 +471,7 @@ H5P.Flashcards = (function ($, XapiGenerator) {
       }
 
       if (done) {
-        that.triggerXAPICompleted(that.getScore(), that.getMaxScore());
+        that.trigger(XapiGenerator.getXapiEvent(that));
         that.trigger('resize');
       }
     };
@@ -406,6 +488,21 @@ H5P.Flashcards = (function ($, XapiGenerator) {
 
     return $card;
   };
+
+  /**
+   * Reset audio from button.
+   * @param {number} [id] Id of button to be reset.
+   */
+  C.prototype.resetAudio = function(id) {
+    if (typeof id === 'number' && id >= 0 && id < this.audioButtons.length) {
+      this.audioButtons[id].resetAudio();
+      return;
+    }
+
+    this.audioButtons.forEach(function(button) {
+      button.resetAudio();
+    });
+  }
 
   /**
    * Create result screen
@@ -483,19 +580,20 @@ H5P.Flashcards = (function ($, XapiGenerator) {
 
       var $resultsAnswer = $('<div/>', {
         'class': 'h5p-results-answer',
-        'text': this.answers[i]
+        'text': (card.answer) ? this.answers[i] : ''
       }).appendTo($listItem);
 
-      $resultsAnswer.prepend('<span>' + this.options.answerShortText + ' </span>');
-
-      if (!userCorrect) {
+      if (card.answer && !userCorrect) {
+        $resultsAnswer.prepend('<span>' + this.options.answerShortText + ' </span>');
         $resultsAnswer.append('<span> ' + this.options.showSolutionText + ': </span>');
-        $resultsAnswer.append('<span class="h5p-correct">' + card.answer + '</span>');
+        $resultsAnswer.append('<span class="h5p-correct">' + C.splitAlternatives(card.answer).join('<span> ' + this.options.or + ' </span>') + '</span>');
       }
 
-      $('<div/>', {
-        'class': 'h5p-results-box'
-      }).appendTo($listItem);
+      if (card.answer) {
+        $('<div/>', {
+          'class': 'h5p-results-box'
+        }).appendTo($listItem);
+      }
     }
     if (this.getScore() < this.getMaxScore()) {
       this.$retryButton.removeClass('h5p-invisible');
@@ -586,6 +684,8 @@ H5P.Flashcards = (function ($, XapiGenerator) {
     var that = this;
     var $next = this.$current.next();
 
+    that.resetAudio();
+
     clearTimeout(this.prevTimer);
     clearTimeout(this.nextTimer);
 
@@ -600,7 +700,7 @@ H5P.Flashcards = (function ($, XapiGenerator) {
     that.$prevButton.removeClass('h5p-hidden');
     that.setProgress();
 
-    if ($next.is(':last-child') && that.numAnswered == that.options.cards.length) {
+    if ($next.is(':last-child') && that.numAnswered == that.getMaxScore()) {
       that.$container.find('.h5p-show-results').show();
     }
   };
@@ -611,6 +711,8 @@ H5P.Flashcards = (function ($, XapiGenerator) {
   C.prototype.previous = function () {
     var that = this;
     var $prev = this.$current.prev();
+
+    that.resetAudio();
 
     clearTimeout(this.prevTimer);
     clearTimeout(this.nextTimer);
@@ -649,6 +751,10 @@ H5P.Flashcards = (function ($, XapiGenerator) {
    * @private
    */
   C.prototype.resetTask = function () {
+    this.speechRecognitions.forEach(function(button) {
+      button.enableButton();
+    });
+
     this.numAnswered = 0;
     this.hasBeenReset = true;
     this.cardsLoaded();
@@ -747,6 +853,29 @@ H5P.Flashcards = (function ($, XapiGenerator) {
    * @type {H5P.jQuery}
    */
   C.$converter = $('<div/>');
+
+  /**
+   * Split text by | while respecting \| as escaped |.
+   * @param {string} text Text to split.
+   * @param {string} [delimiter='|'] Delimiter.
+   * @param {string} [escaper='\\'] Escape sequence, default: single backslash.
+   * @return {string[]} Split text.
+   */
+  C.splitAlternatives = function (text, delimiter, escaper) {
+    text = text || '';
+    delimiter = delimiter || '|';
+    escaper = escaper || '\\';
+
+    while (text.indexOf(escaper + delimiter) !== -1) {
+      text = text.replace(escaper + delimiter, '\u001a');
+    }
+
+    return text
+      .split(delimiter)
+      .map(function (element) {
+        return element = element.replace('\u001a', delimiter);
+      });
+  };
 
   /**
    * Get xAPI data.

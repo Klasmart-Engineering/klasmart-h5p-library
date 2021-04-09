@@ -1,7 +1,7 @@
 {
   "semantics": [
     {
-      "label": "Oppgåvetekst"
+      "label": "Task description"
     },
     {
       "widgets": [
@@ -9,22 +9,22 @@
           "label": "Default"
         }
       ],
-      "label": "Kort",
-      "entity": "kort",
+      "label": "Cards",
+      "entity": "card",
       "field": {
-        "label": "Kort",
+        "label": "Card",
         "fields": [
           {
-            "label": "Spørsmål",
-            "description": "Valfritt tekstleg spørsmål. (Kortet kan innehalde bilde, tekst, eller begge deler)"
+            "label": "Question",
+            "description": "Optional textual question for the card. (The card may use just an image, just a text or both)"
           },
           {
-            "label": "Svar",
-            "description": "Valfritt svar(fasit) for kortet. Use a pipe symbol | to split alternative solutions. Use \\| if a solution should contain a |."
+            "label": "Answer",
+            "description": "Optional answer (solution) for the card. Use a pipe symbol | to split alternative solutions. Use \\| if a solution should contain a |."
           },
           {
-            "label": "Bilde",
-            "description": "Valfritt tekstleg spørsmål. (Kortet kan innehalde bilde, tekst, eller begge deler)"
+            "label": "Image",
+            "description": "Optional image for the card. (The card may use just an image, just a text or both)"
           },
           {
             "label": "Alternative text for image"
@@ -34,10 +34,10 @@
             "description": "Optional audio for the card."
           },
           {
-            "label": "Tips",
+            "label": "Tip",
             "fields": [
               {
-                "label": "Tipstekst"
+                "label": "Tip text"
               }
             ]
           }
@@ -45,21 +45,21 @@
       }
     },
     {
-      "label": "Tekst for framdrift",
-      "default": "Kort @card av @total",
-      "description": "Tekst som viser kva for kort ein er på. Variablar tilgjengelig: @card og @total. Eksempel: 'Kort @card av @total'"
+      "label": "Progress text",
+      "default": "Card @card of @total",
+      "description": "Progress text, variables available: @card and @total. Example: 'Card @card of @total'"
     },
     {
-      "label": "Tekst for \"Neste\" knappen",
-      "default": "Neste"
+      "label": "Text for the next button",
+      "default": "Next"
     },
     {
-      "label": "Tekst for \"Forrige\" knappen",
-      "default": "Førre"
+      "label": "Text for the previous button",
+      "default": "Previous"
     },
     {
-      "label": "Tekst for \"Sjekk svar\" knappen",
-      "default": "Sjekk"
+      "label": "Text for the check answers button",
+      "default": "Check"
     },
     {
       "label": "Allow user to enter answer using speech recognition"
@@ -436,48 +436,48 @@
       ]
     },
     {
-      "label": "Krev inndata frå brukaren før fasit blir vist."
+      "label": "Require user input before the solution can be viewed"
     },
     {
-      "label": "Tekst for \"svar\" feltet",
-      "default": "Ditt svar"
+      "label": "Text for the answer input field",
+      "default": "Your answer"
     },
     {
-      "label": "Tekst for riktig svar",
-      "default": "Riktig"
+      "label": "Text for correct answer",
+      "default": "Correct"
     },
     {
-      "label": "Tekst for feil svar",
-      "default": "Feil"
+      "label": "Text for incorrect answer",
+      "default": "Incorrect"
     },
     {
-      "label": "Tekst for vis svar.",
-      "default": "Riktig svar"
+      "label": "Show solution text",
+      "default": "Correct answer"
     },
     {
       "label": "Separator of solution alternatives",
       "default": "or"
     },
     {
-      "label": "Tekst for tittel på Resultatskjerm",
-      "default": "Resultat"
+      "label": "Text for results title",
+      "default": "Results"
     },
     {
-      "label": "Tekst for antall korrekt",
-      "default": "@score av @total korrekt",
-      "description": "Resultattekst. Variablar tilgjengelig: @score og @total. Eksempel: '@score av @total korrekt'"
+      "label": "Text for number of correct",
+      "default": "@score of @total correct",
+      "description": "Result text, variables available: @score and @total. Example: '@score of @total correct'"
     },
     {
-      "label": "Tekst for \"vis resultatar\"",
-      "default": "Vis resultat"
+      "label": "Text for show results",
+      "default": "Show results"
     },
     {
-      "label": "Tekst for kort svartekst",
-      "default": "S:"
+      "label": "Text for short answer label",
+      "default": "A:"
     },
     {
       "label": "Text for \"retry\" button",
-      "default": "Prøv igjen"
+      "default": "Retry"
     },
     {
       "label": "Case sensitive",
@@ -485,12 +485,12 @@
     },
     {
       "label": "Incorrect text for assistive technologies",
-      "default": "Feil svar. Det rette svaret var @answer",
+      "default": "Incorrect answer. Correct answer was @answer",
       "description": "Text that will be announced to assistive technologies. Use @answer as variable."
     },
     {
       "label": "Card change for assistive technologies",
-      "default": "Side @current av @total",
+      "default": "Page @current of @total",
       "description": "Text that will be announced to assistive technologies when navigating between cards. Use @current and @total as variables."
     },
     {

@@ -8,6 +8,9 @@
   outline: 1px solid #0099ff;
 }
 
+.h5peditor .h5p-dragnbar-element > .h5p-scale-distortion {
+}
+
 /* Display outline on label for h5p nil */
 .h5p-dragnbar-element.h5p-nil-interaction.focused,
 .h5p-dragnbar-element.h5p-nil-interaction:hover {

@@ -16,8 +16,9 @@ H5P.DragNBarContextMenu = (function ($, EventDispatcher) {
    * @param {string} [directionLock] Which way to lock resizing. Possible values:
    *  - 'vertical'
    *  - 'horizontal'
+   * @param {boolean} [disableRotate=true] Disable rotation.
    */
-  function ContextMenu($container, DragNBarElement, hasCoordinates, disableResize, disableCopy, directionLock) {
+  function ContextMenu($container, DragNBarElement, hasCoordinates, disableResize, disableCopy, directionLock, disableRotate) {
     var self = this;
     EventDispatcher.call(this);
 
@@ -82,6 +83,12 @@ H5P.DragNBarContextMenu = (function ($, EventDispatcher) {
      * @type {boolean}
      */
     this.canResize = !disableResize;
+
+    /**
+     * Determines if rotation angle can be changed.
+     * @type {boolean}
+     */
+    this.canRotate = (typeof disableRotate === 'undefined') ? false : !disableRotate;
 
     /**
      * Determines if the transform panel is showing.
@@ -266,6 +273,92 @@ H5P.DragNBarContextMenu = (function ($, EventDispatcher) {
   };
 
   /**
+   * Create rotation angle in context menu
+   */
+  ContextMenu.prototype.addRotation = function () {
+    // Coordinates disabled or exists
+    if (!this.canRotate || this.$rotation) {
+      return;
+    }
+
+    var self = this;
+
+    self.$rotation = $('<div/>', {
+      'class': 'h5p-dragnbar-rotation'
+    });
+
+    // Add label
+    $('<div/>', {
+      'class': 'h5p-dragnbar-label',
+      appendTo: self.$rotation,
+      text: H5PEditor.t('H5P.DragNBar', 'rotationLabel')
+    });
+
+    /**
+     * Update the rotation picker.
+     */
+    const updateRotation = function () {
+      let angle = parseFloat(this.value);
+      if (isNaN(angle)) {
+        return;
+      }
+
+      // Only use degrees of 0-359
+      angle = angle % 360;
+      if (angle < 0) {
+        angle += 360;
+      }
+
+      this.value = angle;
+
+      self.dnb.dnr.trigger('stoppedRotating', {
+        angle: angle
+      });
+    };
+
+    // Add input for width
+    self.$angle = self.getNewInput({
+      type: 'angle',
+      label: H5PEditor.t('H5P.DragNBar', 'rotationLabel'),
+      $container: self.$rotation,
+      handler: updateRotation,
+      disabled: !this.canRotate
+    });
+
+    // Add rotation picker
+    this.$rotation.mousedown(function () {
+      self.dnb.pressed = true;
+    }).appendTo(this.$transformPanel);
+  };
+
+  /**
+   * Update rotation.
+   *
+   * @param {Number} angle Angle.
+   */
+  ContextMenu.prototype.updateRotation = function (angle) {
+    if (!this.canRotate) {
+      return;
+    }
+
+    if (typeof angle !== 'number') {
+      const $element = this.dnbElement.getElement();
+      const $outer = $element.children().first();
+
+      angle = this.dnb.getCSSTransformValues($outer).angle;
+    }
+
+    // Only use degrees of 0-359
+    angle = angle % 360;
+    if (angle < 0) {
+      angle += 360;
+    }
+
+    // Set angle
+    this.$angle.val(Math.round(angle));
+  };
+
+  /**
    * Create coordinates in context menu
    */
   ContextMenu.prototype.addDimensions = function () {
@@ -320,7 +413,13 @@ H5P.DragNBarContextMenu = (function ($, EventDispatcher) {
     };
 
     // Add input for width
-    self.$width = self.getNewInput('width', H5PEditor.t('H5P.DragNBar', 'widthLabel'), self.$dimensions, updateDimensions, self.directionLock === 'vertical');
+    self.$width = self.getNewInput({
+      type: 'width',
+      label: H5PEditor.t('H5P.DragNBar', 'widthLabel'),
+      $container: self.$dimensions,
+      handler: updateDimensions,
+      disabled: self.directionLock === 'vertical'
+    });
 
     $('<span/>', {
       'class': 'h5p-dragnbar-dimensions-separator',
@@ -328,7 +427,13 @@ H5P.DragNBarContextMenu = (function ($, EventDispatcher) {
       appendTo: self.$dimensions
     });
 
-    self.$height = self.getNewInput('height', H5PEditor.t('H5P.DragNBar', 'heightLabel'), self.$dimensions, updateDimensions, self.directionLock === 'horizontal');
+    self.$height = self.getNewInput({
+      type: 'height',
+      label: H5PEditor.t('H5P.DragNBar', 'heightLabel'),
+      $container: self.$dimensions,
+      handler: updateDimensions,
+      disabled: self.directionLock === 'horizontal'
+    });
 
     self.dnb.dnr.on('moveResizing', function () {
       self.updateDimensions();
@@ -378,40 +483,43 @@ H5P.DragNBarContextMenu = (function ($, EventDispatcher) {
   /**
    * Creates a new input field for modifying an element property.
    *
-   * @param {string} type
-   * @param {string} label
-   * @param {H5P.jQuery} $container
-   * @param {function} handler
-   * @param {boolean} disabled
+   * @params {object} params Parameters.
+   * @param {string} params.type
+   * @param {string} params.label
+   * @param {H5P.jQuery} params.$container
+   * @param {function} params.handler
+   * @param {boolean} params.disabled
+   * @param {number} [params.step=1] Step to increase/decrease
    * @returns {H5P.jQuery}
    */
-  ContextMenu.prototype.getNewInput = function (type, label, $container, handler, disabled) {
+  ContextMenu.prototype.getNewInput = function (params) {
+    params.step = params.step || 1;
     // Wrap input element with label (implicit labeling)
     var $wrapper = $('<div/>', {
-      'class': 'h5p-dragnbar-input h5p-dragnbar-' + type,
-      'aria-label': label,
-      appendTo: $container
+      'class': 'h5p-dragnbar-input h5p-dragnbar-' + params.type,
+      'aria-label': params.label,
+      appendTo: params.$container
     });
 
     // Create input field
     var $input = $('<input/>', {
       maxLength: 5,
-      disabled: disabled === true,
+      disabled: params.disabled === true,
       on: {
         change: function () {
-          handler.call(this, type);
+          params.handler.call(this, params.type);
         },
         keydown: function (event) {
           if (event.which === 13) { // Enter key
-            handler.call(this, type);
+            params.handler.call(this, params.type);
             $input.focus().select();
           }
           else if (event.which === 38 || event.which === 40) { // Up key
             // Increase or decrease the number by using the arrows keys
             var currentValue = parseFloat($input.val());
             if (!isNaN(currentValue)) {
-              $input.val(currentValue + (event.which === 38 ? 1 : -1));
-              handler.call(this, type);
+              $input.val(currentValue + (event.which === 38 ? params.step : -params.step));
+              params.handler.call(this, params.type);
             }
           }
         },
@@ -500,6 +608,11 @@ H5P.DragNBarContextMenu = (function ($, EventDispatcher) {
     // Add dimensions
     if (this.canResize) {
       this.addDimensions();
+      enableTransform = true;
+    }
+
+    if (this.canRotate) {
+      this.addRotation();
       enableTransform = true;
     }
 

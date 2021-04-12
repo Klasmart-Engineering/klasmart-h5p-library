@@ -8,6 +8,7 @@
     "unableToPaste": "Objektia ei pystytty liittämään. Valitettavasti objektia jota yrität liittä ei tueta tässä aineistomuodossa tai sen nykyisessä versiossa.",
     "sizeLabel": "Koko",
     "positionLabel": "Sijainti",
+    "rotationLabel": "Rotation",    
     "heightLabel": "Korkeus",
     "widthLabel": "Leveys",
     "copyLabel": "Kopioi",

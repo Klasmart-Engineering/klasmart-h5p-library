@@ -8,6 +8,7 @@
     "unableToPaste": "Ei saa seda objekti kleepida - see sisutüüp või versioon ei toeta objekti, mida püüad kleepida.",
     "sizeLabel": "Suurus",
     "positionLabel": "Asukoht",
+    "rotationLabel": "Rotation",    
     "heightLabel": "Kõrgus",
     "widthLabel": "Laius",
     "copyLabel": "Kopeeri",

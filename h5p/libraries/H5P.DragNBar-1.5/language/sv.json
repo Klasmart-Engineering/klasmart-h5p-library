@@ -8,6 +8,7 @@
     "unableToPaste": "Kan inte klistra in detta objekt. Tyvärr så stödjer inte denna innehållstyp eller version inklistring av detta objekt.",
     "sizeLabel": "Storlek",
     "positionLabel": "Position",
+    "rotationLabel": "Rotation",    
     "heightLabel": "Höjd",
     "widthLabel": "Bredd",
     "copyLabel": "Kopiera",

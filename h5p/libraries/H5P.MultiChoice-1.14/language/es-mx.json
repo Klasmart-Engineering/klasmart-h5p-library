@@ -105,7 +105,6 @@
         },
         {
           "label": "Retroalimentación disponible (no se muestra)",
-          "label": "Retroalimentación disponible (no se muestra)",
           "default": "Retroalimentación disponible",
           "description": "Texto de accesibilidad utilizado para los lectores en voz alta"
         },
@@ -135,6 +134,18 @@
         {
           "label": "Texto para el mensaje \"Requiere respuesta\"",
           "default": "Por favor responde antes de ver la solución"
+        },
+        {
+          "label": "Descripción de tecnología asistiva para botón \"Revisar\" ",
+          "default": "Revisar las respuestas. Las respuestas serán marcadas como correcta, incorrecta o sin contestar."
+        },
+        {
+          "label": "Descripción de tecnología asistiva para botón \"Mostrar solución\" ",
+          "default": "Mostrar la solución. El trabajo será marcado con su solución correcta."
+        },
+        {
+          "label": "Descripción de tecnología asistiva para botón \"Reintentar\" ",
+          "default": "Reintentar el trabajo. Reiniciar todas las respuestas e iniciar el trabajo de nuevo."
         }
       ]
     },

@@ -37,6 +37,35 @@
     ]
   },
   {
+    "name": "answerType",
+    "type": "select",
+    "label": "Answer type",
+    "description": "Choose type of answer options.",
+    "options": [
+      {
+        "value": "text",
+        "label": "Text"
+      },
+      {
+        "value": "image",
+        "label": "Image"
+      },
+      {
+        "value": "audio",
+        "label": "Audio"
+      },
+      {
+        "value": "video",
+        "label": "Video"
+      },
+      {
+        "value": "imageaudio",
+        "label": "Image and audio"
+      }
+    ],
+    "default": "text"
+  },
+  {
     "name": "question",
     "type": "text",
     "importance": "medium",
@@ -69,6 +98,86 @@
       "importance": "high",
       "fields": [
         {
+          "name": "image",
+          "type": "group",
+          "label": "Image",
+          "expanded": true,
+          "fields": [
+            {
+              "name": "imageOption",
+              "optional": true,
+              "type": "library",
+              "options": [
+                "H5P.Image 1.1"
+              ],
+              "importance": "medium",
+              "label": "Image"
+            }
+          ],
+          "widget": "showWhen",
+          "detach": true,
+          "showWhen": {
+            "type": "or",
+            "rules": [
+              {
+                "field": "../../answerType",
+                "equals": ["image", "imageaudio"]
+              }
+            ]
+          }
+        },
+        {
+          "name": "audio",
+          "type": "group",
+          "label": "Audio",
+          "expanded": true,
+          "fields": [
+            {
+              "name": "audioOption",
+              "optional": true,
+              "type": "audio",
+              "importance": "medium",
+              "label": "Audio"
+            }
+          ],
+          "widget": "showWhen",
+          "detach": true,
+          "showWhen": {
+            "type": "or",
+            "rules": [
+              {
+                "field": "../../answerType",
+                "equals": ["audio", "imageaudio"]
+              }
+            ]
+          }
+        },
+        {
+          "name": "video",
+          "type": "group",
+          "label": "Video",
+          "expanded": true,
+          "fields": [
+            {
+              "name": "videoOption",
+              "optional": true,
+              "type": "video",
+              "importance": "medium",
+              "label": "Video"
+            }
+          ],
+          "widget": "showWhen",
+          "detach": true,
+          "showWhen": {
+            "rules": [
+              {
+                "field": "../../answerType",
+                "equals": ["video"]
+              }
+            ]
+          }
+        },
+        {
           "name": "text",
           "type": "text",
           "importance": "medium",
@@ -81,6 +190,24 @@
             "sup",
             "code"
           ]
+        },
+        {
+          "name": "displayText",
+          "type": "boolean",
+          "label": "Display text",
+          "default": true,
+          "optional": true,
+          "importance": "low",
+          "widget": "showWhen",
+          "detach": true,
+          "showWhen": {
+            "rules": [
+              {
+                "field": "../../answerType",
+                "equals": ["audio", "image", "video", "imageaudio"]
+              }
+            ]
+          }
         },
         {
           "name": "correct",
@@ -325,6 +452,38 @@
         "type": "text",
         "default": "Please answer before viewing the solution",
         "optional": true
+      },
+      {
+        "label": "Audio not supported message",
+        "importance": "low",
+        "name": "audioNotSupported",
+        "type": "text",
+        "default": "Your browser does not support this audio",
+        "optional": true
+      },
+      {
+        "name": "a11yCheck",
+        "type": "text",
+        "label": "Assistive technology description for \"Check\" button",
+        "default": "Check the answers. The responses will be marked as correct, incorrect, or unanswered.",
+        "importance": "low",
+        "common": true
+      },
+      {
+        "name": "a11yShowSolution",
+        "type": "text",
+        "label": "Assistive technology description for \"Show Solution\" button",
+        "default": "Show the solution. The task will be marked with its correct solution.",
+        "importance": "low",
+        "common": true
+      },
+      {
+        "name": "a11yRetry",
+        "type": "text",
+        "label": "Assistive technology description for \"Retry\" button",
+        "default": "Retry the task. Reset all responses and start the task over again.",
+        "importance": "low",
+        "common": true
       }
     ]
   },
@@ -380,6 +539,28 @@
           {
             "value": "single",
             "label": "Single Choice (Radio Buttons)"
+          }
+        ]
+      },
+      {
+        "name": "columns",
+        "type": "select",
+        "label": "Columns",
+        "importance": "low",
+        "description": "Select the number of columns.",
+        "default": "auto",
+        "options": [
+          {
+            "value": "auto",
+            "label": "Automatic"
+          },
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
           }
         ]
       },

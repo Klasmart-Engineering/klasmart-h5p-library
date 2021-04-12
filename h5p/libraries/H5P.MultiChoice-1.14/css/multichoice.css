@@ -17,6 +17,22 @@
   margin: 1em 0;
 }
 
+.h5p-multichoice .h5p-answers.h5p-answer-type-text.h5p-multi-columns-two,
+.h5p-multichoice .h5p-answers.h5p-answer-type-audio.h5p-multi-columns-two {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.h5p-multichoice .h5p-answers.h5p-answer-type-image.h5p-multi-columns-two,
+.h5p-multichoice .h5p-answers.h5p-answer-type-imageaudio.h5p-multi-columns-two,
+.h5p-multichoice .h5p-answers.h5p-answer-type-video.h5p-multi-columns-two {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 .h5p-multichoice .h5p-answer {
   list-style: none;
   margin: 0.5em 0;
@@ -26,14 +42,39 @@
   cursor: pointer;
 }
 
-.h5p-multichoice .h5p-answer.h5p-has-tip .h5p-alternative-container,
-.h5p-multichoice .h5p-answer.h5p-should-not .h5p-alternative-container {
+.h5p-multichoice .h5p-answers.h5p-answer-type-text.h5p-multi-columns-two .h5p-answer,
+.h5p-multichoice .h5p-answers.h5p-answer-type-audio.h5p-multi-columns-two .h5p-answer {
+  margin: 0 0.25em 0.5em 0;
+  width: calc(50% - 0.25em);
+}
+
+.h5p-multichoice .h5p-answers.h5p-answer-type-image.h5p-multi-columns-two .h5p-answer,
+.h5p-multichoice .h5p-answers.h5p-answer-type-imageaudio.h5p-multi-columns-two .h5p-answer,
+.h5p-multichoice .h5p-answers.h5p-answer-type-video.h5p-multi-columns-two .h5p-answer {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0.25em 0.5em 0;
+  width: calc(50% - 0.25em);
+}
+
+.h5p-multichoice .h5p-answers.h5p-multi-columns-two .h5p-answer:nth-child(2n+0) {
+  margin-right: 0;
+}
+
+.h5p-multichoice .h5p-answers.h5p-answer-type-image.h5p-multi-columns-two .h5p-alternative-container,
+.h5p-multichoice .h5p-answers.h5p-answer-type-imageaudio.h5p-multi-columns-two .h5p-alternative-container,
+.h5p-multichoice .h5p-answers.h5p-answer-type-video.h5p-multi-columns-two .h5p-alternative-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.h5p-multichoice .h5p-answer.h5p-has-tip .h5p-alternative-container {
   padding-right: 2em;
 }
 
 .h5p-multichoice .h5p-answer.h5p-wrong .h5p-alternative-container,
 .h5p-multichoice .h5p-answer.h5p-correct .h5p-alternative-container {
-  padding-right: 3em;
+  padding-right: 2em;
 }
 
 .h5p-multichoice .h5p-alternative-container {
@@ -49,7 +90,6 @@
   -moz-box-shadow: 0 0.1em 0 rgba(0, 0, 0, 0.3);
   box-shadow: 0 0.1em 0 rgba(0, 0, 0, 0.3);
   line-height: 1.5em;
-  text-indent: -2em;
 }
 .h5p-multichoice .h5p-answer .h5p-alternative-container:before {
   font-family: icomoon-multichoice;
@@ -58,7 +98,7 @@
   height: 1em;
   width: 1em;
   position: absolute;
-  left: 2.5em;
+  left: 0.5em;
   top: 0.25em;
   margin: auto;
   text-decoration: none;
@@ -112,6 +152,42 @@
   border-color: #fbd7d8;
   color: #b71c1c;
   box-shadow: 0 0.1em 0 #deb8b8;
+}
+
+.h5p-multichoice .h5p-alternative-container {
+  padding-left: 0;
+  padding-right: 2em;
+}
+
+.h5p-multichoice .h5p-alternative-container .h5p-question-plus-one,
+.h5p-multichoice .h5p-alternative-container .h5p-question-minus-one {
+  position: absolute;
+  top: 0.2em;
+  right: 0.4em;
+}
+
+.h5p-multichoice .h5p-alternative-container.h5p-multichoice-type-image .h5p-alternative-inner-text,
+.h5p-multichoice .h5p-alternative-container.h5p-multichoice-type-audio .h5p-alternative-inner-text,
+.h5p-multichoice .h5p-alternative-container.h5p-multichoice-type-video .h5p-alternative-inner-text,
+.h5p-multichoice .h5p-alternative-container.h5p-multichoice-type-imageaudio .h5p-alternative-inner-text {
+  margin-top: 0.5em;
+}
+
+.h5p-multichoice .h5p-alternative-container.h5p-multichoice-type-audio .h5p-audio-wrapper,
+.h5p-multichoice .h5p-alternative-container.h5p-multichoice-type-imageaudio .h5p-audio-wrapper {
+  height: 32px;
+}
+
+.h5p-multichoice .h5p-alternative-container.h5p-multichoice-type-imageaudio .h5p-audio-wrapper {
+  margin-top: 0.5em;
+}
+
+.h5p-multichoice .h5p-alternative-inner-video > video {
+  width: 100%;
+}
+
+.h5p-multichoice .h5p-alternative-inner-video.h5p-youtube > div {
+  display: inline-block;
 }
 
 .h5p-multichoice .h5p-answer:last-child {
@@ -194,6 +270,10 @@
 }
 
 .h5p-alternative-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
   margin: 0 0.75em 0 2em;
 }
 .h5p-alternative-inner div,

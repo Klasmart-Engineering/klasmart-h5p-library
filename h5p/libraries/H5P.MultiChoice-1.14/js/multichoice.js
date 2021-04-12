@@ -1,18 +1,3 @@
-/*global EJS*/
-// Will render a Question with multiple choices for answers.
-
-// Options format:
-// {
-//   title: "Optional title for question box",
-//   question: "Question text",
-//   answers: [{text: "Answer text", correct: false}, ...],
-//   singleAnswer: true, // or false, will change rendered output slightly.
-//   singlePoint: true,  // True if question give a single point score only
-//                       // if all are correct, false to give 1 point per
-//                       // correct answer. (Only for singleAnswer=false)
-//   randomAnswers: false  // Whether to randomize the order of answers.
-// }
-//
 // Events provided:
 // - h5pQuestionAnswered: Triggered when a question has been answered.
 
@@ -60,20 +45,12 @@ H5P.MultiChoice = function (options, contentId, contentData) {
   H5P.Question.call(self, 'multichoice');
   var $ = H5P.jQuery;
 
-  // checkbox or radiobutton
-  var texttemplate =
-    '<ul class="h5p-answers" role="<%= role %>" aria-labelledby="<%= label %>">' +
-    '  <% for (var i=0; i < answers.length; i++) { %>' +
-    '    <li class="h5p-answer" role="<%= answers[i].role %>" tabindex="<%= answers[i].tabindex %>" aria-checked="<%= answers[i].checked %>" data-id="<%= i %>">' +
-    '      <div class="h5p-alternative-container">' +
-    '        <span class="h5p-alternative-inner"><%= answers[i].text %></span>' +
-    '      </div>' +
-    '      <div class="h5p-clearfix"></div>' +
-    '    </li>' +
-    '  <% } %>' +
-    '</ul>';
+  // Make Audio and Video extend H5P.ContentType
+  H5P.Audio.prototype = H5P.jQuery.extend({}, H5P.ContentType().prototype, H5P.Audio.prototype);
+  H5P.Video.prototype = H5P.jQuery.extend({}, H5P.ContentType().prototype, H5P.Video.prototype);
 
   var defaults = {
+    answerType: "text",
     image: null,
     question: "No question text provided",
     answers: [
@@ -84,6 +61,7 @@ H5P.MultiChoice = function (options, contentId, contentData) {
           notChosenFeedback: ''
         },
         text: "Answer 1",
+        displayText: true,
         correct: true
       }
     ],
@@ -100,13 +78,18 @@ H5P.MultiChoice = function (options, contentId, contentData) {
       readFeedback: 'Read feedback',
       shouldCheck: "Should have been checked",
       shouldNotCheck: "Should not have been checked",
-      noInput: 'Input is required before viewing the solution'
+      noInput: 'Input is required before viewing the solution',
+      audioNotSupported: 'Your browser does not support this audio',
+      a11yCheck: 'Check the answers. The responses will be marked as correct, incorrect, or unanswered.',
+      a11yShowSolution: 'Show the solution. The task will be marked with its correct solution.',
+      a11yRetry: 'Retry the task. Reset all responses and start the task over again.',
     },
     behaviour: {
       enableRetry: true,
       enableSolutionsButton: true,
       enableCheckButton: true,
       type: 'auto',
+      columns: 'auto',
       singlePoint: true,
       randomAnswers: false,
       showSolutionsRequiresInput: true,
@@ -115,10 +98,23 @@ H5P.MultiChoice = function (options, contentId, contentData) {
       showScorePoints: true
     }
   };
-  var template = new EJS({text: texttemplate});
   var params = $.extend(true, defaults, options);
+
+  // TODO: This should go into upgrade.js
+  params.answers.forEach(function (answer) {
+    if (typeof answer.displayText === 'undefined') {
+      answer.displayText = true;
+    }
+  });
+
   // Keep track of number of correct choices
   var numCorrect = 0;
+
+  var instances = [];
+  var instancesToLoad = params.answers.length;
+  var highestAlternative = null;
+  var highestAlternativeStyle = null;
+  var alternatives = null;
 
   // Loop through choices
   for (var i = 0; i < params.answers.length; i++) {
@@ -230,10 +226,19 @@ H5P.MultiChoice = function (options, contentId, contentData) {
     self.setIntroduction('<div id="' + params.label + '">' + params.question + '</div>');
 
     // Register task content area
-    $myDom = $(template.render(params));
+    $myDom = $(createDOM(params));
     self.setContent($myDom, {
       'class': params.behaviour.singleAnswer ? 'h5p-radio' : 'h5p-check'
     });
+
+    // Resize height for image
+    const needsHeightScaling = ['image', 'imageaudio', 'video'].indexOf(params.answerType) !== -1;
+    const numberOfColumns = computeNumberColumns(params.answerType, params.behaviour.columns);
+    if (needsHeightScaling && numberOfColumns > 1) {
+      self.on('resize', function () {
+        setAlternativeHeight();
+      });
+    }
 
     // Create tips:
     var $answers = $('.h5p-answer', $myDom).each(function (i) {
@@ -384,9 +389,17 @@ H5P.MultiChoice = function (options, contentId, contentData) {
       }
     };
 
-    $answers.click(function () {
+    $answers.click(function (event) {
+      if (event.target.classList.contains('h5p-audio-minimal-button')) {
+        return; // Clicking audio button
+      }
+
       toggleCheck($(this));
     }).keydown(function (e) {
+      if (event.target.classList.contains('h5p-audio-minimal-button')) {
+        return; // Activating audio button
+      }
+
       if (e.keyCode === 32) { // Space bar
         // Select current item
         toggleCheck($(this));
@@ -546,6 +559,11 @@ H5P.MultiChoice = function (options, contentId, contentData) {
    */
   this.resetTask = function () {
     self.answered = false;
+    instances = [];
+    instancesToLoad = params.answers.length;
+    highestAlternative = null;
+    highestAlternativeStyle = null;
+    alternatives = null;
     self.hideSolutions();
     params.userAnswers = [];
     removeSelections();
@@ -644,17 +662,22 @@ H5P.MultiChoice = function (options, contentId, contentData) {
         self.showAllSolutions();
       }
 
-    }, false);
+    }, false, {
+      'aria-label': params.UI.a11yShowSolution,
+    });
 
     // Check solution button
     if (params.behaviour.enableCheckButton && (!params.behaviour.autoCheck || !params.behaviour.singleAnswer)) {
       self.addButton('check-answer', params.UI.checkAnswerButton,
         function () {
           self.answered = true;
+          muteInstances();
           checkAnswer();
         },
         true,
-        {},
+        {
+          'aria-label': params.UI.a11yCheck,
+        },
         {
           confirmationDialog: {
             enable: params.behaviour.confirmCheckDialog,
@@ -668,14 +691,8 @@ H5P.MultiChoice = function (options, contentId, contentData) {
 
     // Try Again button
     self.addButton('try-again', params.UI.tryAgainButton, function () {
-      self.showButton('check-answer');
-      self.hideButton('try-again');
-      self.hideButton('show-solution');
-      self.hideSolutions();
-      removeSelections();
-      enableInput();
-      $myDom.find('.h5p-feedback-available').remove();
-      self.answered = false;
+      self.resetTask();
+
       if (params.behaviour.randomAnswers) {
         // reshuffle answers
        var oldIdMap = idMap;
@@ -689,11 +706,17 @@ H5P.MultiChoice = function (options, contentId, contentData) {
        // Those two loops cannot be merged or you'll screw up your tips
        for (i = 0; i < answersDisplayed.length; i++) {
          // move tips and answers on display
-         $(answersDisplayed[i]).find('.h5p-alternative-inner').html(params.answers[i].text);
+         const inner = $(answersDisplayed[i]).find('.h5p-alternative-inner').get(0);
+         inner.innerHTML = '';
+
+         appendAlternatives(inner, params.answerType, params.answers[i]);
+
          $(tip[i]).detach().appendTo($(answersDisplayed[idMap.indexOf(oldIdMap[i])]).find('.h5p-alternative-container'));
        }
      }
-    }, false, {}, {
+    }, false, {
+      'aria-label': params.UI.a11yRetry,
+    }, {
       confirmationDialog: {
         enable: params.behaviour.confirmRetryDialog,
         l10n: params.confirmRetry,
@@ -967,6 +990,389 @@ H5P.MultiChoice = function (options, contentId, contentData) {
     }
     xAPIEvent.data.statement.result.response = response;
   };
+
+  /**
+   * Create DOM
+   * @param {object} params Parameters.
+   * @param {string} params.answerType Answer type.
+   * @param {string} params.role List role.
+   * @param {string} params.label ARIA label.
+   * @param {object[]} params.answers Answers.
+   * @param {string} params.answers.role Item role.
+   * @param {number} params.answers.tabindex Item's tabIndex.
+   * @param {boolean} params.answers.checked True, if checked.
+   * @param {string} params.answers.text Alternative text.
+   */
+  var createDOM = function(params) {
+    const list = document.createElement('ul');
+    list.classList.add('h5p-answers');
+    list.classList.add('h5p-answer-type-' + params.answerType);
+    list.setAttribute('role', params.role);
+    list.setAttribute('aria-labelledby', params.label);
+
+    const columns = computeNumberColumns(params.answerType, params.behaviour.columns);
+    if (columns === 2) {
+      list.classList.add('h5p-multi-columns-two');
+    }
+
+    for (let i = 0; i < params.answers.length; i++) {
+      const listItem = document.createElement('li');
+      listItem.classList.add('h5p-answer');
+      listItem.setAttribute('role', params.answers[i].role);
+      listItem.setAttribute('tabindex', params.answers[i].tabindex);
+      listItem.setAttribute('aria-checked', params.answers[i].checked);
+      listItem.setAttribute('data-id', i);
+      list.appendChild(listItem);
+
+      const container = document.createElement('div');
+      container.classList.add('h5p-alternative-container');
+      container.classList.add('h5p-multichoice-type-' + params.answerType);
+      listItem.appendChild(container);
+
+      const inner = document.createElement('span');
+      inner.classList.add('h5p-alternative-inner');
+
+      appendAlternatives(inner, params.answerType, params.answers[i]);
+
+      container.appendChild(inner);
+
+      const clearFix = document.createElement('div');
+      clearFix.classList.add('h5p-clearfix');
+      listItem.appendChild(clearFix);
+    }
+
+    return list;
+  }
+
+  /**
+   * Append alternatives.
+   *
+   * @private
+   * @param {HTMLElement} inner Element to attach to.
+   * @param {string} answerType Answer type (text|audio|...).
+   * @param {object} answer Parameters of current answer.
+   */
+  var appendAlternatives = function(inner, answerType, answer) {
+    // Alternatives with more than just text
+    if (answerType === 'image') {
+      appendAlternativeImage(inner, answer.image);
+    }
+    else if (answerType === 'audio') {
+      appendAlternativeAudio(inner, answer.audio);
+    }
+    else if (answerType === 'video') {
+      appendAlternativeVideo(inner, answer.video);
+    }
+    else if (answerType === 'imageaudio') {
+      appendAlternativeImage(inner, answer.image);
+      if (answer.audio) {
+        appendAlternativeAudio(inner, answer.audio);
+      }
+    }
+
+    // Text alternative or text as amendment
+    if (answerType === 'text' || answer.displayText) {
+      appendAlternativeText(inner, answer.text);
+    }
+  }
+
+  /**
+   * Append text alternative.
+   *
+   * @private
+   * @param {HTMLElement} inner Element to attach to.
+   * @param {string} text HTML as <div> or <p>.
+   */
+  var appendAlternativeText = function(inner, text) {
+    text = text.trim();
+
+    let type;
+    if (text.substr(0, 3) === '<p>') {
+      type = 'p';
+      text = text.substr(3, text.length - 7);
+    }
+    else if (text.substr(0, 5) === '<div>') {
+      type = 'div';
+      text = text.substr(5, text.length - 11);
+    }
+    else {
+      type = 'div';
+    }
+
+    const innerElement = document.createElement(type);
+    innerElement.classList.add('h5p-alternative-inner-text');
+    innerElement.innerHTML = text;
+    inner.appendChild(innerElement);
+  }
+
+  /**
+   * Append image alternative.
+   *
+   * @private
+   * @param {HTMLElement} inner Element to attach to.
+   * @param {object} image Image parameters.
+   */
+  var appendAlternativeImage = function(inner, image) {
+    const imageWrapper = document.createElement('div');
+    imageWrapper.classList.add('h5p-alternative-inner-image');
+    inner.appendChild(imageWrapper);
+
+    const instance = H5P.newRunnable(
+      image,
+      self.contentId,
+      H5P.jQuery(imageWrapper),
+      false
+    );
+
+    if (!instance.source) {
+      instancesToLoad--;
+    }
+
+    instance.on('loaded', function () {
+      instancesToLoad--;
+      self.trigger('resize');
+    });
+
+    instance.$img.css('display', 'inline');
+  }
+
+  /**
+   * Append audio alternative.
+   *
+   * @private
+   * @param {HTMLElement} inner Element to attach to.
+   * @param {object} audio Audio parameters.
+   */
+  var appendAlternativeAudio = function(inner, audio) {
+    const audioWrapper = document.createElement('div');
+    audioWrapper.classList.add('h5p-alternative-inner-audio');
+    inner.appendChild(audioWrapper);
+
+    const audioDefaults = {
+      files: audio,
+      playerMode: 'full',
+      fitToWrapper: true,
+      controls: true,
+      audioNotSupported: params.UI.audioNotSupported
+    }
+
+    const instance = new H5P.Audio(audioDefaults, self.contentId, {});
+    instance.attach(H5P.jQuery(audioWrapper));
+
+    if (instance.audio) {
+      instances.push(instance);
+
+      instance.audio.style.display = 'inline';
+      instance.audio.addEventListener('play', function() {
+        muteInstances(instance);
+      });
+    }
+  }
+
+  /**
+   * Append video alternative.
+   *
+   * @private
+   * @param {HTMLElement} inner Element to attach to.
+   * @param {object} video Video parameters.
+   */
+  var appendAlternativeVideo = function(inner, video) {
+    const videoWrapper = document.createElement('div');
+    videoWrapper.classList.add('h5p-alternative-inner-video');
+    inner.appendChild(videoWrapper);
+
+    const needsFit = (video && video.length > 0 && typeof video[0].mime === 'string' && video[0].mime.indexOf('YouTube') !== -1);
+
+    const videoDefaults = {
+      sources: video,
+      visuals: {
+        fit: false, // Prevent video from growing endlessly since height is unlimited
+        controls: true
+      }
+    };
+
+    const instance = new H5P.Video(videoDefaults, self.contentId, {});
+    instance.attach(H5P.jQuery(videoWrapper));
+
+    instances.push(instance);
+
+    // Bubble resize events
+    bubbleUp(instance, 'resize', self);
+
+    // Resize children to fit inside parent
+    bubbleDown(self, 'resize', instance);
+
+    const videoElement = videoWrapper.querySelector('video');
+    if (videoElement) {
+      videoElement.style.display = 'inline';
+    }
+
+    instance.on('stateChange', function(state) {
+      if (state.data === H5P.Video.PLAYING) {
+        muteInstances(instance);
+      }
+    });
+
+    // May be needed for resizing height
+    if (!instance.video) {
+      instancesToLoad--;
+    }
+
+    instance.on('loaded', function () {
+      instancesToLoad--;
+      self.trigger('resize');
+    });
+  }
+
+  /**
+   * Mute media instances.
+   *
+   * @private
+   * @param {object} exception Instance of H5P content.
+   */
+  var muteInstances = function (exception) {
+    instances
+      .filter(function (instance) {
+        return instance !== exception;
+      })
+      .forEach(function (instance) {
+        if (typeof instance.pause === 'function') {
+          instance.pause();
+        }
+      });
+  }
+
+  /**
+   * Compute number of columns for display.
+   *
+   * @private
+   * @param {string} answerType Answer type.
+   * @param {string} columns Mode for choosing columns ('auto' || '1' || '2').
+   * @return {number} Number of columns to use.
+   */
+  var computeNumberColumns = function(answerType, columns) {
+    columns = parseInt(columns);
+    if (!Number.isNaN(columns)) {
+      return columns; // Numerical value set by author
+    }
+
+    if (answerType === 'image' || answerType === 'video' || answerType === 'imageaudio') {
+      return 2;
+    }
+
+    return 1; // default
+  }
+
+  /**
+   * Makes it easy to bubble events from child to parent
+   *
+   * @private
+   * @param {Object} origin Origin of the Event
+   * @param {string} eventName Name of the Event
+   * @param {Object} target Target to trigger event on
+   */
+  var bubbleUp = function(origin, eventName, target) {
+    origin.on(eventName, function (event) {
+      // Prevent target from sending event back down
+      target.bubblingUpwards = true;
+
+      // Trigger event
+      target.trigger(eventName, event);
+
+      // Reset
+      target.bubblingUpwards = false;
+    });
+  }
+
+  /**
+   * Makes it easy to bubble events from parent to children
+   *
+   * @private
+   * @param {Object} origin Origin of the Event
+   * @param {string} eventName Name of the Event
+   * @param {object} target Targets to trigger event on
+   */
+  function bubbleDown(origin, eventName, target) {
+    origin.on(eventName, function (event) {
+      if (origin.bubblingUpwards) {
+        return; // Prevent send event back down.
+      }
+
+      target.trigger(eventName, event);
+    });
+  }
+
+  /**
+   * Wait for DOM element to be attached to DOM.
+   * @param {string} selector CSS selector for DOM element.
+   * @param {function} success Function to call once element is attached.
+   * @param {function} [error] Function to call if element wasn't found (in time).
+   * @param {number} [tries=50] Number of maximum tries, negative for infinite.
+   * @param {number} [interval=100] Time interval in ms to check for element.
+   */
+  var waitForDOM = function (selector, success, error, tries, interval) {
+    error = error || function () {};
+    tries = tries || 50;
+    interval = interval || 100;
+
+    if (tries === 0 || !selector || typeof success !== 'function' || typeof error !== 'function') {
+      error();
+      return;
+    }
+
+    // Try to keep sensible
+    interval = Math.max(interval, 50);
+
+    const content = document.querySelector(selector);
+    if (!content) {
+      setTimeout(function () {
+        waitForDOM(selector, success, error, (tries < 0) ? -1 : tries - 1, interval);
+      }, interval);
+      return;
+    }
+
+    success();
+  }
+
+  /**
+   * Set alternatives height depending on largest image. Required for multi column mode.
+   */
+  var setAlternativeHeight = function() {
+    if (instancesToLoad > 0) {
+      return;
+    }
+
+    if (!alternatives) {
+      alternatives = document.querySelectorAll('.h5p-alternative-container.h5p-multichoice-type-image');
+      if (alternatives.length === 0) {
+        alternatives = document.querySelectorAll('.h5p-alternative-container.h5p-multichoice-type-imageaudio');
+      }
+      if (alternatives.length === 0) {
+        alternatives = document.querySelectorAll('.h5p-alternative-container.h5p-multichoice-type-video');
+      }
+
+      // Reset the height of all containers from potential previous attempt
+      for (let i = 0; i < alternatives.length; i++) {
+        alternatives[i].style.height = '';
+      }
+    }
+
+    // Determine highest alternative's height if necessary
+    // TODO: Would be smarter to do that per row
+    if (!highestAlternative) {
+      for (let i = 0; i < alternatives.length; i++) {
+        highestAlternative = (!highestAlternative || highestAlternative.offsetHeight < alternatives[i].offsetHeight) ? alternatives[i] : highestAlternative;
+      }
+    }
+    highestAlternativeStyle = highestAlternativeStyle || window.getComputedStyle(highestAlternative);
+
+    // Set other alternatives height according to highest one
+    for (let i = 0; i < alternatives.length; i++) {
+      if (alternatives[i] !== highestAlternative) {
+        alternatives[i].style.height = highestAlternativeStyle.getPropertyValue('height')
+      }
+    }
+  }
 
   /**
    * Create a map pointing from original answers to shuffled answers

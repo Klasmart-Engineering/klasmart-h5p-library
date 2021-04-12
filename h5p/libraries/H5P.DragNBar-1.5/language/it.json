@@ -8,6 +8,7 @@
     "unableToPaste": "Impossibile incollare questo oggetto. Sfortunatamente, l'oggetto che stai cercando di incollare non è supportato da questo tipo di contenuto o da questa versione",
     "sizeLabel": "Dimensione",
     "positionLabel": "Posizione",
+    "rotationLabel": "Rotation",    
     "heightLabel": "Altezza",
     "widthLabel": "Larghezza",
     "copyLabel": "Copia",

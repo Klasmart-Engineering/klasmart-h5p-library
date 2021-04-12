@@ -113,13 +113,27 @@ H5P.DragNBar.prototype.initEditor = function () {
   });
 
   // Set pressed to not lose focus at the end of resize
-  this.dnr.on('stoppedResizing', function () {
+  this.dnr.on('stoppedResizing', function (event) {
     that.pressed = true;
+
+    that.fitToChild(that.$element, event && event.data && event.data.useBrowserSize);
+
+    var offset = that.$element.offset();
+    var position = that.$element.position();
+    that.updateCoordinates(offset.left, offset.top, position.left, position.top);
 
     // Delete pressed after dnbelement has been refocused so it will lose focus on single click.
     setTimeout(function () {
       delete that.pressed;
     }, 10);
+  });
+
+  this.dnr.on('moveRotating', function (event) {
+    that.updateRotation(event.data.angle);
+  });
+
+  this.dnr.on('stoppedRotating', function (event) {
+    that.updateRotation(event.data.angle);
   });
 
   /**
@@ -847,6 +861,8 @@ H5P.DragNBar.prototype.getElementSizeNPosition = function ($element) {
   // We include container inner size as well
   var containerSize = window.getComputedStyle(this.$container[0]);
 
+  const transform = this.getCSSTransformValues($element.children().first());
+
   // Start preparing return value
   var sizeNPosition = {
     width: parseFloat(size.width),
@@ -854,7 +870,8 @@ H5P.DragNBar.prototype.getElementSizeNPosition = function ($element) {
     left: parseFloat(position.left),
     top: parseFloat(position.top),
     containerWidth: parseFloat(containerSize.width),
-    containerHeight: parseFloat(containerSize.height)
+    containerHeight: parseFloat(containerSize.height),
+    transform: transform
   };
 
   if (position.left.substr(-1, 1) === '%' || position.top.substr(-1, 1) === '%') {
@@ -933,6 +950,9 @@ H5P.DragNBar.prototype.moveWithKeys = function (x, y) {
 H5P.DragNBar.prototype.add = function ($element, clipboardData, options) {
   var self = this;
   options = options || {};
+
+  options.disableRotate = (typeof options.disableRotate === 'undefined') ? true : options.disableRotate;
+
   if (this.isEditor && !options.disableResize) {
     this.dnr.add($element, options);
   }
@@ -1029,9 +1049,8 @@ H5P.DragNBar.prototype.focus = function ($element) {
   // Wait for potential recreation of element
   setTimeout(function () {
     self.updateCoordinates();
-    if (self.focusedElement && self.focusedElement.contextMenu && self.focusedElement.contextMenu.canResize) {
-      self.focusedElement.contextMenu.updateDimensions();
-    }
+    self.updateDimensions();
+    self.updateRotation();
   }, 0);
 };
 
@@ -1103,6 +1122,27 @@ H5P.DragNBar.prototype.updateCoordinates = function (left, top, x, y) {
 };
 
 /**
+ * Update dimensions of context menu.
+ */
+H5P.DragNBar.prototype.updateDimensions = function () {
+  if (this.focusedElement && this.focusedElement.contextMenu && this.focusedElement.contextMenu.canResize) {
+    this.focusedElement.contextMenu.updateDimensions();
+  }
+};
+
+/**
+ * Update rotation of context menu.
+ *
+ * @param {number} angle Angle in degrees.
+ * @param {boolean} nofit If true, only update context menu, but don't fit.
+ */
+H5P.DragNBar.prototype.updateRotation = function (angle, nofit) {
+  if (this.focusedElement && this.focusedElement.contextMenu && this.focusedElement.contextMenu.canRotate) {
+    this.focusedElement.updateRotation(angle, nofit);
+  }
+};
+
+/**
  * Creates element data to store in the clipboard.
  *
  * @param {string} from Source of the element
@@ -1137,6 +1177,9 @@ H5P.DragNBar.clipboardify = function (from, params, generic) {
 H5P.DragNBar.fitElementInside = function (sizeNPosition) {
   var style = {};
 
+  const keepAspectRatio = sizeNPosition.transform && sizeNPosition.transform.angle !== 0;
+  let factor = {};
+
   if (sizeNPosition.left < 0) {
     // Element sticks out of the left side
     style.left = sizeNPosition.left = 0;
@@ -1149,6 +1192,7 @@ H5P.DragNBar.fitElementInside = function (sizeNPosition) {
       // Element is wider than the container
       style.left = 0;
       style.width = sizeNPosition.containerWidth;
+      factor.x = sizeNPosition.containerWidth / sizeNPosition.width;
     }
   }
 
@@ -1164,11 +1208,227 @@ H5P.DragNBar.fitElementInside = function (sizeNPosition) {
       // Element is higher than the container
       style.top = 0;
       style.height = sizeNPosition.containerHeight;
+      factor.y = sizeNPosition.containerHeight / sizeNPosition.height;
+    }
+  }
+
+  if (keepAspectRatio) {
+    if (factor.x && factor.y) {
+      if (sizeNPosition.containerHeight < sizeNPosition.containerWidth) {
+        style.width = sizeNPosition.width * factor.y;
+      }
+      else {
+        style.height = sizeNPosition.height * factor.x;
+      }
+    }
+    else if (factor.x) {
+      style.height = sizeNPosition.height * factor.x;
+    }
+    else if (factor.y) {
+      style.width = sizeNPosition.width * factor.y;
     }
   }
 
   return style;
 };
+
+/**
+ * Get maxtrix components.
+ * @param {H5P.jQuery} $element DOM element.
+ * @return {object} Components: angle, rotation, scale, skew, translation.
+ */
+H5P.DragNBar.prototype.getCSSTransformValues = function ($element) {
+  const matrix = $element.css('transform')
+
+  let matrixValues
+
+  if (matrix && matrix.indexOf('matrix(') !== -1) {
+    matrixValues = matrix.split('(')[1].split(')')[0].split(',');
+  }
+  else {
+    matrixValues = [1, 0, 0, 1, 0, 0];
+  }
+
+  var a = matrixValues[0];
+  var b = matrixValues[1];
+  var c = matrixValues[2];
+  var d = matrixValues[3];
+  var e = matrixValues[4];
+  var f = matrixValues[5];
+
+  var delta = a * d - b * c;
+
+  let result = {
+    translation: {
+      x: parseFloat(e),
+      y: parseFloat(f)
+    },
+    rotation: 0,
+    scale: {
+      x: 0,
+      y: 0
+    },
+    skew: {
+      x: 0,
+      y: 0
+    }
+  };
+
+  // Apply the QR-like decomposition.
+  if (a != 0 || b != 0) {
+    const r = Math.sqrt(a * a + b * b);
+    result.rotation = b > 0 ? Math.acos(a / r) : - Math.acos(a / r);
+    result.scale = {
+      x: r,
+      y: delta / r
+    };
+    result.skew = {
+      x: Math.atan((a * c + b * d) / (r * r)),
+      y: 0
+    };
+  }
+  else if (c != 0 || d != 0) {
+    const s = Math.sqrt(c * c + d * d);
+    result.rotation =
+      Math.PI / 2 - (d > 0 ? Math.acos(-c / s) : -Math.acos(c / s));
+    result.scale = {
+      x: delta / s,
+      y: s
+    };
+    result.skew = {
+      x: 0,
+      y: Math.atan((a * c + b * d) / (s * s))
+    };
+  }
+
+  result.angle = Math.round(result.rotation * (180 / Math.PI));
+
+  // Only use degrees of 0-359
+  result.angle = result.angle % 360;
+  if (result.angle < 0) {
+    result.angle += 360;
+  }
+
+  return result;
+}
+
+/**
+ * Fit child to parent.
+ * Parent may need to take child's size when rotating the child, but child
+ * uses 100% width and height of parent.
+ *
+ * @param {H5P.jQuery} $outer Parent element.
+ * @param {boolean} [useBrowserSize=true] If true, will not use internal computed size but DOM size.
+ */
+H5P.DragNBar.prototype.fitToChild = function ($outer, useBrowserSize) {
+  if (!this.focusedElement) {
+    return;
+  }
+
+  useBrowserSize = (typeof useBrowserSize === 'boolean') ? useBrowserSize : true;
+
+  const $inner = $outer.children().first();
+
+  // Store initial sizes
+  const containerSize = this.getHullSize(this.$container); // this.$container needs to be set
+
+  // Not using actual value in browser as this will not be exact and become inaccurate
+  const outerHullSize = (useBrowserSize) ? this.getHullSize($outer) : this.focusedElement.getSize();
+  const innerHullSize = this.getHullSize($inner);
+
+  /*
+   * Set parent size to child's current size
+   */
+  $outer.css({
+    width: `${innerHullSize.width / containerSize.width * 100}%`,
+    height: `${innerHullSize.height / containerSize.height * 100}%`
+  });
+  this.focusedElement.setSize({
+    width: innerHullSize.width,
+    height: innerHullSize.height
+  });
+
+  // Compute scale percentage of inner element in relation to outer element
+  const scale = {
+    x: outerHullSize.width / innerHullSize.width,
+    y: outerHullSize.height / innerHullSize.height
+  }
+
+  /*
+   * Scale inner element to fit parent element. Setting width/height as percentage
+   * and computing transform-origin and translation didn't work out
+   */
+  $inner.css({
+    overflow: 'hidden', // TODO: CSS for editor instead
+    transform: `${$inner[0].style.transform} scale(${scale.x}, ${scale.y})`
+  });
+
+  // Compute simpler transform value
+  const innerTransformValues = this.getCSSTransformValues($inner);
+  $inner.css({
+    transform: `rotate(${innerTransformValues.rotation}rad) scale(${innerTransformValues.scale.x}, ${innerTransformValues.scale.y})`
+  });
+
+  // Update content (balance scaling and sizing of parent)
+  const $content = $inner.children().first();
+
+  // Not all content types have content but only use box size and position to mark spots
+  if ($content.length > 0) {
+    const contentSize = {
+      width: parseFloat($content[0].style.width || 100),
+      height: parseFloat($content[0].style.height || 100)
+    }
+
+    $content.css({
+      transform: `${$content[0].style.transform} scale(${1 / scale.x}, ${1 / scale.y})`,
+      width: `${scale.x * contentSize.width}%`,
+      height: `${scale.y * contentSize.height}%`,
+      'transform-origin': '0 0'
+    });
+
+    // Compute simpler transform value
+    const contentTransformValues = this.getCSSTransformValues($content);
+    $content.css({
+      transform: `rotate(${contentTransformValues.rotation}rad) scale(${contentTransformValues.scale.x}, ${contentTransformValues.scale.y})`
+    });
+  }
+
+  // Editors may add outline to $outer that will be streched due to scaling
+  this.checkScaleDistortion();
+
+  this.dnr.trigger('updatedTransform', innerTransformValues);
+}
+
+/**
+ * Get hull size for (rotated) element.
+ * @param {H5P.jQuery} element Element.
+ * @return {object} Hull size of element.
+ */
+H5P.DragNBar.prototype.getHullSize = function($element) {
+  const clientRect = $element[0].getBoundingClientRect();
+
+  return {
+    width: clientRect.width,
+    height: clientRect.height
+  };
+};
+
+/**
+ * Check for scale distortion to be marked.
+ * @param {H5P.jQuery} [$element] Element to check.
+ */
+H5P.DragNBar.prototype.checkScaleDistortion = function ($element) {
+  $element = $element || this.focusedElement.$element;
+  if ($element.length === 0) {
+    return;
+  }
+
+  const $outer = $element.children().first();
+  const transformValues = this.getCSSTransformValues($outer);
+
+  const scaleDistortion = transformValues.scale.x < 0.3 || transformValues.scale.x > 1.7 || transformValues.scale.y < 0.3 || transformValues.scale.y > 1.7;
+  $outer.toggleClass('h5p-scale-distortion', scaleDistortion);
+}
 
 /**
  * Clean up any event listeners

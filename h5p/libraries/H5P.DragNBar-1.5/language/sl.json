@@ -8,6 +8,7 @@
     "unableToPaste": "Tega predmeta ni mogoče prilepiti, saj ni podprt za izbran tip ali različico aktivnosti.",
     "sizeLabel": "Velikost",
     "positionLabel": "Položaj",
+    "rotationLabel": "Rotation",    
     "heightLabel": "Višina",
     "widthLabel": "Širina",
     "copyLabel": "Kopiraj",

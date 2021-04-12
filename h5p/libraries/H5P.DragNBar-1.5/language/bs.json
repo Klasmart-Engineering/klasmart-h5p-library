@@ -8,6 +8,7 @@
     "unableToPaste":"Nije moguće prenijeti ovaj objekat. Nažalost, objekat koji pokušavate prenijeti nije podržan u ovom sadržaju ili verziji sadržaja.",
     "sizeLabel":"Veličina",
     "positionLabel":"Pozisija",
+    "rotationLabel": "Rotation",    
     "heightLabel":"Visina",
     "widthLabel":"Širina",
     "copyLabel": "Copy",

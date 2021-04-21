@@ -9,8 +9,7 @@
             "js/h5p-content-type.js",
             "js/h5p-confirmation-dialog.js",
             "js/h5p-action-bar.js",
-            "js/request-queue.js",
-            "js/xapi-uploader.js"
+            "js/request-queue.js"
         ]
     },
     "styles": {

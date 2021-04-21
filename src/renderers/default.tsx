@@ -109,14 +109,14 @@ function Editor(props: any):any {
                     $('#h5p-content-form').submit(function(event) {
                         if (h5peditor !== undefined) {
                             var params = h5peditor.getParams();
-            
+
                             if (params.params !== undefined) {
                                 // Validate mandatory main title. Prevent submitting if that's not set.
                                 // Deliberately doing it after getParams(), so that any other validation
                                 // problems are also revealed
-                                // if (!h5peditor.isMainTitleSet()) {
-            
-                                // }
+                                if (!h5peditor.isMainTitleSet()) {
+                                    return event.preventDefault();
+                                }
             
                                 // Set main library
                                 $library.val(h5peditor.getLibrary());
@@ -146,6 +146,10 @@ function Editor(props: any):any {
                                 // $maxscore.val(h5peditor.getMaxScore(params.params));
                             }
                         }
+
+                        // Prevent the user from submitting before a content type has been selected.
+                        // Otherwise, the user is presented with a 'Malformed request' page.
+                        return event.preventDefault();
                     });
             
                     // Title label

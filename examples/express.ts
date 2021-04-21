@@ -79,7 +79,9 @@ const start = async () => {
     const h5pPlayer = new H5P.H5PPlayer(
         h5pEditor.libraryStorage,
         h5pEditor.contentStorage,
-        config
+        config,
+        undefined,
+        ["/h5p/core/js/xapi-uploader.js"]
     );
 
     // We now set up the Express server in the usual fashion.
@@ -161,7 +163,7 @@ const start = async () => {
 
     // The startPageRenderer displays a list of content objects and shows
     // buttons to display, edit, delete and download existing content.
-    //server.get('/', startPageRenderer(h5pEditor));
+    server.get('/', startPageRenderer(h5pEditor));
 
     server.get('/.well-known/express/server-health', (req, res) => {res.sendStatus(200)});
     

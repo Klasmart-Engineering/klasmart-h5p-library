@@ -12,7 +12,7 @@ function Player(props: any):any {
         <html className="h5p-iframe">
             <head>
                 <meta charSet="utf-8" />
-                {/* <script src="http://localhost:8000/record.js" /> */}
+                
                 { props.model.styles.map((style) => (
                     <link rel="stylesheet" href={style} />
                 ))}

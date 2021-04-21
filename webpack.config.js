@@ -4,7 +4,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 module.exports = {
     mode: "production",
     entry: {
-        lr: "./src/logrocket.ts",
+        "xapi-uploader": "./src/xapi-uploader.ts",
     },
     module: {
         rules: [

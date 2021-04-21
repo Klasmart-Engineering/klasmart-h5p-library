@@ -24,6 +24,12 @@ import player from './renderers/player';
 import H5pError from './helpers/H5pError';
 import LibraryManager from './LibraryManager';
 
+
+const xapi_events_endpoint: string | undefined = typeof process.env.XAPI_ENDPOINT === "string" && process.env.XAPI_ENDPOINT
+if(!xapi_events_endpoint) { 
+    console.error(`Set XAPI_ENDPOINT enviroment variable to for xAPI event reporting`) 
+}
+
 const log = new Logger('Player');
 
 export default class H5PPlayer {
@@ -224,7 +230,7 @@ export default class H5PPlayer {
         // see https://h5p.org/creating-your-own-h5p-plugin
         log.info(`generating integration for ${contentId}`);
         return {
-            xapi_events_endpoint: process.env.XAPI_ENDPOINT,
+            xapi_events_endpoint,
             contents: {
                 [`cid-${contentId}`]: {
                     displayOptions: {

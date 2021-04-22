@@ -1,9 +1,9 @@
-# syntax = docker/dockerfile:experimental
 FROM node:latest
 
 USER node
 RUN mkdir /home/node/h5p-nodejs-library
 WORKDIR /home/node/h5p-nodejs-library
+COPY --chown=node:node node_modules node_modules
 COPY --chown=node:node assets assets
 COPY --chown=node:node scripts scripts
 COPY --chown=node:node test/data/content-type-cache/real-content-types.json test/data/content-type-cache/real-content-types.json
@@ -14,9 +14,6 @@ COPY --chown=node:node src src
 COPY --chown=node:node package.json package.json
 COPY --chown=node:node package-lock.json package-lock.json
 
-RUN --mount=type=ssh npm i
-RUN npm audit fix --production || true
-RUN npm install --production
 RUN npm install ts-node
 RUN rm -rf h5p/content
 RUN rm -rf h5p/temporary-storage

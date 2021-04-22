@@ -7,15 +7,17 @@ pipelines:
           script:
             - npm i
             - npm audit fix
+            - ls -la
           caches:
             - nodemodules
           artifacts:
-            - node_modules/*
+            - node_modules/**/*
 
       - step:
           name: 'Docker build'
           image: python:3.9-alpine
           script:
+            - ls -la
             - pip3 install -U awscli
             
             - export BRANCH_TAG=$(echo "$BITBUCKET_BRANCH" | sed -E 's/([^0-9a-zA-Z]+)/-/g')

@@ -7,6 +7,7 @@ pipelines:
           script:
             - npm i
             - ls -la
+            - pwd
             - docker build -t kidsloop-h5p-service .
           services:
             - docker

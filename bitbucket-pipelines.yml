@@ -10,7 +10,8 @@ pipelines:
           caches:
             - nodemodules
           artifacts:
-            - dist/*
+            - node_modules/*
+
       - step:
           name: 'Docker build'
           image: python:3.9-alpine

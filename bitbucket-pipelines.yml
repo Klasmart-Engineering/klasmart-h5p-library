@@ -12,6 +12,7 @@ pipelines:
             - export REPO=$DOCKER_REPO_URL/kidsloop-h5p-service      # DOCKER_REPO_URL is workspace wide variable
 
             - aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin $DOCKER_REPO_URL
+            - eval $(ssh-agent -s)
             - DOCKER_BUILDKIT=1 docker build -t kidsloop-h5p-service --ssh default .
 
             - docker tag kidsloop-h5p-service:latest $REPO:$BRANCH_TAG-latest
@@ -20,6 +21,8 @@ pipelines:
             - docker tag kidsloop-h5p-service:latest $REPO:$BRANCH_TAG-$BITBUCKET_BUILD_NUMBER
             - docker push $REPO:$BRANCH_TAG-$BITBUCKET_BUILD_NUMBER
           services:
+            - docker
+          caches:
             - docker
 
 definitions:

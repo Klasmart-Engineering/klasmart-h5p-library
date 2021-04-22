@@ -2,18 +2,6 @@ pipelines:
   custom:
     deploy:
       - step:
-          name: "Fetch NPM dependencies"
-          image: node:lts
-          script:
-            - npm i
-            - npm audit fix
-            - ls -la
-          caches:
-            - nodemodules
-          artifacts:
-            - node_modules/**/*
-
-      - step:
           name: 'Docker build'
           image: python:3.9-alpine
           script:
@@ -24,7 +12,7 @@ pipelines:
             - export REPO=$DOCKER_REPO_URL/kidsloop-h5p-service      # DOCKER_REPO_URL is workspace wide variable
 
             - aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin $DOCKER_REPO_URL
-            - docker build -t kidsloop-h5p-service .
+            - DOCKER_BUILDKIT=1 docker build -t kidsloop-h5p-service --ssh default .
 
             - docker tag kidsloop-h5p-service:latest $REPO:$BRANCH_TAG-latest
             - docker push $REPO:$BRANCH_TAG-latest

@@ -7,22 +7,21 @@ pipelines:
           script:
             - npm i
             - ls -la
-            - pwd
-            - docker build -t kidsloop-h5p-service .
-          services:
-            - docker
           caches:
-            - docker
             - nodemodules
+          artifacts:
+            - node_modules/**/*
             
       - step:
           name: "Push docker image to AWS"
           image: python:3.9-alpine
           script:
+            - ls -la
             - pip3 install -U awscli
             
             - export BRANCH_TAG=$(echo "$BITBUCKET_BRANCH" | sed -E 's/([^0-9a-zA-Z]+)/-/g')
             - export REPO=$DOCKER_REPO_URL/kidsloop-h5p-service      # DOCKER_REPO_URL is workspace wide variable
+            - docker build -t kidsloop-h5p-service .
 
             - aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin $DOCKER_REPO_URL
 

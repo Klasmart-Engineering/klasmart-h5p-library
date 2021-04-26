@@ -5,6 +5,7 @@ import i18next from 'i18next';
 import i18nextHttpMiddleware from 'i18next-http-middleware';
 import i18nextFsBackend from 'i18next-fs-backend';
 import path from 'path';
+import cors from "cors"
 
 import h5pAjaxExpressRouter from '../src/adapters/H5PAjaxRouter/H5PAjaxExpressRouter';
 import libraryAdministrationExpressRouter from '../src/adapters/LibraryAdministrationRouter/LibraryAdministrationExpressRouter';
@@ -86,6 +87,8 @@ const start = async () => {
 
     // We now set up the Express server in the usual fashion.
     const server = express();
+
+    server.use(cors())
 
     server.use(bodyParser.json({ limit: '500mb' }));
     server.use(

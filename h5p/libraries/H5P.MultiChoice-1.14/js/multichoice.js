@@ -1084,6 +1084,7 @@ H5P.MultiChoice = function (options, contentId, contentData) {
    * @param {string} text HTML as <div> or <p>.
    */
   var appendAlternativeText = function(inner, text) {
+    text = text || '';
     text = text.trim();
 
     let type;

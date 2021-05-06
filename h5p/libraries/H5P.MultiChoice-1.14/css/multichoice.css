@@ -272,7 +272,8 @@
 .h5p-alternative-inner {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  /* Height of 100% is required to keep images and videos of different height aligned in a row */
+  /* height: 100%; */
   justify-content: space-between;
   margin: 0 0.75em 0 2em;
 }

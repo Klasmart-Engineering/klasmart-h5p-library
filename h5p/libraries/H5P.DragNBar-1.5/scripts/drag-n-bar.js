@@ -116,11 +116,13 @@ H5P.DragNBar.prototype.initEditor = function () {
   this.dnr.on('stoppedResizing', function (event) {
     that.pressed = true;
 
-    that.fitToChild(that.$element, event && event.data && event.data.useBrowserSize);
+    if (event.data && event.data.canRotate) {
+      that.fitToChild(that.$element, event && event.data && event.data.useBrowserSize);
 
-    var offset = that.$element.offset();
-    var position = that.$element.position();
-    that.updateCoordinates(offset.left, offset.top, position.left, position.top);
+      var offset = that.$element.offset();
+      var position = that.$element.position();
+      that.updateCoordinates(offset.left, offset.top, position.left, position.top);
+    }
 
     // Delete pressed after dnbelement has been refocused so it will lose focus on single click.
     setTimeout(function () {

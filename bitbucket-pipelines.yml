@@ -9,7 +9,8 @@ pipelines:
           name: "Fetch NPM dependencies and build docker image"
           image: node:lts
           script:
-            - npm i
+            - npm ci
+            - npm audit fix
           caches:
             - nodemodules
           artifacts:
@@ -39,7 +40,7 @@ pipelines:
             - pipe: atlassian/slack-notify:1.0.1
               variables:
                 WEBHOOK_URL: 'https://hooks.slack.com/services/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'
-                MESSAGE: 'A new build of H5P ($BITBUCKET_COMMIT) has been push with the "$BITBUCKET_BRANCH" tag'
+                MESSAGE: 'A new build of H5P ($BITBUCKET_COMMIT) has been push with the \"$(echo "$BITBUCKET_BRANCH" | sed -E "s/([^0-9a-zA-Z]+)/-/g")\" tag'
 
   custom:
     deploy:

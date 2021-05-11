@@ -4,7 +4,7 @@ pipelines:
       - step:
           name: Atlassian Security Secrets Scan
           script:
-            - pipe: atlassian/git-secrets-scan
+            - pipe: atlassian/git-secrets-scan:0.5.1
       - step:
           name: "Fetch NPM dependencies and build docker image"
           image: node:lts

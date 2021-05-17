@@ -212,6 +212,10 @@
 .h5p-questionnaire-interaction-icon:before {
   content: "\e902";
 }
+.h5p-interactive-video-dragnbar .h5p-dragnbar-jigsawpuzzlekid-button:before,
+.h5p-jigsawpuzzlekid-interaction-icon:before {
+  content: "\f12e";
+}
 .h5p-interactive-video-dragnbar .h5p-dragnbar-more-button {
   width: 0.3em;
 }

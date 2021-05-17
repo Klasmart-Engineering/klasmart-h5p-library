@@ -3,7 +3,7 @@
   "license": "MIT",
   "majorVersion": 1,
   "minorVersion": 22,
-  "patchVersion": 1,
+  "patchVersion": 2,
   "runnable": 0,
   "machineName": "H5PEditor.InteractiveVideo",
   "author": "Joubel",
@@ -171,6 +171,11 @@
       "machineName": "H5P.FreeTextQuestion",
       "majorVersion": 1,
       "minorVersion": 0
+    },
+    {
+      "machineName": "H5P.JigsawPuzzleKID",
+      "majorVersion": 0,
+      "minorVersion": 3
     }
   ]
 }

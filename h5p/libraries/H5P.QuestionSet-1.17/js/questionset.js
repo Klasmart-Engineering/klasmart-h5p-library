@@ -285,6 +285,15 @@ H5P.QuestionSet = function (options, contentId, contentData) {
 
       question.params = question.params || {};
       var hasAnswers = contentData.previousState && contentData.previousState.answers;
+
+      // Find the Hotspot needs to use non-popup mode to prevent inconsistent UX
+      const libraryName = (question.library) ? question.library.split(' ')[0] : '';
+      if (libraryName === 'H5P.ImageHotspotQuestion') {
+        question.params.imageHotspotQuestion = question.params.imageHotspotQuestion || {};
+        question.params.imageHotspotQuestion.hotspotSettings = question.params.imageHotspotQuestion.hotspotSettings || {};
+        question.params.imageHotspotQuestion.hotspotSettings.showFeedbackAsPopup = false;
+      }
+
       var questionInstance = H5P.newRunnable(question, contentId, undefined, undefined,
         {
           previousState: hasAnswers ? contentData.previousState.answers[i] : undefined,
@@ -958,6 +967,18 @@ H5P.QuestionSet = function (options, contentId, contentData) {
 
     // Allow other libraries to add transitions after the questions have been inited
     $('.questionset', $myDom).addClass('started');
+
+    /*
+     * Make sure content type's content doesn't have margin bottom of 0 or
+     * question buttons will be touching the content
+     */
+    $('.questionset', $myDom)
+      .find('.h5p-question-content')
+      .each(function (content) {
+        if (parseInt($(this).css('margin-bottom')) === 0) {
+          $(this).css('margin-bottom', '1em');
+        }
+      });
 
     $('.qs-startbutton', $myDom)
       .click(function () {

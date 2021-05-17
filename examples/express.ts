@@ -90,7 +90,7 @@ const start = async () => {
 
     server.use(cors())
 
-    server.use(bodyParser.json({ limit: '500mb' }));
+    server.use(bodyParser.json({ limit: '1024mb' }));
     server.use(
         bodyParser.urlencoded({
             extended: true

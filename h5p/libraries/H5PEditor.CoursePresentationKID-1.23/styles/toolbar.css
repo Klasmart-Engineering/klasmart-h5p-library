@@ -235,6 +235,10 @@
   font-family: 'H5PFontAwesome4';
   content: "\f009";
 }
+.h5p-dragnbar-jigsawpuzzlekid-button:before {
+  font-family: 'H5PFontAwesome4';
+  content: "\f12e";
+}
 .h5p-dragnbar-shape-button:before {
   content: "\e91c";
 }

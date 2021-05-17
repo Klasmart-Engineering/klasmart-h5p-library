@@ -1809,7 +1809,8 @@ H5PEditor.widgets.interactiveVideo = H5PEditor.InteractiveVideo = (function ($) 
     'H5P.Summary',
     'H5P.MarkTheWords',
     'H5P.DragText',
-    'H5P.TrueFalse'
+    'H5P.TrueFalse',
+    'H5P.JigsawPuzzleKID'
   ];
 
   return InteractiveVideoEditor;

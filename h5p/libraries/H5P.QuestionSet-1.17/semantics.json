@@ -129,7 +129,9 @@
         "H5P.MarkTheWords 1.9",
         "H5P.DragText 1.8",
         "H5P.TrueFalse 1.6",
-        "H5P.Essay 1.2"
+        "H5P.Essay 1.2",
+        "H5P.ImageHotspotQuestion 1.8",
+        "H5P.ImageMultipleHotspotQuestion 1.0"
       ]
     }
   },

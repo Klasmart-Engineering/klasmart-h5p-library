@@ -198,8 +198,13 @@ H5P.Audio.prototype.attach = function ($wrapper) {
   if (this.params.fitToWrapper === undefined || this.params.fitToWrapper) {
     audio.style.width = '100%';
     if (!this.isRoot()) {
-      // Only set height if this isn't a root
-      audio.style.height = '100%';
+      /*
+       * Only set height if this isn't a root
+       * Fixed height instead of 100% is a workaround for integrations that
+       * don't use an iframe (of adjusting height). 54px is default height of
+       * audio element in Chrome.
+       */
+      audio.style.height = '54px';
     }
   }
 

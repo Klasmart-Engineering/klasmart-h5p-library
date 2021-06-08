@@ -21,7 +21,6 @@ pipelines:
           script:
             - ls -la
             - pip3 install -U awscli
-            - apt update -qq && apt install -qqy git
 
             - export BRANCH_TAG=$(echo "$BITBUCKET_BRANCH" | sed -E 's/([^0-9a-zA-Z]+)/-/g')
             - export REPO=$DOCKER_REPO_URL/kidsloop-h5p-service      # DOCKER_REPO_URL is workspace wide variable
@@ -33,7 +32,7 @@ pipelines:
             - docker tag kidsloop-h5p-service:latest $REPO:$BRANCH_TAG
             - docker tag kidsloop-h5p-service:latest $REPO:$BRANCH_TAG-latest
             - docker tag kidsloop-h5p-service:latest $REPO:$BRANCH_TAG-$BITBUCKET_BUILD_NUMBER
-            - docker tag kidsloop-h5p-service:latest $REPO:$BRANCH_TAG-$COMMIT_TAG
+            - docker tag kidsloop-h5p-service:latest $REPO:$BRANCH_TAG-${BITBUCKET_COMMIT:0:7}
             - docker push $REPO:$BRANCH_TAG
             - docker push $REPO:$BRANCH_TAG-latest
             - docker push $REPO:$BRANCH_TAG-$BITBUCKET_BUILD_NUMBER
@@ -69,11 +68,9 @@ pipelines:
           script:
             - ls -la
             - pip3 install -U awscli
-            - apt update -qq && apt install -qqy git
 
             - export BRANCH_TAG=$(echo "$BITBUCKET_BRANCH" | sed -E 's/([^0-9a-zA-Z]+)/-/g')
             - export REPO=$DOCKER_REPO_URL/kidsloop-h5p-service      # DOCKER_REPO_URL is workspace wide variable
-            - export COMMIT_TAG=$(git rev-parse --short HEAD)
             - docker build --build-arg SSH_PRIVATE_KEY="$(cat /opt/atlassian/pipelines/agent/ssh/id_rsa)" -t kidsloop-h5p-service .
 
             - aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin $DOCKER_REPO_URL
@@ -81,7 +78,7 @@ pipelines:
             - docker tag kidsloop-h5p-service:latest $REPO:$BRANCH_TAG
             - docker tag kidsloop-h5p-service:latest $REPO:$BRANCH_TAG-latest
             - docker tag kidsloop-h5p-service:latest $REPO:$BRANCH_TAG-$BITBUCKET_BUILD_NUMBER
-            - docker tag kidsloop-h5p-service:latest $REPO:$BRANCH_TAG-$COMMIT_TAG
+            - docker tag kidsloop-h5p-service:latest $REPO:$BRANCH_TAG-${BITBUCKET_COMMIT:0:7}
             - docker push $REPO:$BRANCH_TAG
             - docker push $REPO:$BRANCH_TAG-latest
             - docker push $REPO:$BRANCH_TAG-$BITBUCKET_BUILD_NUMBER

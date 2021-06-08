@@ -21,15 +21,22 @@ pipelines:
           script:
             - ls -la
             - pip3 install -U awscli
-            
+
             - export BRANCH_TAG=$(echo "$BITBUCKET_BRANCH" | sed -E 's/([^0-9a-zA-Z]+)/-/g')
             - export REPO=$DOCKER_REPO_URL/kidsloop-h5p-service      # DOCKER_REPO_URL is workspace wide variable
+            - export COMMIT_TAG=$(git rev-parse --short HEAD)
             - docker build -t kidsloop-h5p-service .
 
             - aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin $DOCKER_REPO_URL
 
             - docker tag kidsloop-h5p-service:latest $REPO:$BRANCH_TAG
+            - docker tag kidsloop-h5p-service:latest $REPO:$BRANCH_TAG-latest
+            - docker tag kidsloop-h5p-service:latest $REPO:$BRANCH_TAG-$BITBUCKET_BUILD_NUMBER
+            - docker tag kidsloop-h5p-service:latest $REPO:$BRANCH_TAG-$COMMIT_TAG
             - docker push $REPO:$BRANCH_TAG
+            - docker push $REPO:$BRANCH_TAG-latest
+            - docker push $REPO:$BRANCH_TAG-$BITBUCKET_BUILD_NUMBER
+            - docker push $REPO:$BRANCH_TAG-$COMMIT_TAG
           services:
             - docker
           caches:
@@ -54,22 +61,29 @@ pipelines:
             - nodemodules
           artifacts:
             - node_modules/**/*
-            
+
       - step:
           name: "Push docker image to AWS"
           image: python:3.9-alpine
           script:
             - ls -la
             - pip3 install -U awscli
-            
+
             - export BRANCH_TAG=$(echo "$BITBUCKET_BRANCH" | sed -E 's/([^0-9a-zA-Z]+)/-/g')
             - export REPO=$DOCKER_REPO_URL/kidsloop-h5p-service      # DOCKER_REPO_URL is workspace wide variable
+            - export COMMIT_TAG=$(git rev-parse --short HEAD)
             - docker build -t kidsloop-h5p-service .
 
             - aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin $DOCKER_REPO_URL
 
             - docker tag kidsloop-h5p-service:latest $REPO:$BRANCH_TAG
+            - docker tag kidsloop-h5p-service:latest $REPO:$BRANCH_TAG-latest
+            - docker tag kidsloop-h5p-service:latest $REPO:$BRANCH_TAG-$BITBUCKET_BUILD_NUMBER
+            - docker tag kidsloop-h5p-service:latest $REPO:$BRANCH_TAG-$COMMIT_TAG
             - docker push $REPO:$BRANCH_TAG
+            - docker push $REPO:$BRANCH_TAG-latest
+            - docker push $REPO:$BRANCH_TAG-$BITBUCKET_BUILD_NUMBER
+            - docker push $REPO:$BRANCH_TAG-$COMMIT_TAG
           services:
             - docker
           caches:

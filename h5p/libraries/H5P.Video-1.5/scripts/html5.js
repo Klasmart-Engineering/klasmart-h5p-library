@@ -66,6 +66,10 @@ H5P.VideoHtml5 = (function ($) {
      * @private
      */
     const setInitialSource = function () {
+      if (qualities[currentQuality] === undefined) {
+        return;
+      }
+
       if (H5P.setSource !== undefined) {
         H5P.setSource(video, qualities[currentQuality].source, self.contentId)
       }
@@ -78,6 +82,13 @@ H5P.VideoHtml5 = (function ($) {
         }
         video.src = srcPath;
       }
+
+      // Relay play/pause/seeked events
+      ['play', 'pause', 'seeked'].forEach(function (type) {
+        video.addEventListener(type, function () {
+          self.trigger(type, self.getCurrentTime());
+        });
+      });
 
       // Add poster if provided
       if (options.poster) {
@@ -177,6 +188,19 @@ H5P.VideoHtml5 = (function ($) {
     video.setAttribute('webkit-playsinline', '');
     video.setAttribute('playsinline', '');
     video.setAttribute('preload', 'metadata');
+
+    // Remove buttons in Chrome's video player:
+    let controlsList = 'nodownload';
+    if (options.disableFullscreen) {
+      controlsList += ' nofullscreen';
+    }
+    if (options.disableRemotePlayback) {
+      controlsList += ' noremoteplayback';
+    }
+    video.setAttribute('controlsList', controlsList);
+
+    // Remove picture in picture as it interfers with other video players
+    video.disablePictureInPicture = true;
 
     // Set options
     video.disableRemotePlayback = (options.disableRemotePlayback ? true : false);
@@ -644,6 +668,7 @@ H5P.VideoHtml5 = (function ($) {
     mapEvent('pause', 'stateChange', H5P.Video.PAUSED);
     mapEvent('waiting', 'stateChange', H5P.Video.BUFFERING);
     mapEvent('loadedmetadata', 'loaded');
+    mapEvent('canplay', 'canplay');
     mapEvent('error', 'error');
     mapEvent('ratechange', 'playbackRateChange');
 
@@ -678,6 +703,22 @@ H5P.VideoHtml5 = (function ($) {
         }
       });
     });
+
+    // Alternative to 'canplay' event
+    /*self.on('resize', function () {
+      if (video.offsetParent === null) {
+        return;
+      }
+
+      video.style.width = '100%';
+      video.style.height = '100%';
+
+      var width = video.clientWidth;
+      var height = options.fit ? video.clientHeight : (width * (video.videoHeight / video.videoWidth));
+
+      video.style.width = width + 'px';
+      video.style.height = height + 'px';
+    });*/
 
     // Video controls are ready
     nextTick(function () {
@@ -817,7 +858,12 @@ H5P.VideoHtml5 = (function ($) {
    * @param {String} quality Index of preferred quality
    */
   var setPreferredQuality = function (quality) {
-    localStorage.setItem('h5pVideoQuality', quality);
+    try {
+      localStorage.setItem('h5pVideoQuality', quality);
+    }
+    catch (err) {
+      console.warn('Unable to set preferred video quality, localStorage is not available.');
+    }
   };
 
   /**
@@ -829,16 +875,27 @@ H5P.VideoHtml5 = (function ($) {
    */
   var getPreferredQuality = function () {
     // First check localStorage
-    let quality = localStorage.getItem('h5pVideoQuality');
+    let quality;
+    try {
+      quality = localStorage.getItem('h5pVideoQuality');
+    }
+    catch (err) {
+      console.warn('Unable to retrieve preferred video quality from localStorage.');
+    }
     if (!quality) {
-      // The fallback to old cookie solution
-      var settings = document.cookie.split(';');
-      for (var i = 0; i < settings.length; i++) {
-        var setting = settings[i].split('=');
-        if (setting[0] === 'H5PVideoQuality') {
-          quality = setting[1];
-          break;
+      try {
+        // The fallback to old cookie solution
+        var settings = document.cookie.split(';');
+        for (var i = 0; i < settings.length; i++) {
+          var setting = settings[i].split('=');
+          if (setting[0] === 'H5PVideoQuality') {
+            quality = setting[1];
+            break;
+          }
         }
+      }
+      catch (err) {
+        console.warn('Unable to retrieve preferred video quality from cookie.');
       }
     }
     return quality;

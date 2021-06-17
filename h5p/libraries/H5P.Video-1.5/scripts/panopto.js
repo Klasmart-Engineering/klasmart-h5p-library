@@ -64,7 +64,7 @@ H5P.VideoPanopto = (function ($) {
         events: {
           onIframeReady: function () {
             $placeholder.children(0).text('');
-            self.trigger('loaded');
+            player.loadVideo();
           },
           onReady: function () {
             self.trigger('loaded');
@@ -74,19 +74,29 @@ H5P.VideoPanopto = (function ($) {
               const captionTracks = player.getCaptionTracks();
               for (trackIndex in captionTracks) {
                 captions.push(new H5P.Video.LabelValue(captionTracks[trackIndex], trackIndex));
-                if (!currentTrack) {
-                  currentTrack = captions[0]; // No function for getting active caption track? Assuming first or Off is always default
-                }
               }
+
+              // Select active track
+              currentTrack = player.getSelectedCaptionTrack();
+              currentTrack = captions[currentTrack] ? captions[currentTrack] : null;
 
               self.trigger('captions', captions);
             }
+            self.pause();
           },
           onStateChange: function (state) {
             // TODO: Playback rate fix for IE11?
             if (state > -1 && state < 4) {
               self.trigger('stateChange', state);
             }
+
+            if (state === H5P.Video.PLAYING) {
+              self.trigger('play', player.getCurrentTime());
+            }
+            else if (state === H5P.Video.PAUSED) {
+              self.trigger('pause', player.getCurrentTime());
+            }
+            // No way to detect seeked via API
           },
           onPlaybackRateChange: function () {
             self.trigger('playbackRateChange', self.getPlaybackRate());

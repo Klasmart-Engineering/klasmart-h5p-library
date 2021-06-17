@@ -20,6 +20,7 @@ H5P.DragNBar = (function (EventDispatcher) {
 
     EventDispatcher.call(this);
     this.overflowThreshold = 13; // How many buttons to display before we add the more button.
+    this.overflowThresholdVertical = H5P.DragNBar.OVERFLOW_THRESHOLD_VERTICAL;
     this.buttons = buttons;
     this.$container = $container;
     this.$dialogContainer = $dialogContainer;
@@ -675,6 +676,26 @@ H5P.DragNBar.prototype.attach = function ($wrapper) {
   }
 
   this.containTooltips();
+
+  // Reflow vertical buttons in multiple columns to avoid vertical overflow
+  const amountColumns = Math.ceil((this.buttons.length - this.overflowThreshold) / this.overflowThresholdVertical);
+  if (amountColumns > 1) {
+    window.requestAnimationFrame(function () {
+      /*
+       * Apply width of buttons in horizontal toolbar to buttons in vertical
+       * toolbar and increase vertical toolbar width to allow having multiple
+       * columns. May require to adjust style sheet in content type.
+       */
+      const referenceButtonWidth = self.$list.find('.h5p-dragnbar-li').first().width();
+      const $verticalListItems = $list
+        .find('.h5p-dragnbar-li')
+        .addClass('h5p-dragnbar-overflow-vertical')
+        .width(referenceButtonWidth);
+
+      // jQuery takes care of the animation frame
+      $list.width(amountColumns * $verticalListItems.first().outerWidth());
+    });
+  }
 };
 
 /**
@@ -1443,3 +1464,6 @@ H5P.DragNBar.prototype.remove = function () {
     .off('keyup.dnb' + index, H5P.DragNBar.keyupHandler)
     .off('click.dnb' + index, H5P.DragNBar.clickHandler);
 };
+
+/** @constant {number} Number of buttons to display vertically in vertical toolbar */
+H5P.DragNBar.OVERFLOW_THRESHOLD_VERTICAL = 10;

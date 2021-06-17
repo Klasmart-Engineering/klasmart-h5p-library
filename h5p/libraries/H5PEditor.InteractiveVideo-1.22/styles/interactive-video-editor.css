@@ -127,6 +127,10 @@
   margin: 0;
 }
 
+.h5p-interactive-video-dragnbar .h5p-dragnbar-li-ul .h5p-dragnbar-li.h5p-dragnbar-overflow-vertical {
+  float: left;
+}
+
 .h5p-interactive-video-dragnbar .h5p-dragnbar-li-ul .h5p-dragnbar-li:last-child {
   padding-bottom: 0.2em;
 }

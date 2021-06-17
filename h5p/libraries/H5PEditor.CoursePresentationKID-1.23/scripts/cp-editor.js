@@ -300,8 +300,15 @@ H5PEditor.CoursePresentationKID.prototype.appendTo = function ($wrapper) {
     })
     .next()
     .click(function () {
-      var newSlide = H5P.cloneObject(that.params.slides[that.cp.$current.index()], true);
-      newSlide.keywords = [];
+      const oldSlide = that.params.slides[that.cp.$current.index()];
+      var newSlide = H5P.cloneObject(
+        {
+          elements: oldSlide.elements,
+          keywords: [],
+          slideBackgroundSelector: oldSlide.slideBackgroundSelector
+        },
+        true
+      );
       that.addSlide(newSlide);
       H5P.ContinuousText.Engine.run(that);
       that.updateSlidesSidebar();
@@ -1510,8 +1517,10 @@ H5PEditor.CoursePresentationKID.prototype.generateForm = function (elementParams
   });
 
   // Set correct aspect ratio on new images.
-  // TODO: Do not use/rely on magic numbers!
-  var library = element.children[4];
+  var library = element.children.filter(child => {
+    return child.field && child.field.name === 'action';
+  }).shift();
+
   if (!(library instanceof H5PEditor.None)) {
     var libraryChange = function () {
       if (library.children[0].field.type === 'image') {

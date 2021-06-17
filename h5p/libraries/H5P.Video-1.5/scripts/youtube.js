@@ -17,6 +17,9 @@ H5P.VideoYouTube = (function ($) {
     var id = 'h5p-youtube-' + numInstances;
     numInstances++;
 
+    // Keep track of state changes
+    self.stateChangeSequence = [];
+
     var $wrapper = $('<div/>');
     var $placeholder = $('<div/>', {
       id: id,
@@ -64,6 +67,7 @@ H5P.VideoYouTube = (function ($) {
           controls: options.controls ? 1 : 0,
           disablekb: options.controls ? 0 : 1,
           fs: 0,
+          loop: options.loop ? 1 : 0,
           playlist: options.loop ? videoId : undefined,
           rel: 0,
           showinfo: 0,
@@ -104,18 +108,7 @@ H5P.VideoYouTube = (function ($) {
             }
           },
           onStateChange: function (state) {
-            if (state.data > -1 && state.data < 4) {
-
-              // Fix for keeping playback rate in IE11
-              if (H5P.Video.IE11_PLAYBACK_RATE_FIX && state.data === H5P.Video.PLAYING && playbackRate !== 1) {
-                // YT doesn't know that IE11 changed the rate so it must be reset before it's set to the correct value
-                player.setPlaybackRate(1);
-                player.setPlaybackRate(playbackRate);
-              }
-              // End IE11 fix
-
-              self.trigger('stateChange', state.data);
-            }
+            self.handleStateChange(state.data);
           },
           onPlaybackQualityChange: function (quality) {
             self.trigger('qualityChange', quality.data);
@@ -166,6 +159,63 @@ H5P.VideoYouTube = (function ($) {
     self.appendTo = function ($container) {
       $container.addClass('h5p-youtube').append($wrapper);
       create();
+    };
+
+    /*
+     * Detect whether b is subarray of a at end of a.
+     * @param {number[]|string[]} a Array a.
+     * @param {number[]|string[]} b Array b.
+     * @return {boolean} True, if b is subarray of a at end of a.
+     */
+    self.isSubArrayEnd = function (a, b) {
+      return (a.length < b.length) ?
+        false :
+        a.slice(-b.length).every(function (item, index) {
+          return item === b[index];
+        });
+    };
+
+    /**
+     * Handle state change.
+     *
+     * YouTube's iframe player API doesn't allow to reliably differentiate
+     * a mere seek from a pause
+     *
+     * @param {number} type Type as definef by YouTube iframe API
+     */
+    self.handleStateChange = function (type) {
+      if (type > -1 && type < 4) {
+
+        // Fix for keeping playback rate in IE11
+        if (H5P.Video.IE11_PLAYBACK_RATE_FIX && state.data === H5P.Video.PLAYING && playbackRate !== 1) {
+          // YT doesn't know that IE11 changed the rate so it must be reset before it's set to the correct value
+          player.setPlaybackRate(1);
+          player.setPlaybackRate(playbackRate);
+        }
+        // End IE11 fix
+
+        self.trigger('stateChange', type);
+      }
+
+      // YouTube doesn't have a seek event. Infer it from state sequence [3, 1].
+      self.stateChangeSequence = self.stateChangeSequence.concat(type);
+
+      if (
+        type === H5P.Video.PLAYING &&
+        self.isSubArrayEnd(self.stateChangeSequence, [H5P.Video.BUFFERING, H5P.Video.PLAYING]) &&
+        self.stateChangeSequence.indexOf(-1) === -1 // Not seeking when starting video
+      ) {
+        self.trigger('seeked', player.getCurrentTime());
+        self.stateChangeSequence = [];
+      }
+      else if (type === H5P.Video.PLAYING) {
+        self.trigger('play', player.getCurrentTime());
+        self.stateChangeSequence = []
+      }
+      else if (type === H5P.Video.PAUSED) {
+        self.trigger('pause', player.getCurrentTime());
+        self.stateChangeSequence = []
+      }
     };
 
     /**
@@ -294,6 +344,20 @@ H5P.VideoYouTube = (function ($) {
       }
 
       return player.getDuration();
+    };
+
+    /**
+     * Get current status of the video.
+     *
+     * @public
+     * @returns {Number}
+     */
+     self.getPlayerState = function () {
+      if (!player || !player.getPlayerState) {
+        return;
+      }
+
+      return player.getPlayerState();
     };
 
     /**
@@ -467,13 +531,16 @@ H5P.VideoYouTube = (function ($) {
       var width = $wrapper[0].clientWidth;
       var height = options.fit ? $wrapper[0].clientHeight : (width * (9/16));
 
-      // Set size
-      $wrapper.css({
-        width: width + 'px',
-        height: height + 'px'
-      });
+      // Validate height before setting
+      if (height > 0) {
+        // Set size
+        $wrapper.css({
+          width: width + 'px',
+          height: height + 'px'
+        });
 
-      player.setSize(width, height);
+        player.setSize(width, height);
+      }
     });
   }
 

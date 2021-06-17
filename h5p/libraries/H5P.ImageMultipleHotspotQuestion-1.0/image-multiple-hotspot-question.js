@@ -302,6 +302,7 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
       width: hotspot.computedSettings.width + '%',
       height: hotspot.computedSettings.height + '%'
     }).appendTo(this.$imageWrapper);
+    $hotspotWrapper.append(this.audios[index].player);
 
     var $hotspot = $('<div>', {
       'class': 'image-hotspot ' + hotspot.computedSettings.figure
@@ -681,7 +682,7 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
     }
 
     const player = document.createElement('audio');
-    player.style.display = 'none';
+    player.classList.add('h5p-invisible-audio');
     player.src = H5P.getPath(audio[0].path, id);
 
     return {

@@ -204,7 +204,7 @@ H5P.Audio.prototype.attach = function ($wrapper) {
        * don't use an iframe (of adjusting height). 54px is default height of
        * audio element in Chrome.
        */
-      audio.style.height = '54px';
+      audio.style.height = (this.params.playerMode === 'full') ? '54px' : '100%';
     }
   }
 
@@ -213,10 +213,16 @@ H5P.Audio.prototype.attach = function ($wrapper) {
   if (this.params.playerMode === 'minimalistic') {
     audio.controls = false;
     this.addMinimalAudioPlayer($wrapper, false);
+
+    // audio element required for KidsLoop DOM/event replication
+    this.attachInvisibleAudio($wrapper, audio)
   }
   else if (this.params.playerMode === 'transparent') {
     audio.controls = false;
     this.addMinimalAudioPlayer($wrapper, true);
+
+    // audio element required for KidsLoop DOM/event replication
+    this.attachInvisibleAudio($wrapper, audio)
   }
   else {
     audio.autoplay = this.params.autoplay === undefined ? false : this.params.autoplay;
@@ -228,6 +234,17 @@ H5P.Audio.prototype.attach = function ($wrapper) {
     this.seekTo(this.oldTime);
   }
 };
+
+/**
+ * Attach invisible audio element. Required by KidsLoop DOM/event replication.
+ * @param {jQuery} $wrapper element to attach to.
+ */
+H5P.Audio.prototype.attachInvisibleAudio = function ($wrapper, audio) {
+  audio.classList.add('h5p-audio-invisible');
+  audio.style.width = 0;
+  audio.style.height = 0;
+  $wrapper.append(audio);
+}
 
 /**
  * Attaches a flash audio player to the wrapper.

@@ -110,3 +110,8 @@
 .h5p-audio-inner.h5p-audio-transparent .h5p-audio-minimal-pause:before {
   content: none;
 }
+
+.h5p-audio-wrapper .h5p-audio-invisible {
+  opacity: 0;
+  visibility: hidden;
+}

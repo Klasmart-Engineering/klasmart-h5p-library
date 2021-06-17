@@ -207,3 +207,10 @@
   height: 100%;
   width: 100%;
 }
+
+.h5p-image-multiple-hotspot-question .h5p-invisible-audio {
+  height: 0;
+  opacity: 0;
+  visibility: hidden;
+  width: 0;
+}

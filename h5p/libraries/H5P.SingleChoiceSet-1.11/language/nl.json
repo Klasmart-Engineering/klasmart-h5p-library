@@ -12,7 +12,7 @@
         }
       ],
       "field": {
-        "label": "Vraag & alternatieven",
+        "label": "Vraag &amp; alternatieven",
         "fields": [
           {
             "label": "Vraag"
@@ -132,6 +132,14 @@
           "label": "Label voor het vraagnummer in het antwoordoverzicht",
           "description": "Geeft het huidige vraagnummer in het antwoordoverzicht, variabele is :num",
           "default": "Vraag :num"
+        },
+        {
+          "label": "Ondersteunende technologie beschrijving voor \"Toon oplossing\" knop",
+          "default": "Toon de oplossing. De taak zal worden gemarkeerd met de juiste oplossing."
+        },
+        {
+          "label": "Ondersteunende technologie beschrijving voor \"Opnieuw\" knop",
+          "default": "De taak opnieuw proberen. Alle antwoorden resetten en de taak opnieuw starten."
         }
       ]
     }

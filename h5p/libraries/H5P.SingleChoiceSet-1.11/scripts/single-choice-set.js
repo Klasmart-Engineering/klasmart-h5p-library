@@ -68,7 +68,9 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
       slideOfTotal: 'Slide :num of :total',
       muteButtonLabel: "Mute feedback sound",
       scoreBarLabel: 'You got :num out of :total points',
-      solutionListQuestionNumber: 'Question :num'
+      solutionListQuestionNumber: 'Question :num',
+      a11yShowSolution: 'Show the solution. The task will be marked with its correct solution.',
+      a11yRetry: 'Retry the task. Reset all responses and start the task over again.',
     }, options.l10n !== undefined ? options.l10n : {});
 
     this.$container = $('<div>', {
@@ -135,7 +137,7 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
 
     if (!this.muted) {
       setTimeout(function () {
-        SoundEffects.setup(self.getLibraryFilePath(''));
+        SoundEffects.setup(self.getLibraryFilePath(''), self.$choices);
       }, 1);
     }
 
@@ -471,13 +473,17 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
     if (this.options.behaviour.enableRetry) {
       this.addButton('try-again', this.l10n.retryButtonLabel, function () {
         self.resetTask();
-      }, self.results.corrects !== self.options.choices.length);
+      }, self.results.corrects !== self.options.choices.length, {
+        'aria-label': this.l10n.a11yRetry,
+      });
     }
 
     if (this.options.behaviour.enableSolutionsButton) {
       this.addButton('show-solution', this.l10n.showSolutionButtonLabel, function () {
         self.showSolutions();
-      }, self.results.corrects !== self.options.choices.length);
+      }, self.results.corrects !== self.options.choices.length, {
+        'aria-label': this.l10n.a11yShowSolution,
+      });
     }
   };
 

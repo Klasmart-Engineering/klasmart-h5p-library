@@ -42,6 +42,12 @@
   margin: 0 !important;
   padding: 0 !important;
 }
+.h5p-memory-game .h5p-memory-wrap > audio.h5p-invisible-audio {
+  height: 0;
+  opacity: 0;
+  visibility: hidden;
+  width: 0;
+}
 .h5p-memory-game .h5p-memory-card {
   display: inline-block;
   outline: none;

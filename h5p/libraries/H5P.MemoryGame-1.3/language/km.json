@@ -77,43 +77,43 @@
       "fields": [
         {
           "label": "Card turns text",
-          "default": "Kort snur"
+          "default": "កាតបង្វិល"
         },
         {
           "label": "Time spent text",
-          "default": "Tid brukt"
+          "default": "ពេលចំណាយ"
         },
         {
           "label": "Feedback text",
-          "default": "Bra jobba!"
+          "default": "ល្អណាស់!"
         },
         {
           "label": "Try again button text",
-          "default": "prøv igjen?"
+          "default": "សាកម្តងទៀត?"
         },
         {
           "label": "Close button label",
-          "default": "Lukk"
+          "default": "បិទ"
         },
         {
           "label": "Game label",
-          "default": "Memory-spel. Finn dei matchande korta."
+          "default": "ល្បែងចងចាំ! រកកាតដែលផ្គូផ្គង"
         },
         {
           "label": "Game finished label",
-          "default": "Alle korta har blitt funne."
+          "default": "អ្នកបានរកឃើញកាតទាំងអស់ហើយ!"
         },
         {
           "label": "Card indexing label",
-          "default": "Kort %num:"
+          "default": "កាត %num:"
         },
         {
           "label": "Card unturned label",
-          "default": "Ikkje snudd."
+          "default": "មិនបានបង្វិល។"
         },
         {
           "label": "Card matched label",
-          "default": "Match funne."
+          "default": "រកឃើញកាតផ្គូផ្គង។"
         }
       ]
     }

@@ -5,69 +5,69 @@
       "fields": [
         {
           "label": "Type",
-          "description": "De optionele media wordt boven de vraag getoond."
+          "description": "Optional media to display above the question."
         },
         {
-          "label": "Schakel het beeldzoomen uit"
+          "label": "Disable image zooming"
         }
       ]
     },
     {
-      "label": "Taakomschrijving",
-      "description": "Beschrijf hier je taak.",
-      "placeholder": "Luister alsjelieft goed en schrijf op wat je hoort."
+      "label": "Task description",
+      "description": "Describe your task here.",
+      "placeholder": "Please listen carefully and write what you hear."
     },
     {
-      "label": "Zinnen",
+      "label": "Sentences",
       "widgets": [
         {
-          "label": "Standaard"
+          "label": "Default"
         }
       ],
-      "entity": "Zin",
+      "entity": "Sentence",
       "field": {
-        "label": "Zin",
+        "label": "Sentence",
         "fields": [
           {
             "label": "Description",
             "description": "You can optionally put a simple description above the text input field, useful e.g. for dialogues."
           },
           {
-            "label": "Geluidsvoorbeeld",
-            "description": "De zin gesproken in normale snelheid"
+            "label": "Sound sample",
+            "description": "Sentence spoken in normal speed"
           },
           {
-            "label": "Geluidsvoorbeeld langzaam",
-            "description": "De zin gesproken in langzame snelheid"
+            "label": "Sound sample slow",
+            "description": "Sentence spoken in slow speed"
           },
           {
-            "label": "Tekst",
-            "description": "De te schrijven tekst. You can add alternate spellings to a word by adding a vertical line (|) behind followed by an alternative."
+            "label": "Text",
+            "description": "Text that should be written. You can add alternate spellings to a word by adding a vertical line (|) behind followed by an alternative."
           }
         ]
       }
     },
     {
-      "label": "Algehele feedback",
+      "label": "Overall Feedback",
       "fields": [
         {
           "widgets": [
             {
-              "label": "Standaard"
+              "label": "Default"
             }
           ],
-          "label": "Definieer aangepaste feedback voor elke scorereeks",
-          "description": "Druk op de knop \"Voeg scorereeks toe\" om zoveel reeksen toe te voegen als nodig is. Voorbeeld: 0-20% Onvoldoende score, 21-91% Gemiddelde score, 91-100% Uitstekende score!",
-          "entity": "reeks",
+          "label": "Define custom feedback for any score range",
+          "description": "Click the \"Add range\" button to add as many ranges as you need. Example: 0-20% Bad score, 21-91% Average Score, 91-100% Great Score!",
+          "entity": "range",
           "field": {
             "fields": [
               {
-                "label": "Scorereeks"
+                "label": "Score Range"
               },
               {},
               {
-                "label": "Feedback voor de gedefinieerde scorereeks",
-                "placeholder": "Vul de aangepaste feedback in"
+                "label": "Feedback for defined score range",
+                "placeholder": "Fill in the feedback"
               }
             ]
           }
@@ -75,16 +75,16 @@
       ]
     },
     {
-      "label": "Gedragsinstellingen",
-      "description": "Met deze opties kun je bepalen hoe de taak zich gedraagt.",
+      "label": "Behavioural settings",
+      "description": "These options will let you control how the task behaves.",
       "fields": [
         {
-          "label": "Maximaal aantal pogingen",
-          "description": "Dit begrenst het aantal maal dat de voorbeelden voor elke zin kunnen worden beluisterd."
+          "label": "Maximum tries",
+          "description": "Will limit the number of times the samples for each sentence can be listened to."
         },
         {
-          "label": "Maximaal aantal pogingen voor de langzame snelheid",
-          "description": "Dit begrenst het aantal maal dat de langzame voorbeelden voor elke zin kunnen worden beluisterd."
+          "label": "Maximum tries for slow speed",
+          "description": "Will limit the number of times the slow samples for each sentence can be listened to."
         },
         {
           "label": "Shuffle sentences",
@@ -102,8 +102,8 @@
           ]
         },
         {
-          "label": "Negeer interpunctie",
-          "description": "Indien aangevinkt, worden de leestekens niet in aanmerking genomen bij het bepalen van de score."
+          "label": "Ignore Punctuation marks",
+          "description": "If checked, punctuation marks will not be considered for scoring."
         },
         {
           "label": "Zero mistakes mode",
@@ -114,8 +114,8 @@
           "description": "If checked, typos will be displayed in a custom style distinguishing them from clear mistakes."
         },
         {
-          "label": "De waarde van de typefouten",
-          "description": "Bepaal in welke mate typefouten (word with 3-9 characters: up to 1 mistake, word with more than 9 characters: up to 2 mistakes) als fout gelden.",
+          "label": "Value of typos",
+          "description": "Determine to which extent typing errors (word with 3-9 characters: up to 1 mistake, word with more than 9 characters: up to 2 mistakes) count as a real mistake.",
           "options": [
             {
               "label": "100 %"
@@ -160,20 +160,20 @@
           "description": "Activate if particular characters (e.g. Chinese Han characters) should be split into separate words automatically."
         },
         {
-          "label": "Schakel \"Opnieuw\" in"
+          "label": "Enable \"Retry\""
         },
         {
-          "label": "Schakel \"Oplossing\" in"
+          "label": "Enable \"Show solution\" button"
         }
       ]
     },
     {
-      "label": "Gebruikersomgeving",
+      "label": "User interface",
       "fields": [
         {
-          "label": "Algemene feedback",
-          "description": "Je kunt gebruik maken van meerdere plaatshouders die worden vervangen door het juiste nummer: @matches = aantal overeenkomsten, @total = totaal aantal fouten, @capped = gemaximeerd totaal aantal fouten, @wrong = verkeerde woorden, @added = extra woorden, @missing = ontbrekende woorden, @typo = tikfouten",
-          "default": "Je hebt @total fout(en) gemaakt."
+          "label": "General feedback",
+          "description": "You can use several placeholders that will be replaced with the adequate number: @matches = number of matches, @total = total mistakes, @capped = capped total mistakes, @wrong = wrong words, @added = additional words, @missing = missing words, @typo = typing errors",
+          "default": "You have made @total mistake(s)."
         },
         {
           "label": "General feedback (zero mistakes mode)",
@@ -181,25 +181,25 @@
           "default": "You have entered @total word(s) correctly and @typo word(s) with minor mistakes."
         },
         {
-          "label": "Tekst voor de \"Controleer\" -knop",
-          "default": "Controleer"
+          "label": "Text for \"Check\" button",
+          "default": "Check"
         },
         {
-          "label": "Tekst voor de \"Opnieuw\" -knop",
-          "default": "Opnieuw"
+          "label": "Text for \"Retry\" button",
+          "default": "Retry"
         },
         {
-          "label": "Tekst voor de \"Toon oplossing\" -knop",
-          "default": "Toon oplossing"
+          "label": "Text for \"Show solution\" button",
+          "default": "Show solution"
         },
         {
-          "label": "Bericht dat de audio niet wordt ondersteund",
-          "default": "Je browser ondersteunt deze audio niet."
+          "label": "Audio not supported message",
+          "default": "Your browser does not support this audio."
         }
       ]
     },
     {
-      "label": "Readspeakers",
+      "label": "Readspeaker",
       "fields": [
         {
           "label": "Assistive technology description for \"Check\" button",
@@ -214,126 +214,126 @@
           "default": "Retry the task. Reset all responses and start the task over again."
         },
         {
-          "label": "Afspelen knop",
-          "default": "Afspelen"
+          "label": "Play button",
+          "default": "Play"
         },
         {
-          "label": "Langzaam afspelen knop",
-          "default": "Langzaam afspelen"
+          "label": "Play slowly button",
+          "default": "Play slowly"
         },
         {
-          "label": "Resterende pogingen (tekst voor readspeakers en muisover tekst)",
-          "description": "@number wordt vervangen door het huidige aantal resterende pogingen.",
-          "default": "Aantal resterende pogingen: @number"
+          "label": "Tries left (text for readspeakers and hover text)",
+          "description": "@number will be replaced by the current number of tries left.",
+          "default": "Number of tries left: @number"
         },
         {
-          "label": "Oneindig (tekst voor readspeakers en muisover tekst)",
-          "default": "oneindig"
+          "label": "Infinite (text for readspeakers and hover text)",
+          "default": "infinite"
         },
         {
-          "label": "Tekstveld invoeren",
-          "default": "Voer in wat je hebt gehoord."
+          "label": "Enter text field",
+          "default": "Enter what you have heard."
         },
         {
-          "label": "Je resultaat",
+          "label": "Your result",
           "description": "@score will be replaced by the number of points. @total will be replaced by the maximum possible points.",
           "default": "You got @score out of @total points"
         },
         {
-          "label": "Oplossing",
-          "default": "Oplossing"
+          "label": "Solution",
+          "default": "Solution"
         },
         {
-          "label": "Zin",
-          "default": "Zin"
+          "label": "Sentence",
+          "default": "Sentence"
         },
         {
           "label": "Item",
           "default": "Item"
         },
         {
-          "label": "Juist",
-          "default": "juist"
+          "label": "Correct",
+          "default": "correct"
         },
         {
-          "label": "Onjuist",
-          "default": "onjuist"
+          "label": "Wrong",
+          "default": "wrong"
         },
         {
-          "label": "Kleine fout",
-          "default": "kleine fout"
+          "label": "Small mistake",
+          "default": "small mistake"
         },
         {
-          "label": "Ontbrekend woord of symbool",
-          "default": "ontbrekend"
+          "label": "Missing word or symbol",
+          "default": "missing"
         },
         {
-          "label": "Toegevoegd woord of symbool",
-          "default": "toegevoegd"
+          "label": "Added word or symbol",
+          "default": "added"
         },
         {
           "label": "Correct solution",
           "default": "Should have been"
         },
         {
-          "label": "Of",
-          "default": "of"
+          "label": "Or",
+          "default": "or"
         },
         {
-          "label": "Punt",
-          "default": "punt"
+          "label": "Point",
+          "default": "point"
         },
         {
-          "label": "Punten",
-          "default": "punten"
+          "label": "Points",
+          "default": "points"
         },
         {
-          "label": "Punt",
-          "default": "punt"
+          "label": "Period",
+          "default": "period"
         },
         {
-          "label": "Uitroepteken",
-          "default": "uitroepteken"
+          "label": "Exclamation point",
+          "default": "exclamation point"
         },
         {
-          "label": "Vraagteken",
-          "default": "vraagteken"
+          "label": "Question mark",
+          "default": "question mark"
         },
         {
-          "label": "Komma",
-          "default": "komma"
+          "label": "Comma",
+          "default": "comma"
         },
         {
-          "label": "Enkel aanhalingsteken",
-          "default": "enkel aanhalingsteken"
+          "label": "Single quote",
+          "default": "single quote"
         },
         {
-          "label": "Dubbele aanhalingstekens",
-          "default": "dubbele aanhalingstekens"
+          "label": "Double quote",
+          "default": "double quote"
         },
         {
-          "label": "Dubbele punt",
-          "default": "dubbele punt"
+          "label": "Colon",
+          "default": "colon"
         },
         {
-          "label": "Puntkomma",
-          "default": "puntkomma"
+          "label": "Semicolon",
+          "default": "semicolon"
         },
         {
           "label": "Plus",
           "default": "plus"
         },
         {
-          "label": "Min",
-          "default": "min"
+          "label": "Minus",
+          "default": "minus"
         },
         {
           "label": "Asterisk",
           "default": "asterisk"
         },
         {
-          "label": "Schuine streep naar voren",
-          "default": "schuine streep naar voren"
+          "label": "Forward slash",
+          "default": "forward slash"
         }
       ]
     }

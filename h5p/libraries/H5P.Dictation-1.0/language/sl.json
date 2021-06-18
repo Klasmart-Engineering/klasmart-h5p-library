@@ -87,8 +87,27 @@
           "description": "Omejitev možnega števila predvajanja upočasnjenega posnetka (za vsak stavek posebej)."
         },
         {
+          "label": "Shuffle sentences",
+          "description": "Define when the sentences should be shuffled.",
+          "options": [
+            {
+              "label": "Never"
+            },
+            {
+              "label": "Once when starting exercise"
+            },
+            {
+              "label": "On every try"
+            }
+          ]
+        },
+        {
           "label": "Ne upoštevaj ločil",
           "description": "V primeru onemogočene nastavitve se bo v stavkih točkoval tudi vnos ločil."
+        },
+        {
+          "label": "Zero mistakes mode",
+          "description": "If checked, only correct answers will be considered for scoring. Mistakes will not be punished."
         },
         {
           "label": "Tipkarske napake prikaži ločeno",
@@ -157,6 +176,11 @@
           "default": "Število napak: @total."
         },
         {
+          "label": "General feedback (zero mistakes mode)",
+          "description": "You can use several placeholders that will be replaced with the adequate number: @matches = number of matches, @total = total score, @wrong = wrong words, @added = additional words, @missing = missing words, @typo = typing errors",
+          "default": "You have entered @total word(s) correctly and @typo word(s) with minor mistakes."
+        },
+        {
           "label": "Besedilo za gumb \"Preveri\"",
           "default": "Preveri"
         },
@@ -177,6 +201,18 @@
     {
       "label": "Bralniki zaslona",
       "fields": [
+        {
+          "label": "Assistive technology description for \"Check\" button",
+          "default": "Check the answers. The responses will be marked as correct, incorrect, or unanswered."
+        },
+        {
+          "label": "Assistive technology description for \"Show Solution\" button",
+          "default": "Show the solution. The task will be marked with its correct solution."
+        },
+        {
+          "label": "Assistive technology description for \"Retry\" button",
+          "default": "Retry the task. Reset all responses and start the task over again."
+        },
         {
           "label": "Gumb za predvajanje",
           "default": "Predvajaj"

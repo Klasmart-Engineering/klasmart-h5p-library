@@ -2,6 +2,7 @@ H5P.SingleChoiceSet = H5P.SingleChoiceSet || {};
 
 H5P.SingleChoiceSet.SoundEffects = (function () {
   var isDefined = false;
+  const audioObjects = {};
 
   var SoundEffects = {
     types: [
@@ -11,24 +12,44 @@ H5P.SingleChoiceSet.SoundEffects = (function () {
   };
 
   /**
-   * Setup defined sounds
+   * Setup defined sounds.
    *
-   * @param {string} libraryPath
-   * @return {boolean} True if setup was successfull, otherwise false
+   * @param {string} libraryPath Library path.
+   * @param {jQuery} $dom DOM to attach audio element to.
+   * @return {boolean} True if setup was successfull, otherwise false.
    */
-  SoundEffects.setup = function (libraryPath) {
-    if (isDefined || !H5P.SoundJS.initializeDefaultPlugins()) {
+  SoundEffects.setup = function (libraryPath, $dom) {
+    if (isDefined) {
       return false;
     }
 
-    H5P.SoundJS.alternateExtensions = ['mp3'];
-    for (var i = 0; i < SoundEffects.types.length; i++) {
-      var type = SoundEffects.types[i];
-      H5P.SoundJS.registerSound(libraryPath + 'sounds/' + type + '.ogg', type);
+    for (let i = 0; i < SoundEffects.types.length; i++) {
+      const type = SoundEffects.types[i];
+      audioObjects[type] = SoundEffects.createAudio(libraryPath, type);
+      $dom.append(audioObjects[type].player);
     }
     isDefined = true;
 
     return true;
+  };
+
+  /**
+   * Create audio object.
+   * @param {string} libraryPath Library path.
+   * @param {number} id H5P content type id.
+   * @return {object} Audio object.
+   */
+  SoundEffects.createAudio = function (libraryPath, type) {
+    const path = libraryPath + 'sounds/' + type + '.mp3';
+
+    const player = document.createElement('audio');
+    player.classList.add('h5p-invisible-audio');
+    player.src = path;
+
+    return {
+      player: player,
+      promise: null
+    };
   };
 
   /**
@@ -38,7 +59,30 @@ H5P.SingleChoiceSet.SoundEffects = (function () {
    * @param  {number} delay Delay in milliseconds
    */
   SoundEffects.play = function (type, delay) {
-    H5P.SoundJS.play(type, H5P.SoundJS.INTERRUPT_NONE, (delay || 0));
+    if (typeof type !== 'string') {
+      return;
+    }
+
+    const audio = audioObjects[type];
+
+    if (!audio) {
+      return;
+    }
+
+    // People might click quickly ...
+    if (!audio.promise) {
+      setTimeout(function () {
+        audio.promise = audio.player.play();
+        audio.promise
+          .then(() => {
+            audio.promise = null;
+          })
+          .catch(() => {
+            // Browser policy prevents playing
+            audio.promise = null;
+          });
+      }, delay || 0);
+    }
   };
 
   return SoundEffects;

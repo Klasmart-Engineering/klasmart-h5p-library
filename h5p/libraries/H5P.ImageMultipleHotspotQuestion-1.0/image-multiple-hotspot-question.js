@@ -302,7 +302,9 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
       width: hotspot.computedSettings.width + '%',
       height: hotspot.computedSettings.height + '%'
     }).appendTo(this.$imageWrapper);
-    $hotspotWrapper.append(this.audios[index].player);
+    if (this.audios[index]) {
+      $hotspotWrapper.append(this.audios[index].player);
+    }
 
     var $hotspot = $('<div>', {
       'class': 'image-hotspot ' + hotspot.computedSettings.figure

@@ -77,43 +77,43 @@
       "fields": [
         {
           "label": "Card turns text",
-          "default": "Kort snur"
+          "default": "Card turns"
         },
         {
           "label": "Time spent text",
-          "default": "Tid brukt"
+          "default": "Time spent"
         },
         {
           "label": "Feedback text",
-          "default": "Bra jobba!"
+          "default": "Good work!"
         },
         {
           "label": "Try again button text",
-          "default": "prøv igjen?"
+          "default": "Try again?"
         },
         {
           "label": "Close button label",
-          "default": "Lukk"
+          "default": "Close"
         },
         {
           "label": "Game label",
-          "default": "Memory-spel. Finn dei matchande korta."
+          "default": "Memory Game. Find the matching cards."
         },
         {
           "label": "Game finished label",
-          "default": "Alle korta har blitt funne."
+          "default": "All of the cards have been found."
         },
         {
           "label": "Card indexing label",
-          "default": "Kort %num:"
+          "default": "Card %num:"
         },
         {
           "label": "Card unturned label",
-          "default": "Ikkje snudd."
+          "default": "Unturned."
         },
         {
           "label": "Card matched label",
-          "default": "Match funne."
+          "default": "Match found."
         }
       ]
     }

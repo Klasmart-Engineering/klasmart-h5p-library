@@ -44,6 +44,7 @@
     if (audio) {
       // Check if browser supports audio.
       audioPlayer = document.createElement('audio');
+      audioPlayer.classList.add('h5p-invisible-audio');
       if (audioPlayer.canPlayType !== undefined) {
         // Add supported source files.
         for (var i = 0; i < audio.length; i++) {
@@ -227,6 +228,7 @@
           .end();
 
       if (audioPlayer) {
+        $wrapper.append(audioPlayer);
         $card.children('.h5p-back')
           .click(function () {
             if ($card.hasClass('h5p-memory-audio-playing')) {

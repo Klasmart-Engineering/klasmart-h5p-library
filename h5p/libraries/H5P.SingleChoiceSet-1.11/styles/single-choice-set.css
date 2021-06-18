@@ -533,3 +533,10 @@ li.h5p-sc-alternative .h5p-sc-status {
   min-height: initial;
   max-height: none;
 }
+
+.h5p-sc-set .h5p-invisible-audio {
+  height: 0;
+  opacity: 0;
+  visibility: hidden;
+  width: 0;
+}

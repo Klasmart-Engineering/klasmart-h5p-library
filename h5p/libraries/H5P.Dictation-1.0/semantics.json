@@ -91,7 +91,9 @@
           "label": "Sound sample",
           "description": "Sentence spoken in normal speed",
           "importance": "medium",
-          "widgetExtensions": ["AudioRecorder"]
+          "widgetExtensions": [
+            "AudioRecorder"
+          ]
         },
         {
           "name": "sampleAlternative",
@@ -100,7 +102,9 @@
           "description": "Sentence spoken in slow speed",
           "importance": "medium",
           "optional": true,
-          "widgetExtensions": ["AudioRecorder"]
+          "widgetExtensions": [
+            "AudioRecorder"
+          ]
         },
         {
           "name": "text",
@@ -195,19 +199,48 @@
         "min": 1
       },
       {
+        "name": "shuffleSentences",
+        "type": "select",
+        "label": "Shuffle sentences",
+        "description": "Define when the sentences should be shuffled.",
+        "options": [
+          {
+            "value": "never",
+            "label": "Never"
+          },
+          {
+            "value": "once",
+            "label": "Once when starting exercise"
+          },
+          {
+            "value": "onRetry",
+            "label": "On every try"
+          }
+        ],
+        "default": "never"
+      },
+      {
         "name": "ignorePunctuation",
         "type": "boolean",
         "label": "Ignore Punctuation marks",
-        "description": "If checked, punctuation marks will not be considerd for scoring.",
+        "description": "If checked, punctuation marks will not be considered for scoring.",
         "optional": false,
         "default": true
+      },
+      {
+        "name": "zeroMistakeMode",
+        "type": "boolean",
+        "label": "Zero mistakes mode",
+        "description": "If checked, only correct answers will be considered for scoring. Mistakes will not be punished.",
+        "default": false,
+        "optional": false
       },
       {
         "name": "customTypoDisplay",
         "type": "boolean",
         "label": "Custom typo display",
         "description": "If checked, typos will be displayed in a custom style distinguishing them from clear mistakes.",
-        "default": true,
+        "default": false,
         "optional": false
       },
       {
@@ -216,20 +249,20 @@
         "label": "Value of typos",
         "description": "Determine to which extent typing errors (word with 3-9 characters: up to 1 mistake, word with more than 9 characters: up to 2 mistakes) count as a real mistake.",
         "options": [
-            {
-              "value": "100",
-              "label": "100 %"
-            },
-            {
-              "value": "50",
-              "label": "50 %"
-            },
-            {
-              "value": "0",
-              "label": "0 %"
-            }
-          ],
-        "default": "50"
+          {
+            "value": "100",
+            "label": "100 %"
+          },
+          {
+            "value": "50",
+            "label": "50 %"
+          },
+          {
+            "value": "0",
+            "label": "0 %"
+          }
+        ],
+        "default": "100"
       },
       {
         "name": "alternateSolution",
@@ -311,6 +344,14 @@
         "default": "You have made @total mistake(s)."
       },
       {
+        "name": "generalFeedbackZeroMistakesMode",
+        "type": "text",
+        "label": "General feedback (zero mistakes mode)",
+        "description": "You can use several placeholders that will be replaced with the adequate number: @matches = number of matches, @total = total score, @wrong = wrong words, @added = additional words, @missing = missing words, @typo = typing errors",
+        "importance": "low",
+        "default": "You have entered @total word(s) correctly and @typo word(s) with minor mistakes."
+      },
+      {
         "name": "checkAnswer",
         "type": "text",
         "label": "Text for \"Check\" button",
@@ -347,6 +388,27 @@
     "label": "Readspeaker",
     "importance": "low",
     "fields": [
+      {
+        "name": "check",
+        "type": "text",
+        "label": "Assistive technology description for \"Check\" button",
+        "importance": "low",
+        "default": "Check the answers. The responses will be marked as correct, incorrect, or unanswered."
+      },
+      {
+        "name": "showSolution",
+        "type": "text",
+        "label": "Assistive technology description for \"Show Solution\" button",
+        "importance": "low",
+        "default": "Show the solution. The task will be marked with its correct solution."
+      },
+      {
+        "name": "retry",
+        "type": "text",
+        "label": "Assistive technology description for \"Retry\" button",
+        "importance": "low",
+        "default": "Retry the task. Reset all responses and start the task over again."
+      },
       {
         "name": "play",
         "type": "text",

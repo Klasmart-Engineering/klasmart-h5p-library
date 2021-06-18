@@ -87,8 +87,27 @@
           "description": "Limitará o número de vezes que as amostras lentas de cada sentença podem ser ouvidas."
         },
         {
+          "label": "Shuffle sentences",
+          "description": "Define when the sentences should be shuffled.",
+          "options": [
+            {
+              "label": "Never"
+            },
+            {
+              "label": "Once when starting exercise"
+            },
+            {
+              "label": "On every try"
+            }
+          ]
+        },
+        {
           "label": "Ignorar marcas de pontuação",
           "description": "Se marcada, os sinais de pontuação não serão considerados para pontuação."
+        },
+        {
+          "label": "Zero mistakes mode",
+          "description": "If checked, only correct answers will be considered for scoring. Mistakes will not be punished."
         },
         {
           "label": "Exibição de erro de digitação personalizada",
@@ -157,6 +176,11 @@
           "default": "Você cometeu @total erro(s)."
         },
         {
+          "label": "General feedback (zero mistakes mode)",
+          "description": "You can use several placeholders that will be replaced with the adequate number: @matches = number of matches, @total = total score, @wrong = wrong words, @added = additional words, @missing = missing words, @typo = typing errors",
+          "default": "You have entered @total word(s) correctly and @typo word(s) with minor mistakes."
+        },
+        {
           "label": "Texto para o botão \"Verificar\"",
           "default": "Verificar"
         },
@@ -177,6 +201,18 @@
     {
       "label": "Alto-falante",
       "fields": [
+        {
+          "label": "Assistive technology description for \"Check\" button",
+          "default": "Check the answers. The responses will be marked as correct, incorrect, or unanswered."
+        },
+        {
+          "label": "Assistive technology description for \"Show Solution\" button",
+          "default": "Show the solution. The task will be marked with its correct solution."
+        },
+        {
+          "label": "Assistive technology description for \"Retry\" button",
+          "default": "Retry the task. Reset all responses and start the task over again."
+        },
         {
           "label": "Botão Reproduzir",
           "default": "Reproduzir"

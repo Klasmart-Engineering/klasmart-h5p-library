@@ -108,7 +108,7 @@ H5P.VideoYouTube = (function ($) {
             }
           },
           onStateChange: function (state) {
-            self.handleStateChange(state.data);
+            self.handleStateChange(state);
           },
           onPlaybackQualityChange: function (quality) {
             self.trigger('qualityChange', quality.data);
@@ -181,9 +181,14 @@ H5P.VideoYouTube = (function ($) {
      * YouTube's iframe player API doesn't allow to reliably differentiate
      * a mere seek from a pause
      *
-     * @param {number} type Type as definef by YouTube iframe API
+     * @param {Object} state Type as defined by YouTube iframe API
      */
-    self.handleStateChange = function (type) {
+    self.handleStateChange = function (state) {
+      // This line is needed by KidsLoop Live. Propagate onStateChange event to outside to replicate
+      // youtube player behavior on student side using rrweb package.
+      $('#' + id).trigger('ytPlayerStateChange', [ id, player, state ]);
+
+      const type = state.data;
       if (type > -1 && type < 4) {
 
         // Fix for keeping playback rate in IE11

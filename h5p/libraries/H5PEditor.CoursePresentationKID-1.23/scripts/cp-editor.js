@@ -309,6 +309,10 @@ H5PEditor.CoursePresentationKID.prototype.appendTo = function ($wrapper) {
         },
         true
       );
+
+      // Reset subcontent ids copied elements
+      that.resetSubContentId(newSlide.elements);
+
       that.addSlide(newSlide);
       H5P.ContinuousText.Engine.run(that);
       that.updateSlidesSidebar();
@@ -355,6 +359,29 @@ H5PEditor.CoursePresentationKID.prototype.appendTo = function ($wrapper) {
   });
 
   this.updateSlidesSidebar();
+};
+
+/**
+ * Recursively reset all subContentIds in an object.
+ * @param {object} params Parameters to parse.
+ */
+H5PEditor.CoursePresentationKID.prototype.resetSubContentId = function (params) {
+  const that = this;
+
+  if (Array.isArray(params)) {
+    params.forEach(function (param) {
+      that.resetSubContentId(param);
+    });
+  }
+  else if (typeof params === 'object') {
+    if (params.library && params.subContentId) {
+      params.subContentId = H5P.createUUID();
+    }
+
+    for (param in params) {
+      that.resetSubContentId(params[param]);
+    }
+  }
 };
 
 /**

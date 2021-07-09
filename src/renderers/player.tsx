@@ -11,7 +11,8 @@ function Player(props: any):any {
         <html className="h5p-iframe">
             <head>
                 <meta charSet="utf-8" />
-                
+                {/* Prevent right-click/context-menu from showing */}
+                <script>{"window.addEventListener(`contextmenu`, function(e){ e.preventDefault(); }, false)"}</script>
                 { props.model.styles.map((style) => (
                     <link rel="stylesheet" href={style} />
                 ))}

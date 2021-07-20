@@ -22,6 +22,12 @@ import { displayIps } from './utils';
 const start = async () => {
     // We use i18next to localize messages sent to the user. You can use any
     // localization library you like.
+    const options = {
+        // Order and from where user language should be detected.
+        order: ['querystring', 'cookie', 'header'],
+        lookupCookie: 'locale',
+      }
+
     const translationFunction = await i18next
         .use(i18nextFsBackend)
         .use(i18nextHttpMiddleware.LanguageDetector) // This will add the
@@ -35,6 +41,7 @@ const start = async () => {
             },
             debug: process.env.DEBUG && process.env.DEBUG.includes('i18n'),
             defaultNS: 'server',
+            detection: options,
             fallbackLng: 'en',
             ns: [
                 'client',

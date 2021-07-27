@@ -364,6 +364,7 @@ H5P.GoalsPage = (function ($, EventDispatcher) {
     definition.interactionType = 'fill-in';
     definition.correctResponsesPattern = '';
     definition.extensions = {
+      'https://h5p.org/x-api/h5p-local-content-id': self.id,
       'https://h5p.org/x-api/h5p-machine-name': 'H5P.GoalsPage'
     };
 

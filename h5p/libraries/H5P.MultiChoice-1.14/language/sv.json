@@ -39,8 +39,8 @@
                 "description": "Meddelande kommer visas under svaret när användaren väljer \"rätta\" om detta svar är valt."
               },
               {
-                "label": "Meddelande visas om svar inte är valt displayed if answer is not selected",
-                "description": "Meddelande kommer visas under svaret när användaren väljer \"check\" om detta svar inte är valt."
+                "label": "Meddelande visas om svar inte är valt",
+                "description": "Meddelande kommer visas under svaret när användaren väljer \"rätta\" om detta svar inte är valt."
               }
             ]
           }
@@ -136,16 +136,16 @@
           "default": "Svara innan du visar lösningen"
         },
         {
-          "label": "Assistive technology description for \"Check\" button",
-          "default": "Check the answers. The responses will be marked as correct, incorrect, or unanswered."
+          "label": "Text för knappen \"Rätta\" i tillgänglighetshjälpmedel",
+          "default": "Rätta svaren. Svaren kommer att markeras som korrekta, felaktiga eller obesvarade."
         },
         {
-          "label": "Assistive technology description for \"Show Solution\" button",
-          "default": "Show the solution. The task will be marked with its correct solution."
+          "label": "Beskrivning för knappen \"Visa lösning\" i tillgänglighetshjälpmedel",
+          "default": "Visa lösningen. Uppgiften kommer att markeras med dess rätta lösning."
         },
         {
-          "label": "Assistive technology description for \"Retry\" button",
-          "default": "Retry the task. Reset all responses and start the task over again."
+          "label": "Beskrivning för knappen \"Försök igen\" i tillgänglighetshjälpmedel",
+          "default": "Försök igen med uppgiften. Nollställer alla svar och startar om uppgiften."
         }
       ]
     },
@@ -224,7 +224,7 @@
           "default": "Avbryt"
         },
         {
-          "label": "Etikett på avsluta-knapp",
+          "label": "Etikett på knappen Bekräfta",
           "default": "Avsluta"
         }
       ]

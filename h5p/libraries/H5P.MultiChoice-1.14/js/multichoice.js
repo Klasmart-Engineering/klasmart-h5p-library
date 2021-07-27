@@ -46,8 +46,12 @@ H5P.MultiChoice = function (options, contentId, contentData) {
   var $ = H5P.jQuery;
 
   // Make Audio and Video extend H5P.ContentType
-  H5P.Audio.prototype = H5P.jQuery.extend({}, H5P.ContentType().prototype, H5P.Audio.prototype);
-  H5P.Video.prototype = H5P.jQuery.extend({}, H5P.ContentType().prototype, H5P.Video.prototype);
+  if (H5P.Audio) {
+    H5P.Audio.prototype = H5P.jQuery.extend({}, H5P.ContentType().prototype, H5P.Audio.prototype);
+  }
+  if (H5P.Video) {
+    H5P.Video.prototype = H5P.jQuery.extend({}, H5P.ContentType().prototype, H5P.Video.prototype);
+  }
 
   var defaults = {
     answerType: "text",

@@ -212,5 +212,8 @@ H5PEditor.language.core = {
   unknownLibrary: 'Valitettavasti valittua sisältötyyppiä \'%lib\' ei ole asennettuna tähän järjestelmään. Olethan yhteydessä ylläpitoon.',
   proceedButtonLabel: 'Proceed to save',
   enterFullscreenButtonLabel: 'Enter fullscreen',
-  exitFullscreenButtonLabel: 'Exit fullscreen'
+  exitFullscreenButtonLabel: 'Exit fullscreen',
+  deleteAuthorTitle: 'Deleting author',
+  deleteAuthorChangeLogTitle: 'Deleting changelog',
+  confirm: 'Confirm'
 };

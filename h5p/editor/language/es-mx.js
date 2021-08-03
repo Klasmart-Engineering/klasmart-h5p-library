@@ -213,4 +213,7 @@ H5PEditor.language.core = {
   proceedButtonLabel: 'Proceder a guardar',
   enterFullscreenButtonLabel: 'Ir a pantalla completa',
   exitFullscreenButtonLabel: 'Salir de pantalla completa',
+  deleteAuthorTitle: 'Deleting author',
+  deleteAuthorChangeLogTitle: 'Deleting changelog',
+  confirm: 'Confirm'
 };

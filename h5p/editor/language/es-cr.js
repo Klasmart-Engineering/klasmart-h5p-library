@@ -213,4 +213,7 @@ H5PEditor.language.core = {
   proceedButtonLabel: 'Proceed to save',
   enterFullscreenButtonLabel: 'Enter fullscreen',
   exitFullscreenButtonLabel: 'Exit fullscreen',
+  deleteAuthorTitle: 'Deleting author',
+  deleteAuthorChangeLogTitle: 'Deleting changelog',
+  confirm: 'Confirm'
 };

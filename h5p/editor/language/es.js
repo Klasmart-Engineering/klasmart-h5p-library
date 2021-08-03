@@ -214,5 +214,8 @@ H5PEditor.language.core = {
   unknownLibrary: 'Desafortunadamente, el tipo de contendo seleccionado \'%lib\' no está instalado en este sistema.',
   proceedButtonLabel: 'Proceder a guardar',
   enterFullscreenButtonLabel: 'Ir a pantalla completa',
-  exitFullscreenButtonLabel: 'Salir de pantalla completa'
+  exitFullscreenButtonLabel: 'Salir de pantalla completa',
+  deleteAuthorTitle: 'Deleting author',
+  deleteAuthorChangeLogTitle: 'Deleting changelog',
+  confirm: 'Confirm'
 };

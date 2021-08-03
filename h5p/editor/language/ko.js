@@ -213,4 +213,7 @@ H5PEditor.language.core = {
   proceedButtonLabel: '저장 진행',
   enterFullscreenButtonLabel: '전체화면',
   exitFullscreenButtonLabel: '전체화면 종료',
+  deleteAuthorTitle: 'Deleting author',
+  deleteAuthorChangeLogTitle: 'Deleting changelog',
+  confirm: 'Confirm'
 };

@@ -214,5 +214,8 @@ H5PEditor.language.core = {
   unknownLibrary: 'Kahjuks ei ole valitud sisutüüp \'%lib\' sellesse süsteemi paigaldatud.',
   proceedButtonLabel: 'Edasi salvestama',
   enterFullscreenButtonLabel: 'Ava täisekraanis',
-  exitFullscreenButtonLabel: 'Välju täisekraanist'
+  exitFullscreenButtonLabel: 'Välju täisekraanist',
+  deleteAuthorTitle: 'Deleting author',
+  deleteAuthorChangeLogTitle: 'Deleting changelog',
+  confirm: 'Confirm'
 };

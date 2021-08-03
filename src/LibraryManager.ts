@@ -103,9 +103,14 @@ export default class LibraryManager {
                     library
                 )}`
             );
+            let languageFile = `language/${language}.json`;
+            if (!(await this.libraryStorage.fileExists(library, languageFile))) {
+                const languageWithoutRegion = language.replace(/-.+$/, '');
+                languageFile = `language/${languageWithoutRegion}.json`
+            }
             const stream = await this.getFileStream(
                 library,
-                `language/${language}.json`
+                languageFile
             );
             return streamToString(stream);
         } catch (ignored) {

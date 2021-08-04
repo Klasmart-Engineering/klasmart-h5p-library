@@ -39,11 +39,20 @@ export default class H5PAjaxExpressController {
     ): Promise<void> => {
         const { action } = req.query;
         const { majorVersion, minorVersion, machineName } = req.query;
-        const language = (req as any).language
+        const language = (req as any).language;
         switch (action) {
             case 'content-type-cache':
                 const contentTypeCache = await this.h5pEditor.getContentTypeCache(
                     req.user
+                );
+                // Filter out the original CoursePresentation content type
+                // since KidsLoop has its own version (CoursePresentationKID).
+                // AppearIn has copyright issues, so we're filtering that one
+                // out too. TODO: Do this in a cleaner way.
+                contentTypeCache.libraries = contentTypeCache.libraries.filter(
+                    (x) =>
+                        x.machineName !== 'H5P.CoursePresentation' &&
+                        x.machineName !== 'H5P.AppearIn'
                 );
                 res.status(200).json(contentTypeCache);
                 break;

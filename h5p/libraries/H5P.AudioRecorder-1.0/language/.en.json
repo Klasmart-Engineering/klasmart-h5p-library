@@ -9,7 +9,7 @@
       "fields": [
         {
           "label": "Record button text",
-          "default": "Ta opp"
+          "default": "Record"
         },
         {
           "label": "Pause button text",
@@ -17,72 +17,72 @@
         },
         {
           "label": "Continue button text",
-          "default": "Hald fram"
+          "default": "Continue"
         },
         {
           "label": "Download button text",
-          "default": "Last ned"
+          "default": "Download"
         },
         {
           "label": "Done button text",
-          "default": "Ferdig"
+          "default": "Done"
         },
         {
           "label": "Retry button text",
-          "default": "Prøv igjen"
+          "default": "Retry"
         },
         {
           "label": "Microphone not supported error message",
-          "default": "Mikrofon ikkje støtta. Pass på at du bruker ein nettlesar som støttar mikrofon-opptak."
+          "default": "Microphone not supported. Make sure you are using a browser that allows microphone recording."
         },
         {
           "label": "Microphone inaccessible error message",
-          "default": "Mikrofon ikkje tilgjengeleg. Pass på at mikrofonen i nettlesaren er slått på."
+          "default": "Microphone is not accessible. Make sure that the browser microphone is enabled."
         },
         {
           "label": "Message displayed when insecure access is not allowed",
           "description": "Some browsers do not allow using the microphone when the page is served using HTTP. This message will be displayed if that is the case",
-          "default": "Tilgang til mikrofon er ikkje mogleg i nettlesaren din, siden denne sida ikkje bruker HTTPS. Ta kontakt med forfattaren og be ham gjere dette tilgjengeleg ved hjelp av HTTPS"
+          "default": "Access to microphone is not allowed in your browser since this page is not served using HTTPS. Please contact the author, and ask him to make this available using HTTPS"
         },
         {
           "label": "Ready to record status message",
-          "default": "Trykk på ein knapp under for å spele inn svaret ditt."
+          "default": "Press a button below to record your answer."
         },
         {
           "label": "Recording status message",
-          "default": "Speler inn..."
+          "default": "Recording..."
         },
         {
           "label": "Paused status message",
-          "default": "Innspeling pausa. Trykk på ein knapp for å halde fram med å ta opp."
+          "default": "Recording paused. Press a button to continue recording."
         },
         {
           "label": "Finished recording status message",
-          "default": "Du har spelt inn svaret ditt! Høyr på opptaket under."
+          "default": "You have successfully recorded your answer! Listen to the recording below."
         },
         {
           "label": "Download recording message",
-          "default": "Last ned opptaket eller prøv igjen."
+          "default": "Download this recording or retry."
         },
         {
           "label": "Retry dialog header text",
-          "default": "Spel inn på nytt?"
+          "default": "Retry recording?"
         },
         {
           "label": "Retry dialog body text",
-          "default": "Viss du trykkjer på \"Retry\" vil du miste opptaket ditt."
+          "default": "By pressing \"Retry\" you will lose your current recording."
         },
         {
           "label": "Retry dialog confirm text",
-          "default": "Prøv igjen"
+          "default": "Retry"
         },
         {
           "label": "Retry dialog cancel text",
-          "default": "Avbryt"
+          "default": "Cancel"
         },
         {
           "label": "Can't create audio file status message",
-          "default": "Kan ikkje lage lydfil."
+          "default": "Can't create the audio file."
         }
       ]
     }

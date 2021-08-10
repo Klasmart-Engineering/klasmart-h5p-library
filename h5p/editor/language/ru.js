@@ -214,5 +214,8 @@ H5PEditor.language.core = {
   unknownLibrary: 'К сожалению, выбранный тип контента \'%lib\' isn\ не установлен в этой системе.',
   proceedButtonLabel: 'Перейти к сохранению',
   enterFullscreenButtonLabel: 'Войти в полноэкранный режим',
-  exitFullscreenButtonLabel: 'Покинуть полноэкранный режим'
+  exitFullscreenButtonLabel: 'Покинуть полноэкранный режим',
+  deleteAuthorTitle: 'Deleting author',
+  deleteAuthorChangeLogTitle: 'Deleting changelog',
+  confirm: 'Confirm'
 };

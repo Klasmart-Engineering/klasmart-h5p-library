@@ -212,5 +212,8 @@ H5PEditor.language.core = {
   unknownLibrary: '很遗憾，被选择的内容类型中有%并没有被安装在系统中',
   proceedButtonLabel: '继续保存',
   enterFullscreenButtonLabel: '进入全屏',
-  exitFullscreenButtonLabel: '退出全屏'
+  exitFullscreenButtonLabel: '退出全屏',
+  deleteAuthorTitle: 'Deleting author',
+  deleteAuthorChangeLogTitle: 'Deleting changelog',
+  confirm: 'Confirm'
 };

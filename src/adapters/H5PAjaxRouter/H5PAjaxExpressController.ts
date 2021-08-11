@@ -38,8 +38,7 @@ export default class H5PAjaxExpressController {
         res: express.Response
     ): Promise<void> => {
         const { action } = req.query;
-        const { majorVersion, minorVersion, machineName } = req.query;
-        const language = (req as any).language;
+        const { majorVersion, minorVersion, machineName, language } = req.query;
         switch (action) {
             case 'content-type-cache':
                 const contentTypeCache = await this.h5pEditor.getContentTypeCache(

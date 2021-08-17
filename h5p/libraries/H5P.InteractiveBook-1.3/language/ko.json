@@ -1,19 +1,19 @@
 {
   "semantics": [
     {
-      "label": "책 표지 활성화",
-      "description": "접근 전 책에 대한 정보를 보여주는 표지"
+      "label": "책 표지 사용",
+      "description": "접근하기 전에 책에 대한 정보를 보여주는 표지"
     },
     {
-      "label": "커버 페이지",
+      "label": "표지",
       "fields": [
         {
-          "label": "커버 설명",
-          "description": "이 텍스트는 당신의 책에 대한 설명이 될 겁니다."
+          "label": "표지 설명",
+          "description": "이 텍스트는 책에 대한 설명이 될 것입니다."
         },
         {
-          "label": "커버 이미지",
-          "description": "(선택사항)소개의 배경 이미지."
+          "label": "표지 이미지",
+          "description": "소개를 위한 선택적 배경 이미지입니다."
         },
         {
           "label": "표지 이미지 대체 텍스트",
@@ -39,161 +39,161 @@
       }
     },
     {
-      "label": "행동 설절",
+      "label": "동작 설정",
       "fields": [
         {
-          "label": "목차를 기본값으로 표시",
-          "description": "활성화했을 때 책을 열 때 목차가 표시됨"
+          "label": "목차를 기본적으로 표시",
+          "description": "활성화하면 책을 열 때 목차가 표시됩니다."
         },
         {
-          "label": "학습 진도 표시",
-          "description": "활성화하면 사용자가 페이지별로 완료했는지 여부를 나타내는 진도가 표시됨."
+          "label": "진행 표시기 보여주기",
+          "description": "활성화되면 사용자가 페이지 작업을 완료했는지 여부를 보여주는 페이지당 표시기가 보여집니다."
         },
         {
-          "label": "자동 학습 진도 표시 활성화",
-          "description": "활성화하면 과제없는 페이지는 페이지를 보았을 때 완료된 것으로 간주됨. 과제가 있는 경우 과제 완료시 페이지 완료 표시. 비활성화시 모든 페이지 하단에 사용자가 페이지 과제를 마쳤을 때 클릭할 수 있는 버튼이 있음."
+          "label": "자동 진행 활성화",
+          "description": "활성화된 경우 작업이 없는 페이지는 볼 때 완료된 것으로 간주됩니다. 모든 작업이 완료되면 작업이 있는 페이지입니다. 비활성화된 경우 모든 페이지 하단에 사용자가 페이지 작업을 마치면 클릭할 수 있는 버튼이 있습니다."
         },
         {
           "label": "요약 표시",
-          "description": "활성화되면 요약 정보를 보고 학습진도/정답을 제출할 수 있음."
+          "description": "활성화되면 사용자는 요약을 보고 진행 상황\/답변을 제출할 수 있습니다."
         }
       ]
     },
     {
-      "label": "\"Read\" (읽기)에 대한 맞춤형 텍스트",
+      "label": "\"읽기\"에 대한 번역",
       "default": "읽기"
     },
     {
-      "label": "\"Display 'Table of contents'\" (목차 표시)에 대한 맞춤형 텍스트",
-      "default": "목차 표시"
+      "label": "\"'목차' 표시\"에 대한 번역",
+      "default": "'목차' 표시"
     },
     {
-      "label": "\"Hide 'Table of contents'\" (목차 숨기기)에 대한 맞춤형 텍스트",
-      "default": "목차 숨기기"
+      "label": "\"'목차' 숨기기\"에 대한 번역",
+      "default": "'목차' 숨기기"
     },
     {
-      "label": "\"Next page\" (다음 페이지)에 대한 맞춤형 텍스트",
+      "label": "\"다음 페이지\"에 대한 번역",
       "default": "다음 페이지"
     },
     {
-      "label": "\"Previous page\" (이전 페이지)에 대한 맞춤형 텍스트",
+      "label": "\"이전 페이지\"에 대한 번역",
       "default": "이전 페이지"
     },
     {
-      "label": "\"Page completed!\" (페이지 완료)에 대한 맞춤형 텍스트",
+      "label": "\"페이지 완료!\"에 대한 번역",
       "default": "페이지 완료!"
     },
     {
-      "label": "\"@pages of @total completed\" 총 @total 중 @pages 완료 (@pages 와 @total 실제값으로 대체)에 대한 맞춤형 텍스트",
-      "default": "총 @total 중 @pages 완료"
+      "label": "\"@pages of @total completed\"에 대한 번역(@pages 및 @total은 실제 값으로 대체됨)",
+      "default": "@total 중 @page페이지 완료"
     },
     {
-      "label": "\"Incomplete page\" (페이지 미완료)에 대한 맞춤형 텍스트",
-      "default": "페이지 미완료"
+      "label": "\"미완료 페이지\"에 대한 번역",
+      "default": "미완료 페이지"
     },
     {
-      "label": "\"Navigate to the top\" (맨 위로 이동)에 대한 맞춤형 텍스트",
-      "default": "(맨 위로 이동)"
+      "label": "\"맨 위로 이동\"에 대한 번역",
+      "default": "맨 위로 이동"
     },
     {
-      "label": " \"I have finished this page\" (이 페이지 완료)에 대한 맞춤형 텍스트",
+      "label": "\"이 페이지를 마쳤습니다\" 번역",
       "default": "이 페이지를 완료했습니다."
     },
     {
       "label": "전체 화면 버튼 레이블",
-      "default": "전체화면"
+      "default": "전체 화면"
     },
     {
-      "label": "전체 화면 종료 버튼 레이블",
-      "default": "전체 화면 종료"
+      "label": "전체화면 종료 버튼 레이블",
+      "default": "전체화면 종료"
     },
     {
-      "label": "책의 페이지 진행",
-      "description": "\"@count\"는 페이지 수로 대체되며, \"@total\"는 전체 페이지 수로 변경된다.",
-      "default": "총 @total 페이지 중 @count"
+      "label": "책의 페이지 진행률",
+      "description": "\"@count\"는 페이지 수로 대체되고 \"@total\"은 총 페이지 수로 대체됩니다.",
+      "default": "@total개의 페이지 중 @count개"
     },
     {
-      "label": "상호작용 진행",
-      "description": "\"@count\"는 상호 작용 횟수로 대체되며, \"@total\"은 총 상호 작용 횟수로 대체된다.",
-      "default": " 총 @total 상호작용 중 @count"
+      "label": "인터랙션 진행",
+      "description": "\"@count\"는 인터랙션 수로 대체되고 \"@total\"은 총 인터랙션 수로 대체됩니다.",
+      "default": "@total개의 인터랙션 중 @count개"
     },
     {
-      "label": "\"Submit report\" (보고서 제출)에 대한 맞춤형 텍스트",
+      "label": "\"보고서 제출\"에 대한 번역",
       "default": "보고서 제출"
     },
     {
-      "label": "\"restart\" (재시작) 버튼",
+      "label": "\"재시작\" 버튼 레이블",
       "default": "재시작"
     },
     {
-      "label": "요약 머릿말",
+      "label": "요약 헤더",
       "default": "요약"
     },
     {
-      "label": "\"All interactions\"(모든 상호작용)에 대한 맞춤형 텍스트",
-      "default": "모든 상호작용"
+      "label": "\"모든 인터랙션\"에 대한 번역",
+      "default": "모든 인터랙션"
     },
     {
-      "label": "\"Unanswered interactions\" (미답변 상호작용)에 대한 맞춤형 텍스트",
-      "default": "미답변 상호작용"
+      "label": "\"응답되지 않은 인터랙션\"에 대한 번역",
+      "default": "응답되지 않은 인터랙션"
     },
     {
       "label": "점수",
-      "description": "\"@score\"는 현재 점수로 대체되고 \"@maxscore\" 는 달성 가능한 최대 점수로 대체됨.",
+      "description": "\"@score\"는 현재 점수로 대체되고 \"@maxscore\"는 최대 달성 가능 점수로 대체됩니다.",
       "default": "@score / @maxscore"
     },
     {
-      "label": "페이지 단위 상호 작용 완료",
-      "description": "\"@left\"는 나머지 상호 작용으로 대체되며, \"@max\"는 페이지의 총 상호 작용 수로 대체된다",
-      "default": "총 @max 상호작용 남은 상호작용 @left"
+      "label": "페이지 인터랙션 완료 당",
+      "description": "\"@left\"는 남은 인터랙션 갯수를 보여주고, \"@max\"은 페이지 내 총 인터랙션 갯수를 보여줍니다.",
+      "default": "@max개의 인터랙션 중 @left개가 완료됨"
     },
     {
-      "label": "\"No interactions\"(상호작용 없음)에 대한 맞춤형 텍스트",
-      "default": "상호작용 없음"
+      "label": "\"인터랙션 없음\"에 대한 번역",
+      "default": "인터랙션 없음"
     },
     {
-      "label": "\"Score\"(점수)에 대한 맞춤형 텍스트",
+      "label": "\"점수\"에 대한 번역",
       "default": "점수"
     },
     {
-      "label": "\"Summary & submit\" (요약 및 제출) 버튼",
+      "label": "\"요약 및 제출\" 버튼에 대한 레이블",
       "default": "요약 및 제출"
     },
     {
-      "label": "\"You have not interacted with any pages.\" (상호작용이 없습니다)에 대한 맞춤형 텍스트",
-      "default": "상호작용이 없습니다."
+      "label": "\"아무 페이지에서도 활동하지 않았습니다.\"에 대한 번역입니다.",
+      "default": "아무 페이지에서도 활동하지 않았습니다."
     },
     {
-      "label": "\"You have to interact with at least one page before you can see the summary.\" (요약보기에 앞서 적어도 한 페이지에서 상호작용 필수)에 대한 맞춤형 텍스트",
-      "default": "요약보기에 앞서 적어도 한 페이지에서 상호작용 필수"
+      "label": "\"요약을 보려면 최소한 하나의 페이지와 상호 작용해야 합니다.\"에 대한 번역입니다.",
+      "default": "요약을 보려면 최소한 하나의 페이지와 상호 작용해야 합니다."
     },
     {
-      "label": "\"Your answers are submitted for review!\" (검토를 위해 답이 제출됨)에 대한 맞춤형 텍스트",
-      "default": "검토를 위해 답이 제출됨!"
+      "label": "\"귀하의 답변이 검토를 위해 제출되었습니다!\"에 대한 번역",
+      "default": "귀하의 답변이 검토를 위해 제출되었습니다!"
     },
     {
-      "label": "학습진도 요약 레이블",
-      "default": "책 진도"
+      "label": "요약 진행률 레이블",
+      "default": "책 진행 상황"
     },
     {
-      "label": "상호작용 진도 레이블",
-      "default": "상호작용 진도"
+      "label": "인터랙션 진행 레이블",
+      "default": "인터랙션 진행"
     },
     {
-      "label": "전체 점수 레이블",
-      "default": "전체 점수"
+      "label": "총 점수 레이블",
+      "default": "총 점수"
     },
     {
-      "label": "접근성 표시 텍스트",
+      "label": "접근성 텍스트",
       "fields": [
         {
-          "label": "페이지 진도 텍스트형으로 표시",
-          "description": "시각화 진도표시에 대한 대체 텍스트. @page 및 @total 변수 이용가능.",
-          "default": "총 @total 중 @page 페이지."
+          "label": "페이지 진행률 텍스트 대체",
+          "description": "시각적으로 페이지 진행률을 표시하기 위한 대체 텍스트입니다. @page 및 @total 변수를 사용할 수 있습니다.",
+          "default": "@total 중 @page페이지입니다."
         },
         {
-          "label": "네비게이션 메뉴 확장/축소 레이블",
-          "default": "네비게이션 메뉴 온 오프"
+          "label": "탐색 메뉴 확장/축소를 위한 레이블",
+          "default": "탐색 메뉴 전환"
         }
       ]
     }

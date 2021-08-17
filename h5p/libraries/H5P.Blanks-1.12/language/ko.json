@@ -1,56 +1,56 @@
 {
   "semantics": [
     {
-      "label": "Media",
+      "label": "미디어",
       "fields": [
         {
-          "label": "Type",
-          "description": "Optional media to display above the question."
+          "label": "종류",
+          "description": "질문 위에 표시할 선택적 미디어입니다."
         },
         {
-          "label": "Disable image zooming"
+          "label": "이미지 확대/축소 비활성화"
         }
       ]
     },
     {
-      "label": "Task description",
-      "default": "Fill in the missing words",
-      "description": "A guide telling the user how to answer this task."
+      "label": "작업 설명",
+      "default": "빈칸을 채우세요",
+      "description": "사용자에게 이 작업에 응답하는 방법을 알려주는 가이드입니다."
     },
     {
-      "label": "Text blocks",
-      "entity": "text block",
+      "label": "텍스트 블록",
+      "entity": "텍스트 블록",
       "field": {
-        "label": "Line of text",
-        "placeholder": "Oslo is the capital of *Norway*.",
+        "label": "텍스트 줄",
+        "placeholder": "오슬로는 *노르웨이*의 수도입니다.",
         "description": "",
         "important": {
-          "description": "<ul><li>Blanks are added with an asterisk (*) in front and behind the correct word/phrase.</li><li>Alternative answers are separated with a forward slash (/).</li><li>You may add a textual tip, using a colon (:) in front of the tip.</li></ul>",
-          "example": "H5P content may be edited using a *browser/web-browser:Something you use every day*."
+          "description": "<ul> <li> 공백은 올바른 단어/구 앞뒤에 별표(*)로 추가됩니다. </li> <li> 대체 답변은 슬래시(/)로 구분됩니다. </li> <li> 팁 앞에 콜론(:)을 사용하여 텍스트 팁을 추가할 수 있습니다. </li> </ul>",
+          "example": "H5P 콘텐츠는 *브라우저/웹 브라우저:매일 사용하는 것*을 사용하여 편집할 수 있습니다."
         }
       }
     },
     {
-      "label": "Overall Feedback",
+      "label": "전반적인 피드백",
       "fields": [
         {
           "widgets": [
             {
-              "label": "Default"
+              "label": "기본값"
             }
           ],
-          "label": "Define custom feedback for any score range",
-          "description": "Click the \"Add range\" button to add as many ranges as you need. Example: 0-20% Bad score, 21-91% Average Score, 91-100% Great Score!",
-          "entity": "range",
+          "label": "모든 점수 범위에 대한 사용자 정의 피드백 정의",
+          "description": "\"범위 추가\" 버튼을 클릭하여 필요한 만큼 범위를 추가하십시오. 예: 0-20% 노력, 21-91% 잘함, 91-100% 아주 잘함!",
+          "entity": "범위",
           "field": {
             "fields": [
               {
-                "label": "Score Range"
+                "label": "점수 범위"
               },
               {},
               {
-                "label": "Feedback for defined score range",
-                "placeholder": "Fill in the feedback"
+                "label": "정의된 점수 범위에 대한 피드백",
+                "placeholder": "피드백을  작성해 주세요."
               }
             ]
           }
@@ -58,138 +58,138 @@
       ]
     },
     {
-      "label": "Text for \"Show solutions\" button",
-      "default": "Show solution"
+      "label": "\"솔루션 표시\" 버튼에 대한 텍스트",
+      "default": "해답 보기 모드 텍스트"
     },
     {
-      "label": "Text for \"Retry\" button",
-      "default": "Retry"
+      "label": "\"모든 슬라이드 인쇄\" 버튼에 대한 레이블",
+      "default": "재시도"
     },
     {
-      "label": "Text for \"Check\" button",
-      "default": "Check"
+      "label": "\"확인\" 버튼에 대한 텍스트",
+      "default": "확인"
     },
     {
-      "label": "Text for \"Not filled out\" message",
-      "default": "Please fill in all blanks to view solution"
+      "label": "\"채워지지 않음\" 메시지에 대한 텍스트",
+      "default": "솔루션을 보려면 모든 공백을 채우십시오."
     },
     {
-      "label": "Text for \"':ans' is correct\" message",
-      "default": "':ans' is correct"
+      "label": "\"':ans'가 정확합니다\" 메시지에 대한 텍스트",
+      "default": "':an'이 맞습니다."
     },
     {
-      "label": "Text for \"':ans' is wrong\" message",
-      "default": "':ans' is wrong"
+      "label": "\"':ans' is wrong\" 메시지에 대한 텍스트",
+      "default": "':an'이 잘못되었습니다."
     },
     {
-      "label": "Text for \"Answered correctly\" message",
-      "default": "Answered correctly"
+      "label": "\"정확하게 응답함\" 메시지에 대한 텍스트",
+      "default": "정답"
     },
     {
-      "label": "Text for \"Answered incorrectly\" message",
-      "default": "Answered incorrectly"
+      "label": "\"잘못 응답함\" 메시지에 대한 텍스트",
+      "default": "오답"
     },
     {
-      "label": "Assistive technology label for solution",
-      "default": "Correct answer:"
+      "label": "솔루션에 대한 보조 기술 레이블",
+      "default": "정답"
     },
     {
-      "label": "Assistive technology label for input field",
-      "description": "Use @num and @total to replace current cloze number and total cloze number",
-      "default": "Blank input @num of @total"
+      "label": "입력 필드용 보조 기술 레이블",
+      "description": "@num 및 @total을 사용하여 현재 클로즈 수와 총 클로즈 수를 대체합니다.",
+      "default": "빈 입력 @num of @total"
     },
     {
-      "label": "Assistive technology label for saying an input has a tip tied to it",
-      "default": "Tip available"
+      "label": "입력에 팁이 연결되어 있음을 알려주는 보조 기술 레이블",
+      "default": "팁 사용 가능"
     },
     {
-      "label": "Tip icon label",
-      "default": "Tip"
+      "label": "팁 아이콘 레이블",
+      "default": "팁"
     },
     {
-      "label": "Behavioural settings.",
-      "description": "These options will let you control how the task behaves.",
+      "label": "동작 설정",
+      "description": "이 옵션을 사용하면 동작이 작동하는 방식을 제어할 수 있습니다.",
       "fields": [
         {
-          "label": "Enable \"Retry\""
+          "label": "\"재시도\" 활성화"
         },
         {
-          "label": "Enable \"Show solution\" button"
+          "label": "\"솔루션 표시\" 버튼 활성화"
         },
         {
-          "label": "Enable \"Check\" button"
+          "label": "\"확인\" 버튼 활성화"
         },
         {
-          "label": "Automatically check answers after input"
+          "label": "입력 후 자동으로 답변 확인"
         },
         {
-          "label": "Case sensitive",
-          "description": "Makes sure the user input has to be exactly the same as the answer."
+          "label": "대소문자 구분",
+          "description": "사용자 입력이 답변과 정확히 동일해야 합니다."
         },
         {
-          "label": "Require all fields to be answered before the solution can be viewed"
+          "label": "솔루션을 보기 전에 모든 필드에 응답해야 합니다."
         },
         {
-          "label": "Put input fields on separate lines"
+          "label": "별도의 줄에 입력 필드 배치"
         },
         {
-          "label": "Show confirmation dialog on \"Check\"",
-          "description": "This options is not compatible with the \"Automatically check answers after input\" option"
+          "label": "\"확인\"에 확인 대화 상자 표시",
+          "description": "이 옵션은 \"입력 후 자동으로 답변 확인\" 옵션과 호환되지 않습니다."
         },
         {
-          "label": "Show confirmation dialog on \"Retry\""
+          "label": "\"다시 시도\" 시 확인 대화 상자 표시"
         },
         {
-          "label": "Accept minor spelling errors",
-          "description": "If activated, an answer will also count as correct with minor spelling errors (3-9 characters: 1 spelling error, more than 9 characters: 2 spelling errors)"
+          "label": "사소한 맞춤법 오류 허용",
+          "description": "활성화된 경우 답변은 사소한 맞춤법 오류가 있는 경우에도 올바른 것으로 간주됩니다(3-9자: 맞춤법 오류 1개, 9자 초과: 맞춤법 오류 2개)."
         }
       ]
     },
     {
-      "label": "Check confirmation dialog",
+      "label": "확인 대화 상자 확인",
       "fields": [
         {
-          "label": "Header text",
-          "default": "Finish ?"
+          "label": "헤더 텍스트",
+          "default": "마치다 ?"
         },
         {
-          "label": "Body text",
-          "default": "Are you sure you wish to finish ?"
+          "label": "본문 텍스트",
+          "default": "끝내시겠습니까?"
         },
         {
-          "label": "Cancel button label",
-          "default": "Cancel"
+          "label": "취소 버튼 라벨",
+          "default": "취소"
         },
         {
-          "label": "Confirm button label",
-          "default": "Finish"
+          "label": "확인 버튼 라벨",
+          "default": "끝내기"
         }
       ]
     },
     {
-      "label": "Retry confirmation dialog",
+      "label": "재시도 확인 대화 상자",
       "fields": [
         {
-          "label": "Header text",
-          "default": "Retry ?"
+          "label": "헤더 텍스트",
+          "default": "재시도?"
         },
         {
-          "label": "Body text",
-          "default": "Are you sure you wish to retry ?"
+          "label": "본문 텍스트",
+          "default": "다시 시도하시겠습니까?"
         },
         {
-          "label": "Cancel button label",
-          "default": "Cancel"
+          "label": "취소 버튼 라벨",
+          "default": "취소"
         },
         {
-          "label": "Confirm button label",
-          "default": "Confirm"
+          "label": "확인 버튼 라벨",
+          "default": "확인"
         }
       ]
     },
     {
-      "label": "Textual representation of the score bar for those using a readspeaker",
-      "default": "You got :num out of :total points"
+      "label": "읽기 스피커를 사용하는 사람들을 위한 점수 표시줄의 문자 표현",
+      "default": "총 :total점 중 :num점을 얻었습니다."
     }
   ]
 }

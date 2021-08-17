@@ -27,10 +27,6 @@
             "label": "설명",
             "placeholder": "내 이미지 설명 ...",
             "description": "이미지에 대한 선택적 설명"
-          },
-          {
-            "label": "Audio",
-            "description": "Optional audio that plays when an image is shown."
           }
         ]
       }
@@ -58,10 +54,6 @@
         {
           "label": "투명 교체 색상",
           "description": "이미지의 투명 영역을 대체할 색상을 설정합니다."
-        },
-        {
-          "label": "Image space in fullscreen mode",
-          "description": "If you have descriptions in addition to the images, set the the percentage of space that the images should use in fullscreen mode."
         }
       ]
     },
@@ -75,22 +67,6 @@
         {
           "label": "이미지 슬라이더",
           "default": "이미지 슬라이더"
-        },
-        {
-          "label": "Mute title",
-          "default": "Mute"
-        },
-        {
-          "label": "Unmute title",
-          "default": "Unmute"
-        },
-        {
-          "label": "Title for fullscreen button (enter)",
-          "default": "Enter fullscreen mode"
-        },
-        {
-          "label": "Title for fullscreen button (exit)",
-          "default": "Exit fullscreen mode"
         }
       ]
     }

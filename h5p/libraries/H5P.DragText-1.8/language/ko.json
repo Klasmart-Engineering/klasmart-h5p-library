@@ -1,40 +1,40 @@
 {
   "semantics": [
     {
-      "label": "Task description",
-      "description": "Describe how the user should solve the task.",
-      "default": "Drag the words into the correct boxes"
+      "label": "작업 설명",
+      "description": "사용자가 작업을 해결하는 방법을 설명합니다.",
+      "default": "단어를 올바른 상자로 드래그하세요."
     },
     {
-      "label": "Text",
-      "placeholder": "*Oslo* is the capital of Norway, *Stockholm* is the capital of Sweden and *Copenhagen* is the capital of Denmark. All cities are located in the *Scandinavian:Northern Part of Europe* peninsula.",
-      "description": "",
+      "label": "텍스트",
+      "placeholder": "*오슬로*는 노르웨이의 수도입니다. *스톡홀름*은 스웨덴의 수도입니다. *코펜하겐*은 덴마크의 수도입니다. 모든 도시는 *스칸디나비아:유럽 북부* 반도에 있습니다.",
+      "description": "비어 있음",
       "important": {
-        "description": "<ul><li>Droppable words are added with an asterisk (*) in front and behind the correct word/phrase.</li><li>You may add a textual tip, using a colon (:) in front of the tip.</li><li>For every empty spot there is only one correct word.</li><li>You may add feedback to be displayed when a task is completed. Use '\\+' for correct and '\\-' for incorrect feedback.</li></ul>",
-        "example": "H5P content may be edited using a *browser:What type of program is Chrome?*. </br> H5P content is *interactive\\+Correct! \\-Incorrect, try again!*"
+        "description": "<ul> <li> 드롭 가능한 단어는 올바른 단어/문구 앞뒤에 별표(*)가 추가됩니다. </li> <li> 팁 앞에 콜론(:)을 사용하여 텍스트 팁을 추가할 수 있습니다. </li> <li> 빈 자리마다 단어로 된 정답은 하나만 있습니다. </li> <li> 작업이 완료되면 표시할 피드백을 추가할 수 있습니다. 정답에는 '\\+'를, 오답에는 '\\-'를 피드백으로 사용합니다. </li> </ul>",
+        "example": "H5P 콘텐츠는 *브라우저:크롬은 어떤 종류의 프로그램인가요?*를 사용하여 편집할 수 있습니다. </br> H5P 콘텐츠는 *반응형\\+맞았습니다! \\-틀렸습니다. 다시 시도하세요!*"
       }
     },
     {
-      "label": "Overall Feedback",
+      "label": "전반적인 피드백",
       "fields": [
         {
           "widgets": [
             {
-              "label": "Default"
+              "label": "기본값"
             }
           ],
-          "label": "Define custom feedback for any score range",
-          "description": "Click the \"Add range\" button to add as many ranges as you need. Example: 0-20% Bad score, 21-91% Average Score, 91-100% Great Score!",
-          "entity": "range",
+          "label": "모든 점수 범위에 대한 사용자 정의 피드백 정의",
+          "description": "\"범위 추가\" 버튼을 클릭하여 필요한 만큼 범위를 추가하십시오. 예: 0-20% 노력, 21-91% 잘함, 91-100% 아주 잘함!",
+          "entity": "범위",
           "field": {
             "fields": [
               {
-                "label": "Score Range"
+                "label": "점수 범위"
               },
               {},
               {
-                "label": "Feedback for defined score range",
-                "placeholder": "Fill in the feedback"
+                "label": "정의된 점수 범위에 대한 피드백",
+                "placeholder": "피드백을  작성해 주세요."
               }
             ]
           }
@@ -42,95 +42,95 @@
       ]
     },
     {
-      "label": "Text for \"Check\" button",
-      "default": "Check"
+      "label": "\"확인\" 버튼에 대한 텍스트",
+      "default": "확인"
     },
     {
-      "label": "Text for \"Retry\" button",
-      "default": "Retry"
+      "label": "\"모든 슬라이드 인쇄\" 버튼에 대한 레이블",
+      "default": "재시도"
     },
     {
-      "label": "Text for \"Show Solution\" button",
-      "default": "Show solution"
+      "label": "\"솔루션 표시\" 버튼에 대한 텍스트",
+      "default": "해답 보기 모드 텍스트"
     },
     {
-      "label": "Numbered Drop zone label",
-      "default": "Drop Zone @index.",
-      "description": "Label used for accessibility, where the Read speaker will read the index of a drop zone. Variable available: @index"
+      "label": "번호가 매겨진 드롭 영역 표시",
+      "default": "드롭 영역 @index.",
+      "description": "리드스피커가 드롭 영역 항목을 읽어 줄 위치의 접근성 표시. 변수 가능"
     },
     {
-      "label": "Empty Drop Zone label",
-      "default": "Drop Zone @index is empty.",
-      "description": "Label used for accessibility, where the Read speaker will read that the drop zone is empty"
+      "label": "빈 드롭 영역 표시",
+      "default": "드롭 영역 @index이 비어있습니다.",
+      "description": "드롭 영역이 비어있다고 리드스피커가 읽어 줄 위치의 접근성 표시"
     },
     {
-      "label": "Contains Drop Zone label",
-      "default": "Drop Zone @index contains draggable @draggable.",
-      "description": "Label used for accessibility, where the Read speaker will read that the drop zone contains a draggable"
+      "label": "드롭 영역 표시 포함",
+      "default": "드롭 영역 @index에는 드래그 가능한 @draggable이 포함되어 있습니다.",
+      "description": "드롭 영역에 드래그 가능한 항목이 포함되어 있다고 리드스피커가 읽어 줌을 알리는 표시"
     },
     {
-      "label": "Draggable elements label",
-      "default": "@index of @count draggables.",
-      "description": "Label used for accessibility, where the Read speaker reads that this is a draggable element. Variable available: @index, @count"
+      "label": "드래그 가능한 요소 표시",
+      "default": "총 @total장 중 @index번째 드래그 요소",
+      "description": "드래그할 수 있는 요소이며, 변수사용이 가능하다고 리드스피커가 읽어줌을 알리는 표시"
     },
     {
-      "label": "Label for show tip button",
-      "default": "Show tip",
-      "description": "Label used for accessibility, where the Read speaker reads it before the tip is read out"
+      "label": "Tip 버튼 보기 레이블",
+      "default": "힌트 보기",
+      "description": "힌트를 읽어주기 전, 리드스피커가 읽어줌을 알리는 레이블"
     },
     {
-      "label": "Readspeaker text for correct answer",
-      "default": "Correct!"
+      "label": "정답에 대한 리드스피커 텍스트",
+      "default": "정답입니다!"
     },
     {
-      "label": "Readspeaker text for incorrect answer",
-      "default": "Incorrect!"
+      "label": "오답에 대한 리드스피커 텍스트",
+      "default": "틀렸습니다!"
     },
     {
-      "label": "Confirmation dialog title that user wants to reset a droppable",
-      "default": "Reset drop"
+      "label": "사용자가 드롭 기능을 재설정하려는지 확인하기 위한 대화상장 제목",
+      "default": "드롭 재설정"
     },
     {
-      "label": "Confirmation dialog description that user wants to reset a droppable",
-      "default": "Are you sure you want to reset this drop zone?"
+      "label": "사용자가 드롭파를 재설정하려는 확인 대화 상자 설명",
+      "default": "이 드롭존을 재설정 하시겠습니까?"
     },
     {
-      "label": "Label used for accessibility, where the read speaker indicates that dragging is initiated",
-      "default": "Draggable is grabbed."
+      "label": "드래그가 시작되었음을 나타내기 위한 레이블",
+      "default": "드래그 할 수 있습니다."
     },
     {
-      "label": "Label used for accessibility, where the read speaker indicates that dragging is canceled",
-      "default": "Cancelled dragging."
+      "label": "드래그가 취소되었음을 나타내기 위한 레이블",
+      "default": "드래그가 취소되었습니다."
     },
     {
-      "label": "Label used for accessibility, where the read speaker indicates that a text is the correct answer",
-      "default": "Correct answer:"
+      "label": "텍스트가 정답임을 나타내기 위한 레이블",
+      "default": "정답"
     },
     {
-      "label": "Header for panel containing feedback for correct/incorrect answers",
-      "default": "Feedback"
+      "label": "정답/오답에 대한 피드백이 포함된 패널의 헤더",
+      "default": "피드백"
     },
     {
-      "label": "Behavioural settings.",
-      "description": "These options will let you control how the task behaves.",
+      "label": "동작 설정",
+      "description": "이 옵션을 사용하면 동작이 작동하는 방식을 제어할 수 있습니다.",
       "fields": [
         {
-          "label": "Enable \"Retry\""
+          "label": "\"재시도\" 활성화"
         },
         {
-          "label": "Enable \"Show Solution\" button"
+          "label": "\"솔루션 표시\" 버튼 활성화"
         },
         {
-          "label": "Enable \"Check\" button"
+          "label": "\"확인\" 버튼 활성화"
         },
         {
-          "label": "Instant feedback"
+          "label": "즉각적인 피드백"
         }
       ]
     },
     {
       "label": "Textual representation of the score bar for those using a readspeaker",
-      "default": "You got :num out of :total points"
+      "default": "총 :total점 중 :num점을 받았습니다."
     }
   ]
 }

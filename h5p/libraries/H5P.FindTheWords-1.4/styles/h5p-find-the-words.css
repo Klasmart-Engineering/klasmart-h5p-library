@@ -174,3 +174,47 @@
 .h5p-find-the-words  em::before {
   margin-right: 8px;
 }
+
+.h5p-find-the-words .dom-canvas-grid {
+  font-family: sans-serif;
+}
+
+.h5p-find-the-words .dom-canvas-grid .dom-canvas-grid-cell {
+  box-sizing: border-box;
+  display: inline-block;
+  margin: 0;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.h5p-find-the-words .dom-canvas-drawing-container,
+.h5p-find-the-words .dom-canvas-output-container {
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+.h5p-find-the-words .dom-drawing-marker {
+  stroke: rgb(107, 177, 125);
+  stroke-linecap: round;
+  stroke-opacity: 0.4;
+}
+
+.h5p-find-the-words .marker-answer {
+  stroke: rgba(107,177,125);
+  stroke-opacity: 0.9;
+  stroke-width: 2;
+  fill: rgb(107,177,125);
+  fill-opacity: 0.3;
+}
+
+.h5p-find-the-words .marker-solution {
+  stroke: rgba(51,102,255);
+  stroke-dasharray: 8 4;
+  stroke-opacity: 0.9;
+  stroke-width: 2;
+  fill: rgb(51, 102, 255);
+  fill-opacity: 0.1;
+}

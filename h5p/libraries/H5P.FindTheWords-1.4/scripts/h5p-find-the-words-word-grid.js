@@ -379,27 +379,25 @@
   /**
    * mouseMoveEventHandler.
    * @param {Object} e Event Object.
-   * @param {HTMLelement} canvas Html5 Canvas Element.
+   * @param {HTMLelement} drawingContainer SVG Element.
    * @param {Object[]} srcPos Position from which the movement started.
    * @param {number} eSize  Current element size.
    */
-  const mouseMoveEventHandler = function (e, canvas, srcPos, eSize) {
-    const offsetTop = ($(canvas).offset().top > eSize * 0.75) ? Math.floor(eSize * 0.75) : $(canvas).offset().top;
-    const desX = e.pageX - $(canvas).offset().left;
+  const mouseMoveEventHandler = function (e, drawingContainer, srcPos, eSize) {
+    const offsetTop = ($(drawingContainer).offset().top > eSize * 0.75) ? Math.floor(eSize * 0.75) : $(drawingContainer).offset().top;
+    const desX = e.pageX - $(drawingContainer).offset().left;
     const desY = e.pageY - Math.abs(offsetTop);
-    const context = canvas.getContext('2d');
 
-    // Draw the current marking
-    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-    context.fillStyle = 'rgba(107,177,125,0.3)';
-    context.beginPath();
-    context.lineCap = 'round';
-    context.moveTo(srcPos[0] - (eSize / 8), srcPos[1] + (offsetTop / 8));
-    context.strokeStyle = 'rgba(107,177,125,0.4)';
-    context.lineWidth = Math.floor(eSize / 2);
-    context.lineTo(desX - (eSize / 8), desY + (offsetTop / 8));
-    context.stroke();
-    context.closePath();
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.classList.add('dom-drawing-marker');
+    line.setAttribute('stroke-width', Math.floor(eSize / 2));
+    line.setAttribute('x1', srcPos[0] - (eSize / 8));
+    line.setAttribute('y1', srcPos[1] + (offsetTop / 8));
+    line.setAttribute('x2', desX - (eSize / 8));
+    line.setAttribute('y2', desY + (offsetTop / 8));
+
+    drawingContainer.innerHTML = '';
+    drawingContainer.appendChild(line);
   };
 
   /*
@@ -421,7 +419,6 @@
     const x = e.pageX - $(canvas).offset().left;
     const y = e.pageY - Math.abs(offsetTop);
     const clickEnd = calculateCordinates(x, y, elementSize);
-    const context = canvas.getContext('2d');
 
     if ((Math.abs(clickEnd[0] - x) < 20) && (Math.abs(clickEnd[1] - y) < 15)) {
       // Drag ended within permissible range
@@ -432,9 +429,6 @@
       };
     }
 
-    // Clear if there any markings started
-    context.closePath();
-    context.clearRect(0, 0, canvas.width, canvas.height);
     return wordObject;
   };
 
@@ -500,34 +494,47 @@
 
     // set the output puzzle
     this.wordGrid = wordGrid;
+
+    // Grid with characters
+    this.canvas = document.createElement('div');
+    this.canvas.classList.add('dom-canvas-grid');
+
+    for (let row = 0; row < this.wordGrid.length; row++) {
+      for (let col = 0; col < this.wordGrid[0].length; col++) {
+        const cell = document.createElement('div');
+
+        cell.classList.add('dom-canvas-grid-cell');
+        cell.innerHTML = this.wordGrid[row][col].toUpperCase();
+        this.canvas.appendChild(cell);
+      }
+    }
+
+    // Container where marker is drawn on
+    this.drawingContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    this.drawingContainer.classList.add('dom-canvas-drawing-container');
+
+    // Container where results are put
+    this.outputContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    this.outputContainer.classList.add('dom-canvas-output-container');
   };
 
   /**
    * markWord - mark the word on the output canvas (permanent).
+   * The computation of the SVG path feels a little wacky, but it uses what
+   * it previously got from the original canvas implementation. Could probably
+   * be refactored to be made simpler.
    * @param {Object} wordParams
    */
   FindTheWords.WordGrid.prototype.markWord = function (wordParams) {
     const dirKey = wordParams['directionKey'];
     const clickStart = wordParams['start'];
     const clickEnd = wordParams['end'];
-    const context = this.$outputCanvas[0].getContext('2d');
     const offsetTop = (this.$container.offset().top > this.elementSize * 0.75) ? Math.floor(this.elementSize * 0.75) * (-1) : this.$container.offset().top;
     const topRadius = Math.floor(this.elementSize / 8);
     const bottomRadius = Math.abs(Math.floor(offsetTop / 8));
     const lineWidth = Math.floor(this.elementSize / 4);
 
     let startingAngle;
-
-    // set the drawing property values
-    context.lineWidth = 2;
-    context.strokeStyle = 'rgba(107,177,125,0.9)';
-    context.fillStyle = 'rgba(107,177,125,0.3)';
-
-    if (!this.options.gridActive) {
-      context.strokeStyle = 'rgba(51, 102, 255,0.9)';
-      context.fillStyle = 'rgba(51, 102, 255,0.1)';
-      context.setLineDash([8, 4]);
-    }
 
     // find the arc starting angle depending on the direction
     switch (dirKey) {
@@ -565,13 +572,48 @@
       }
     }
 
-    // start drawing
-    context.beginPath();
-    context.arc(clickStart[0] - topRadius, clickStart[1] + bottomRadius, lineWidth, startingAngle, startingAngle + (Math.PI));
-    context.arc(clickEnd[0] - topRadius, clickEnd[1] + bottomRadius, lineWidth, startingAngle + (Math.PI), startingAngle + (2 * Math.PI));
-    context.closePath();
-    context.stroke();
-    context.fill();
+    // Create marker as SVG
+    const marker = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    marker.classList.add(`${this.options.gridActive ? 'marker-answer' : 'marker-solution'}`);
+    marker.setAttribute('d', this.computeSVGPath(
+      { x: clickStart[0] - topRadius, y: clickStart[1] + bottomRadius },
+      { x: clickEnd[0] - topRadius, y: clickEnd[1] + bottomRadius },
+      lineWidth,
+      startingAngle
+    ));
+    this.outputContainer.appendChild(marker);
+  };
+
+  /**
+   * Compute SVG path for marker.
+   * @param {object} start Start coordinates.
+   * @param {object} end End coordinates.
+   * @param {number} radius Radius of marker.
+   * @param {angle} angle Angle (in radians) of marker.
+   */
+  FindTheWords.WordGrid.prototype.computeSVGPath = function (start, end, radius, angle) {
+    // Points for path
+    const p1 = this.computeCoordinateCenterOffset(start.x, start.y, radius, angle + Math.PI);
+    const p2 = this.computeCoordinateCenterOffset(start.x, start.y, radius, angle);
+    const p3 = this.computeCoordinateCenterOffset(end.x, end.y, radius, angle + 2 * Math.PI);
+    const p4 = this.computeCoordinateCenterOffset(end.x, end.y, radius, angle + Math.PI);
+
+    return `M ${p1.x} ${p1.y} A ${radius} ${radius} 0 0 0 ${p2.x} ${p2.y} L  ${p3.x} ${p3.y} A ${radius} ${radius} 0 0 0 ${p4.x} ${p4.y} Z`;
+  };
+
+  /**
+   * Compute offset for center coordinat to place circle's arc.
+   * @param {number} centerX x coordinate of center.
+   * @param {number} centerY y coordinate of center.
+   * @param {number} radius Radius of circle.
+   * @param {number} angleInRadians Angle for offset.
+   * @return {object} Coordinates on circle's arc.
+   */
+  FindTheWords.WordGrid.prototype.computeCoordinateCenterOffset = function (centerX, centerY, radius, angleInRadians) {
+    return {
+      x: centerX + (radius * Math.cos(angleInRadians)),
+      y: centerY + (radius * Math.sin(angleInRadians))
+    };
   };
 
   /**
@@ -668,21 +710,35 @@
     const marginResp = (Math.floor(that.elementSize / 8) < margin) ? (Math.floor(that.elementSize / 8)) : margin;
     const offsetTop = (that.$container.offset().top > that.elementSize * 0.75) ? Math.floor(that.elementSize * 0.75) : that.$container.offset().top;
 
-    this.$gridCanvas = $('<canvas id="grid-canvas" class="canvas-element" height="' + that.canvasHeight + 'px" width="' + that.canvasWidth + 'px" />').appendTo(that.$container);
-    this.$outputCanvas = $('<canvas class="canvas-element" height="' + that.canvasHeight + 'px" width="' + that.canvasWidth + 'px"/>').appendTo(that.$container);
-    this.$drawingCanvas = $('<canvas id="drawing-canvas" class="canvas-element" height="' + that.canvasHeight + 'px" width="' + that.canvasWidth + 'px"/>').appendTo(that.$container);
+    /*
+     * Recompute the cell style to match original implementation
+     * It's unnecessary to recreate the $container contents here all the
+     * time, bit that's part of the original implementation. Not changing
+     * this now.
+     */
+    this.canvas.style.width = `${that.canvasWidth}px`;
+    this.canvas.style.height = `${that.canvasHeight}px`;
+    this.canvas.style.fontSize = `${that.elementSize / 3}px`;
+    for (let i = 0; i < this.wordGrid.length * this.wordGrid[0].length; i++) {
+      const cell = this.canvas.childNodes[i];
+      cell.style.width = `${that.canvasWidth / this.wordGrid[0].length}px`;
+      cell.style.height = `${that.canvasHeight / this.wordGrid.length}px`;
+      cell.style.paddingLeft = `${2 * marginResp}px`;
+      cell.style.paddingTop = `${offsetTop - ((that.$container.offset().top > that.elementSize * 0.75) ? 16 : 18)}px`;
+    }
 
-    const ctx1 = this.$gridCanvas[0].getContext('2d');
-    const offset = that.$container.offset();
+    // Found words
+    this.outputContainer.style.width = this.canvas.style.width;
+    this.outputContainer.style.height = this.canvas.style.height;
+    this.outputContainer.innerHTML = '';
 
-    ctx1.clearRect(offset.left, offset.top, that.canvasWidth, that.canvasHeight);
-    ctx1.font = (that.elementSize / 3 ) + 'px sans-serif';
+    // Drawing marker
+    this.drawingContainer.style.width = this.canvas.style.width;
+    this.drawingContainer.style.height = this.canvas.style.height;
 
-    that.wordGrid.forEach(function (row, index1) {
-      row.forEach(function (element, index2) {
-        ctx1.fillText(element.toUpperCase(), index2 * that.elementSize + 2 * marginResp, index1 * that.elementSize + (offsetTop) );
-      });
-    });
+    that.$container.append(this.canvas);
+    that.$container.append(this.outputContainer);
+    that.$container.append(this.drawingContainer);
 
     let clickStart = [];
     let isDragged = false;
@@ -692,19 +748,19 @@
       //TODO: need to implement for a11y
     }, false);
 
-    this.$drawingCanvas[0].addEventListener('touchstart', function (event) {
+    this.drawingContainer.addEventListener('touchstart', function (event) {
       touchHandler(event);
     }, false);
 
-    this.$drawingCanvas[0].addEventListener('touchmove', function (event) {
+    this.drawingContainer.addEventListener('touchmove', function (event) {
       touchHandler(event);
     }, false);
 
-    this.$drawingCanvas[0].addEventListener('touchend', function (event) {
+    this.drawingContainer.addEventListener('touchend', function (event) {
       touchHandler(event);
     }, false);
 
-    this.$drawingCanvas.on('mousedown', function (event) {
+    $(this.drawingContainer).on('mousedown', function (event) {
       if (that.options.gridActive) {
         if (!clickMode) {
           that.enableDrawing = true;
@@ -714,7 +770,7 @@
       }
     });
 
-    this.$drawingCanvas.on('mouseup', function (event) {
+    $(this.drawingContainer).on('mouseup', function (event) {
       if (that.enableDrawing) {
         if (isDragged || clickMode) {
           if (clickMode) {
@@ -760,25 +816,17 @@
         }
         else if (!clickMode) {
           clickMode = true;
-          const offsetTop = (that.$container.offset().top > that.elementSize * 0.75) ? Math.floor(that.elementSize * 0.75) : that.$container.offset().top;
-          const context = that.$drawingCanvas[0].getContext('2d');
-          //drawing the dot on initial click
-          context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-          context.lineWidth = Math.floor(that.elementSize / 2);
-          context.strokeStyle = 'rgba(107,177,125,0.9)';
-          context.fillStyle = 'rgba(107,177,125,0.3)';
-          context.beginPath();
-          context.arc(clickStart[0] - (that.elementSize / 8), clickStart[1] + Math.floor(offsetTop / 8), that.elementSize / 4, 0, 2 * Math.PI);
-          context.fill();
-          context.closePath();
         }
+
+        // Clear drawing container
+        that.drawingContainer.innerHTML = '';
       }
     });
 
-    this.$drawingCanvas.on('mousemove', function (event) {
+    $(this.drawingContainer).on('mousemove', function (event) {
       if (that.enableDrawing ) {
         isDragged = true;
-        mouseMoveEventHandler(event, this, clickStart, that.elementSize);
+        mouseMoveEventHandler(event, that.drawingContainer, clickStart, that.elementSize);
       }
     });
   };

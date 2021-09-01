@@ -240,7 +240,12 @@ border-bottom: 1px solid #dde4ea;
   padding: 0em 1em 0em 1em;
 }
 
-
+.h5p-image-sequencing-audio-wrapper audio.h5p-invisible-audio {
+  height: 0;
+  opacity: 0;
+  visibility: hidden;
+  width: 0;
+}
 
 .h5p-image-sequencing-audio-wrapper{
   padding-left: 0.3em;

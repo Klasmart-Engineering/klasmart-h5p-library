@@ -48,6 +48,8 @@
         // Have to stop else audio will take up a socket pending forever in chrome.
         if (audioObj.audio && audioObj.audio.preload) {
           audioObj.audio.preload = 'none';
+          audioObj.audio.classList.add('h5p-invisible-audio');
+          $audioWrapper.append(audioObj.audio);
         }
       }
       else {

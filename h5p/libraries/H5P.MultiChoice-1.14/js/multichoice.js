@@ -1349,6 +1349,17 @@ H5P.MultiChoice = function (options, contentId, contentData) {
 
     if (!alternatives) {
       alternatives = document.querySelectorAll('.h5p-alternative-container.h5p-multichoice-type-image');
+
+      // Workaround for Safari on LiveView
+      if (alternatives.length) {
+        alternatives.forEach(function (alternative) {
+          const img = alternative.querySelector('img');
+          if (img) {
+            img.style.height = 'auto';
+          }
+        });
+      }
+
       if (alternatives.length === 0) {
         alternatives = document.querySelectorAll('.h5p-alternative-container.h5p-multichoice-type-imageaudio');
       }

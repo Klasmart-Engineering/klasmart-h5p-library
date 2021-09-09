@@ -1,4 +1,7 @@
 definitions:
+  services:
+    docker:
+      memory: 4096
   caches:
     nodemodules: ./node_modules
   steps:
@@ -39,6 +42,10 @@ definitions:
     - docker push $REPO:$BRANCH_TAG-$BITBUCKET_BUILD_NUMBER
     - docker push $REPO:$BRANCH_TAG-${BITBUCKET_COMMIT:0:7}
 
+options:
+  docker: true
+  size: 2x
+
 pipelines:
   branches:
     dev:
@@ -56,6 +63,7 @@ pipelines:
           script: *build-and-push-to-aws
           services:
             - docker
+          size: 2x
           caches:
             - docker
       - step: *slack-notification
@@ -72,6 +80,7 @@ pipelines:
           script: *build-and-push-to-aws
           services:
             - docker
+          size: 2x
           caches:
             - docker
       - step: *slack-notification

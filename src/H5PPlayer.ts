@@ -27,7 +27,11 @@ import LibraryManager from './LibraryManager';
 
 const xapi_events_endpoint: string | undefined = typeof process.env.XAPI_ENDPOINT === "string" && process.env.XAPI_ENDPOINT
 if(!xapi_events_endpoint) { 
-    console.error(`Set XAPI_ENDPOINT enviroment variable to for xAPI event reporting`) 
+    console.error(`Set XAPI_ENDPOINT environment variable for xAPI event reporting`)
+}
+const audio_service_endpoint: string | undefined = typeof process.env.AUDIO_SERVICE_ENDPOINT === "string" && process.env.AUDIO_SERVICE_ENDPOINT
+if(!audio_service_endpoint) { 
+    console.error(`Set AUDIO_SERVICE_ENDPOINT environment variable for audio upload functionality`)
 }
 
 const log = new Logger('Player');
@@ -231,6 +235,7 @@ export default class H5PPlayer {
         log.info(`generating integration for ${contentId}`);
         return {
             xapi_events_endpoint,
+            audio_service_endpoint,
             contents: {
                 [`cid-${contentId}`]: {
                     displayOptions: {

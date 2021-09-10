@@ -21,6 +21,7 @@ import {
     ISemanticsEntry,
     IFileStats
 } from './types';
+import { Readable } from 'stream';
 
 const log = new Logger('LibraryManager');
 
@@ -77,7 +78,7 @@ export default class LibraryManager {
     public async getFileStream(
         library: ILibraryName,
         file: string
-    ): Promise<ReadStream> {
+    ): Promise<Readable> {
         log.debug(
             `getting file ${file} from library ${LibraryName.toUberName(
                 library

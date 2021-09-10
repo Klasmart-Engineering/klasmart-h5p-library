@@ -784,7 +784,7 @@ export interface ILibraryStorage {
      * @param filename the relative path inside the library
      * @returns a readable stream of the file's contents
      */
-    getFileStream(library: ILibraryName, file: string): Promise<ReadStream>;
+    getFileStream(library: ILibraryName, file: string): Promise<Readable>;
 
     /**
      * Returns all installed libraries or the installed libraries that have the machine names in the arguments.

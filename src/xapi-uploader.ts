@@ -13,19 +13,20 @@ console.log('audioServiceEndpoint:', audioServiceEndpoint)
 if(!h5p) {
     console.error("[xAPI Uploader] Could not locate H5P")
 } else if (!h5pIntegration) {
-    console.error("Could not locate H5P.H5PIntegration")
-} else if(!xapiServiceEndpoint || typeof xapiServiceEndpoint !== "string" ) {
-    console.error(`Invalid xAPI endpoint '${xapiServiceEndpoint}'`)
-} else if(!audioServiceEndpoint || typeof audioServiceEndpoint !== "string" ) {
-    console.error(`Invalid audio endpoint '${audioServiceEndpoint}'`)
-} else {
+    console.error("[xAPI Uploader] Could not locate H5P.H5PIntegration")
+}
+
+if(xapiServiceEndpoint && typeof xapiServiceEndpoint === "string" ) {
     const xapiUploader = new XapiUploader(xapiServiceEndpoint)
     h5p.externalDispatcher.on('xAPI', (event: any) => {
         console.log(event)
         Object.assign(event, { clientTimestamp: Date.now() })
         xapiUploader.uploadEvent(JSON.stringify(event))
     });
+    console.log("xAPI upload listener attached")
+}
 
+if(audioServiceEndpoint && typeof audioServiceEndpoint === "string" ) {
     const audioUploader = new AudioUploader(audioServiceEndpoint)
     h5p.externalDispatcher.on('exportFile', (event: any) => {
         console.log('audio', event)
@@ -39,6 +40,5 @@ if(!h5p) {
           .then(() => console.log('Audio upload succeeded'))
           .catch(e => console.error('Audio upload failed', e))
     });
-    
-    console.log("xAPI uploader listener attached")
-} 
+    console.log("Audio upload listener attached")
+}

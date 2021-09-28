@@ -9,19 +9,20 @@ services:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: h5pnodejs
         ports:
-            - 5444:5432
-        volumes:
-            - pgdata:/var/lib/postgresql/data
+            - 5432:5432
+        # volumes:
+            # - h5ppgdata:/var/lib/postgresql/data
     minio1:
         image: minio/minio
         volumes:
             - minio_data:/data
         ports:
             - "9000:9000"
-        command: ["server", "/data"]
+            - 43333:43333
+        command: ["server", "/data", "--console-address=:43333"]
         environment:
-            MINIO_ACCESS_KEY: minioaccesskey
-            MINIO_SECRET_KEY: miniosecret
+            MINIO_ROOT_USER: minioaccesskey
+            MINIO_ROOT_PASSWORD: miniosecret
     h5p:
         image: h5p:latest
         ports: 
@@ -29,16 +30,19 @@ services:
         environment:
             CONTENTSTORAGE: typeorms3
             LIBRARYSTORAGE: typeorms3
-            TYPEORM_LIBRARY_S3_ENDPOINT: http://localhost:9000
+            S3_ENDPOINT: http://minio1:9000
+            TYPEORM_CONTENT_REGION: us-east-2
             TYPEORM_LIBRARY_REGION: us-east-2
             S3_STORAGE_BUCKET: kidsloop-h5p-content-storage
             H5P_STORAGE_ENV: postgres
-            H5P_PG_HOST: http://localhost
+            H5P_PG_HOST: postgres
             H5P_PG_USER: postgres
-            H5P_PG_PORT: 5444
-            H5P_PG_DATABASE: h5p
+            H5P_PG_PORT: 5432
+            H5P_PG_DATABASE: postgres
             H5P_PG_PASSWORD: h5pnodejs
-            
+            DEBUG: "*"
+            AWS_ACCESS_KEY_ID: "minioaccesskey"
+            AWS_SECRET_ACCESS_KEY: "miniosecret"
 volumes:
-    pgdata:
+    h5ppgdata:
     minio_data:

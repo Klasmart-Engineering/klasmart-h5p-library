@@ -100,45 +100,6 @@ const start = async () => {
         ["/h5p/core/js/xapi-uploader.js"]
     );
 
-        // // Sync libraries to TypeORM if LIBRARYSTORAGE is configured to use typeorm
-        // if (process.env.LIBRARYSTORAGE?.toLowerCase() === 'typeorms3') {
-            
-        //     // Resolve libraries in file system directory
-        //     const directoryPath = path.resolve('h5p/libraries');
-        //     const directoryItems = await fs.promises.readdir(directoryPath);
-            
-        //     // Filter out content that are not child directories
-        //     const libraries = directoryItems.filter(async d => (await fs.promises.stat(d)).isDirectory);
-            
-        //     // Load libraries' package.json metadata files
-        //     const manifests = await Promise.all(libraries.map(async library => JSON.parse(
-        //         (await fs.promises.readFile(`${directoryPath}/${library}`)).toString()
-        //     )));
-
-
-            
-        //     const libraryNames: ILibraryName[] = manifests.map(manifest => ({
-        //         machineName: manifest.machineName,
-        //         majorVersion: manifest.majorVersion,
-        //         minorVersion: manifest.minorVersion
-        //     }));
-            
-        //     // Map ubernames to original file indexes so that they can be found from the filtered array
-        //     const libraryIndexMap = new Map<string, number>();
-        //     libraryNames.forEach((libraryName, i) => libraryIndexMap.set(LibraryName.toUberName(libraryName), i));
-            
-        //     const librariesToAdd = await Promise.all(
-        //         libraryNames.filter(libraryName => h5pEditor.libraryStorage.libraryExists(libraryName))
-        //     );
-            
-        //     await Promise.all(librariesToAdd.map(library => {
-        //         const sourceLibraryIndex = libraryIndexMap.get(LibraryName.toUberName(library));
-        //         const libraryDirectoryName = libraries[sourceLibraryIndex];
-        //         h5pEditor.libraryManager.installFromDirectory(`${directoryPath}/${libraryDirectoryName}`)
-        //     }));
-        // }
-
-
     // We now set up the Express server in the usual fashion.
     const server = express();
 

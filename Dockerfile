@@ -23,6 +23,8 @@ RUN echo "${SSH_PRIVATE_KEY}" > /home/node/.ssh/id_rsa && \
 
 RUN rm -rf h5p/content
 RUN rm -rf h5p/temporary-storage
+RUN ["mkdir", "temp-content-store"]
+
 
 RUN curl 'https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem' -o './rds-combined-ca-bundle.pem'
 RUN sha256sum rds-combined-ca-bundle.pem

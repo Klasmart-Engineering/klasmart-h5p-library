@@ -6,6 +6,7 @@ import i18nextHttpMiddleware from 'i18next-http-middleware';
 import i18nextFsBackend from 'i18next-fs-backend';
 import path from 'path';
 import cors from "cors"
+import fs from 'fs';
 
 import h5pAjaxExpressRouter from '../src/adapters/H5PAjaxRouter/H5PAjaxExpressRouter';
 import libraryAdministrationExpressRouter from '../src/adapters/LibraryAdministrationRouter/LibraryAdministrationExpressRouter';
@@ -16,8 +17,11 @@ import * as H5P from '../src';
 import expressRoutes from './expressRoutes';
 import startPageRenderer from './startPageRenderer';
 import User from './User';
-import createH5PEditor from './createH5PEditor';
+import createH5PEditor, { syncLibraryFromFs } from './createH5PEditor';
 import { displayIps } from './utils';
+import { ILibraryName, LibraryName } from '@lumieducation/h5p-server';
+
+
 
 const start = async () => {
     // We use i18next to localize messages sent to the user. You can use any
@@ -83,6 +87,10 @@ const start = async () => {
         }
     );
 
+    if (process.env.LIBRARYSTORAGE === 'typeorms3') {
+        await syncLibraryFromFs(path.resolve('h5p/libraries'), h5pEditor);
+    }
+
     // The H5PPlayer object is used to display H5P content.
     const h5pPlayer = new H5P.H5PPlayer(
         h5pEditor.libraryStorage,
@@ -91,6 +99,45 @@ const start = async () => {
         undefined,
         ["/h5p/core/js/xapi-uploader.js"]
     );
+
+        // // Sync libraries to TypeORM if LIBRARYSTORAGE is configured to use typeorm
+        // if (process.env.LIBRARYSTORAGE?.toLowerCase() === 'typeorms3') {
+            
+        //     // Resolve libraries in file system directory
+        //     const directoryPath = path.resolve('h5p/libraries');
+        //     const directoryItems = await fs.promises.readdir(directoryPath);
+            
+        //     // Filter out content that are not child directories
+        //     const libraries = directoryItems.filter(async d => (await fs.promises.stat(d)).isDirectory);
+            
+        //     // Load libraries' package.json metadata files
+        //     const manifests = await Promise.all(libraries.map(async library => JSON.parse(
+        //         (await fs.promises.readFile(`${directoryPath}/${library}`)).toString()
+        //     )));
+
+
+            
+        //     const libraryNames: ILibraryName[] = manifests.map(manifest => ({
+        //         machineName: manifest.machineName,
+        //         majorVersion: manifest.majorVersion,
+        //         minorVersion: manifest.minorVersion
+        //     }));
+            
+        //     // Map ubernames to original file indexes so that they can be found from the filtered array
+        //     const libraryIndexMap = new Map<string, number>();
+        //     libraryNames.forEach((libraryName, i) => libraryIndexMap.set(LibraryName.toUberName(libraryName), i));
+            
+        //     const librariesToAdd = await Promise.all(
+        //         libraryNames.filter(libraryName => h5pEditor.libraryStorage.libraryExists(libraryName))
+        //     );
+            
+        //     await Promise.all(librariesToAdd.map(library => {
+        //         const sourceLibraryIndex = libraryIndexMap.get(LibraryName.toUberName(library));
+        //         const libraryDirectoryName = libraries[sourceLibraryIndex];
+        //         h5pEditor.libraryManager.installFromDirectory(`${directoryPath}/${libraryDirectoryName}`)
+        //     }));
+        // }
+
 
     // We now set up the Express server in the usual fashion.
     const server = express();

@@ -70,6 +70,7 @@
         "escape-html": "^1.0.3",
         "fs-extra": "^9.0.0",
         "glob-promise": "^3.4.0",
+        "h5p-typeorm": "git+ssh://git@bitbucket.org/calmisland/h5p-typeorm#v0.1.7",
         "image-size": "^0.8.3",
         "jsonpath": "^1.1.1",
         "jsonwebtoken": "^8.5.1",
@@ -134,9 +135,6 @@
         "ts-jest": "26.3.0",
         "ts-loader": "^8.0.2",
         "ts-node": "9.0.0",
-        "tslint": "6.1.3",
-        "tslint-config-airbnb": "5.11.2",
-        "tslint-config-prettier": "1.18.0",
         "typescript": "4.0.2",
         "webpack": "^4.44.1",
         "webpack-cli": "^3.3.12"

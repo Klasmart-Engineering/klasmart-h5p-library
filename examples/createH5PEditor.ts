@@ -105,6 +105,13 @@ let getTypeormConnection: () => Promise<Connection> = (() => {
     }
 })();
 
+/**
+ * Creates and returns an IContentStorage implementation corresponding to the environment variable 
+ * of CONTENTSTORAGE and defaulting to the file system content storage when no value is set.
+ * 
+ * @param localContentPath - Optional filesystem path for content
+ * @returns IContentStorage implementation
+ */
 async function getContentStorageImplementation(localContentPath?: string) : Promise<H5P.IContentStorage>{
     switch(process.env.CONTENTSTORAGE) {
         case 'mongos3':
@@ -148,6 +155,13 @@ async function getContentStorageImplementation(localContentPath?: string) : Prom
     }
 }
 
+/**
+ * Creates and returns an ILibraryStorage implementation corresponding to the environment variable 
+ * of LIBRARYSTORAGE and defaulting to the file system library storage when no value is set.
+ * 
+ * @param localLibraryPath Path to local library storage. 
+ * @returns Asynchronously returns ILibraryStorage implementation
+ */
 async function getLibraryStorageImplementation(localLibraryPath?: string): Promise<H5P.ILibraryStorage> {
     switch(process.env.LIBRARYSTORAGE) {
         case 'typeorms3':
@@ -171,10 +185,30 @@ async function getLibraryStorageImplementation(localLibraryPath?: string): Promi
     }
 }
 
+/**
+ * Utility function to synchronize libraries from file system to another implementation LibraryStorage system.
+ * Enumerates libraries in librariesPath and calls an editor's LibraryManager's installFromDirectory function.
+ * ! Note: installFromDirectory does not operate transactionally. If addFile steps fail, libraries additions will
+ * ! not be rolled back.
+ * @param librariesPath File system location of H5P libraries to be synced.
+ * @param editor A configured H5PEditor with an instantiated LibraryManager
+ */
 export async function syncLibraryFromFs(librariesPath: string, editor: H5P.H5PEditor) {
+
+    if (!editor) {
+        log.error(`syncLibraryFromFs called without H5PEditor.`);
+        throw new H5P.H5pError(`create-h5p-editor:sync-library-from-fs:h5p-editor-undefined`);
+    }
+    if (!editor?.libraryManager) {
+        log.error(`syncLibraryFromFs called with H5PEditor that has no LibraryStorage.`);
+        throw new H5P.H5pError(`create-h5p-editor:sync-library-from-fs:library-storage-undefined`);
+    }
+    
+    // Get all files/directories within librariesPath
     const directoryItems = await fs.promises.readdir(librariesPath);
     log.info(`Syncing file system libraries to S3 storage`);
 
+    // Filters out files from librariesPath, leaving only directories in resultant array
     const libraries: string[] = await Promise.all(
         directoryItems
             .map(async path => { return [path, await fs.promises.stat(`${librariesPath}/${path}`)] as [string, fs.Stats] })
@@ -187,16 +221,18 @@ export async function syncLibraryFromFs(librariesPath: string, editor: H5P.H5PEd
 
     log.info(`${libraries.length} libraries discovered in file system`);
 
+    // Start synchronizing libraries by calling installFromDirectory on each
     const promises = libraries.map(async (library, i) => {
         log.info(`Syncing library ${i+1}/${libraries.length}: ${library}`)
-        return  editor.libraryManager.installFromDirectory(`${librariesPath}/${library}`)
+        return editor.libraryManager.installFromDirectory(`${librariesPath}/${library}`)
     });
 
     try {
+        // Await for synchronization to complete
         await Promise.all(promises);
         log.info(`Libraries synced successfully`);
     } catch (err) {
-        log.error(`Error syncing libraries: ${err}`)
-        log.error(`Caused by: ${err.stack}`)
+        log.error(`Error syncing libraries: ${err}`);
+        log.error(`Caused by: ${err.stack}`);
     }
 }

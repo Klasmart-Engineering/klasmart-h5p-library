@@ -19,7 +19,6 @@ import startPageRenderer from './startPageRenderer';
 import User from './User';
 import createH5PEditor, { syncLibraryFromFs } from './createH5PEditor';
 import { displayIps } from './utils';
-import { ILibraryName, LibraryName } from '@lumieducation/h5p-server';
 
 
 
@@ -87,6 +86,7 @@ const start = async () => {
         }
     );
 
+    // Synchronize file system libraries when using typeorms3 library storage
     if (process.env.LIBRARYSTORAGE === 'typeorms3') {
         await syncLibraryFromFs(path.resolve('h5p/libraries'), h5pEditor);
     }

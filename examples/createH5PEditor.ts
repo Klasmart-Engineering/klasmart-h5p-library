@@ -96,7 +96,7 @@ let getTypeormConnection: () => Promise<Connection> = (() => {
                 database: process.env.H5P_PG_DATABASE || 'h5p',
                 password: process.env.H5P_PG_PASSWORD,
                 extra: {
-                connectionLimit: 5
+                    max: 5
                 },
                 logging: true
             });

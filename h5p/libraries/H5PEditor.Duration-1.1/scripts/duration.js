@@ -54,9 +54,21 @@ H5PEditor.widgets.duration = H5PEditor.Duration = (function ($) {
    * Creates HTML for the widget.
    */
   C.prototype.createHtml = function () {
+    // Display float fraction value as FPS
+    if (this.params.fps) {
+      this.params.from = C.convertFloatToFPS(this.params.from, this.params.fps);
+      this.params.to = C.convertFloatToFPS(this.params.to, this.params.fps);
+    }
+
     const id = H5PEditor.getNextFieldId(this.field);
     const descriptionId = (this.field.description !== undefined ? H5PEditor.getDescriptionId(id) : undefined)
     var input = H5PEditor.createText(this.params !== undefined ? C.humanizeTime(this.params.from) : undefined, 15, 'From', id, descriptionId) + ' - ' + H5PEditor.createText(this.params !== undefined ? C.humanizeTime(this.params.to) : undefined, 15, 'To', undefined, descriptionId);
+
+    // Add hint to number format
+    if (this.params.fps) {
+      input += ' (' + this.params.fps + ' ' + C.t('fps') + ')';
+    }
+
     return H5PEditor.createFieldMarkup(this.field, input, id);
   };
 
@@ -100,6 +112,22 @@ H5PEditor.widgets.duration = H5PEditor.Duration = (function ($) {
         return false;
       }
 
+      // Seconds fraction (interpreted as fps) must be smaller than video's fps
+      if (that.params.fps && value !== Math.floor(values[j])) {
+        const fpsValue = parseInt(value.toString().split('.')[1]);
+
+        if (fpsValue >= that.params.fps) {
+          that.$errors.append(H5PEditor.createError(C.t('invalidTime', {':property': field.name})));
+          return false;
+        }
+      }
+
+      // Keep fps and convert fps fractions to float seconds
+      if (that.params.fps) {
+        duration.fps = that.params.fps;
+        value = C.convertFPSToFloat(values[j], that.params.fps);
+      }
+
       // Validate minutes
       j = j - 1;
       var minutes = parseInt(values[j]);
@@ -133,6 +161,7 @@ H5PEditor.widgets.duration = H5PEditor.Duration = (function ($) {
       }
 
       duration[field.name] = value;
+      that.params[field.name] = value;
     });
 
     // Check that "To" time always is after "From" time.
@@ -160,6 +189,46 @@ H5PEditor.widgets.duration = H5PEditor.Duration = (function ($) {
   C.t = function (key, params) {
     return H5PEditor.t('H5PEditor.Duration', key, params);
   };
+
+  /**
+   * Convert seconds fraction to FPS for display.
+   * @param {number} seconds Seconds.
+   * @param {number} fpsVideo FPS used for the video.
+   * @return {number} Seconds with pseudo fps.
+   */
+  C.convertFloatToFPS = function (seconds, fpsVideo) {
+    let secondsString = seconds.toString();
+    if (secondsString.indexOf('.') === -1) {
+      return seconds;
+    }
+
+    const secondsFloor = parseInt(secondsString.split('.')[0]);
+
+    const secondsFractionString = secondsString.split('.')[1];
+    const secondsFraction = parseInt(secondsFractionString);
+
+    const secondsFractionDivisor = Math.pow(10, secondsFractionString.length);
+    const fps = parseFloat('0.' + Math.round(secondsFraction / secondsFractionDivisor * fpsVideo).toString());
+
+    return secondsFloor + fps;
+  }
+
+  /**
+   * Convert FPS fraction to float seconds for video seek.
+   * @param {string} secondsString Seconds with fps to convert.
+   * @param {number} fpsVideo FPS used for the video.
+   * @return {number} Seconds with float fraction.
+   */
+  C.convertFPSToFloat = function (secondsString, fpsVideo) {
+    if (secondsString.indexOf('.') === -1) {
+      secondsString = secondsString + '.0';
+    }
+
+    const seconds = parseInt(secondsString.split('.')[0]);
+    const fpsTarget = parseInt(secondsString.split('.')[1]);
+
+    return seconds + fpsTarget / fpsVideo;
+  }
 
   /**
    * Formats time in H:MM:SS.

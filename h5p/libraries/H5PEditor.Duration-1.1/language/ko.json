@@ -1,0 +1,8 @@
+{
+  "libraryStrings": {
+    "exceedsMin": "\":property\"가 최소값인 :min을 초과했습니다.",
+    "fromBiggerThanTo": "\"시작 시점\"은 \"목표 시점\"보다 이전이어야 합니다.",
+    "invalidTime": "\":property\"에 잘못된 시간 형식이 있습니다.",
+    "fps": "fps"
+  }
+}

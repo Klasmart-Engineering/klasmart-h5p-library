@@ -58,8 +58,8 @@
       "default": "Anterior"
     },
     {
-      "label": "Texto para botón Revisar respuestas",
-      "default": "Revisar"
+      "label": "Texto para el botón Revisar respuestas",
+      "default": "Comprobar"
     },
     {
       "label": "Allow user to enter answer using speech recognition"
@@ -480,8 +480,8 @@
       "default": "Reintentar"
     },
     {
-      "label": "MAYÚSCULAS/minúsculas importan",
-      "description": "Asegurarse que la entrada del usuario sea exactamente la misma que la respuesta."
+      "label": "Case sensitive",
+      "description": "Makes sure the user input has to be exactly the same as the answer."
     },
     {
       "label": "Texto incorrecto para tecnologías asistivas",

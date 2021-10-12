@@ -159,7 +159,10 @@
                   {
                     "label": "Rango de Puntaje"
                   },
-                  {},
+                  {
+                    "one": "",
+                    "other": ""
+                  },
                   {
                     "label": "Retroalimentación para rango definido de puntaje",
                     "placeholder": "Complete la retroalimentación"

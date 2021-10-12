@@ -10,7 +10,7 @@
     /** @alias H5P.FindTheWords.Timer# */
     const that = this;
     // Initialize event inheritance
-    Timer.call(that, 100);
+    Timer.call(that, 1000);
 
     /** @private {string} */
     const naturalState = '0:00';

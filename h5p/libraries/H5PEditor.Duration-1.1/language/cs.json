@@ -2,6 +2,7 @@
   "libraryStrings": {
     "exceedsMin": "\":property\" překračuje minimální hodnotu :min.",
     "fromBiggerThanTo": "\"From\" musí být dříve než \"To\".",
-    "invalidTime": "\":property\" obsahuje neplatný formát času."
+    "invalidTime": "\":property\" obsahuje neplatný formát času.",
+    "fps": "fps"
   }
 }

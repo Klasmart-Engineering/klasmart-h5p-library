@@ -2,6 +2,7 @@
   "libraryStrings": {
     "exceedsMin": "\":property\" надминава минималната стойност на :min.",
     "fromBiggerThanTo": "\"From\" трябва да бъде преди \"To\".",
-    "invalidTime": "\":property\" съдържа невалиден формат за време."
+    "invalidTime": "\":property\" съдържа невалиден формат за време.",
+    "fps": "fps"
   }
 }

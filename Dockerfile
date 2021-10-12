@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:lts
 
 USER node
 RUN mkdir /home/node/h5p-nodejs-library

@@ -9,8 +9,7 @@ definitions:
         name: "Fetch NPM dependencies and build docker image"
         image: node:lts
         script:
-          - npm ci
-          - npm audit fix
+          - npm i
         caches:
           - nodemodules
         artifacts:

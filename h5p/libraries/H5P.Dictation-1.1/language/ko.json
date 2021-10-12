@@ -30,7 +30,7 @@
         "fields": [
           {
             "label": "설명",
-            "description": "선택사항으로 텍스트 입력 필드 위에 간단한 설명을 넣을 수 있습니다.(예> 대화에 유용합니다.)"
+            "description": "선택사항으로 텍스트 입력 필드 위에 간단한 설명을 넣을 수 있습니다.(예> 대화)"
           },
           {
             "label": "소리 샘플",
@@ -64,7 +64,10 @@
               {
                 "label": "점수 범위"
               },
-              {},
+              {
+                "one": "",
+                "other": ""
+              },
               {
                 "label": "정의된 점수 범위에 대한 피드백",
                 "placeholder": "피드백 작성"
@@ -130,11 +133,11 @@
           ]
         },
         {
-          "label": "Text",
+          "label": "텍스트",
           "fields": [
             {
-              "label": "Word separator",
-              "description": "Define the separator of words different than space character to support alternate solutions with different number of words.",
+              "label": "단어 구분자",
+              "description": "단어 수가 다른 대체 솔루션을 지원하기 위해 공백 문자와 다른 단어 구분 기호를 정의합니다.",
               "default": " "
             },
             {
@@ -159,7 +162,7 @@
           ]
         },
         {
-          "label": "Presentation of feedback",
+          "label": "피드백 프레젠테이션",
           "fields": [
             {
               "label": "사용자 정의 오타 표시",
@@ -180,13 +183,13 @@
           ]
         },
         {
-          "label": "\"Retry\" (재시도) 버튼 활성화"
+          "label": "\"재시도\" 활성화"
         },
         {
-          "label": "\"Show solution\" (해답보이기) 버튼 활성화"
+          "label": "\"솔루션 표시\" 버튼 활성화"
         },
         {
-          "label": "Show solution on check"
+          "label": "확인 시 솔루션 표시"
         }
       ]
     },

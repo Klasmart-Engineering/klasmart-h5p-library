@@ -50,20 +50,20 @@
           "description": "카드를 배치할 때 열과 행의 수를 일치시키려고 합니다. 그런 다음 카드의 크기가 화면에 맞게 사이즈가 조정됩니다."
         },
         {
-          "label": "Row/columns selection",
-          "description": "Enforce the number of rows/columns for the card layout.",
+          "label": "행/열 선택",
+          "description": "카드 레이아웃에 대한 행/열 수를 적용합니다.",
           "fields": [
             {
-              "label": "Rows"
+              "label": "행"
             },
             {
-              "label": "Columns"
+              "label": "열"
             }
           ]
         },
         {
-          "label": "Enforce layout on narrow screens",
-          "description": "The content type will reduce the number of columns if the cards become to small. Activate this setting if you want to enforce a given number of columns even on a narrow screen knowing that cards may become too small to be used."
+          "label": "좁은 화면에서 레이아웃 적용",
+          "description": "콘텐츠 유형은 카드가 작아지면 열 수를 줄입니다. 카드가 너무 작아서 사용할 수 없다는 것을 알고 있는 좁은 화면에서도 지정된 수의 열을 적용하려면 이 설정을 활성화하십시오."
         },
         {
           "label": "사용할 카드 수",
@@ -75,7 +75,7 @@
       ]
     },
     {
-      "label": "보고 느끼다",
+      "label": "보고 느끼는 것",
       "description": "게임의 비주얼을 제어합니다.",
       "fields": [
         {

@@ -5,10 +5,9 @@ const h5pIntegration = (window as any).H5PIntegration;
 const xapiServiceEndpoint = h5pIntegration?.xapi_events_endpoint;
 const audioServiceEndpoint = h5pIntegration?.audio_service_endpoint;
 
-console.log('h5p:', h5p)
-console.log('h5pIntegration:', h5pIntegration)
-console.log('xapiServiceEndpoint:', xapiServiceEndpoint)
-console.log('audioServiceEndpoint:', audioServiceEndpoint)
+const parentUrl = new URL(window.parent.location.toString()) 
+const selfUrl = new URL(window.location.toString()) 
+const liveAuthorizationToken = selfUrl.searchParams.get("token") || parentUrl.searchParams.get("token") 
 
 if(!h5p) {
     console.error("[xAPI Uploader] Could not locate H5P")
@@ -17,7 +16,7 @@ if(!h5p) {
 }
 
 if(xapiServiceEndpoint && typeof xapiServiceEndpoint === "string" ) {
-    const xapiUploader = new XapiUploader(xapiServiceEndpoint)
+    const xapiUploader = new XapiUploader(xapiServiceEndpoint, liveAuthorizationToken)
     h5p.externalDispatcher.on('xAPI', (event: any) => {
         console.log(event)
         Object.assign(event, { clientTimestamp: Date.now() })
@@ -27,15 +26,9 @@ if(xapiServiceEndpoint && typeof xapiServiceEndpoint === "string" ) {
 }
 
 if(audioServiceEndpoint && typeof audioServiceEndpoint === "string" ) {
-    const audioUploader = new AudioUploader(audioServiceEndpoint)
+    const audioUploader = new AudioUploader(audioServiceEndpoint, liveAuthorizationToken)
     h5p.externalDispatcher.on('exportFile', (event: any) => {
         console.log('audio', event)
-        // TODO: Replace the roomId placeholder when live implements passing it to us.
-        const roomId = 'roomId'
-        Object.assign(event, { roomId })
-        // TODO: Replace organizationId placeholder.
-        const organizationId = 'org1'
-        Object.assign(event, { organizationId })
         audioUploader.uploadAudio(event)
           .then(() => console.log('Audio upload succeeded'))
           .catch(e => console.error('Audio upload failed', e))

@@ -54,8 +54,8 @@
           "description": "Kui on lubatud, siis ülesanneteta lehekülg loetakse vaatamisel läbituks, ülesannetega lehekülg peale kõigi ülesannete täitmist. Kui keelatud, siis on iga lehe all nupp, mida kasutaja peab lehe läbituks märkimiseks vajutama."
         },
         {
-          "label": "Display summary",
-          "description": "When enabled the user can see a summary and submit the progress/answers"
+          "label": "Kuva kokkuvõtet",
+          "description": "Kui lubatud, siis kasutaja näeb kokkuvõtet ning saab oma tulemused edastada/vaadata"
         }
       ]
     },
@@ -156,8 +156,8 @@
       "default": "Score"
     },
     {
-      "label": "Label for \"Summary & submit\" button",
-      "default": "Summary & submit"
+      "label": "Label for \"Summary &amp; submit\" button",
+      "default": "Summary &amp; submit"
     },
     {
       "label": "Translation for \"You have not interacted with any pages.\"",

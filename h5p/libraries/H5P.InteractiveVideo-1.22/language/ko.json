@@ -23,7 +23,7 @@
                 },
                 {
                   "label": "짧은 설명(선택사항)",
-                  "description": "선택사항. 비디오 시작 화면에 간단한 설명 텍스트를 표시하십시오. YouTube 동영상에 대해서는 작동하지 않습니다."
+                  "description": "선택 옵션. 비디오 시작 화면에 짧은 설명 텍스트를 표시합니다. YouTube 동영상에서는 작동하지 않습니다."
                 },
                 {
                   "label": "포스터 이미지",
@@ -91,7 +91,7 @@
                   },
                   {
                     "label": "표시 방법",
-                    "description": "<b>Button</b> (버튼식) 사용자가 누르면 열리는 있는 접힌 상호 작용이다. <b>Poster</b> (포스터식)은 비디오 바로 위에 표시되는 확장된 상호작용.",
+                    "description": "<b> 버튼 </b> 은 사용자가 열려면 눌러야 하는 축소된 상호 작용입니다. <b> 포스터 </b> 는 비디오 바로 위에 표시되는 확장된 상호 작용입니다.",
                     "options": [
                       {
                         "label": "버튼"
@@ -143,7 +143,7 @@
                             "description": "M:SS 형식으로 시간코드 입력"
                           },
                           {
-                            "label": "사용자가 그만두고 나가 계속하도록 허용"
+                            "label": "사용자가 선택 해제하고 계속할 수 있도록 허용"
                           },
                           {
                             "label": "메시지"
@@ -155,11 +155,11 @@
                       },
                       {
                         "label": "진행하기 전에 과제에 대한 만점 점수 필요",
-                        "description": "최상의 기능을 위해 이 옵션을 대화형 비디오에서 \"Prevent skipping forward in a video\"(앞으로 건너뛰기 방지) 옵션과 함께 사용해야 한다."
+                        "description": "설정하면 작업이 완료된 후 비디오가 자동으로 계속됩니다. 전체 점수가 필요하지만 사용자가 전체 점수를 얻지 못한 경우 계속하지 않습니다."
                       },
                       {
-                        "label": "Require full score for task before proceeding",
-                        "description": "For best functionality this option should be used in conjunction with the \"Prevent skipping forward in a video\" option of Interactive Video."
+                        "label": "진행하기 전에 작업에 대한 전체 점수 가 필요합니다.",
+                        "description": "최상의 기능을 위해 이 옵션은 대화형 비디오의 \"비디오에서 앞으로 건너뛰기 방지\" 옵션과 함께 사용해야 합니다."
                       }
                     ]
                   },
@@ -255,20 +255,20 @@
           "description": "비디오 자동 재생 시작"
         },
         {
-          "label": "Auto-fullscreen on play",
-          "description": "Go to fullscreen when playing video"
+          "label": "재생 시 자동 전체 화면",
+          "description": "비디오를 재생할 때 전체 화면으로 이동"
         },
         {
           "label": "비디오 반복 재생",
           "description": "비디오가 반복해서 재생되어야 하는지 확인"
         },
         {
-          "label": "Frames per second",
-          "description": "Set the video's frames per second explicitly using frame based timecodes."
+          "label": "초당 프레임",
+          "description": "프레임 기반 시간 코드를 사용하여 비디오의 초당 프레임 수를 명시적으로 설정합니다."
         },
         {
-          "label": "\"Show Solution\" (해답보이기) 버튼 재정의",
-          "description": "이 옵션은 모든 질문에 대해 \"Show Solution\" 버튼을 표시할지 또는 각 질문에 대해 개별적으로 구성할지 결정함",
+          "label": "\"솔루션 표시\" 버튼 재정의",
+          "description": "이 옵션은 \"솔루션 표시\" 버튼을 모든 질문에 대해 표시할지, 모든 질문에 대해 비활성화할지 또는 각 질문에 대해 개별적으로 구성할지를 결정합니다.",
           "options": [
             {
               "label": "활성화"
@@ -279,7 +279,7 @@
           ]
         },
         {
-          "label": "\"Retry\" (재시도) 버튼 재정의",
+          "label": "\"다시 시도\" 버튼 재정의",
           "description": "이 옵션은 모든 질문에 대해 \"Retry\"버튼을 표시할지 아니면 모든 질문에 대해 개별적으로 구성할지 결정함.",
           "options": [
             {
@@ -363,7 +363,7 @@
           "default": "제출하기 화면"
         },
         {
-          "label": "유연적인 추구 버튼을 위한 레이블",
+          "label": "적응성 탐색 버튼에 대한 기본 레이블",
           "default": "계속하기"
         },
         {
@@ -437,12 +437,12 @@
         {
           "label": "제출 화면 제목",
           "default": "@answered 질문들은 답변되었습니다.",
-          "description": "@answered 는 답한 질문 수로 대체될 것."
+          "description": "@answered는 답변된 질문 수로 대체됩니다."
         },
         {
           "label": "제출 화면 정보",
           "default": "@answered 질문에 답하였습니다, 답변을 제출하려면 아래를 클릭하십시오.",
-          "description": "@answered 는 답한 질문 수로 대체될 것."
+          "description": "@answered는 답변된 질문 수로 대체됩니다."
         },
         {
           "label": "누락된 답변에 대한 제출 화면 정보",
@@ -473,11 +473,11 @@
           "default": "답변됨"
         },
         {
-          "label": "제출 화면 점수를 포함한 행 요약 (자동 읽어주기 용)",
+          "label": "제출 화면 점수를 포함한 행 요약 (자동 읽어주기 기능용)",
           "default": "@minutes 분 그리고 @seconds 초 이후에 @question 문제에서 총 @total 점 중 @score 점수를 획득하였습니다."
         },
         {
-          "label": "점수가 없는 경우 제출 화면 행 요약 (자동 읽어주기 용)",
+          "label": "점수가 없는 경우 제출 화면 행 요약 (자동 읽어주기 기능용)",
           "default": "@minutes 분 그리고 @seconds 초 이후에 @question 문제에 답을 하였습니다."
         }
       ]

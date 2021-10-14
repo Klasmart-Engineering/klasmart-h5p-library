@@ -1,19 +1,19 @@
 {
   "semantics": [
     {
-      "label": "Image"
+      "label": "이미지"
     },
     {
-      "label": "Alternative text",
-      "description": "Required. If the browser can't load the image this text will be displayed instead. Also used by \"text-to-speech\" readers."
+      "label": "선택지 텍스트",
+      "description": "브라우저에서 이미지를 로드할 수 없는 경우 이 텍스트가 대신 표시됩니다. \"텍스트 음성 변환\" 사용자도 이용합니다. (필수)"
     },
     {
-      "label": "Hover text",
-      "description": "Optional. This text is displayed when the users hover their pointing device over the image."
+      "label": "마우스 오버 시 보여질 텍스트",
+      "description": "사용자가 이미지 위에 포인팅 장치를 마우스로 가져가면 이 텍스트가 표시됩니다. (선택 옵션)"
     },
     {
-      "label": "Image content name",
-      "default": "Image"
+      "label": "이미지 콘텐츠 이름",
+      "default": "이미지"
     }
   ]
 }

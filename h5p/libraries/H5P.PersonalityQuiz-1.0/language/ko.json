@@ -10,7 +10,7 @@
               "label": "제목"
             },
             {
-              "label": "표시 제목",
+              "label": "제목 표시하기",
               "description": "성격 퀴즈 시작 시 제목을 헤드라인으로 표시할지 여부."
             }
           ]
@@ -38,7 +38,7 @@
       "fields": [
         {
           "label": "애니메이션",
-          "description": "Wheel of Fortune 애니메이션은 모든 인물이 연관된 이미지를 가지고 있는 경우에만 인물과 연관된 이미지를 사용합니다.",
+          "description": "행운의 돌림판 애니메이션은 모든 성격이 연관된 이미지를 가지고 있는 경우에만 성격과 연관된 이미지를 사용합니다.",
           "options": [
             {
               "label": "없음"
@@ -55,7 +55,7 @@
           "label": "성격 제목을 표시하시겠습니까?"
         },
         {
-          "label": "디스플레이 설명?"
+          "label": "설명을 표시하시겠습니까?"
         },
         {
           "label": "성격 이미지 위치",
@@ -165,12 +165,12 @@
       "description": "진행 텍스트에 사용 가능한 변수: @question 및 @total. (예: '@total의 @question')"
     },
     {
-      "label": "다시 잡다",
-      "default": "퀴즈 재응시",
-      "description": "텍스트 재응시"
+      "label": "재시도",
+      "default": "퀴즈 재시도",
+      "description": "재시도 텍스트"
     },
     {
-      "label": "생기",
+      "label": "애니메이션",
       "description": "모든 애니메이션을 끄려면 선택을 취소하십시오."
     },
     {

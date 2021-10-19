@@ -1,22 +1,22 @@
 {
   "semantics": [
     {
-      "label": "학습 경로 가지가 있는 문제 편집기",
+      "label": "가지치기형 문항 편집기",
       "fields": [
         {
           "label": "문제"
         },
         {
-          "label": "사용 가능한 대안",
-          "entity": "대안",
+          "label": "선택지 리스트",
+          "entity": "선택지",
           "field": {
-            "label": "대안",
+            "label": "선택지",
             "fields": [
               {
                 "label": "텍스트"
               },
               {
-                "label": "다음 콘텐츠 (-1 은 마지막 창)"
+                "label": "다음 콘텐츠 (-1 은 마지막 화면임)"
               },
               {
                 "label": "피드백",

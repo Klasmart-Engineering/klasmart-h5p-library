@@ -5,8 +5,13 @@ definitions:
   caches:
     nodemodules: ./node_modules
   steps:
+    - step: &commitlint-check
+        name: 'Conventional Commits check'
+        image: node:lts
+        script:
+          - /bin/bash commitlint-pipeline-check.sh
     - step: &fetch-npm-dependencies
-        name: "Fetch NPM dependencies and build docker image"
+        name: "Fetch NPM dependencies"
         image: node:lts
         script:
           - npm i
@@ -46,9 +51,11 @@ options:
   size: 2x
 
 pipelines:
-  branches:
-    dev:
+  pull-requests:
+    '**': # This runs as default for any branch not elsewhere defined.:
       - step: *fetch-npm-dependencies
+      - step: *commitlint-check
+  branches:
     alpha:
       - step:
           name: Atlassian Security Secrets Scan

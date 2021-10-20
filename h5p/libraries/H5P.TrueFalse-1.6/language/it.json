@@ -65,12 +65,24 @@
         {
           "label": "Rappresentazione testuale sulla barra del punteggio per chi usa un lettore vocale",
           "default": "Il tuo punteggio è :num su :total"
+        },
+        {
+          "label": "Descrizione delle tecnologie assistive per il pulsante \"Verifica\"",
+          "default": "Verifica"
+        },
+        {
+          "label": "Descrizione delle tecnologie assistive per il pulsante \"Mostra soluzione\"",
+          "default": "Mostra soluzione"
+        },
+        {
+          "label": "Descrizione delle tecnologie assistive per il pulsante \"Riprova\"",
+          "default": "Riprova"
         }
       ]
     },
     {
       "label": "Impostazioni di esecuzione",
-      "description": "Queste opzioni permettono di controllare il comportamento del compito",
+      "description": "Queste opzioni permettono di controllare il comportamento dell'esercizio.",
       "fields": [
         {
           "label": "Attiva pulsante \"Riprova\""

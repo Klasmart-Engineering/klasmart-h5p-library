@@ -55,10 +55,10 @@
     },
     {
       "label": "Verhaltenseinstellungen",
-      "description": "Diese Optionen legen fest, wie die Aufgabe im Detail funktioniert.",
+      "description": "Hier kannst Du einstellen, wie sich die Aufgabe verhält.",
       "fields": [
         {
-          "label": "\"Wiederholen\" zulassen"
+          "label": "\"Wiederholen\" erlauben"
         },
         {
           "label": "\"Lösung anzeigen\" ermöglichen"
@@ -111,6 +111,18 @@
     {
       "label": "Überschrift des Antworten-Überprüfen-Modus (Barrierefreiheit)",
       "default": "Antworten überprüfen-Modus"
+    },
+    {
+      "label": "Beschreibung des \"Überprüfen\"-Buttons (für Hilfsmittel zur Barrierefreiheit)",
+      "default": "Die Antworten überprüfen. Die Auswahlen werden als richtig, falsch oder fehlend markiert."
+    },
+    {
+      "label": "Beschreibung des \"Lösung anzeigen\"-Buttons (für Hilfsmittel zur Barrierefreiheit)",
+      "default": "Die Lösung anzeigen. Die richtigen Lösungen werden in der Aufgabe angezeigt."
+    },
+    {
+      "label": "Beschreibung des \"Wiederholen\"-Buttons (für Hilfsmittel zur Barrierefreiheit)",
+      "default": "Die Aufgabe wiederholen. Alle Versuche werden zurückgesetzt und die Aufgabe wird erneut gestartet."
     }
   ]
 }

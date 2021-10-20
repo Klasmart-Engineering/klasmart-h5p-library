@@ -10,7 +10,7 @@
       "placeholder": "Esta é uma resposta: *answer*.",
       "description": "",
       "important": {
-        "description": "<ul><li>Palavras marcadas são adicionadas com um asterisco(*).</li><li>Asteriscos podem ser adicionados junto às palavras marcadas adicionando outro asterisco, *palavracorreta*** => palavracorreta*.</li></ul>",
+        "description": "<ul><li>Palavras marcadas são adicionadas com um asterisco(*).</li><li>Asteriscos podem ser adicionados junto às palavras marcadas adicionando outro asterisco, *palavracorreta*** =&gt; palavracorreta*.</li></ul>",
         "example": "As palavras corretas são marcadas desta maneira: *palavra correta*, e um asterisco pode ser escrito da seguinte maneira: *palavracorreta***."
       }
     },
@@ -111,6 +111,18 @@
     {
       "label": "Checking mode header for assistive technologies",
       "default": "Checking mode"
+    },
+    {
+      "label": "Assistive technology description for \"Check\" button",
+      "default": "Check the answers. The responses will be marked as correct, incorrect, or unanswered."
+    },
+    {
+      "label": "Assistive technology description for \"Show Solution\" button",
+      "default": "Show the solution. The task will be marked with its correct solution."
+    },
+    {
+      "label": "Assistive technology description for \"Retry\" button",
+      "default": "Retry the task. Reset all responses and start the task over again."
     }
   ]
 }

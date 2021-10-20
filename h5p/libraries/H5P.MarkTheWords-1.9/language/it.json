@@ -10,7 +10,7 @@
       "placeholder": "Questa è una risposta: *answer*",
       "description": "",
       "important": {
-        "description": "<ul><li>Le parole marcate vengono aggiunte mediante un asterisco (*).</li><li>Gli asterischi possono essere aggiunti all'interno di parole marcate attraverso un ulteriore asterisco. Es. *parola-corretta*** => parola-corretta*.</li></ul>",
+        "description": "<ul><li>Le parole marcate vengono aggiunte mediante un asterisco (*).</li><li>Gli asterischi possono essere aggiunti all'interno di parole marcate attraverso un ulteriore asterisco. Es. *parola-corretta*** =&gt; parola-corretta*.</li></ul>",
         "example": "Le parole corrette sono marcate in questo modo: *parola-corretta*. Un asterisco è scritto così: *parola-corretta***"
       }
     },
@@ -111,6 +111,18 @@
     {
       "label": "Intestazione della modalità di verifica per tecnologie assistive",
       "default": "Modalità di verifica"
+    },
+    {
+      "label": "Descrizione delle tecnologie assistive per il pulsante \"Verifica\"",
+      "default": "Verifica"
+    },
+    {
+      "label": "Descrizione delle tecnologie assistive per il pulsante \"Mostra soluzione\"",
+      "default": "Mostra soluzione"
+    },
+    {
+      "label": "Descrizione delle tecnologie assistive per il pulsante \"Riprova\"",
+      "default": "Riprova"
     }
   ]
 }

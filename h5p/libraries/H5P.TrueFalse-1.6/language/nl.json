@@ -5,7 +5,7 @@
       "fields": [
         {
           "label": "Type",
-          "description": "Optionele media, die boven de vragen worden getoond"
+          "description": "Optionele media, die boven de vraag wordt getoond"
         },
         {
           "label": "Deactiveer zoomen op een afbeelding"
@@ -65,6 +65,18 @@
         {
           "label": "Tekstuele weergave van de scorebalk voor de gebruikers van de readspeaker",
           "default": "Je hebt :num van :total punten"
+        },
+        {
+          "label": "Assistive technology beschrijving voor de \"Controleer\" knop",
+          "default": "Controleer de antwoorden. De antwoorden worden gemarkeerd als juist, onjuist, of onbeantwoord."
+        },
+        {
+          "label": "Assistive technology beschrijving voor de \"Toon oplossing\" knop",
+          "default": "Toon de oplossing. De taak wordt gemarkeerd met de juiste oplossing."
+        },
+        {
+          "label": "Assistive technology beschrijving voor de \"Opnieuw proberen\" knop",
+          "default": "Probeer de taak opnieuw. Stelt de antwoorden opnieuw in en start de taak nogmaals."
         }
       ]
     },

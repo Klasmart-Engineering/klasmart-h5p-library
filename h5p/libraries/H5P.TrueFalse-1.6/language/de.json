@@ -1,14 +1,14 @@
 {
   "semantics": [
     {
-      "label": "Medien",
+      "label": "Medium",
       "fields": [
         {
           "label": "Typ",
-          "description": "Medium, das wahlweise oberhalb der Aufgabe angezeigt wird."
+          "description": "Optionales Medium, das über der Frage dargestellt wird."
         },
         {
-          "label": "Bildzoom deaktivieren"
+          "label": "Bild-Zoom deaktivieren"
         }
       ]
     },
@@ -65,6 +65,18 @@
         {
           "label": "Anzeigetext als Ersatz für den Punktebalken in Vorlesewerkzeugen (Barrierefreiheit)",
           "default": "Du hast :num von :total Punkten erreicht."
+        },
+        {
+          "label": "Beschreibung des \"Überprüfen\"-Buttons (für Hilfsmittel zur Barrierefreiheit)",
+          "default": "Die Antworten überprüfen. Die Antwort wird als richtig, falsch oder unbeantwortet markiert."
+        },
+        {
+          "label": "Beschreibung des \"Lösung anzeigen\"-Buttons (für Hilfsmittel zur Barrierefreiheit)",
+          "default": "Die Lösung anzeigen. Die richtige Lösung wird in der Aufgabe angezeigt."
+        },
+        {
+          "label": "Beschreibung des \"Wiederholen\"-Buttons (für Hilfsmittel zur Barrierefreiheit)",
+          "default": "Die Aufgabe wiederholen. Alle Versuche werden zurückgesetzt und die Aufgabe wird erneut gestartet."
         }
       ]
     },

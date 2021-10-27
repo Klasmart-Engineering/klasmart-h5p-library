@@ -94,6 +94,7 @@
   border: 0;
   background: transparent;
   border-radius: 0;
+  opacity: 0; /* Extra workaround for KidsLoop LiveView */
 }
 
 .h5p-audio-inner.h5p-audio-transparent .h5p-audio-minimal-button:hover {

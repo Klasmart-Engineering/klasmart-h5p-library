@@ -85,6 +85,14 @@ H5P.Audio = (function ($) {
         this.setAttribute('aria-hidden', 'false');
       });
 
+    /*
+     * Experimental workaround for KidsLoop LiveView replication. `background`
+     * is set to transparent in CSS, but seems to be ignored by replication.
+     */
+    if (transparentMode) {
+      audioButton.css('background', 'transparent');
+    }
+
     //Fit to wrapper
     if (this.params.fitToWrapper) {
       audioButton.css({

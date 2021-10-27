@@ -90,7 +90,7 @@ const start = async () => {
         h5pEditor.contentStorage,
         config,
         undefined,
-        ["/h5p/core/js/xapi-uploader.js"]
+        ["/h5p/core/js/xapi-uploader.js", "/h5p/core/js/triggerXAPIExperienced.js"]
     );
 
     // We now set up the Express server in the usual fashion.

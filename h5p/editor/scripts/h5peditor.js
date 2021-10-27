@@ -4,11 +4,23 @@
  */
 
 // Grab common resources set in parent window, but avoid sharing back resources set in iframe)
-window.ns = window.H5PEditor = H5P.jQuery.extend(false, {}, window.parent.H5PEditor || window.self.H5PEditor);
+var h5pEditor = window.self.H5PEditor
+try {
+  h5pEditor = window.parent.H5PEditor
+} catch (e) {
+  console.error('h5pEditor = window.parent.H5PEditor:', e)
+}
+window.ns = window.H5PEditor = H5P.jQuery.extend(false, {}, h5pEditor);
 ns.$ = H5P.jQuery;
 
 // Load needed resources from parent.
-H5PIntegration = H5P.jQuery.extend(false, {}, window.parent.H5PIntegration || window.self.H5PIntegration);
+var h5pIntegration = window.self.H5PIntegration
+try {
+  h5pIntegration = window.parent.H5PIntegration
+} catch (e) {
+  console.error('h5pIntegration = window.parent.H5PIntegration:', e)
+}
+H5PIntegration = H5P.jQuery.extend(false, {}, h5pIntegration);
 H5PIntegration.loadedJs = [];
 H5PIntegration.loadedCss = [];
 

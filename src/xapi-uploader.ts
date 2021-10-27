@@ -5,9 +5,15 @@ const h5pIntegration = (window as any).H5PIntegration;
 const xapiServiceEndpoint = h5pIntegration?.xapi_events_endpoint;
 const audioServiceEndpoint = h5pIntegration?.audio_service_endpoint;
 
-const parentUrl = new URL(window.parent.location.toString()) 
-const selfUrl = new URL(window.location.toString()) 
-const liveAuthorizationToken = selfUrl.searchParams.get("token") || parentUrl.searchParams.get("token") 
+let liveUrl = new URL(window.location.toString());
+if (!liveUrl) {
+    try {
+        liveUrl = new URL(window.parent.location.toString())
+    } catch (e) {
+        console.log('liveUrl = new URL(window.parent.location.toString()):', e)
+    }
+}
+const liveAuthorizationToken = liveUrl.searchParams.get("token");
 
 if(!h5p) {
     console.error("[xAPI Uploader] Could not locate H5P")

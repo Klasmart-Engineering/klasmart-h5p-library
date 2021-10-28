@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.1.0...v2.2.0) (2021-10-28)
+
+
+### Features
+
+* modify Korean translations for H5P.Image ([d15e287](https://bitbucket.org/calmisland/kidsloop-h5p-library/commit/d15e287069ab4ad5043279cce8ac22bbe6b0a22e))
+
+
+### Bug Fixes
+
+* question box does not appear properly in the interactive video content ([50650a7](https://bitbucket.org/calmisland/kidsloop-h5p-library/commit/50650a726926759b6237be9cc0c034e5841995ae))
+* screen from iOS doesn't show full content of course presentation ([bae5628](https://bitbucket.org/calmisland/kidsloop-h5p-library/commit/bae562800e7f3797ead40b77dd7784d7ef10e504))
+
 ## [2.1.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.0.0...v2.1.0) (2021-10-21)
 
 

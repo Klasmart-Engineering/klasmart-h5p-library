@@ -21,6 +21,11 @@ H5P.Column = (function (EventDispatcher) {
       params.useSeparators = true;
     }
 
+    // Filter out incomplete instances (set in editor, workaround for node.js port)
+    params.content = (params.content || []).filter(function (contentItem) {
+      return contentItem.content && contentItem.content.library !== undefined;
+    });
+
     this.contentData = data;
 
     // Column wrapper element

@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.1.0...v2.3.0) (2021-11-10)
+
+
+### Features
+
+* add xapi 'experienced' event ([397b240](https://bitbucket.org/calmisland/kidsloop-h5p-library/commit/397b24063bf85f08afb5dcc4e1a75b17d2b4b2a0))
+
+
+### Bug Fixes
+
+* course presentation activity dragging ([e19e302](https://bitbucket.org/calmisland/kidsloop-h5p-library/commit/e19e30256218659c6223964c2b4cd4f8389a60b5))
+* image pairing activity scaling in Live ([fcfc5e4](https://bitbucket.org/calmisland/kidsloop-h5p-library/commit/fcfc5e45e51f4d0744b12e0892361f90420ca2d3))
+* wrong behavior setting input types in H5P.DragQuestion ([510040e](https://bitbucket.org/calmisland/kidsloop-h5p-library/commit/510040e0833c2976d389d060589abcda257c7158))
+
 ## [2.2.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.1.0...v2.2.0) (2021-10-28)
 
 

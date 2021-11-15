@@ -13,6 +13,27 @@
       ]
     },
     {
+      "label": "Answer type",
+      "description": "Choose type of answer options.",
+      "options": [
+        {
+          "label": "Text"
+        },
+        {
+          "label": "Image"
+        },
+        {
+          "label": "Audio"
+        },
+        {
+          "label": "Video"
+        },
+        {
+          "label": "Image and audio"
+        }
+      ]
+    },
+    {
       "label": "Ερώτηση"
     },
     {
@@ -22,7 +43,34 @@
         "label": "Επιλογή",
         "fields": [
           {
+            "label": "Image",
+            "fields": [
+              {
+                "label": "Image"
+              }
+            ]
+          },
+          {
+            "label": "Audio",
+            "fields": [
+              {
+                "label": "Audio"
+              }
+            ]
+          },
+          {
+            "label": "Video",
+            "fields": [
+              {
+                "label": "Video"
+              }
+            ]
+          },
+          {
             "label": "Κείμενο"
+          },
+          {
+            "label": "Display text"
           },
           {
             "label": "Σωστή επιλογή"
@@ -136,6 +184,10 @@
           "default": "Παρακαλώ απάντησε προτού δεις τη λύση"
         },
         {
+          "label": "Audio not supported message",
+          "default": "Your browser does not support this audio"
+        },
+        {
           "label": "Περιγραφή υποστηρικτικών τεχνολογιών για το πλήκτρο \"Έλεγχος\"",
           "default": "Έλεγχος απαντήσεων. Οι απαντήσεις θα μαρκαριστούν ως σωστές, λάθος και μη απαντημένες."
         },
@@ -174,6 +226,21 @@
             },
             {
               "label": "Μοναδική επιλογή (Κουμπί Επιλογής)"
+            }
+          ]
+        },
+        {
+          "label": "Columns",
+          "description": "Select the number of columns.",
+          "options": [
+            {
+              "label": "Automatic"
+            },
+            {
+              "label": "1"
+            },
+            {
+              "label": "2"
             }
           ]
         },

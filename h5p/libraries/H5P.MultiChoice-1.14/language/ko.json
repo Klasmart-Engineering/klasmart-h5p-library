@@ -13,6 +13,27 @@
       ]
     },
     {
+      "label": "Answer type",
+      "description": "Choose type of answer options.",
+      "options": [
+        {
+          "label": "Text"
+        },
+        {
+          "label": "Image"
+        },
+        {
+          "label": "Audio"
+        },
+        {
+          "label": "Video"
+        },
+        {
+          "label": "Image and audio"
+        }
+      ]
+    },
+    {
       "label": "질문"
     },
     {
@@ -22,7 +43,34 @@
         "label": "옵션",
         "fields": [
           {
+            "label": "Image",
+            "fields": [
+              {
+                "label": "Image"
+              }
+            ]
+          },
+          {
+            "label": "Audio",
+            "fields": [
+              {
+                "label": "Audio"
+              }
+            ]
+          },
+          {
+            "label": "Video",
+            "fields": [
+              {
+                "label": "Video"
+              }
+            ]
+          },
+          {
             "label": "텍스트"
+          },
+          {
+            "label": "Display text"
           },
           {
             "label": "정답"
@@ -64,10 +112,7 @@
               {
                 "label": "점수 범위"
               },
-              {
-                "one": "",
-                "other": ""
-              },
+              {},
               {
                 "label": "정의된 점수 범위에 대한 피드백",
                 "placeholder": "피드백 작성"
@@ -139,6 +184,10 @@
           "default": "해답 보기에 앞서 답을 해야 합니다"
         },
         {
+          "label": "Audio not supported message",
+          "default": "Your browser does not support this audio"
+        },
+        {
           "label": "\"확인\" 버튼에 대한 보조 기술 설명",
           "default": "정답을 체크하세요. 답변은 정답, 오답 혹은 미답변으로 표기될 것입니다."
         },
@@ -177,6 +226,21 @@
             },
             {
               "label": "단답형 (라디오 버튼)"
+            }
+          ]
+        },
+        {
+          "label": "Columns",
+          "description": "Select the number of columns.",
+          "options": [
+            {
+              "label": "Automatic"
+            },
+            {
+              "label": "1"
+            },
+            {
+              "label": "2"
             }
           ]
         },

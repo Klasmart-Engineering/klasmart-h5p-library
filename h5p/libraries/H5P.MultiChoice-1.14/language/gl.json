@@ -13,6 +13,27 @@
       ]
     },
     {
+      "label": "Answer type",
+      "description": "Choose type of answer options.",
+      "options": [
+        {
+          "label": "Text"
+        },
+        {
+          "label": "Image"
+        },
+        {
+          "label": "Audio"
+        },
+        {
+          "label": "Video"
+        },
+        {
+          "label": "Image and audio"
+        }
+      ]
+    },
+    {
       "label": "Pregunta"
     },
     {
@@ -22,7 +43,34 @@
         "label": "Opción",
         "fields": [
           {
+            "label": "Image",
+            "fields": [
+              {
+                "label": "Image"
+              }
+            ]
+          },
+          {
+            "label": "Audio",
+            "fields": [
+              {
+                "label": "Audio"
+              }
+            ]
+          },
+          {
+            "label": "Video",
+            "fields": [
+              {
+                "label": "Video"
+              }
+            ]
+          },
+          {
             "label": "Texto"
+          },
+          {
+            "label": "Display text"
           },
           {
             "label": "Correcto"
@@ -136,6 +184,10 @@
           "default": "Por favor, responde antes de ver a solución"
         },
         {
+          "label": "Audio not supported message",
+          "default": "Your browser does not support this audio"
+        },
+        {
           "label": "Descrición asistida para o botón \"Comprobar\"",
           "default": "Comproba as túas respostas. As respostas marcaranse como correctas, incorrectas ou non contestadas."
         },
@@ -174,6 +226,21 @@
             },
             {
               "label": "Escolla Simple (Botóns de Radio)"
+            }
+          ]
+        },
+        {
+          "label": "Columns",
+          "description": "Select the number of columns.",
+          "options": [
+            {
+              "label": "Automatic"
+            },
+            {
+              "label": "1"
+            },
+            {
+              "label": "2"
             }
           ]
         },

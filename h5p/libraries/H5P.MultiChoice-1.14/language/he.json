@@ -13,6 +13,27 @@
       ]
     },
     {
+      "label": "Answer type",
+      "description": "Choose type of answer options.",
+      "options": [
+        {
+          "label": "Text"
+        },
+        {
+          "label": "Image"
+        },
+        {
+          "label": "Audio"
+        },
+        {
+          "label": "Video"
+        },
+        {
+          "label": "Image and audio"
+        }
+      ]
+    },
+    {
       "label": "שאלה"
     },
     {
@@ -22,7 +43,34 @@
         "label": "אפשרויות",
         "fields": [
           {
+            "label": "Image",
+            "fields": [
+              {
+                "label": "Image"
+              }
+            ]
+          },
+          {
+            "label": "Audio",
+            "fields": [
+              {
+                "label": "Audio"
+              }
+            ]
+          },
+          {
+            "label": "Video",
+            "fields": [
+              {
+                "label": "Video"
+              }
+            ]
+          },
+          {
             "label": "תוכן"
+          },
+          {
+            "label": "Display text"
           },
           {
             "label": "נכון"
@@ -136,6 +184,10 @@
           "default": "אנא השיבו לפני הצגת הפתרון"
         },
         {
+          "label": "Audio not supported message",
+          "default": "Your browser does not support this audio"
+        },
+        {
           "label": "תיאור טכנולוגיה מסייעת עבור כפתור \"בדיקה\"",
           "default": "בדקו את התשובות. המענים יסומנו כנכון, לא נכון, או ריק."
         },
@@ -174,6 +226,21 @@
             },
             {
               "label": "אפשרות אחת (כפתור רדיו)"
+            }
+          ]
+        },
+        {
+          "label": "Columns",
+          "description": "Select the number of columns.",
+          "options": [
+            {
+              "label": "Automatic"
+            },
+            {
+              "label": "1"
+            },
+            {
+              "label": "2"
             }
           ]
         },

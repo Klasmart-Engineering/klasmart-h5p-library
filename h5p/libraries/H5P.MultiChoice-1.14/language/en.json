@@ -13,6 +13,27 @@
       ]
     },
     {
+      "label": "Answer type",
+      "description": "Choose type of answer options.",
+      "options": [
+        {
+          "label": "Text"
+        },
+        {
+          "label": "Image"
+        },
+        {
+          "label": "Audio"
+        },
+        {
+          "label": "Video"
+        },
+        {
+          "label": "Image and audio"
+        }
+      ]
+    },
+    {
       "label": "Question"
     },
     {
@@ -22,7 +43,34 @@
         "label": "Option",
         "fields": [
           {
+            "label": "Image",
+            "fields": [
+              {
+                "label": "Image"
+              }
+            ]
+          },
+          {
+            "label": "Audio",
+            "fields": [
+              {
+                "label": "Audio"
+              }
+            ]
+          },
+          {
+            "label": "Video",
+            "fields": [
+              {
+                "label": "Video"
+              }
+            ]
+          },
+          {
             "label": "Text"
+          },
+          {
+            "label": "Display text"
           },
           {
             "label": "Correct"
@@ -64,10 +112,7 @@
               {
                 "label": "Score Range"
               },
-              {
-                "one": "",
-                "other": ""
-              },
+              {},
               {
                 "label": "Feedback for defined score range",
                 "placeholder": "Fill in the feedback"
@@ -139,6 +184,10 @@
           "default": "Please answer before viewing the solution"
         },
         {
+          "label": "Audio not supported message",
+          "default": "Your browser does not support this audio"
+        },
+        {
           "label": "Assistive technology description for \"Check\" button",
           "default": "Check the answers. The responses will be marked as correct, incorrect, or unanswered."
         },
@@ -177,6 +226,21 @@
             },
             {
               "label": "Single Choice (Radio Buttons)"
+            }
+          ]
+        },
+        {
+          "label": "Columns",
+          "description": "Select the number of columns.",
+          "options": [
+            {
+              "label": "Automatic"
+            },
+            {
+              "label": "1"
+            },
+            {
+              "label": "2"
             }
           ]
         },

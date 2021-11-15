@@ -13,6 +13,27 @@
       ]
     },
     {
+      "label": "Answer type",
+      "description": "Choose type of answer options.",
+      "options": [
+        {
+          "label": "Text"
+        },
+        {
+          "label": "Image"
+        },
+        {
+          "label": "Audio"
+        },
+        {
+          "label": "Video"
+        },
+        {
+          "label": "Image and audio"
+        }
+      ]
+    },
+    {
       "label": "Vraag"
     },
     {
@@ -22,7 +43,34 @@
         "label": "Opsie",
         "fields": [
           {
+            "label": "Image",
+            "fields": [
+              {
+                "label": "Image"
+              }
+            ]
+          },
+          {
+            "label": "Audio",
+            "fields": [
+              {
+                "label": "Audio"
+              }
+            ]
+          },
+          {
+            "label": "Video",
+            "fields": [
+              {
+                "label": "Video"
+              }
+            ]
+          },
+          {
             "label": "Teks"
+          },
+          {
+            "label": "Display text"
           },
           {
             "label": "Reg"
@@ -136,6 +184,10 @@
           "default": "Antwoord asb. voor jy die antwoord besigtig"
         },
         {
+          "label": "Audio not supported message",
+          "default": "Your browser does not support this audio"
+        },
+        {
           "label": "Hulptegnologieë beskrywing vir \"Toets\" knoppie",
           "default": "Kyk na die antwoorde. Die antwoorde sal as korrek, verkeerd of onbeantwoord gemerk word."
         },
@@ -174,6 +226,21 @@
             },
             {
               "label": "Enkel keuse (Radio knoppies)"
+            }
+          ]
+        },
+        {
+          "label": "Columns",
+          "description": "Select the number of columns.",
+          "options": [
+            {
+              "label": "Automatic"
+            },
+            {
+              "label": "1"
+            },
+            {
+              "label": "2"
             }
           ]
         },

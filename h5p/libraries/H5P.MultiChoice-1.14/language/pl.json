@@ -13,6 +13,27 @@
       ]
     },
     {
+      "label": "Answer type",
+      "description": "Choose type of answer options.",
+      "options": [
+        {
+          "label": "Text"
+        },
+        {
+          "label": "Image"
+        },
+        {
+          "label": "Audio"
+        },
+        {
+          "label": "Video"
+        },
+        {
+          "label": "Image and audio"
+        }
+      ]
+    },
+    {
       "label": "Pytanie"
     },
     {
@@ -22,7 +43,34 @@
         "label": "Odpowiedź",
         "fields": [
           {
+            "label": "Image",
+            "fields": [
+              {
+                "label": "Image"
+              }
+            ]
+          },
+          {
+            "label": "Audio",
+            "fields": [
+              {
+                "label": "Audio"
+              }
+            ]
+          },
+          {
+            "label": "Video",
+            "fields": [
+              {
+                "label": "Video"
+              }
+            ]
+          },
+          {
             "label": "Tekst"
+          },
+          {
+            "label": "Display text"
           },
           {
             "label": "Odpowiedź poprawna"
@@ -136,6 +184,10 @@
           "default": "Podaj odpowiedź przed sprawdzeniem rozwiązania"
         },
         {
+          "label": "Audio not supported message",
+          "default": "Your browser does not support this audio"
+        },
+        {
           "label": "Assistive technology description for \"Check\" button",
           "default": "Check the answers. The responses will be marked as correct, incorrect, or unanswered."
         },
@@ -174,6 +226,21 @@
             },
             {
               "label": "Jedna poprawna odpowiedź (Radio Buttons)"
+            }
+          ]
+        },
+        {
+          "label": "Columns",
+          "description": "Select the number of columns.",
+          "options": [
+            {
+              "label": "Automatic"
+            },
+            {
+              "label": "1"
+            },
+            {
+              "label": "2"
             }
           ]
         },

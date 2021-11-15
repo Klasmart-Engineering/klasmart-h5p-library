@@ -13,6 +13,27 @@
       ]
     },
     {
+      "label": "Answer type",
+      "description": "Choose type of answer options.",
+      "options": [
+        {
+          "label": "Text"
+        },
+        {
+          "label": "Image"
+        },
+        {
+          "label": "Audio"
+        },
+        {
+          "label": "Video"
+        },
+        {
+          "label": "Image and audio"
+        }
+      ]
+    },
+    {
       "label": "问题"
     },
     {
@@ -22,7 +43,34 @@
         "label": "类型",
         "fields": [
           {
+            "label": "Image",
+            "fields": [
+              {
+                "label": "Image"
+              }
+            ]
+          },
+          {
+            "label": "Audio",
+            "fields": [
+              {
+                "label": "Audio"
+              }
+            ]
+          },
+          {
+            "label": "Video",
+            "fields": [
+              {
+                "label": "Video"
+              }
+            ]
+          },
+          {
             "label": "文字"
+          },
+          {
+            "label": "Display text"
           },
           {
             "label": "正确答案"
@@ -136,6 +184,10 @@
           "default": "观看正确答案前请先回答"
         },
         {
+          "label": "Audio not supported message",
+          "default": "Your browser does not support this audio"
+        },
+        {
           "label": "Assistive technology description for \"Check\" button",
           "default": "Check the answers. The responses will be marked as correct, incorrect, or unanswered."
         },
@@ -174,6 +226,21 @@
             },
             {
               "label": "单选（单选按钮）"
+            }
+          ]
+        },
+        {
+          "label": "Columns",
+          "description": "Select the number of columns.",
+          "options": [
+            {
+              "label": "Automatic"
+            },
+            {
+              "label": "1"
+            },
+            {
+              "label": "2"
             }
           ]
         },

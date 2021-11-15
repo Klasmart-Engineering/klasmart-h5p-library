@@ -13,6 +13,27 @@
       ]
     },
     {
+      "label": "Answer type",
+      "description": "Choose type of answer options.",
+      "options": [
+        {
+          "label": "Text"
+        },
+        {
+          "label": "Image"
+        },
+        {
+          "label": "Audio"
+        },
+        {
+          "label": "Video"
+        },
+        {
+          "label": "Image and audio"
+        }
+      ]
+    },
+    {
       "label": "Вопрос"
     },
     {
@@ -22,7 +43,34 @@
         "label": "Вариант",
         "fields": [
           {
+            "label": "Image",
+            "fields": [
+              {
+                "label": "Image"
+              }
+            ]
+          },
+          {
+            "label": "Audio",
+            "fields": [
+              {
+                "label": "Audio"
+              }
+            ]
+          },
+          {
+            "label": "Video",
+            "fields": [
+              {
+                "label": "Video"
+              }
+            ]
+          },
+          {
             "label": "Текст"
+          },
+          {
+            "label": "Display text"
           },
           {
             "label": "Правильный"
@@ -136,6 +184,10 @@
           "default": "Пожалуйста, ответьте перед просмотром решения"
         },
         {
+          "label": "Audio not supported message",
+          "default": "Your browser does not support this audio"
+        },
+        {
           "label": "Assistive technology description for \"Check\" button",
           "default": "Check the answers. The responses will be marked as correct, incorrect, or unanswered."
         },
@@ -174,6 +226,21 @@
             },
             {
               "label": "Одиночный выбор (Радио-кнопки)"
+            }
+          ]
+        },
+        {
+          "label": "Columns",
+          "description": "Select the number of columns.",
+          "options": [
+            {
+              "label": "Automatic"
+            },
+            {
+              "label": "1"
+            },
+            {
+              "label": "2"
             }
           ]
         },

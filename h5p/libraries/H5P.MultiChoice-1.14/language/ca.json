@@ -13,6 +13,27 @@
       ]
     },
     {
+      "label": "Answer type",
+      "description": "Choose type of answer options.",
+      "options": [
+        {
+          "label": "Text"
+        },
+        {
+          "label": "Image"
+        },
+        {
+          "label": "Audio"
+        },
+        {
+          "label": "Video"
+        },
+        {
+          "label": "Image and audio"
+        }
+      ]
+    },
+    {
       "label": "Pregunta"
     },
     {
@@ -22,7 +43,34 @@
         "label": "Opció",
         "fields": [
           {
+            "label": "Image",
+            "fields": [
+              {
+                "label": "Image"
+              }
+            ]
+          },
+          {
+            "label": "Audio",
+            "fields": [
+              {
+                "label": "Audio"
+              }
+            ]
+          },
+          {
+            "label": "Video",
+            "fields": [
+              {
+                "label": "Video"
+              }
+            ]
+          },
+          {
             "label": "Text"
+          },
+          {
+            "label": "Display text"
           },
           {
             "label": "Correcte"
@@ -136,6 +184,10 @@
           "default": "Responeu abans de veure la solució"
         },
         {
+          "label": "Audio not supported message",
+          "default": "Your browser does not support this audio"
+        },
+        {
           "label": "Descripció de la tecnologia d’assistència per al botó \"Comprova\"",
           "default": "Comprova les respostes. Les respostes es marcaran com a correctes, incorrectes o sense resposta."
         },
@@ -174,6 +226,21 @@
             },
             {
               "label": "Resposta única (Botons rodons)"
+            }
+          ]
+        },
+        {
+          "label": "Columns",
+          "description": "Select the number of columns.",
+          "options": [
+            {
+              "label": "Automatic"
+            },
+            {
+              "label": "1"
+            },
+            {
+              "label": "2"
             }
           ]
         },

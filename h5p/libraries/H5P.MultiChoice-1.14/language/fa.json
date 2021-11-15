@@ -13,6 +13,27 @@
       ]
     },
     {
+      "label": "Answer type",
+      "description": "Choose type of answer options.",
+      "options": [
+        {
+          "label": "Text"
+        },
+        {
+          "label": "Image"
+        },
+        {
+          "label": "Audio"
+        },
+        {
+          "label": "Video"
+        },
+        {
+          "label": "Image and audio"
+        }
+      ]
+    },
+    {
       "label": "سؤال"
     },
     {
@@ -22,7 +43,34 @@
         "label": "گزینه",
         "fields": [
           {
+            "label": "Image",
+            "fields": [
+              {
+                "label": "Image"
+              }
+            ]
+          },
+          {
+            "label": "Audio",
+            "fields": [
+              {
+                "label": "Audio"
+              }
+            ]
+          },
+          {
+            "label": "Video",
+            "fields": [
+              {
+                "label": "Video"
+              }
+            ]
+          },
+          {
             "label": "متن"
+          },
+          {
+            "label": "Display text"
           },
           {
             "label": "صحیح"
@@ -136,6 +184,10 @@
           "default": "لطفاً پیش از دیدن پاسخ صحیح، پاسخ دهید"
         },
         {
+          "label": "Audio not supported message",
+          "default": "Your browser does not support this audio"
+        },
+        {
           "label": "توصیف تکنولوژی کمکی برای دکمه «بررسی»",
           "default": "بررسی پاسخ‌ها. پاسخ‌ها به عنوان صحیح، غلط، یا پاسخ داده نشده علامت‌گذاری می‌شوند."
         },
@@ -174,6 +226,21 @@
             },
             {
               "label": "تک گزینه‌ای (Radio Buttons)"
+            }
+          ]
+        },
+        {
+          "label": "Columns",
+          "description": "Select the number of columns.",
+          "options": [
+            {
+              "label": "Automatic"
+            },
+            {
+              "label": "1"
+            },
+            {
+              "label": "2"
             }
           ]
         },

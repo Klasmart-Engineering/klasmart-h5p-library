@@ -13,6 +13,10 @@
         {
           "name": "content",
           "type": "library",
+          "widget": "customlibraryselector",
+          "customLibrarySelector": {
+            "hide": ["H5P.CoursePresentation"]
+          },
           "importance": "high",
           "label": "Content",
           "options": [

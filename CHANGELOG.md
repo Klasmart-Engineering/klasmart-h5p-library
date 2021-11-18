@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.3.0...v2.4.0) (2021-11-18)
+
+
+### Features
+
+* hide original course presentation from column dropdown ([a685720](https://bitbucket.org/calmisland/kidsloop-h5p-library/commit/a685720e95f2735b6818195ba4dc1bef51d273de))
+
+
+### Bug Fixes
+
+* interactive book preview not showing ([bd4aa53](https://bitbucket.org/calmisland/kidsloop-h5p-library/commit/bd4aa5396de097d67b7b77e8080fd70cf324712c))
+* mismatched multi-choice config UI ([990558d](https://bitbucket.org/calmisland/kidsloop-h5p-library/commit/990558d29ae940ca87b6cbd6f723e8b9d955b26b))
+* mute button is hidden on mobile ([d429935](https://bitbucket.org/calmisland/kidsloop-h5p-library/commit/d429935a85b806381b37d04e48f74c69df3d22b6))
+
 ## [2.3.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.1.0...v2.3.0) (2021-11-10)
 
 

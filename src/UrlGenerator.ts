@@ -6,11 +6,11 @@ import { ContentId, IH5PConfig, ILibraryName, IUrlGenerator } from './types';
 export default class UrlGenerator implements IUrlGenerator {
     constructor(private config: IH5PConfig) {}
 
-    public coreFile = (file: string) => {
+    public coreFile = (file: string): string => {
         return `${this.getBaseUrl()}${this.config.coreUrl}/${file}`;
     };
 
-    public downloadPackage = (contentId: ContentId) => {
+    public downloadPackage = (contentId: ContentId): string => {
         return `${this.getBaseUrl()}${this.config.downloadUrl}/${contentId}`;
     };
 
@@ -22,17 +22,17 @@ export default class UrlGenerator implements IUrlGenerator {
         return `${this.getBaseUrl()}${this.config.editorLibraryUrl}/`;
     };
 
-    public libraryFile = (library: ILibraryName, file: string) => {
+    public libraryFile = (library: ILibraryName, file: string): string => {
         return `${this.getBaseUrl()}${this.config.librariesUrl}/${
             library.machineName
         }-${library.majorVersion}.${library.minorVersion}/${file}`;
     };
 
-    public parameters = () => {
+    public parameters = (): string => {
         return `${this.getBaseUrl()}${this.config.paramsUrl}`;
     };
 
-    public play = () => {
+    public play = (): string => {
         return `${this.getBaseUrl()}${this.config.playUrl}`;
     };
 

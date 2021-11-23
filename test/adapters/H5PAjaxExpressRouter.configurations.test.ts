@@ -49,7 +49,8 @@ describe('Configuration of the Express Ajax endpoint adapter', () => {
             }),
             path.resolve(path.join(tempDir, 'libraries')), // the path on the local disc where libraries should be stored
             path.resolve(path.join(tempDir, 'temporary-storage')), // the path on the local disc where temporary files (uploads) should be stored
-            path.resolve(path.join(tempDir, 'content')) // the path on the local disc where content is stored
+            path.resolve(path.join(tempDir, 'content')), // the path on the local disc where content is stored
+            path.resolve(path.join(tempDir, 'content-user-data')) // the path on the local disc where content user data is stored
         );
         axiosMock
             .onPost(h5pEditor.config.hubRegistrationEndpoint)

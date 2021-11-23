@@ -16,7 +16,7 @@ coverage
 .vscode
 .DS_Store
 microsoft.gpg
-.env 
+.env
 
 # Dependency directory
 node_modules
@@ -24,4 +24,7 @@ node_modules
 # Downloaded and generated files
 test/data/hub-content/*
 test/data/content-type-cache/real-content-types.json
-test/data/hub-content-extracted/*
+test/data/hub-content-extracted/*test/data/hub-content-extracted/*
+
+# Local file Storage
+h5p/content-user-data

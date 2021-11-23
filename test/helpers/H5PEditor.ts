@@ -3,6 +3,7 @@ import path from 'path';
 import {
     H5PEditor,
     IContentStorage,
+    IContentUserDataStorage,
     IH5PConfig,
     IKeyValueStorage,
     ILibraryStorage,
@@ -11,6 +12,7 @@ import {
 import H5PConfig from '../../src/implementation/H5PConfig';
 import DirectoryTemporaryFileStorage from '../../src/implementation/fs/DirectoryTemporaryFileStorage';
 import FileContentStorage from '../../src/implementation/fs/FileContentStorage';
+import FileContentUserDataStorage from '../../src/implementation/fs/FileContentUserDataStorage';
 import FileLibraryStorage from '../../src/implementation/fs/FileLibraryStorage';
 import InMemoryStorage from '../../src/implementation/InMemoryStorage';
 
@@ -19,6 +21,7 @@ export function createH5PEditor(
 ): {
     config: IH5PConfig;
     contentStorage: IContentStorage;
+    contentUserDataStorage: IContentUserDataStorage;
     h5pEditor: H5PEditor;
     keyValueStorage: IKeyValueStorage;
     libraryStorage: ILibraryStorage;
@@ -32,6 +35,9 @@ export function createH5PEditor(
     const contentStorage = new FileContentStorage(
         path.join(tempPath, 'content')
     );
+    const contentUserDataStorage = new FileContentUserDataStorage(
+        path.join(tempPath, 'content-user-data')
+    );
     const temporaryStorage = new DirectoryTemporaryFileStorage(
         path.join(tempPath, 'tmp')
     );
@@ -41,12 +47,14 @@ export function createH5PEditor(
         config,
         libraryStorage,
         contentStorage,
+        contentUserDataStorage,
         temporaryStorage
     );
 
     return {
         config,
         contentStorage,
+        contentUserDataStorage,
         h5pEditor,
         keyValueStorage,
         libraryStorage,

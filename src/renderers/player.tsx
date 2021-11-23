@@ -1,9 +1,9 @@
 import ReactDOMServer from 'react-dom/server';
-import React, { useState, useEffect } from "react";
-import { IPlayerModel } from "../types"
+import React from 'react';
+import { IPlayerModel } from '../types';
 
 // tslint:disable-next-line: function-name
-function Player(props: any):any {
+function Player(props: any): any {
     // console.log("render")
     // console.log(props.model.integration)
 
@@ -12,26 +12,42 @@ function Player(props: any):any {
             <head>
                 <meta charSet="utf-8" />
                 {/* Prevent right-click/context-menu from showing */}
-                <script>{"window.addEventListener(`contextmenu`, function(e){ e.preventDefault(); }, false)"}</script>
-                { props.model.styles.map((style) => (
-                    <link rel="stylesheet" href={style} />
+                <script>
+                    {
+                        'window.addEventListener(`contextmenu`, function(e){ e.preventDefault(); }, false)'
+                    }
+                </script>
+                {props.model.styles.map((style, index) => (
+                    <link rel="stylesheet" href={style} key={index} />
                 ))}
 
-                { props.model.scripts.map((script) => (
-                    <script src={script} />
+                {props.model.scripts.map((script, index) => (
+                    <script src={script} key={index} />
                 ))}
 
-                <script dangerouslySetInnerHTML={{__html: `H5PIntegration = ${JSON.stringify(props.model.integration, null, 2)}`}} />
-                
-                { props.model.customScripts.map((script) => (
-                    <script src={script} />
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `H5PIntegration = ${JSON.stringify(
+                            props.model.integration,
+                            null,
+                            2
+                        )}`
+                    }}
+                />
+
+                {props.model.customScripts.map((script, index) => (
+                    <script src={script} key={index} />
                 ))}
             </head>
             <body>
-                <div className="h5p-content" data-content-id={props.model.contentId}></div>
+                <div
+                    className="h5p-content"
+                    data-content-id={props.model.contentId}
+                ></div>
             </body>
         </html>
     );
 }
 
-export default (model: IPlayerModel) => `${ReactDOMServer.renderToString(<Player model={model} />)}`
+export default (model: IPlayerModel): string =>
+    `${ReactDOMServer.renderToString(<Player model={model} />)}`;

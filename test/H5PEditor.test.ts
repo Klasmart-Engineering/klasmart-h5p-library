@@ -17,6 +17,7 @@ describe('H5PEditor: general', () => {
             config,
             null,
             null,
+            null,
             null
         );
 
@@ -40,6 +41,7 @@ describe('H5PEditor: general', () => {
         const h5pEditor = new H5PEditor(
             new InMemoryStorage(),
             config,
+            null,
             null,
             null,
             null

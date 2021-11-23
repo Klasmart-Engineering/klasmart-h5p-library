@@ -198,15 +198,16 @@ The H5P client (run in the browser by the user) can be configured to use custom 
 
 ```js
 const config = {
-    ajaxUrl: '/ajax?action=',   // URL prefix for all AJAX requests
-    baseUrl: '/h5p',            // a prefix added to all Ajax URLs
-    contentFilesUrl: '/content',// base path for content files (e.g. images, video)
-    coreUrl: '/core',           // URL of static player "core files"
-    downloadUrl: '/download',   // URL to download h5p packages
-    editorLibraryUrl: '/editor',// URL of static editor "core files" (not the content types!)
-    librariesUrl: '/libraries', // URL at which library files (= content types) can be retrieved
-    paramsUrl: '/params'        // URL at which the parameters (= content.json) of content can be retrieved
-    playUrl: '/play'            // URL at which content can be displayed
+    ajaxUrl: '/ajax?action=',          // URL prefix for all AJAX requests
+    baseUrl: '/h5p',                   // a prefix added to all Ajax URLs
+    contentFilesUrl: '/content',       // base path for content files (e.g. images, video)
+    coreUrl: '/core',                  // URL of static player "core files"
+    downloadUrl: '/download',          // URL to download h5p packages
+    editorLibraryUrl: '/editor',       // URL of static editor "core files" (not the content types!)
+    librariesUrl: '/libraries',        // URL at which library files (= content types) can be retrieved
+    paramsUrl: '/params'               // URL at which the parameters (= content.json) of content can be retrieved
+    playUrl: '/play'                   // URL at which content can be displayed
+    contentUserData: '/contentUserData/:contentId/:dataType/:subContentId' // URL at which the content state is managed
     ... // further configuration values
 }
 ```

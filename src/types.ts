@@ -149,8 +149,8 @@ export interface IContentMetadata {
  * server.
  */
 export interface IIntegration {
-    xapi_events_endpoint?: string
-    audio_service_endpoint?: string
+    XAPI_EVENTS_ENDPOINT?: string;
+    AUDIO_SERVICE_ENDPOINT?: string;
     ajax: {
         /**
          * The Ajax endpoint called when the user state has changed
@@ -1421,6 +1421,12 @@ export interface IH5PConfig {
      */
     playUrl: string;
     /**
+     * If false, will not save the content state. If set to a number,
+     * represents the time interval in seconds that's used to store the
+     * current user's content state.
+     */
+    saveFrequency?: boolean | number;
+    /**
      * If true, the instance will send usage statistics to the H5P Hub whenever it looks for new content types or updates.
      * User-configurable.
      */
@@ -1671,4 +1677,90 @@ export interface ILibraryAdministrationOverviewItem {
     restricted: boolean;
     runnable: boolean;
     title: string;
+}
+
+/* Previous state of content types*/
+export interface IPreviousState {
+    // Serializes JSON returned by H5P content types via getCurrentState()
+    state: string;
+}
+
+/**
+ * Data required for storing user content data
+ */
+export interface IContentUserData {
+    /**
+     * User id (as provided by the integration) to store data for
+     */
+    userId: string;
+    /**
+     * Content id to store data for.
+     */
+    contentId: ContentId;
+    /**
+     * Subcontent id.
+     */
+    subContentId: string;
+    /**
+     * Usually `state`, but can take other values, too.
+     */
+    dataType: string;
+    /**
+     * The actual data. 0 if the data should be deleted.
+     */
+    data: any | 0;
+    /**
+     * Indicates that data should be invalidated when content changes.
+     */
+    invalidate: 0 | 1;
+    /**
+     * Indicates that data should be loaded when content is loaded.
+     */
+    preload: 0 | 1;
+    /**
+     * Timestamp indicating last update of entry.
+     */
+    updatedAt?: number;
+}
+
+export interface IContentUserDataStorage {
+    /**
+     * Store data.
+     * @param {IContentUserData} contentUserData Content user data.
+     */
+    set(contentUserData: IContentUserData): Promise<void>;
+
+    /**
+     * Get raw data.
+     * @param {ContentId} contentId Content id.
+     * @param {string} userId User id.
+     * @return {Promise<IContentUserData[]>} All data stored.
+     */
+    getAll(contentId: ContentId, userId: string): Promise<IContentUserData[]>;
+
+    /**
+     * Get data only.
+     * @param {ContentId} contentId Content Id.
+     * @param {string} userId User Id.
+     * @param {string} subContentId Subcontent id.
+     * @param {string} dataType Data type, usually 'state'.
+     * @return {Promise<IAjaxResponse>} Data of single content user item.
+     */
+    getData(
+        contentId: ContentId,
+        userId: string,
+        subContentId: string,
+        dataType: string
+    ): Promise<IAjaxResponse>;
+
+    /**
+     * Get data ready for previous state usage.
+     * @param {ContentId} contentId Content id.
+     * @param {string} userId User id.
+     * @return {Promise<IPreviousState[]>} Data ready for previous state usage.
+     */
+    getPreviousState(
+        contentId: ContentId,
+        userId: string
+    ): Promise<IPreviousState[]>;
 }

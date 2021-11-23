@@ -1,6 +1,6 @@
 {
     "extends": "./tsconfig.base.json",
-    "include": ["src/xapi-uploader.ts"],
+    "include": ["./**/*", "./xapi-uploader.ts"],
     "compilerOptions": {
         "outDir": "./build-ide",
         "jsx": "react"

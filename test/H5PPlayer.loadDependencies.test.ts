@@ -46,6 +46,7 @@ describe('Loading dependencies', () => {
         return new H5PPlayer(
             mockLibraryStorage,
             undefined,
+            undefined,
             new H5PConfig(undefined),
             undefined,
             undefined
@@ -118,6 +119,7 @@ describe('Loading dependencies', () => {
 
         return new H5PPlayer(
             mockLibraryStorage,
+            undefined,
             undefined,
             new H5PConfig(undefined),
             undefined,
@@ -199,6 +201,7 @@ describe('Loading dependencies', () => {
         return new H5PPlayer(
             mockLibraryStorage,
             undefined,
+            undefined,
             new H5PConfig(undefined),
             undefined,
             undefined
@@ -271,6 +274,7 @@ describe('Loading dependencies', () => {
 
         return new H5PPlayer(
             mockLibraryStorage,
+            undefined,
             undefined,
             new H5PConfig(undefined),
             undefined,
@@ -349,6 +353,7 @@ describe('Loading dependencies', () => {
         return new H5PPlayer(
             mockLibraryStorage,
             undefined,
+            undefined,
             new H5PConfig(undefined),
             undefined,
             undefined
@@ -426,6 +431,7 @@ describe('Loading dependencies', () => {
 
         const h5p = new H5PPlayer(
             mockLibraryStorage,
+            undefined,
             undefined,
             new H5PConfig(undefined, {
                 baseUrl: '/baseUrl',

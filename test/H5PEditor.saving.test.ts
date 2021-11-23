@@ -8,6 +8,7 @@ import LibraryName from '../src/LibraryName';
 import {
     IContentMetadata,
     IContentStorage,
+    IContentUserDataStorage,
     IH5PConfig,
     IKeyValueStorage,
     ILibraryFileUrlResolver,
@@ -27,6 +28,7 @@ describe('H5PEditor', () => {
     ): {
         config: IH5PConfig;
         contentStorage: IContentStorage;
+        contentUserDataStorage: IContentUserDataStorage;
         h5pEditor: H5PEditor;
         keyValueStorage: IKeyValueStorage;
         libraryFileUrlResolver: ILibraryFileUrlResolver;
@@ -41,7 +43,10 @@ describe('H5PEditor', () => {
         const contentStorage = new fsImplementations.FileContentStorage(
             path.join(tempPath, 'content')
         );
-        const libraryFileUrlResolver = () => '';
+        const contentUserDataStorage = new fsImplementations.FileContentUserDataStorage(
+            path.join(tempPath, 'content-user-data')
+        );
+        const libraryFileUrlResolver = (): string => '';
         const temporaryStorage = new fsImplementations.DirectoryTemporaryFileStorage(
             path.join(tempPath, 'tmp')
         );
@@ -51,12 +56,14 @@ describe('H5PEditor', () => {
             config,
             libraryStorage,
             contentStorage,
+            contentUserDataStorage,
             temporaryStorage
         );
 
         return {
             config,
             contentStorage,
+            contentUserDataStorage,
             h5pEditor,
             keyValueStorage,
             libraryFileUrlResolver,

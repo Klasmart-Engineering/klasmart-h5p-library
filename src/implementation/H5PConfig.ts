@@ -60,6 +60,7 @@ export default class H5PConfig implements IH5PConfig {
         [machineName: string]: string[];
     };
     public playUrl: string = '/play';
+    public saveFrequency: boolean | number = false;
     public sendUsageStatistics: boolean = false;
     public siteType: 'local' | 'network' | 'internet' = 'local';
     public temporaryFileLifetime: number = 120 * 60 * 1000; // 120 minutes
@@ -84,6 +85,7 @@ export default class H5PConfig implements IH5PConfig {
         await this.loadSettingFromStorage('maxFileSize');
         await this.loadSettingFromStorage('maxTotalSize');
         await this.loadSettingFromStorage('playerAddons');
+        await this.loadSettingFromStorage('saveFrequency');
         await this.loadSettingFromStorage('sendUsageStatistics');
         await this.loadSettingFromStorage('siteType');
         await this.loadSettingFromStorage('uuid');
@@ -107,6 +109,7 @@ export default class H5PConfig implements IH5PConfig {
         await this.saveSettingToStorage('maxFileSize');
         await this.saveSettingToStorage('maxTotalSize');
         await this.saveSettingToStorage('playerAddons');
+        await this.saveSettingToStorage('saveFrequency');
         await this.saveSettingToStorage('sendUsageStatistics');
         await this.saveSettingToStorage('siteType');
         await this.saveSettingToStorage('uuid');

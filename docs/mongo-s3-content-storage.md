@@ -104,6 +104,22 @@ An example call would be:
 CONTENTSTORAGE=mongos3 AWS_ACCESS_KEY_ID=minioaccesskey AWS_SECRET_ACCESS_KEY=miniosecret AWS_S3_ENDPOINT="http://127.0.0.1:9000" MONGODB_URL="mongodb://127.0.0.1:27017" MONGODB_DB=testdb1 MONGODB_USER=root MONGODB_PASSWORD=h5pnodejs CONTENT_AWS_S3_BUCKET=testbucket1 CONTENT_MONGO_COLLECTION=h5p npm start
 ```
 
+## Using MongoContentUserDataStorage in the example
+
+By default, the content user state will be written to disk. If it should be
+written to a MongoDB instance instead, as for the environment variables for
+
+-   MONGODB_URL
+-   MONGODB_DB
+-   MONGODB_USER
+-   MONGODB_PASSWORD
+
+need to be set. Then setting the environment variables
+-   CONTENTUSERDATASTORAGE=mongo
+-   MONGODB_COLLECTION_CONTENTUSERDATA=h5p-content-user-data
+will ensure that the content user data is written to a MongoDB instance. If
+MONGODB_COLLECTION_CONTENTUSERDATA is not set, it will default to `h5p-content-user-data`.
+
 ## Customizing permissions
 
 By default the storage implementation allows all users read and write access to

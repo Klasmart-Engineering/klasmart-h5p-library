@@ -1,10 +1,13 @@
 import LibraryName from './LibraryName';
+import H5PUser from './H5PUser';
+
 import {
     ContentId,
     ContentParameters,
     IAssets,
     IContentMetadata,
     IContentStorage,
+    IContentUserDataStorage,
     IH5PConfig,
     IInstalledLibrary,
     IIntegration,
@@ -12,7 +15,8 @@ import {
     ILibraryStorage,
     IPlayerModel,
     IUrlGenerator,
-    ILibraryMetadata
+    ILibraryMetadata,
+    IPreviousState
 } from './types';
 import UrlGenerator from './UrlGenerator';
 import Logger from './helpers/Logger';
@@ -24,14 +28,20 @@ import player from './renderers/player';
 import H5pError from './helpers/H5pError';
 import LibraryManager from './LibraryManager';
 
-
-const xapi_events_endpoint: string | undefined = typeof process.env.XAPI_ENDPOINT === "string" && process.env.XAPI_ENDPOINT
-if(!xapi_events_endpoint) { 
-    console.error(`Set XAPI_ENDPOINT environment variable for xAPI event reporting`)
+const XAPI_EVENTS_ENDPOINT: string | undefined =
+    typeof process.env.XAPI_ENDPOINT === 'string' && process.env.XAPI_ENDPOINT;
+if (!XAPI_EVENTS_ENDPOINT) {
+    console.error(
+        `Set XAPI_ENDPOINT environment variable for xAPI event reporting (${process.env.XAPI_ENDPOINT})`
+    );
 }
-const audio_service_endpoint: string | undefined = typeof process.env.AUDIO_SERVICE_ENDPOINT === "string" && process.env.AUDIO_SERVICE_ENDPOINT
-if(!audio_service_endpoint) { 
-    console.error(`Set AUDIO_SERVICE_ENDPOINT environment variable for audio upload functionality`)
+const AUDIO_SERVICE_ENDPOINT: string | undefined =
+    typeof process.env.AUDIO_SERVICE_ENDPOINT === 'string' &&
+    process.env.AUDIO_SERVICE_ENDPOINT;
+if (!AUDIO_SERVICE_ENDPOINT) {
+    console.error(
+        `Set AUDIO_SERVICE_ENDPOINT environment variable for audio upload functionality`
+    );
 }
 
 const log = new Logger('Player');
@@ -41,6 +51,7 @@ export default class H5PPlayer {
      *
      * @param libraryStorage the storage for libraries (can be read only)
      * @param contentStorage the storage for content (can be read only)
+     * @param contentUserDataStorage Storage for content user data.
      * @param config the configuration object
      * @param integrationObjectDefaults (optional) the default values to use for the integration object
      * @param globalCustomScripts (optional) references to these scripts will be added when rendering content
@@ -48,6 +59,7 @@ export default class H5PPlayer {
     constructor(
         private libraryStorage: ILibraryStorage,
         private contentStorage: IContentStorage,
+        private contentUserDataStorage: IContentUserDataStorage,
         private config: IH5PConfig,
         private integrationObjectDefaults?: IIntegration,
         private globalCustomScripts: string[] = [],
@@ -55,6 +67,7 @@ export default class H5PPlayer {
     ) {
         log.info('initialize');
         this.renderer = player;
+        this.user = null;
         this.clientTranslation = defaultTranslation;
         this.libraryManager = new LibraryManager(
             libraryStorage,
@@ -64,6 +77,23 @@ export default class H5PPlayer {
     private clientTranslation: any;
     private libraryManager: LibraryManager;
     private renderer: (model: IPlayerModel) => string | any;
+    private user: H5PUser;
+
+    /**
+     * Set user.
+     * @param {H5PIUser} user User data for H5PIntegration and previous state.
+     */
+    public setUser(user: H5PUser): void {
+        this.user = user;
+    }
+
+    /**
+     * Get content user data storage.
+     * @return {IContentUserDataStorage} Content user data storage.
+     */
+    public getContentUserDataStorage(): IContentUserDataStorage {
+        return this.contentUserDataStorage;
+    }
 
     /**
      * Creates a frame for displaying H5P content. You can customize this frame by calling setRenderer(...).
@@ -104,7 +134,7 @@ export default class H5PPlayer {
             customScripts: this.globalCustomScripts,
             downloadPath: this.getDownloadPath(contentId),
             // integrationPath: `${contentId}/integration.js`,
-            integration: this.generateIntegration(
+            integration: await this.generateIntegration(
                 contentId,
                 parameters,
                 metadata
@@ -226,18 +256,51 @@ export default class H5PPlayer {
         return false;
     }
 
-    private generateIntegration(
+    /**
+     * Get previous state(s) of content/user.
+     * @param {ContentId} contentId Id of content.
+     * @return {Promise} Previous states.
+     */
+    private async getPreviousState(
+        contentId: ContentId
+    ): Promise<IPreviousState[]> {
+        let contentUserData: IPreviousState[] = [{ state: '{}' }]; // default
+
+        if (!this.config.saveFrequency) {
+            return contentUserData; // "save content state" not set
+        }
+
+        const userId = this.user ? this.user.getId() : null;
+        if (!userId) {
+            return contentUserData; // no user id available
+        }
+
+        // Fetch from Storage
+        contentUserData = await this.contentUserDataStorage.getPreviousState(
+            contentId,
+            userId
+        );
+
+        return contentUserData;
+    }
+
+    private async generateIntegration(
         contentId: ContentId,
         parameters: ContentParameters,
         metadata: IContentMetadata
-    ): IIntegration {
+    ): Promise<IIntegration> {
         // see https://h5p.org/creating-your-own-h5p-plugin
         log.info(`generating integration for ${contentId}`);
         return {
-            xapi_events_endpoint,
-            audio_service_endpoint,
+            XAPI_EVENTS_ENDPOINT,
+            AUDIO_SERVICE_ENDPOINT,
+            ajax: {
+                contentUserData:
+                    '/h5p/contentUserData/:contentId/:dataType/:subContentId'
+            },
             contents: {
                 [`cid-${contentId}`]: {
+                    contentUserData: await this.getPreviousState(contentId),
                     displayOptions: {
                         copy: false,
                         copyright: false,
@@ -271,7 +334,8 @@ export default class H5PPlayer {
             },
             libraryConfig: this.config.libraryConfig,
             postUserStatistics: false,
-            saveFreq: false,
+            saveFreq: this.config.saveFrequency,
+            user: this.user ? this.user.getH5PIntegrationUser() : undefined,
             url: this.config.baseUrl,
             ...this.integrationObjectDefaults
         };

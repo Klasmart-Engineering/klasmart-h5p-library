@@ -397,7 +397,7 @@ export default class H5PAjaxExpressController {
         totalLength: number,
         start: number,
         end: number
-    ) => {
+    ): void => {
         const contentType = mimeLookup(filename) || 'application/octet-stream';
 
         response.writeHead(206, {
@@ -406,7 +406,7 @@ export default class H5PAjaxExpressController {
             'Content-Range': `bytes ${start}-${end}/${totalLength}`
         });
 
-        readStream.on('error', (err) => {
+        readStream.on('error', () => {
             response.status(404).end();
         });
         readStream.pipe(response);
@@ -417,7 +417,7 @@ export default class H5PAjaxExpressController {
         readStream: Readable,
         response: express.Response,
         contentLength?: number
-    ) => {
+    ): void => {
         const contentType = mimeLookup(filename) || 'application/octet-stream';
         if (contentLength) {
             response.writeHead(200, {
@@ -428,7 +428,7 @@ export default class H5PAjaxExpressController {
         } else {
             response.type(contentType);
         }
-        readStream.on('error', (err) => {
+        readStream.on('error', () => {
             response.status(404).end();
         });
         readStream.pipe(response);

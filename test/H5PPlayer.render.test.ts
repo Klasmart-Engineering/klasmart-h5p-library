@@ -7,7 +7,7 @@ describe('H5P.render()', () => {
         const contentObject = {};
         const metadata: any = {};
 
-        new H5PPlayer(undefined, undefined, new H5PConfig(undefined))
+        new H5PPlayer(undefined, undefined, undefined, new H5PConfig(undefined))
             .setRenderer((model) => model)
             .render(contentId, contentObject, metadata)
             .then((model) => {

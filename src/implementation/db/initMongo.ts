@@ -23,7 +23,7 @@ export default async (
     db?: string,
     user?: string,
     password?: string
-) => {
+): Promise<any> => {
     try {
         const auth = process.env.MONGODB_USER
             ? {

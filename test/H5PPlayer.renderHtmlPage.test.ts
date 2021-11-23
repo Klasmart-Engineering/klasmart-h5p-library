@@ -3,6 +3,16 @@ import H5PConfig from '../src/implementation/H5PConfig';
 import { ILibraryName } from '../src/types';
 
 describe('Rendering the HTML page', () => {
+    const OLD_ENV = process.env;
+
+    beforeEach(() => {
+        process.env = { ...OLD_ENV };
+    });
+
+    afterAll(() => {
+        process.env = { ...OLD_ENV };
+    });
+
     it('uses default renderer and integration values', () => {
         const contentId = 'foo';
         const contentObject = {
@@ -10,14 +20,23 @@ describe('Rendering the HTML page', () => {
         };
         const h5pObject = {};
 
-        return new H5PPlayer(undefined, undefined, new H5PConfig(undefined))
+        process.env.XAPI_ENDPOINT = 'dummy';
+        process.env.AUDIO_SERVICE_ENDPOINT = 'dummy';
+
+        return new H5PPlayer(
+            undefined,
+            undefined,
+            undefined,
+            new H5PConfig(undefined)
+        )
             .render(contentId, contentObject, h5pObject as any)
             .then((html) => {
                 expect(html.replace(/\n */g, '')).toBe(
                     `<html class="h5p-iframe" data-reactroot="">
                 <head>
-                    <meta charset="utf-8"/>
-                    
+                    <meta charSet="utf-8"/>
+                    <script>window.addEventListener(\`contextmenu\`, function(e){ e.preventDefault(); }, false)</script>
+
                     <link rel="stylesheet" href="/h5p/core/styles/h5p.css"/>
                     <link rel="stylesheet" href="/h5p/core/styles/h5p-confirmation-dialog.css"/>
                     <script src="/h5p/core/js/jquery.js"></script>
@@ -29,11 +48,18 @@ describe('Rendering the HTML page', () => {
                     <script src="/h5p/core/js/h5p-confirmation-dialog.js"></script>
                     <script src="/h5p/core/js/h5p-action-bar.js"></script>
                     <script src="/h5p/core/js/request-queue.js"></script>
-                
+
                     <script>
                         H5PIntegration = {
+                          "XAPI_EVENTS_ENDPOINT": false,
+                          "AUDIO_SERVICE_ENDPOINT": false,
+                          "ajax": {
+                            "contentUserData": "/h5p/contentUserData/:contentId/:dataType/:subContentId"
+                          },
+
                   "contents": {
                     "cid-foo": {
+                      "contentUserData": [{"state": "{}"}],
                       "displayOptions": {
                         "copy": false,
                         "copyright": false,
@@ -44,15 +70,15 @@ describe('Rendering the HTML page', () => {
                       },
                       "fullScreen": "0",
                       "jsonContent": "{\\"my\\":\\"content\\"}",
-                      "metadata":{
-                        "license":"U",
-                        "title":"",
-                        "defaultLanguage":"en"
+                      "metadata": {
+                        "license": "U",
+                        "title": "",
+                        "defaultLanguage": "en"
                        }
                     }
                   },
-                  "core":{
-                    "scripts":[
+                  "core": {
+                    "scripts": [
                     "/h5p/core/js/jquery.js",
                     "/h5p/core/js/h5p.js",
                     "/h5p/core/js/h5p-event-dispatcher.js",
@@ -63,7 +89,7 @@ describe('Rendering the HTML page', () => {
                     "/h5p/core/js/h5p-action-bar.js",
                     "/h5p/core/js/request-queue.js"
                     ],
-                    "styles":[
+                    "styles": [
                     "/h5p/core/styles/h5p.css",
                     "/h5p/core/styles/h5p-confirmation-dialog.css"
                     ]
@@ -148,7 +174,6 @@ describe('Rendering the HTML page', () => {
                 </head>
                 <body>
                     <div class="h5p-content" data-content-id="foo"></div>
-                    <a href="/h5p/download/foo">Download</a>
                 </body>
                 </html>`.replace(/\n */g, '')
                 );
@@ -181,6 +206,7 @@ describe('Rendering the HTML page', () => {
         return new H5PPlayer(
             mockLibraryStorage,
             undefined,
+            undefined,
             new H5PConfig(undefined)
         )
             .setRenderer((model) => model)
@@ -197,9 +223,15 @@ describe('Rendering the HTML page', () => {
         const contentObject = {};
         const h5pObject = {};
 
-        return new H5PPlayer(undefined, undefined, new H5PConfig(undefined), {
-            integration: 'test'
-        } as any)
+        return new H5PPlayer(
+            undefined,
+            undefined,
+            undefined,
+            new H5PConfig(undefined),
+            {
+                integration: 'test'
+            } as any
+        )
             .setRenderer((model) => model)
             .render(contentId, contentObject, h5pObject as any)
             .then((model) => {
@@ -217,6 +249,7 @@ describe('Rendering the HTML page', () => {
         return new H5PPlayer(
             undefined,
             undefined,
+            undefined,
             new H5PConfig(undefined),
             undefined,
             ['/test']
@@ -226,8 +259,9 @@ describe('Rendering the HTML page', () => {
                 expect(html.replace(/\n */g, '')).toBe(
                     `<html class="h5p-iframe" data-reactroot="">
                     <head>
-                        <meta charset="utf-8"/>
-                        
+                        <meta charSet="utf-8"/>
+                        <script>window.addEventListener(\`contextmenu\`, function(e){ e.preventDefault(); }, false)</script>
+
                         <link rel="stylesheet" href="/h5p/core/styles/h5p.css"/>
                         <link rel="stylesheet" href="/h5p/core/styles/h5p-confirmation-dialog.css"/>
                         <script src="/h5p/core/js/jquery.js"></script>
@@ -239,11 +273,17 @@ describe('Rendering the HTML page', () => {
                         <script src="/h5p/core/js/h5p-confirmation-dialog.js"></script>
                         <script src="/h5p/core/js/h5p-action-bar.js"></script>
                         <script src="/h5p/core/js/request-queue.js"></script>
-                    
+
                         <script>
                             H5PIntegration = {
+                              "XAPI_EVENTS_ENDPOINT": false,
+                              "AUDIO_SERVICE_ENDPOINT": false,
+                              "ajax": {
+                                "contentUserData": "/h5p/contentUserData/:contentId/:dataType/:subContentId"
+                              },
                       "contents": {
                         "cid-foo": {
+                          "contentUserData": [{"state": "{}"}],
                           "displayOptions": {
                             "copy": false,
                             "copyright": false,
@@ -254,15 +294,15 @@ describe('Rendering the HTML page', () => {
                           },
                           "fullScreen": "0",
                           "jsonContent": "{\\"my\\":\\"content\\"}",
-                          "metadata":{
-                            "license":"U",
-                            "title":"",
-                            "defaultLanguage":"en"
+                          "metadata": {
+                            "license": "U",
+                            "title": "",
+                            "defaultLanguage": "en"
                           }
                         }
                       },
-                      "core":{
-                          "scripts":[
+                      "core": {
+                          "scripts": [
                           "/h5p/core/js/jquery.js",
                           "/h5p/core/js/h5p.js",
                           "/h5p/core/js/h5p-event-dispatcher.js",
@@ -274,7 +314,7 @@ describe('Rendering the HTML page', () => {
                           "/h5p/core/js/request-queue.js",
                           "/test"
                           ],
-                          "styles":[
+                          "styles": [
                           "/h5p/core/styles/h5p.css",
                           "/h5p/core/styles/h5p-confirmation-dialog.css"
                           ]
@@ -359,7 +399,6 @@ describe('Rendering the HTML page', () => {
                     </head>
                     <body>
                         <div class="h5p-content" data-content-id="foo"></div>
-                        <a href="/h5p/download/foo">Download</a>
                     </body>
                     </html>`.replace(/\n */g, '')
                 );

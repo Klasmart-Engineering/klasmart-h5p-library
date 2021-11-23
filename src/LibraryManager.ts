@@ -106,47 +106,62 @@ export default class LibraryManager {
 
             const languageFileFormats = [
                 language, // whatever format the cookie is in
-                (() => { // xx_XX
-                  const [ languageCode, countryCode ] = language.replace(`-`, `_`).split(`_`);
-                  if (!languageCode || !countryCode) return;
-                  return `${languageCode.toLowerCase()}_${countryCode.toUpperCase()}`;
+                (() => {
+                    // xx_XX
+                    const [languageCode, countryCode] = language
+                        .replace(`-`, `_`)
+                        .split(`_`);
+                    if (!languageCode || !countryCode) return;
+                    return `${languageCode.toLowerCase()}_${countryCode.toUpperCase()}`;
                 })(),
-                (() => { // xx-XX
-                  const [ languageCode, countryCode ] = language.replace(`_`, `-`).split(`-`);
-                  if (!languageCode || !countryCode) return;
-                  return `${languageCode.toLowerCase()}-${countryCode.toUpperCase()}`;
+                (() => {
+                    // xx-XX
+                    const [languageCode, countryCode] = language
+                        .replace(`_`, `-`)
+                        .split(`-`);
+                    if (!languageCode || !countryCode) return;
+                    return `${languageCode.toLowerCase()}-${countryCode.toUpperCase()}`;
                 })(),
-                (() => { // xx_xx
-                  const [ languageCode, countryCode ] = language.toLowerCase().replace(`-`, `_`).split(`_`);
-                  if (!languageCode || !countryCode) return;
-                  return `${languageCode}_${countryCode}`;
+                (() => {
+                    // xx_xx
+                    const [
+                        languageCode,
+                        countryCode
+                    ] = language.toLowerCase().replace(`-`, `_`).split(`_`);
+                    if (!languageCode || !countryCode) return;
+                    return `${languageCode}_${countryCode}`;
                 })(),
-                (() => { // xx-xx
-                  const [ languageCode, countryCode ] = language.toLowerCase().replace(`_`, `-`).split(`-`);
-                  if (!languageCode || !countryCode) return;
-                  return `${languageCode}-${countryCode}`;
+                (() => {
+                    // xx-xx
+                    const [
+                        languageCode,
+                        countryCode
+                    ] = language.toLowerCase().replace(`_`, `-`).split(`-`);
+                    if (!languageCode || !countryCode) return;
+                    return `${languageCode}-${countryCode}`;
                 })(),
-                (() => { // xx
-                  const [ languageCode ] = language.toLowerCase().split(/[_-]/);
-                  if (!languageCode) return;
-                  return `${languageCode}`;
-                })(),
-              ].filter((fileFormat): fileFormat is string => !!fileFormat);
+                (() => {
+                    // xx
+                    const [languageCode] = language.toLowerCase().split(/[_-]/);
+                    if (!languageCode) return;
+                    return `${languageCode}`;
+                })()
+            ].filter((fileFormat): fileFormat is string => !!fileFormat);
 
             let languageFile = null;
             for (const fileFormat of languageFileFormats) {
-                const fileExists = await this.libraryStorage.fileExists(library, `language/${fileFormat}.json`);
+                const fileExists = await this.libraryStorage.fileExists(
+                    library,
+                    `language/${fileFormat}.json`
+                );
                 if (fileExists) {
                     languageFile = `language/${fileFormat}.json`;
                     break;
                 }
             }
 
-            const stream = await this.getFileStream(
-                library,
-                languageFile
-            );
-            return streamToString(stream);
+            const stream = await this.getFileStream(library, languageFile);
+            return await streamToString(stream);
         } catch (ignored) {
             log.debug(
                 `language '${language}' not found for ${LibraryName.toUberName(
@@ -165,7 +180,7 @@ export default class LibraryManager {
     public async getLibrary(library: ILibraryName): Promise<IInstalledLibrary> {
         try {
             log.debug(`loading library ${LibraryName.toUberName(library)}`);
-            return this.libraryStorage.getLibrary(library);
+            return await this.libraryStorage.getLibrary(library);
         } catch (ignored) {
             log.warn(
                 `library ${LibraryName.toUberName(library)} is not installed`

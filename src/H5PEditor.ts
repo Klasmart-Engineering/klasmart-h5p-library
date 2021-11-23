@@ -1,7 +1,7 @@
 import { PassThrough, Writable, Readable } from 'stream';
 import { ReadStream } from 'fs';
 import { withFile } from 'tmp-promise';
-import fsExtra, { pathExists } from 'fs-extra';
+import fsExtra from 'fs-extra';
 import imageSize from 'image-size';
 import mimeTypes from 'mime-types';
 import path from 'path';
@@ -35,6 +35,7 @@ import {
     IAssets,
     IContentMetadata,
     IContentStorage,
+    IContentUserDataStorage,
     IEditorModel,
     IH5PConfig,
     IHubInfo,
@@ -69,6 +70,7 @@ export default class H5PEditor {
      * editor can also change these values and save them!
      * @param libraryStorage the storage object for libraries
      * @param contentStorage the storage object for content
+     * @param contentUserDataStorage Storage object for content user data.
      * @param temporaryStorage the storage object for temporary files
      * @param translationCallback a function that is called to retrieve
      * translations of keys in a certain language; the keys use the i18next
@@ -80,6 +82,7 @@ export default class H5PEditor {
         public config: IH5PConfig,
         public libraryStorage: ILibraryStorage,
         public contentStorage: IContentStorage,
+        public contentUserDataStorage: IContentUserDataStorage,
         public temporaryStorage: ITemporaryFileStorage,
         translationCallback: ITranslationFunction = new SimpleTranslator({
             // We use a simplistic translation function that is hard-wired to
@@ -636,7 +639,6 @@ export default class H5PEditor {
             user
         );
         return newContentId;
-
     }
 
     /**

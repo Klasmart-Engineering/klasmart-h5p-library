@@ -1,4 +1,4 @@
-import "newrelic";
+import 'newrelic';
 import bodyParser from 'body-parser';
 import express from 'express';
 import fileUpload from 'express-fileupload';
@@ -6,7 +6,7 @@ import i18next from 'i18next';
 import i18nextHttpMiddleware from 'i18next-http-middleware';
 import i18nextFsBackend from 'i18next-fs-backend';
 import path from 'path';
-import cors from "cors"
+import cors from 'cors';
 
 import h5pAjaxExpressRouter from '../src/adapters/H5PAjaxRouter/H5PAjaxExpressRouter';
 import libraryAdministrationExpressRouter from '../src/adapters/LibraryAdministrationRouter/LibraryAdministrationExpressRouter';
@@ -20,14 +20,14 @@ import User from './User';
 import createH5PEditor from './createH5PEditor';
 import { displayIps } from './utils';
 
-const start = async () => {
+const start = async (): Promise<void> => {
     // We use i18next to localize messages sent to the user. You can use any
     // localization library you like.
     const options = {
         // Order and from where user language should be detected.
         order: ['querystring', 'cookie', 'header'],
-        lookupCookie: 'locale',
-      }
+        lookupCookie: 'locale'
+    };
 
     const translationFunction = await i18next
         .use(i18nextFsBackend)
@@ -78,6 +78,7 @@ const start = async () => {
         config,
         path.resolve('h5p/libraries'), // the path on the local disc where libraries should be stored)
         path.resolve('h5p/content'), // the path on the local disc where content is stored. Only used / necessary if you use the local filesystem content storage class.
+        path.resolve('h5p/content-user-data'), // path to local disc where content user data is stored. Only used / necessary if you use the local filesystem content storage class
         path.resolve('h5p/temporary-storage'), // the path on the local disc where temporary files (uploads) should be stored. Only used / necessary if you use the local filesystem temporary storage class.
         (key, language) => {
             return translationFunction(key, { lng: language });
@@ -88,15 +89,19 @@ const start = async () => {
     const h5pPlayer = new H5P.H5PPlayer(
         h5pEditor.libraryStorage,
         h5pEditor.contentStorage,
+        h5pEditor.contentUserDataStorage,
         config,
         undefined,
-        ["/h5p/core/js/xapi-uploader.js", "/h5p/core/js/triggerXAPIExperienced.js"]
+        [
+            '/h5p/core/js/xapi-uploader.js',
+            '/h5p/core/js/triggerXAPIExperienced.js'
+        ]
     );
 
     // We now set up the Express server in the usual fashion.
     const server = express();
 
-    server.use(cors())
+    server.use(cors());
 
     server.use(bodyParser.json({ limit: '1024mb' }));
     server.use(
@@ -176,8 +181,10 @@ const start = async () => {
     // buttons to display, edit, delete and download existing content.
     server.get('/', startPageRenderer(h5pEditor));
 
-    server.get('/.well-known/express/server-health', (req, res) => {res.sendStatus(200)});
-    
+    server.get('/.well-known/express/server-health', (req, res) => {
+        res.sendStatus(200);
+    });
+
     server.use(
         '/client',
         express.static(path.resolve('build/examples/client'))

@@ -80,13 +80,6 @@ var H5P = H5P || {};
     });
 
     this.content = document.createElement('div');
-    this.content.appendChild(this.inputField);
-
-    // Container
-    this.container = document.createElement('div');
-    this.container.classList.add(MAIN_CONTAINER);
-    this.container.appendChild(this.taskDescription);
-    this.container.appendChild(this.content);
 
     if (params.statusBar) {
       var statusWrapper = document.createElement('div');
@@ -112,6 +105,14 @@ var H5P = H5P || {};
 
       this.updateMessageChars();
     }
+
+    this.content.appendChild(this.inputField);
+
+    // Container
+    this.container = document.createElement('div');
+    this.container.classList.add(MAIN_CONTAINER);
+    this.container.appendChild(this.taskDescription);
+    this.container.appendChild(this.content);
   };
 
   /**

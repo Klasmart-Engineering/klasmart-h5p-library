@@ -71,7 +71,7 @@
 
 .h5p-essay .h5p-essay-input-field-message-char {
   font-size: 0.8em;
-  float: left;
+  float: right;
 }
 
 .h5p-essay .h5p-essay-input-field-message-char-important {
@@ -80,7 +80,7 @@
 
 .h5p-essay .h5p-essay-input-field-message-save {
   font-size: 0.8em;
-  float: right;
+  float: left;
 }
 
 .h5p-essay .h5p-essay-input-field-message-save-animation {

@@ -7,7 +7,7 @@
     },
     {
       "label": "단어 목록",
-      "description": "쉼표로 구분된 단어 목록입니다. 특수 문자, 공백 및 숫자 허용되지 않음",
+      "description": "쉼표로 구분된 단어 목록입니다. 특수 문자, 공백 및 숫자 허용되지 않음. In order to keep the grid size reasonable: Try to use words with 7 letters or less and keep the total number of words low.",
       "default": "하나 둘 셋",
       "regexp": {
         "one": "",

@@ -2,7 +2,8 @@ H5P.FindTheWords = (function ($, UI) {
   const ELEMENT_MIN_SIZE = 32; // PX
   const ELEMENT_MAX_SIZE = 64; // PX
   const MARGIN = 8; //PX
-  const VOCABULARY_INLINE_WIDTH = 200;// PX
+  const VOCABULARY_INLINE_WIDTH = 250;// PX
+  const CHAR_SPACING_FACTOR = 0.66;
 
   /**
    * FindTheWords.
@@ -53,7 +54,8 @@ H5P.FindTheWords = (function ($, UI) {
       preferOverlap: options.behaviour.preferOverlap,
       vocabulary: this.options.vocabulary,
       gridActive: true,
-      fillPool: this.options.behaviour.fillPool
+      fillPool: this.options.behaviour.fillPool,
+      charSpacingFactor: CHAR_SPACING_FACTOR
     };
 
     this.grid = new FindTheWords.WordGrid(this.gridParams);
@@ -74,7 +76,7 @@ H5P.FindTheWords = (function ($, UI) {
       if (this.elementSize !== currentSize) {
         this.$puzzleContainer.empty();
         this.grid.appendTo(this.$puzzleContainer, this.elementSize );
-        this.grid.drawGrid(MARGIN);
+        this.grid.drawGrid();
 
         // If there are already marked elements on the grid mark them
         if (!this.grid.options.gridActive) {
@@ -94,25 +96,12 @@ H5P.FindTheWords = (function ($, UI) {
       if (this.options.behaviour.showVocabulary) {
         if (currentVocMod !== this.isVocModeBlock ) {
           this.vocabulary.setMode(this.isVocModeBlock);
-          if (this.isVocModeBlock) {
-            this.$puzzleContainer.removeClass('puzzle-inline').addClass('puzzle-block');
-          }
-          else {
-            //initial update has to be done manually
-            this.$playArea.css({'width': parseInt(this.$gameContainer.width()) + VOCABULARY_INLINE_WIDTH});
-            this.$puzzleContainer.removeClass('puzzle-block').addClass('puzzle-inline');
-          }
+          this.$gameContainer.toggleClass('column-view', this.isVocModeBlock);
         }
       }
-
-      // Make the playarea just to fit its content
-      if (! this.isVocModeBlock) {
-        this.$playArea.css({'width': parseInt(this.$gameContainer.width()) + 2});
-      }
-      else {
-        this.$playArea.css({'width': parseInt(this.$puzzleContainer.width()) + 2});
-      }
     });
+
+    this.loopResize(4);
   }
 
   FindTheWords.prototype = Object.create(H5P.EventDispatcher.prototype);
@@ -129,6 +118,29 @@ H5P.FindTheWords = (function ($, UI) {
     return Object.keys(directions).filter(function (key) {
       return directions[key];
     });
+  };
+
+  /**
+   * Resize H5P content repeatedly.
+   * @param {number} [repeat=0] Number of times to repeat interval.
+   * @param {number} [timeout=250] Timeout between resizes.
+   */
+  FindTheWords.prototype.loopResize = function (repeat = 0, timeout = 250) {
+    const that = this;
+
+    if (typeof repeat !== 'number' || repeat <= 0) {
+      return;
+    }
+
+    if (typeof timeout !== 'number' || timeout < 100) {
+      timeout = 100;
+    }
+
+    clearTimeout(this.loopResizeTimeout);
+    this.loopResizeTimeout = setTimeout(function () {
+      that.trigger('resize');
+      that.loopResize(repeat - 1, timeout);
+    }, timeout);
   };
 
   /**
@@ -233,7 +245,7 @@ H5P.FindTheWords = (function ($, UI) {
       this.elementSize = gridElementStdSize;
     }
     else {
-      this.elementSize = ELEMENT_MAX_SIZE;
+      this.elementSize = ELEMENT_MIN_SIZE;
     }
   };
 
@@ -241,8 +253,7 @@ H5P.FindTheWords = (function ($, UI) {
    * setVocabularyMode - set vocabulary mode (either inline or block).
    */
   FindTheWords.prototype.setVocabularyMode = function () {
-    const gridCol = this.grid.wordGrid[0].length;
-    this.isVocModeBlock = (this.$container.width() - (gridCol * this.elementSize + 2 * MARGIN) > VOCABULARY_INLINE_WIDTH) ? false : true;
+    this.isVocModeBlock = this.$container.width() - this.$puzzleContainer.width() <= VOCABULARY_INLINE_WIDTH;
   };
 
   /**
@@ -313,7 +324,7 @@ H5P.FindTheWords = (function ($, UI) {
 
     this.grid = new FindTheWords.WordGrid(this.gridParams);
     this.grid.appendTo(this.$puzzleContainer, this.elementSize);
-    this.grid.drawGrid(MARGIN);
+    this.grid.drawGrid();
     this.grid.enableGrid();
     this.registerGridEvents();
 
@@ -425,6 +436,8 @@ H5P.FindTheWords = (function ($, UI) {
    * @param {H5P.jQuery} $container Description.
    */
   FindTheWords.prototype.attach = function ($container) {
+    const that = this;
+
     this.$container = $container.addClass('h5p-find-the-words');
     this.triggerXAPI('attempted');
 
@@ -433,7 +446,6 @@ H5P.FindTheWords = (function ($, UI) {
       this.grid.appendTo(this.$puzzleContainer, this.elementSize );
       this.$puzzleContainer.appendTo(this.$gameContainer);
       if (this.options.behaviour.showVocabulary) {
-        this.setVocabularyMode();
         this.vocabulary.appendTo(this.$vocabularyContainer, this.isVocModeBlock);
         this.$vocabularyContainer.appendTo(this.$gameContainer);
       }
@@ -458,9 +470,10 @@ H5P.FindTheWords = (function ($, UI) {
     this.$footerContainer.appendTo(this.$playArea);
     this.$playArea.appendTo(this.$container);
 
-    this.grid.drawGrid(MARGIN);
+    this.grid.drawGrid();
     this.registerGridEvents();
-    this.trigger('resize');
+
+    that.trigger('resize');
   };
 
   return FindTheWords;

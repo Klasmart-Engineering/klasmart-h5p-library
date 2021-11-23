@@ -391,9 +391,9 @@
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     line.classList.add('dom-drawing-marker');
     line.setAttribute('stroke-width', Math.floor(eSize / 2));
-    line.setAttribute('x1', srcPos[0] - (eSize / 8));
+    line.setAttribute('x1', srcPos[0] - (eSize / 16));
     line.setAttribute('y1', srcPos[1] + (offsetTop / 8));
-    line.setAttribute('x2', desX - (eSize / 8));
+    line.setAttribute('x2', desX - (eSize / 16));
     line.setAttribute('y2', desY + (offsetTop / 8));
 
     drawingContainer.innerHTML = '';
@@ -529,10 +529,10 @@
     const dirKey = wordParams['directionKey'];
     const clickStart = wordParams['start'];
     const clickEnd = wordParams['end'];
-    const offsetTop = (this.$container.offset().top > this.elementSize * 0.75) ? Math.floor(this.elementSize * 0.75) * (-1) : this.$container.offset().top;
-    const topRadius = Math.floor(this.elementSize / 8);
+    const offsetTop = (this.$container.offset().top > this.elementSize * 0.75 / this.options.charSpacingFactor) ? Math.floor(this.elementSize * 0.75) * (-1) : this.$container.offset().top;
+    const topRadius = Math.floor(this.elementSize / 8 * this.options.charSpacingFactor);
     const bottomRadius = Math.abs(Math.floor(offsetTop / 8));
-    const lineWidth = Math.floor(this.elementSize / 4);
+    const lineWidth = Math.floor(this.elementSize / 4 / this.options.charSpacingFactor);
 
     let startingAngle;
 
@@ -693,9 +693,9 @@
    */
   FindTheWords.WordGrid.prototype.appendTo = function ($container, elementSize) {
     this.$container = $container;
-    this.canvasWidth = elementSize * this.wordGrid[0].length;
-    this.canvasHeight = elementSize * this.wordGrid.length;
-    this.elementSize = elementSize;
+    this.canvasWidth = elementSize * this.wordGrid[0].length * this.options.charSpacingFactor;
+    this.canvasHeight = elementSize * this.wordGrid.length * this.options.charSpacingFactor;
+    this.elementSize = elementSize * this.options.charSpacingFactor;
     $container.css('height', this.canvasHeight);
     $container.css('width', this.canvasWidth);
   };
@@ -718,7 +718,7 @@
      */
     this.canvas.style.width = `${that.canvasWidth}px`;
     this.canvas.style.height = `${that.canvasHeight}px`;
-    this.canvas.style.fontSize = `${that.elementSize / 3}px`;
+    this.canvas.style.fontSize = `${that.elementSize / 3 / that.options.charSpacingFactor}px`;
     for (let i = 0; i < this.wordGrid.length * this.wordGrid[0].length; i++) {
       const cell = this.canvas.childNodes[i];
       cell.style.width = `${that.canvasWidth / this.wordGrid[0].length}px`;
@@ -826,7 +826,7 @@
     $(this.drawingContainer).on('mousemove', function (event) {
       if (that.enableDrawing ) {
         isDragged = true;
-        mouseMoveEventHandler(event, that.drawingContainer, clickStart, that.elementSize);
+        mouseMoveEventHandler(event, that.drawingContainer, clickStart, that.elementSize / that.options.charSpacingFactor);
       }
     });
   };

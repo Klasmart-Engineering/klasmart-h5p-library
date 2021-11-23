@@ -3,6 +3,8 @@
   margin:0 auto;
   width: 100%;
   font-family: Helvetica, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
 }
 
 .h5p-find-the-words .h5p-play-area {
@@ -21,7 +23,13 @@
 
 .h5p-find-the-words .game-container {
   position: relative;
-  display: table;
+  display: flex;
+  flex-direction: row;
+}
+
+.h5p-find-the-words .game-container.column-view {
+  flex-direction: column;
+  flex-flow: column-reverse;
 }
 
 .h5p-find-the-words .canvas-element {
@@ -34,14 +42,6 @@
   position: relative;
 }
 
-.h5p-find-the-words .puzzle-inline {
-  display: table-cell;
-}
-
-.h5p-find-the-words .puzzle-block {
-  display: block;
-}
-
 .h5p-find-the-words .vocabulary-container {
   background-color: #eeeeee;
   text-align: left;
@@ -52,6 +52,8 @@
   font-weight: bold;
   padding: 10px 20px 10px 20px;
   border-bottom: 1px solid #e6e6e6;
+  width: auto !important;
+  overflow-y: auto;
 }
 
 .h5p-find-the-words .vocabulary-container ul {
@@ -68,27 +70,20 @@
   visibility: hidden;
 }
 
-.h5p-find-the-words .vocabulary-block-container {
+.h5p-find-the-words .game-container.column-view .vocabulary-container {
   height: auto !important;
   width: 100% !important;
-  display: table-row;
 }
 
-.h5p-find-the-words .vocabulary-block-container li {
+.h5p-find-the-words .game-container.column-view .vocabulary-container li {
   display:inline-block;
-}
-
-.h5p-find-the-words .vocabulary-inline-container {
-  width: auto !important;
-  overflow-y: auto;
-  display: table-cell;
 }
 
 .h5p-find-the-words .vocabulary-container .word-found {
   color: green;
 }
 
-.h5p-find-the-words .vocabulary-inline-container .word-found em {
+.h5p-find-the-words .vocabulary-container .word-found em {
   color: green;
   visibility: visible;
 }

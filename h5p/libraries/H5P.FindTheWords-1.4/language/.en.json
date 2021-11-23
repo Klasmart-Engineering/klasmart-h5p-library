@@ -7,7 +7,7 @@
     },
     {
       "label": "Word list",
-      "description": "Comma Separated list of words. Special Characters, White Spaces and Numbers Not allowed",
+      "description": "Comma separated list of words. Special characters, white spaces and numbers not allowed. In order to keep the grid size reasonable: Try to use words with 7 letters or less and keep the total number of words low.",
       "default": "one,two,three",
       "regexp": {}
     },

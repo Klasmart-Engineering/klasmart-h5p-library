@@ -257,6 +257,8 @@ H5P.MarkTheWords = (function ($, Question, Word, KeyboardNav, XapiGenerator) {
       text: ariaText,
     }).appendTo($ariaTextWrapper);
 
+    $wordContainer.appendTo($container);
+
     // A11y clickable list label
     this.$a11yClickableTextLabel = $('<div>', {
       'class': 'hidden-but-read',
@@ -264,7 +266,6 @@ H5P.MarkTheWords = (function ($, Question, Word, KeyboardNav, XapiGenerator) {
       tabIndex: '-1',
     }).appendTo($container);
 
-    $wordContainer.appendTo($container);
     self.$wordContainer = $wordContainer;
   };
 
@@ -663,9 +664,9 @@ H5P.MarkTheWords = (function ($, Question, Word, KeyboardNav, XapiGenerator) {
 /**
  * Static utility method for parsing H5P.MarkTheWords content item questions
  * into format useful for generating reports.
- * 
+ *
  * Example input: "<p lang=\"en\">I like *pizza* and *burgers*.</p>"
- * 
+ *
  * Produces the following:
  * [
  *   {
@@ -689,7 +690,7 @@ H5P.MarkTheWords = (function ($, Question, Word, KeyboardNav, XapiGenerator) {
  *     content: '.'
  *   }
  * ]
- * 
+ *
  * @param {string} question MarkTheWords textField (html)
  */
 H5P.MarkTheWords.parseText = function (question) {
@@ -697,22 +698,22 @@ H5P.MarkTheWords.parseText = function (question) {
   /**
    * Separate all words surrounded by a space and an asterisk and any other
    * sequence of non-whitespace characters from str into an array.
-   * 
-   * @param {string} str 
+   *
+   * @param {string} str
    * @returns {string[]} array of all words in the given string
    */
-  function getWords(str) { 
+  function getWords(str) {
     return str.match(/ \*[^\*]+\* |[^\s]+/g);
   }
 
   /**
    * Replace each HTML tag in str with the provided value and return the resulting string
-   * 
+   *
    * Regexp expression explained:
    *   <     - first character is '<'
    *   [^>]* - followed by zero or more occurences of any character except '>'
    *   >     - last character is '>'
-   **/ 
+   **/
   function replaceHtmlTags(str, value) {
     return str.replace(/<[^>]*>/g, value);
   }
@@ -731,7 +732,7 @@ H5P.MarkTheWords.parseText = function (question) {
 
   /**
    * Escape double asterisks ** = *, and remove single asterisk.
-   * @param {string} str 
+   * @param {string} str
    */
   function handleAsterisks(str) {
     var asteriskIndex = str.indexOf('*');
@@ -745,7 +746,7 @@ H5P.MarkTheWords.parseText = function (question) {
 
   /**
    * Decode HTML entities (e.g. &nbsp;) from the given string using the DOM API
-   * @param {string} str 
+   * @param {string} str
    */
   function decodeHtmlEntities(str) {
     const el = document.createElement('textarea');
@@ -763,15 +764,15 @@ H5P.MarkTheWords.parseText = function (question) {
     .map(function (w) {
       return removeTrailingPunctuation(w);
     });
-  
+
   const allSelectableWords = wordsWithAsterisksNotRemovedYet.map(function (w) {
-    return handleAsterisks(w); 
+    return handleAsterisks(w);
   });
 
   const correctWordIndexes = [];
 
   const correctWords = wordsWithAsterisksNotRemovedYet
-    .filter(function (w, i) { 
+    .filter(function (w, i) {
       if (startsAndEndsWith('*', w)) {
         correctWordIndexes.push(i);
         return true;
@@ -781,7 +782,7 @@ H5P.MarkTheWords.parseText = function (question) {
     .map(function (w) {
       return handleAsterisks(w);
     });
-  
+
   const printableQuestion = replaceHtmlTags(decodeHtmlEntities(question), ' ')
     .replace('\xa0', '\x20');
 
@@ -793,7 +794,7 @@ H5P.MarkTheWords.parseText = function (question) {
       .reduce(function (textWithPlaceholders, word, index) {
         word = removeTrailingPunctuation(
           removeLeadingPunctuation(word));
-        
+
         return textWithPlaceholders.replace(word, '%' + index);
       }, printableQuestion)
   };

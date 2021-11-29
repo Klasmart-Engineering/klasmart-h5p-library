@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.4.0...v2.5.0) (2021-11-29)
+
+
+### Features
+
+* **H5P-388:** keep the same layout ratio even on narrow screens ([591d7d2](https://bitbucket.org/calmisland/kidsloop-h5p-library/commit/591d7d252fad5e56088e74f89f28194e0c0c29d8))
+* **H5P-389:** move status bar to top ([4e9308a](https://bitbucket.org/calmisland/kidsloop-h5p-library/commit/4e9308af074236ef2a7c77064622723bd70a491b))
+
 ## [2.4.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.3.0...v2.4.0) (2021-11-18)
 
 

@@ -50,6 +50,7 @@
           audioObj.audio.preload = 'none';
           audioObj.audio.classList.add('h5p-invisible-audio');
           $audioWrapper.append(audioObj.audio);
+          that.$audioButton = $audioWrapper.find('.h5p-audio-inner > button');
         }
       }
       else {
@@ -57,6 +58,33 @@
       }
       that.audio = audioObj;
       return $audioWrapper;
+    };
+
+
+    /**
+     * Resize card "manually".
+     * @param {number} cardSize Card size.
+     */
+    that.resize = function (cardSize) {
+      if (typeof cardSize !== 'number' || cardSize < 0) {
+        return; // No valid size
+      }
+
+      // Set card size
+      that.$card.css({
+        width: cardSize + 'px',
+        height: cardSize + that.$description.height() + 'px'
+      });
+
+      // Just a quick patch, decent enough
+      if (that.$audioButton) {
+        if (that.$card.width() <= 64) {
+          that.$audioButton.css('font-size', '0.6em');
+        }
+        else {
+          that.$audioButton.css('font-size', '');
+        }
+      }
     };
 
     /**
@@ -183,37 +211,25 @@
         html: '<span class="sequencing-mark"></span>'
       });
 
-      const $image = $('<div/>',{
+      that.$image = $('<div/>',{
         class: 'image-container',
         html: '<img src="' + path + '"/>',
         alt: that.imageDesc
       });
 
-      const $description = $('<div/>',{
+      that.$description = $('<div/>',{
         class: 'image-desc',
         'data-title': that.imageDesc,
         html: '<span class="text">' + that.imageDesc + '</span>'
-      });
-
-      // grouping audio and image in a group
-      that.$sequencingElement = $('<span role="group" />')
-        .append(that.$audio)
-        .append($image)
-        .append($description);
-      $cardContainer.append(that.$sequencingElement);
-      that.$card = $cardContainer;
-
-      // for tooltip functionality
-      $cardContainer.find('.image-desc').on('click', function () {
+      }).on('click', function () {
+        // for tooltip functionality
         const $this = $(this);
         if (this.offsetWidth < this.scrollWidth) {
           $this.tooltip('option', 'content', $this.find('.text').html());
           $this.tooltip( 'option', 'items', '[data-title]' );
         }
         $(this).tooltip('enable').tooltip('open');
-      });
-
-      $cardContainer.find('.image-desc').tooltip({
+      }).tooltip({
         items:'[data-title]',
         content: '',
         show: null,
@@ -236,6 +252,14 @@
           $(this).tooltip('disable');
         }
       });
+
+      // grouping audio and image in a group
+      that.$sequencingElement = $('<span role="group" />')
+        .append(that.$audio)
+        .append(that.$image)
+        .append(that.$description);
+      $cardContainer.append(that.$sequencingElement);
+      that.$card = $cardContainer;
 
       that.$audio.on('keydown', function (event) {
         if (event.which === 13 || event.which === 32) {

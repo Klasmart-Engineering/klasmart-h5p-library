@@ -27,7 +27,8 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
       behaviour: {
         enableSolution: true,
         enableRetry: true,
-        enableResume: true
+        enableResume: true,
+        enforceColumns: (parameters && parameters.behaviour) ? !!parameters.behaviour.enforceColumns : true,
       },
       l10n: {
         totalMoves: 'Total Moves',
@@ -203,7 +204,7 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
      * Restructure the game layout whenever needed.
      */
     that.rebuildDOM = function () {
-      that.$list.appendTo(that.$wrapper);
+      that.$list.appendTo(that.$listWrapper);
       that.$footerContainer.appendTo(that.$wrapper);
       that.trigger('resize');
     };
@@ -231,6 +232,8 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
           card.setSolved();
         }
       });
+
+      that.$listWrapper = $('<div class="list-wrapper">');
     };
 
     /**
@@ -319,6 +322,10 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
         containment: that.$wrapper,
 
         start: function (event, ui) {
+          ui.placeholder.css({
+            width: ui.item.width(),
+            height: ui.item.height()
+          });
           $(ui.helper).addClass('ui-sortable-helper');
           that.timer.play();
           that.triggerXAPI('interacted');
@@ -582,7 +589,8 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
 
         //append description , cards and footer to main container.
         that.$taskDescription.appendTo($container);
-        that.$list.appendTo($container);
+        that.$list.appendTo(that.$listWrapper);
+        that.$listWrapper.appendTo($container);
         that.$footerContainer.appendTo($container);
 
         that.sequencingCards[0].setFocus();
@@ -590,6 +598,47 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
         that.trigger('resize');
       }
     };
+
+    // Resize handler
+    that.on('resize', function () {
+      if (!that.params.behaviour.maxColumns || !that.sequencingCards.length) {
+        return; // Leave sizing/wrapping to CSS flex
+      }
+
+      const cardWidthFull = that.sequencingCards[0].$card.outerWidth(true);
+
+      if (!that.cardInitialWidth) {
+        that.cardInitialWidth = that.sequencingCards[0].$card.width();
+        that.cardPassepartout = cardWidthFull - that.cardInitialWidth;
+      }
+
+      // Set width to fix maxColumns cards in
+      if (that.$list.css('max-width') === 'none') {
+        that.$list.css('max-width', that.params.behaviour.maxColumns * cardWidthFull + 'px');
+
+        that.sequencingCards.forEach(function (card) {
+          card.$card.css('max-width', that.cardInitialWidth);
+        });
+
+        // that.$list.width() is not correct yet
+        setTimeout(function () {
+          that.trigger('resize');
+        }, 50);
+      }
+
+      // Scale cards in order to keep column layout
+      if (that.params.behaviour.enforceColumns) {
+        const cardSize = Math.floor((that.$list.width() - that.params.behaviour.maxColumns * that.cardPassepartout) / that.params.behaviour.maxColumns) - 2;
+        that.sequencingCards.forEach(function (card) {
+          card.resize(cardSize);
+        });
+      }
+      else {
+        that.sequencingCards.forEach(function (card) {
+          card.$card.css('min-width', that.cardInitialWidth);
+        });
+      }
+    });
   }
   // Extends the event dispatcher
   ImageSequencing.prototype = Object.create(EventDispatcher.prototype);

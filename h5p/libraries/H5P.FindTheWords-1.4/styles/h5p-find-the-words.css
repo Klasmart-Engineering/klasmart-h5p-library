@@ -38,6 +38,10 @@
   left: 0;
 }
 
+.h5p-find-the-words .game-container.column-view .puzzle-container {
+  margin: auto;
+}
+
 .h5p-find-the-words .puzzle-container {
   position: relative;
 }
@@ -70,13 +74,14 @@
   visibility: hidden;
 }
 
-.h5p-find-the-words .game-container.column-view .vocabulary-container {
-  height: auto !important;
-  width: 100% !important;
+.h5p-find-the-words .game-container.column-view .vocabulary-container ul {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .h5p-find-the-words .game-container.column-view .vocabulary-container li {
   display:inline-block;
+  margin: 0;
 }
 
 .h5p-find-the-words .vocabulary-container .word-found {

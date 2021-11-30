@@ -367,6 +367,7 @@
   const mouseDownEventHandler = function (e, canvas, elementSize) {
     const x = e.pageX - $(canvas).offset().left;
     const y = e.pageY - $(canvas).offset().top;
+
     return calculateCordinates(x, y, elementSize);
   };
 
@@ -384,17 +385,16 @@
    * @param {number} eSize  Current element size.
    */
   const mouseMoveEventHandler = function (e, drawingContainer, srcPos, eSize) {
-    const offsetTop = ($(drawingContainer).offset().top > eSize * 0.75) ? Math.floor(eSize * 0.75) : $(drawingContainer).offset().top;
     const desX = e.pageX - $(drawingContainer).offset().left;
-    const desY = e.pageY - Math.abs(offsetTop);
+    const desY = e.pageY - $(drawingContainer).offset().top;
 
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     line.classList.add('dom-drawing-marker');
     line.setAttribute('stroke-width', Math.floor(eSize / 2));
     line.setAttribute('x1', srcPos[0] - (eSize / 16));
-    line.setAttribute('y1', srcPos[1] + (offsetTop / 8));
+    line.setAttribute('y1', srcPos[1] + (eSize / 16));
     line.setAttribute('x2', desX - (eSize / 16));
-    line.setAttribute('y2', desY + (offsetTop / 8));
+    line.setAttribute('y2', desY + (eSize / 16));
 
     drawingContainer.innerHTML = '';
     drawingContainer.appendChild(line);
@@ -415,9 +415,10 @@
    */
   const mouseUpEventHandler = function (e, canvas, elementSize, clickStart) {
     let wordObject = {};
-    const offsetTop = ($(canvas).offset().top > elementSize * 0.75) ? Math.floor(elementSize * 0.75) * (-1) : $(canvas).offset().top;
-    const x = e.pageX - $(canvas).offset().left;
-    const y = e.pageY - Math.abs(offsetTop);
+
+    const x = e.pageX - $(canvas).offset().left - (elementSize / 16);
+    const y = e.pageY - $(canvas).offset().top + (elementSize / 16);
+
     const clickEnd = calculateCordinates(x, y, elementSize);
 
     if ((Math.abs(clickEnd[0] - x) < 20) && (Math.abs(clickEnd[1] - y) < 15)) {
@@ -704,27 +705,26 @@
    * drawGrid - draw the letter on the canvas element provided.
    * @param {number} margin Description.
    */
-  FindTheWords.WordGrid.prototype.drawGrid = function (margin) {
+  FindTheWords.WordGrid.prototype.drawGrid = function () {
     const that = this;
-
-    const marginResp = (Math.floor(that.elementSize / 8) < margin) ? (Math.floor(that.elementSize / 8)) : margin;
-    const offsetTop = (that.$container.offset().top > that.elementSize * 0.75) ? Math.floor(that.elementSize * 0.75) : that.$container.offset().top;
 
     /*
      * Recompute the cell style to match original implementation
      * It's unnecessary to recreate the $container contents here all the
-     * time, bit that's part of the original implementation. Not changing
+     * time, but that's part of the original implementation. Not changing
      * this now.
      */
     this.canvas.style.width = `${that.canvasWidth}px`;
     this.canvas.style.height = `${that.canvasHeight}px`;
     this.canvas.style.fontSize = `${that.elementSize / 3 / that.options.charSpacingFactor}px`;
+    this.canvas.style.lineHeight = `${that.elementSize / 3 / that.options.charSpacingFactor}px`;
+
     for (let i = 0; i < this.wordGrid.length * this.wordGrid[0].length; i++) {
       const cell = this.canvas.childNodes[i];
       cell.style.width = `${that.canvasWidth / this.wordGrid[0].length}px`;
       cell.style.height = `${that.canvasHeight / this.wordGrid.length}px`;
-      cell.style.paddingLeft = `${2 * marginResp}px`;
-      cell.style.paddingTop = `${offsetTop - ((that.$container.offset().top > that.elementSize * 0.75) ? 16 : 18)}px`;
+      cell.style.paddingLeft = `${that.elementSize / 4}px`;
+      cell.style.paddingTop = `${that.elementSize / 3}px`;
     }
 
     // Found words
@@ -778,6 +778,7 @@
           }
           let markedWord = '';
           const wordObject = mouseUpEventHandler(event, this, that.elementSize, clickStart);
+
           const dict = {
             'horizontal' : [1, 0],
             'horizontalBack' : [-1, 0],
@@ -791,8 +792,8 @@
 
           if (!$.isEmptyObject(wordObject) && wordObject['dir'] !== false) {
             const dir = wordObject['dir'];
-            let y1 = wordObject['start'][3];
             let x1 = wordObject['start'][2];
+            let y1 = wordObject['start'][3];
             let x2 = wordObject['end'][2];
             const y2 = wordObject['end'][3];
 
@@ -810,6 +811,7 @@
               }
             }
           }
+
           that.enableDrawing = false;
           isDragged = false;
           that.trigger('drawEnd', {'markedWord': markedWord, 'wordObject': wordObject});

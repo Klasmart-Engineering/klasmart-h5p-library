@@ -270,7 +270,7 @@ export default class H5PPlayer {
             return contentUserData; // "save content state" not set
         }
 
-        const userId = this.user ? this.user.getId() : null;
+        const userId = this.user ? await this.user.getId() : null;
         if (!userId) {
             return contentUserData; // no user id available
         }
@@ -335,7 +335,9 @@ export default class H5PPlayer {
             libraryConfig: this.config.libraryConfig,
             postUserStatistics: false,
             saveFreq: this.config.saveFrequency,
-            user: this.user ? this.user.getH5PIntegrationUser() : undefined,
+            user: this.user
+                ? await this.user.getH5PIntegrationUser()
+                : undefined,
             url: this.config.baseUrl,
             ...this.integrationObjectDefaults
         };

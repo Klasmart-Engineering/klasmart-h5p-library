@@ -1,4 +1,4 @@
-import express, { Request, RequestHandler } from 'express';
+import express, { RequestHandler } from 'express';
 
 import * as H5P from '../src';
 import {
@@ -100,7 +100,7 @@ export default function (
     router.post(
         '/contentUserData/:contentId/:dataType/:subContentId',
         async (req: express.Request, res: express.Response): Promise<void> => {
-            const userId = new H5P.H5PUser(req).getId();
+            const userId = await new H5P.H5PUser(req).getId();
 
             if (
                 !req.body.data ||
@@ -134,7 +134,7 @@ export default function (
     router.get(
         '/contentUserData',
         async (req: express.Request, res: express.Response): Promise<void> => {
-            const userId = new H5P.H5PUser(req).getId();
+            const userId = await new H5P.H5PUser(req).getId();
 
             if (
                 !req.query.contentId ||
@@ -165,7 +165,7 @@ export default function (
     router.get(
         '/contentUserData/:contentId/:dataType/:subContentId',
         async (req: express.Request, res: express.Response): Promise<void> => {
-            const userId = new H5P.H5PUser(req).getId();
+            const userId = await new H5P.H5PUser(req).getId();
 
             if (
                 !req.params.contentId ||

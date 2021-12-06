@@ -24,7 +24,7 @@
           },
           {
             "label": "Imagen",
-            "description": "Imagen opcional para la carta. (La carta podría usar solamente una imagen, solo un texto o ambos)"
+            "description": "Imgen opcional para la carta. (La carta podría usar solamente una imagen, solo un texto o ambos)"
           },
           {
             "label": "Texto aternativo para la imagen"
@@ -60,6 +60,9 @@
     {
       "label": "Texto para el botón Revisar respuestas",
       "default": "Comprobar"
+    },
+    {
+      "label": "Allow user to enter answer using speech recognition"
     },
     {
       "label": "Allow user to enter answer using speech recognition"
@@ -480,8 +483,8 @@
       "default": "Reintentar"
     },
     {
-      "label": "Case sensitive",
-      "description": "Makes sure the user input has to be exactly the same as the answer."
+      "label": "MAYÚSCULAS/minúsculas si importan",
+      "description": "Asegurarse que la entrada del usuario tenga que ser exactamente la misma que la respuesta."
     },
     {
       "label": "Texto incorrecto para tecnologías asistivas",

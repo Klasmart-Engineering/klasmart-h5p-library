@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.5.1](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.5.0...v2.5.1) (2021-12-06)
+
+
+### Bug Fixes
+
+* **H5P-367:** background image not scaled ([b7a88ef](https://bitbucket.org/calmisland/kidsloop-h5p-library/commit/b7a88ef8d6184e068418cc76ec29451918398829))
+* **H5P-419:** possible to pair with zero or multiple other cards ([cbcb940](https://bitbucket.org/calmisland/kidsloop-h5p-library/commit/cbcb9406d8edace9e8feeaac211da6eafab33a00))
+
 ## [2.5.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.4.0...v2.5.0) (2021-11-29)
 
 

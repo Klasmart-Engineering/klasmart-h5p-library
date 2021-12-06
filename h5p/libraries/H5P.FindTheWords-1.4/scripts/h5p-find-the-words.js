@@ -100,6 +100,8 @@ H5P.FindTheWords = (function ($, UI) {
         }
       }
     });
+
+    this.loopResize(4);
   }
 
   FindTheWords.prototype = Object.create(H5P.EventDispatcher.prototype);
@@ -116,6 +118,29 @@ H5P.FindTheWords = (function ($, UI) {
     return Object.keys(directions).filter(function (key) {
       return directions[key];
     });
+  };
+
+  /**
+   * Resize H5P content repeatedly.
+   * @param {number} [repeat=0] Number of times to repeat interval.
+   * @param {number} [timeout=250] Timeout between resizes.
+   */
+  FindTheWords.prototype.loopResize = function (repeat = 0, timeout = 250) {
+    const that = this;
+
+    if (typeof repeat !== 'number' || repeat <= 0) {
+      return;
+    }
+
+    if (typeof timeout !== 'number' || timeout < 100) {
+      timeout = 100;
+    }
+
+    clearTimeout(this.loopResizeTimeout);
+    this.loopResizeTimeout = setTimeout(function () {
+      that.trigger('resize');
+      that.loopResize(repeat - 1, timeout);
+    }, timeout);
   };
 
   /**

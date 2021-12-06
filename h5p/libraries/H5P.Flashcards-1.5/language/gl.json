@@ -455,10 +455,6 @@
       "default": "Resposta correcta"
     },
     {
-      "label": "Separator of solution alternatives",
-      "default": "or"
-    },
-    {
       "label": "Texto para o título dos resultados",
       "default": "Resultados"
     },

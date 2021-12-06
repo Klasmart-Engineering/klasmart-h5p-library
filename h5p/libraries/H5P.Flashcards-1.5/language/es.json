@@ -436,7 +436,15 @@
       ]
     },
     {
-      "label": "Requerir entrada del usuario antes que la solución pueda ser vista"
+      "label": "Allow user to enter answer using speech recognition"
+    },
+    {
+      "label": "Language of speech input",
+      "default": "Your answer"
+    },
+    {
+      "label": "Requerir entrada del usuario antes que la solución pueda ser vista",
+      "default": "Correct"
     },
     {
       "label": "Texto para el campo de ingreso de respuesta",
@@ -456,7 +464,8 @@
     },
     {
       "label": "Separator of solution alternatives",
-      "default": "or"
+      "default": "or",
+      "description": "Result text, variables available: @score and @total. Example: '@score of @total correct'"
     },
     {
       "label": "Título para texto de Resultados",
@@ -473,25 +482,18 @@
     },
     {
       "label": "Texto para etiqueta de respuesta corta",
+      "description": "Makes sure the user input has to be exactly the same as the answer.",
       "default": "A:"
     },
     {
       "label": "Texto para botón \"reintentar\"",
-      "default": "Reintentar"
+      "default": "Reintentar",
+      "description": "Text that will be announced to assistive technologies. Use @answer as variable."
     },
     {
-      "label": "Case sensitive",
-      "description": "Makes sure the user input has to be exactly the same as the answer."
-    },
-    {
-      "label": "Texto incorrecto para tecnologías asistivas",
-      "default": "Respuesta incorrecta. La respuesta correcta era @answer",
-      "description": "Texto que será anunciado a tecnologías asistivas. Use @answer como variable."
-    },
-    {
-      "label": "Cambio de Tarjeta para tecnologías asistivas",
-      "default": "Página @current de @total",
-      "description": "Texto que será anunciado a tecnologías asistivas al navegar entre cartas. Use @current y @total como variables."
+      "label": "MAYÚSCULAS/minúsculas si importan",
+      "default": "Page @current of @total",
+      "description": "Asegurarse que la entrada del usuario tenga que ser exactamente la misma que la respuesta."
     },
     {
       "label": "Audio play button",

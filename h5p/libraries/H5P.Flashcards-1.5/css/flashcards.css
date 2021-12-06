@@ -46,15 +46,21 @@
   position: absolute;
   display: block;
   vertical-align: middle;
-  width: 26em;
   min-width: 14em;
-  max-width: 90%;
   margin: 0 auto;
   left: 0;
   right: 0;
   transition: transform 0.6s;
   transform: translateX(0);
   z-index: 1;
+}
+
+.h5p-flashcards:not(.h5p-landscape) .h5p-card {
+  width: 26em;
+}
+
+.h5p-flashcards.h5p-landscape .h5p-card {
+  width: 90%;
 }
 
 .h5p-flashcards .h5p-card.left {
@@ -70,11 +76,19 @@
   z-index: 2;
 }
 
-.h5p-flashcards .h5p-card.h5p-previous {
+.h5p-flashcards:not(.h5p-landscape) .h5p-card.h5p-previous {
+  transform: translateX(-105%);
+}
+
+.h5p-flashcards.h5p-landscape .h5p-card.h5p-previous {
   transform: translateX(-100%);
 }
 
-.h5p-flashcards .h5p-card.h5p-next {
+.h5p-flashcards:not(.h5p-landscape) .h5p-card.h5p-next {
+  transform: translateX(105%);
+}
+
+.h5p-flashcards.h5p-landscape .h5p-card.h5p-next {
   transform: translateX(100%);
 }
 
@@ -129,9 +143,21 @@
   filter: grayscale(100%);
 }
 
-.h5p-flashcards .h5p-card.h5p-current .h5p-cardholder {
+.h5p-flashcards .h5p-card .h5p-cardholder {
+  display: flex;
+}
+
+.h5p-flashcards .h5p-card .h5p-cardholder {
   background-color: white;
   border-color: white;
+}
+
+.h5p-flashcards:not(.h5p-landscape) .h5p-card .h5p-cardholder {
+  flex-direction: column;
+}
+
+.h5p-flashcards.h5p-landscape .h5p-card .h5p-cardholder {
+  flex-direction: row;
 }
 
 .h5p-flashcards .h5p-cardholder {
@@ -173,17 +199,33 @@
   justify-content: center;
 
   position: relative;
-  margin: 1em 1em 0 1em;
   padding: 1em;
-  height: 18em;
   background-color: #c8e0e3;
+}
+
+.h5p-flashcards:not(.h5p-landscape) .h5p-imageholder {
   border-radius: 2em 2em 0 0;
+  height: 18em;
+  margin: 1em 1em 0 1em;
+}
+
+.h5p-flashcards.h5p-landscape .h5p-imageholder {
+  border-radius: 2em 0 0 2em;
+  flex-basis: calc(50% - 4em);
+  flex-grow: 0;
+  flex-shrink: 0;
+  margin: 1em;
+  max-width: calc(50% - 4em);
 }
 
 .h5p-flashcards .h5p-imageholder.h5p-image-only {
   margin-bottom: 1em;
   border-bottom-left-radius: 2em;
   border-bottom-right-radius: 2em;
+}
+
+.h5p-flashcards.h5p-landscape .h5p-imageholder.h5p-image-only {
+  border-radius: 2em;
 }
 
 .h5p-flashcards .h5p-card .h5p-clue {
@@ -224,16 +266,38 @@
 .h5p-flashcards .h5p-card div.h5p-clue:after {
   content: "\f03e";
   font-family: 'H5PFontAwesome4';
-  font-size: 7em;
+  font-size: min(7em, 15vw);
   line-height: 100px;
   color: #a3b7be;
 }
 
+.h5p-flashcards .h5p-card div.h5p-clue.h5p-small:after {
+  font-size: 4em;
+  line-height: 72px;
+}
+
 .h5p-flashcards .h5p-foot {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.h5p-flashcards:not(.h5p-landscape) .h5p-foot {
+  border-radius: 0 0 2em 2em;
   margin: 0 1em 1em 1em;
   padding: 0 1em 1em 1em;
-  background-color: white;
-  border-radius: 0 0 2em 2em;
+}
+
+.h5p-flashcards.h5p-landscape .h5p-foot {
+  border-radius: 0 2em 2em 0;
+  flex-basis: calc(50% - 2em);
+  flex-grow: 0;
+  flex-shrink: 0;
+  justify-content: center;
+  margin: 1em;
+  max-width: calc(50% - 2em);
+  padding-bottom: 1em;
+  padding-top: 1em;
 }
 
 .h5p-flashcards .h5p-foot.h5p-no-answer {
@@ -322,14 +386,22 @@
   text-align: center;
   overflow: hidden;
   max-width: 32em;
-  padding: 0.75em;
-  margin: auto;
   color: #27344e;
   font-size: 1.5em;
   line-height: 1em;
   font-weight: 300;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-wrap: anywhere;
+}
+
+.h5p-flashcards:not(.h5p-landscape) .h5p-imagetext {
+  margin: auto;
+  padding: 0.75em;
+}
+
+.h5p-flashcards.h5p-landscape .h5p-imagetext {
+  padding: 0 0.75em 0.75em 0.75em;
 }
 
 .h5p-flashcards .h5p-imagetext:first-letter {
@@ -955,9 +1027,16 @@ button::-moz-focus-inner {
 .h5p-flashcards .h5p-flashcards-audio-button-wrapper {
   font-size: 1.5em;
   position: absolute;
-  right: -.25em;
   top: -.25em;
   z-index: 1;
+}
+
+.h5p-flashcards:not(.h5p-landscape) .h5p-flashcards-audio-button-wrapper {
+  right: -.25em;
+}
+
+.h5p-flashcards.h5p-landscape .h5p-flashcards-audio-button-wrapper {
+  left: -.25em;
 }
 
 .h5p-flashcards .h5p-flashcards-audio-button-wrapper .h5p-audio-minimal-button {

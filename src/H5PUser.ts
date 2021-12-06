@@ -60,6 +60,7 @@ export default class H5PUser {
      * @return {IH5PUser} User data from request.
      */
     private async getFromRequest(req: Request): Promise<IH5PUser> {
+        return null;
         const cookieString: string = req.headers.cookie;
         if (!cookieString) {
             return null; // No cookies

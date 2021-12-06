@@ -97,100 +97,100 @@ export default function (
     // );
 
     // Route for posting content state data for a user
-    router.post(
-        '/contentUserData/:contentId/:dataType/:subContentId',
-        async (req: express.Request, res: express.Response): Promise<void> => {
-            const userId = await new H5P.H5PUser(req).getId();
+    // router.post(
+    //     '/contentUserData/:contentId/:dataType/:subContentId',
+    //     async (req: express.Request, res: express.Response): Promise<void> => {
+    //         const userId = await new H5P.H5PUser(req).getId();
 
-            if (
-                !req.body.data ||
-                !req.body.preload ||
-                !req.body.invalidate ||
-                !req.params.contentId ||
-                !req.params.dataType ||
-                !req.params.subContentId ||
-                !userId
-            ) {
-                res.status(400).send('Invalid request').end();
-                return;
-            }
+    //         if (
+    //             !req.body.data ||
+    //             !req.body.preload ||
+    //             !req.body.invalidate ||
+    //             !req.params.contentId ||
+    //             !req.params.dataType ||
+    //             !req.params.subContentId ||
+    //             !userId
+    //         ) {
+    //             res.status(400).send('Invalid request').end();
+    //             return;
+    //         }
 
-            h5pPlayer.getContentUserDataStorage().set({
-                userId: userId,
-                contentId: req.params.contentId,
-                subContentId: req.params.subContentId,
-                dataType: req.params.dataType,
-                data: req.body.data,
-                invalidate: req.body.invalidate === '0' ? 0 : 1,
-                preload: req.body.preload === '0' ? 0 : 1,
-                updatedAt: Date.now()
-            });
+    //         h5pPlayer.getContentUserDataStorage().set({
+    //             userId: userId,
+    //             contentId: req.params.contentId,
+    //             subContentId: req.params.subContentId,
+    //             dataType: req.params.dataType,
+    //             data: req.body.data,
+    //             invalidate: req.body.invalidate === '0' ? 0 : 1,
+    //             preload: req.body.preload === '0' ? 0 : 1,
+    //             updatedAt: Date.now()
+    //         });
 
-            res.status(200).send({ success: true }).end();
-        }
-    );
+    //         res.status(200).send({ success: true }).end();
+    //     }
+    // );
 
-    // Route for getting content state data for a user
-    router.get(
-        '/contentUserData',
-        async (req: express.Request, res: express.Response): Promise<void> => {
-            const userId = await new H5P.H5PUser(req).getId();
+    // // Route for getting content state data for a user
+    // router.get(
+    //     '/contentUserData',
+    //     async (req: express.Request, res: express.Response): Promise<void> => {
+    //         const userId = await new H5P.H5PUser(req).getId();
 
-            if (
-                !req.query.contentId ||
-                !req.query.dataType ||
-                !req.query.subContentId ||
-                !userId
-            ) {
-                res.status(400).send('Invalid request').end();
-                return;
-            }
+    //         if (
+    //             !req.query.contentId ||
+    //             !req.query.dataType ||
+    //             !req.query.subContentId ||
+    //             !userId
+    //         ) {
+    //             res.status(400).send('Invalid request').end();
+    //             return;
+    //         }
 
-            res.send(
-                await h5pPlayer
-                    .getContentUserDataStorage()
-                    .getData(
-                        req.query.contentId as string,
-                        userId,
-                        req.query.subContentId as string,
-                        req.query.dataType as string
-                    )
-            )
-                .status(200)
-                .end();
-        }
-    );
+    //         res.send(
+    //             await h5pPlayer
+    //                 .getContentUserDataStorage()
+    //                 .getData(
+    //                     req.query.contentId as string,
+    //                     userId,
+    //                     req.query.subContentId as string,
+    //                     req.query.dataType as string
+    //                 )
+    //         )
+    //             .status(200)
+    //             .end();
+    //     }
+    // );
 
-    // Route for getting content state data for a user
-    router.get(
-        '/contentUserData/:contentId/:dataType/:subContentId',
-        async (req: express.Request, res: express.Response): Promise<void> => {
-            const userId = await new H5P.H5PUser(req).getId();
+    // // Route for getting content state data for a user
+    // router.get(
+    //     '/contentUserData/:contentId/:dataType/:subContentId',
+    //     async (req: express.Request, res: express.Response): Promise<void> => {
+    //         const userId = await new H5P.H5PUser(req).getId();
 
-            if (
-                !req.params.contentId ||
-                !req.params.dataType ||
-                !req.params.subContentId ||
-                !userId
-            ) {
-                res.status(400).send('Invalid request').end();
-                return;
-            }
+    //         if (
+    //             !req.params.contentId ||
+    //             !req.params.dataType ||
+    //             !req.params.subContentId ||
+    //             !userId
+    //         ) {
+    //             res.status(400).send('Invalid request').end();
+    //             return;
+    //         }
 
-            res.send(
-                await h5pPlayer
-                    .getContentUserDataStorage()
-                    .getData(
-                        req.params.contentId,
-                        userId,
-                        req.params.subContentId,
-                        req.params.dataType
-                    )
-            )
-                .status(200)
-                .end();
-        }
-    );
+    //         res.send(
+    //             await h5pPlayer
+    //                 .getContentUserDataStorage()
+    //                 .getData(
+    //                     req.params.contentId,
+    //                     userId,
+    //                     req.params.subContentId,
+    //                     req.params.dataType
+    //                 )
+    //         )
+    //             .status(200)
+    //             .end();
+    //     }
+    // );
 
     /*
      * TODO: delete route + function to delete data for user (required if user is removed or garbage collection cron)

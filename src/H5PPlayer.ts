@@ -294,13 +294,13 @@ export default class H5PPlayer {
         return {
             XAPI_EVENTS_ENDPOINT,
             AUDIO_SERVICE_ENDPOINT,
-            ajax: {
-                contentUserData:
-                    '/h5p/contentUserData/:contentId/:dataType/:subContentId'
-            },
+            // ajax: {
+            //     contentUserData:
+            //         '/h5p/contentUserData/:contentId/:dataType/:subContentId'
+            // },
             contents: {
                 [`cid-${contentId}`]: {
-                    contentUserData: await this.getPreviousState(contentId),
+                    //contentUserData: await this.getPreviousState(contentId),
                     displayOptions: {
                         copy: false,
                         copyright: false,
@@ -334,7 +334,7 @@ export default class H5PPlayer {
             },
             libraryConfig: this.config.libraryConfig,
             postUserStatistics: false,
-            saveFreq: this.config.saveFrequency,
+            //saveFreq: this.config.saveFrequency,
             user: this.user
                 ? await this.user.getH5PIntegrationUser()
                 : undefined,

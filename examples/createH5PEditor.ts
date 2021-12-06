@@ -32,17 +32,18 @@ export default async function createH5PEditor(
 ): Promise<H5P.H5PEditor> {
     // Depending on the environment variables we use different implementations
     // of the storage interfaces.
-    const contentUserDataStorageManager =
-        process.env.CONTENTUSERDATASTORAGE !== 'mongo'
-            ? new H5P.fsImplementations.FileContentUserDataStorage(
-                  localContentUserDataPath
-              )
-            : new dbImplementations.MongoContentUserDataStorage(
-                  (await dbImplementations.initMongo()).collection(
-                      process.env.MONGODB_COLLECTION_CONTENTUSERDATA ||
-                          'h5p-content-user-data'
-                  )
-              );
+    // const contentUserDataStorageManager =
+    //     process.env.CONTENTUSERDATASTORAGE !== 'mongo'
+    //         ? new H5P.fsImplementations.FileContentUserDataStorage(
+    //               localContentUserDataPath
+    //           )
+    //         : new dbImplementations.MongoContentUserDataStorage(
+    //               (await dbImplementations.initMongo()).collection(
+    //                   process.env.MONGODB_COLLECTION_CONTENTUSERDATA ||
+    //                       'h5p-content-user-data'
+    //               )
+    //           );
+    const contentUserDataStorageManager = undefined;
 
     const h5pEditor = new H5P.H5PEditor(
         new H5P.fsImplementations.InMemoryStorage(), // this is a general-purpose cache

@@ -259,14 +259,51 @@ H5P.MarkTheWords = (function ($, Question, Word, KeyboardNav, XapiGenerator) {
 
     $wordContainer.appendTo($container);
 
-    // A11y clickable list label
-    this.$a11yClickableTextLabel = $('<div>', {
-      'class': 'hidden-but-read',
-      html: self.params.a11yClickableTextLabel,
-      tabIndex: '-1',
-    }).appendTo($container);
-
     self.$wordContainer = $wordContainer;
+
+    /*
+     * Append hidden a11y feedback after buttons are in DOM.
+     * KidsLoop customization to allow scrolling to bottom on check.
+     * Decreases accessibility as focus will be under buttons afterwards.
+     */
+    self.waitForButtons(function () {
+      // A11y clickable list label
+      self.$a11yClickableTextLabel = $('<div>', {
+        'class': 'hidden-but-read',
+        html: self.params.a11yClickableTextLabel,
+        tabIndex: '-1',
+      }).appendTo(self.$inner.closest('.h5p-container'));
+    });
+  };
+
+  /**
+   * Wait for H5P.Question buttons to be present.
+   * @param {function} callback Callback function.
+   */
+  MarkTheWords.prototype.waitForButtons = function (callback, interval, tries) {
+    const that = this;
+
+    if (tries < 0) {
+      return;
+    }
+
+    if (typeof tries !== 'number') {
+      tries = 10;
+    }
+
+    if (typeof interval !== 'number' || interval < 100) {
+      interval = 100;
+    }
+
+    if (this.$inner.closest('.h5p-container').find('.h5p-question-buttons').length) {
+      callback();
+      return;
+    }
+
+    clearTimeout(this.waitForButtonsTimeout);
+    this.waitForButtonsTimeout = setTimeout(function () {
+      that.waitForButtons(callback, interval, tries - 1);
+    }, interval);
   };
 
   /**

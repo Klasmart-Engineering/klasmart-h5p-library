@@ -1,0 +1,69 @@
+version: "3.7"
+
+services:
+    node_1:
+        container_name: node_1
+        image: cockroachdb/cockroach:v21.1.12
+        hostname: node_1
+        volumes:
+           - ./data/node_1:/cockroach/cockroach-data
+        command: start --insecure --join=node_1,node_2 --advertise-host=localhost
+        ports:
+           - "26257:26257"
+           - "8000:8080"
+        networks:
+            cockroachdb_net:
+                aliases:
+                   - node_1
+    node_2:
+        container_name: node_2
+        image: cockroachdb/cockroach:v21.1.12
+        hostname: node_2
+        volumes:
+           - ./data/node_2:/cockroach/cockroach-data
+        command: start --insecure --join=node_1,node_2 --advertise-host=localhost
+        networks:
+            cockroachdb_net:
+                aliases:
+                   - node_2
+    minio1:
+        image: minio/minio
+        volumes:
+            - minio_data:/data
+        ports:
+            - "9000:9000"
+            - 43333:43333
+        command: ["server", "/data", "--console-address=:43333"]
+        environment:
+            MINIO_ROOT_USER: minioaccesskey
+            MINIO_ROOT_PASSWORD: miniosecret   
+        networks:
+            - cockroachdb_net
+    h5p:
+        image: h5p:latest
+        ports: 
+            - 8080:8080
+        environment:
+            CONTENTSTORAGE: typeorms3
+            LIBRARYSTORAGE: typeorms3
+            S3_ENDPOINT: http://minio1:9000
+            TYPEORM_CONTENT_REGION: us-east-2
+            TYPEORM_LIBRARY_REGION: us-east-2
+            S3_STORAGE_BUCKET: kidsloop-h5p-content-storage
+            H5P_STORAGE_ENV: cockroach
+            H5P_PG_HOST: node_1
+            H5P_PG_USER: root
+            H5P_PG_PORT: 26257
+            H5P_PG_DATABASE: defaultdb
+            H5P_PG_PASSWORD: ""
+            DEBUG: "*"
+            AWS_ACCESS_KEY_ID: "minioaccesskey"
+            AWS_SECRET_ACCESS_KEY: "miniosecret"
+        networks: 
+            - cockroachdb_net       
+volumes:
+    minio_data:
+
+networks:
+    cockroachdb_net:
+        driver: bridge

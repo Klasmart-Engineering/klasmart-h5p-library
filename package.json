@@ -61,6 +61,7 @@
         }
     ],
     "dependencies": {
+        "@lumieducation/h5p-server": "^9.0.5",
         "@types/react": "^16.9.35",
         "ajv": "^6.12.0",
         "axios": "^0.21.1",
@@ -70,7 +71,7 @@
         "escape-html": "^1.0.3",
         "fs-extra": "^9.0.0",
         "glob-promise": "^3.4.0",
-        "h5p-typeorm": "git+ssh://git@bitbucket.org/calmisland/h5p-typeorm#v0.1.8",
+        "h5p-typeorm": "git+ssh://git@bitbucket.org/calmisland/h5p-typeorm#v0.1.9",
         "image-size": "^0.8.3",
         "jsonpath": "^1.1.1",
         "jsonwebtoken": "^8.5.1",

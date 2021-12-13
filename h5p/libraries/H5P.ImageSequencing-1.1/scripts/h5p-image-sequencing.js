@@ -45,6 +45,10 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
       }
     }, parameters);
 
+    if (that.params.sequenceImages.length < that.params.behaviour.maxColumns) {
+      that.params.behaviour.maxColumns = that.params.sequenceImages.length;
+    }
+
     // Initialize event inheritance
     EventDispatcher.call(that);
 

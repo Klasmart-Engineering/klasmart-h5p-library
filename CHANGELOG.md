@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.6.0..v2.5.1) (2021-12-13)
+
+
+### Features
+
+* **H5P-385:** usability enhancements ([4fa0c83](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/4fa0c837896805fa734529718e7cdb753afdf63f))
+* **H5P-390:** scroll automatically after input ([8b80288](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/8b80288abd7df5bd7248926f3b35a2ba5c828fca))
+
+
+### Bug Fixes
+
+* **H5P-425:** crash when using GoToSlide feature ([ec86a3c](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/ec86a3cb690180a5af9e70a8cce323409d919432))
+
 ### [2.5.1](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.5.0...v2.5.1) (2021-12-06)
 
 

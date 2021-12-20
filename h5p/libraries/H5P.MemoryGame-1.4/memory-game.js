@@ -567,18 +567,9 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
 
       let maxCardsHeight = Infinity;
 
-      /*
-       * KidsLoop customization (hack). Live view requires to limit the height
-       * and prevent scrolling, but H5P content cannot know what the platform
-       * UI uses of vertical space.
-       */
-      this.initialContentHeight = this.initialContentHeight || Math.floor(this.$container.get(0).offsetHeight);
-
       // Check how much space we have available
       const displayLimits = this.computeDisplayLimits();
       if (displayLimits && displayLimits.height && this.wasInitialized) {
-        displayLimits.height = Math.min(this.initialContentHeight, displayLimits.height);
-
         const cardOuter = $elements[0];
         cardInner = cardOuter.querySelector('.h5p-memory-card');
         const fontScale = (cardInner.offsetHeight + 0.5 * (cardOuter.offsetHeight - cardInner.offsetHeight)) / cardOuter.offsetHeight;
@@ -630,6 +621,7 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
     };
 
     console.log('screen', screenSize.height, 'viewport', topWindow.innerHeight, 'h5p-container', this.$container.get(0).offsetHeight);
+    console.log('document', document, 'body', document.body);
 
     // Smallest value of viewport and container wins
     return {

@@ -12,7 +12,7 @@
     var self = this;
 
     // Initialize event inheritance
-    Timer.call(self, 100);
+    Timer.call(self, 1000);
 
     /** @private {string} */
     var naturalState = element.innerText;

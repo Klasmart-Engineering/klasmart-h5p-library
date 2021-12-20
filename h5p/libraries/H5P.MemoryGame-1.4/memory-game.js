@@ -425,6 +425,10 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
      * @param {H5P.jQuery} $container
      */
     self.attach = function ($container) {
+      const that = this;
+
+      this.$container = $container;
+
       this.triggerXAPI('attempted');
       // TODO: Only create on first attach!
       $wrapper = $container.addClass('h5p-memory-game').html('');
@@ -502,6 +506,12 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
 
         $list.appendTo($container);
       }
+
+      //
+      this.trigger('resize');
+      setTimeout(function () {
+        that.trigger('resize');
+      }, 0);
     };
 
     /**
@@ -512,17 +522,13 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
      * @private
      */
     var scaleGameSize = function () {
+      const that = this;
 
       // Check how much space we have available
-      var $list = $wrapper.children('ul');
+      var $list = this.$container.children('ul');
+      $list.css('max-width', '');
 
-      var newMaxWidth = parseFloat(window.getComputedStyle($list[0]).width);
-      if (maxWidth === newMaxWidth) {
-        return; // Same size, no need to recalculate
-      }
-      else {
-        maxWidth = newMaxWidth;
-      }
+      const maxWidth = parseFloat(window.getComputedStyle($list[0]).width);
 
       // Get the card holders
       var $elements = $list.children();
@@ -557,11 +563,30 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
         });
       }
 
+      const numRows = Math.ceil($elements.length / numCols);
+
+      let maxCardsHeight = Infinity;
+
+      // Check how much space we have available
+      const displayLimits = this.computeDisplayLimits();
+      if (displayLimits && displayLimits.height && this.wasInitialized) {
+        const cardOuter = $elements[0];
+        cardInner = cardOuter.querySelector('.h5p-memory-card');
+        const fontScale = (cardInner.offsetHeight + 0.5 * (cardOuter.offsetHeight - cardInner.offsetHeight)) / cardOuter.offsetHeight;
+
+        const containerHeight = this.$container.outerHeight();
+        const footerHeight = this.$container.find('.h5p-status').outerHeight(true);
+        maxCardsHeight = (displayLimits.height - footerHeight) * fontScale; // Account for shadows
+
+        $list.css('max-width', $(cardInner).outerWidth(true) * numCols + 'px');
+      }
+      this.wasInitialized = true;
+
       // Calculate how much one percentage of the standard/default size is
       var onePercentage = ((CARD_STD_SIZE * numCols) + STD_FONT_SIZE) / 100;
       var paddingSize = (STD_FONT_SIZE * LIST_PADDING) / onePercentage;
-      var cardSize = (100 - paddingSize) / numCols;
-      var fontSize = (((maxWidth * (cardSize / 100)) * STD_FONT_SIZE) / CARD_STD_SIZE);
+      var cardSize = (100 - paddingSize) / Math.max(numCols, numRows);
+      var fontSize = (((Math.min(maxCardsHeight, maxWidth) * (cardSize / 100)) * STD_FONT_SIZE) / CARD_STD_SIZE);
 
       // We use font size to evenly scale all parts of the cards.
       $list.css('font-size', fontSize + 'px');
@@ -577,6 +602,69 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
   // Extends the event dispatcher
   MemoryGame.prototype = Object.create(EventDispatcher.prototype);
   MemoryGame.prototype.constructor = MemoryGame;
+
+  /**
+   * Compute display limits.
+   * @return {object|null} Height and width in px or null if cannot be determined.
+   */
+  MemoryGame.prototype.computeDisplayLimits = function () {
+    let topWindow = this.getTopWindow();
+
+    // iOS doesn't change screen dimensions on rotation
+    let screenSize = (this.isIOS() && window.orientation === 90) ?
+      { height: screen.width, width: screen.height } :
+      { height: screen.height, width: screen.width };
+
+    topWindow = topWindow || {
+      innerHeight: screenSize.height,
+      innerWidth: screenSize.width
+    };
+
+    // Smallest value of viewport and container wins
+    return {
+      height: Math.min(topWindow.innerHeight, screenSize.height),
+      width: Math.min(topWindow.innerWidth, this.$container.get(0).offsetWidth)
+    };
+  };
+
+  /**
+   * Detect whether user is running iOS.
+   * @return {boolean} True, if user is running iOS.
+   */
+  MemoryGame.prototype.isIOS = function () {
+    return (
+      ['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone', 'iPod'].includes(navigator.platform) ||
+      (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
+    );
+  };
+
+  /**
+	 * Get top DOM Window object.
+	 * @param {Window} [startWindow=window] Window to start looking from.
+	 * @return {Window|null} Top window.
+	 */
+  MemoryGame.prototype.getTopWindow = function (startWindow) {
+    let sameOrigin;
+    startWindow = startWindow || window;
+
+    // H5P iframe may be on different domain than iframe content
+    try {
+      sameOrigin = startWindow.parent.location.host === window.location.host;
+    }
+    catch (error) {
+      sameOrigin = null;
+    }
+
+    if (!sameOrigin) {
+      return null;
+    }
+
+    if (startWindow.parent === startWindow || ! startWindow.parent) {
+      return startWindow;
+    }
+
+    return this.getTopWindow(startWindow.parent);
+  };
 
   /**
    * Determine color contrast level compared to white(#fff)

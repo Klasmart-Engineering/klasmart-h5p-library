@@ -568,15 +568,8 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       let maxCardsHeight = Infinity;
 
       // Check how much space we have available
-      const displayLimits = this.computeDisplayLimits();
+      const displayLimits = this.computeDisplayLimitsKLL();
       if (displayLimits && displayLimits.height && this.wasInitialized) {
-
-        /*
-         * This works for Memory Game, because it's not using its own
-         * iframe and document.body may be the body of the KLL `recordediframe`.
-         */
-        displayLimits.height = Math.min(document.body.offsetHeight, displayLimits.height);
-
         const cardOuter = $elements[0];
         cardInner = cardOuter.querySelector('.h5p-memory-card');
         const fontScale = (cardInner.offsetHeight + 0.5 * (cardOuter.offsetHeight - cardInner.offsetHeight)) / cardOuter.offsetHeight;
@@ -632,6 +625,18 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       height: Math.min(topWindow.innerHeight, screenSize.height),
       width: Math.min(topWindow.innerWidth, this.$container.get(0).offsetWidth)
     };
+  };
+
+  /**
+   * Compute display limits for KidsLoop Live.
+   * @return {object|null} Height and width in px or null if cannot be determined.
+   */
+  MemoryGame.prototype.computeDisplayLimitsKLL = function () {
+    const displayLimits = this.computeDisplayLimits();
+
+    // This only works because KLL enforces height on H5P's iframe
+    displayLimits.height = Math.min(displayLimits.height, document.body.offsetHeight);
+    return displayLimits;
   };
 
   /**

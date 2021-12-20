@@ -27,12 +27,13 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .h5p-memory-game img {
   -webkit-user-drag: none;
   display: inline-block !important;
-  margin: auto !important;
-  vertical-align: middle;
   position: relative;
 }
 .h5p-memory-game .h5p-memory-wrap {

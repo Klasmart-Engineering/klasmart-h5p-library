@@ -22,7 +22,7 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
     // Initialize event inheritance
     EventDispatcher.call(self);
 
-    var flipped, timer, counter, popup, $bottom, $taskComplete, $feedback, $wrapper, maxWidth, numCols, audioCard;
+    var flipped, timer, counter, popup, $bottom, $taskComplete, $feedback, $wrapper, numCols, audioCard;
     var cards = [];
     var flipBacks = []; // Que of cards to be flipped back
     var numFlipped = 0;
@@ -48,6 +48,8 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
         cardMatched: 'Match found.'
       }
     }, parameters);
+
+    this.parameters = parameters;
 
     /**
      * Check if these two cards belongs together.
@@ -185,7 +187,6 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
 
         // Scale new layout
         $wrapper.children('ul').children('.h5p-row-break').removeClass('h5p-row-break');
-        maxWidth = -1;
         self.trigger('resize');
         cards[0].setFocus();
       }, 600);
@@ -425,6 +426,10 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
      * @param {H5P.jQuery} $container
      */
     self.attach = function ($container) {
+      const that = this;
+
+      this.$container = $container;
+
       this.triggerXAPI('attempted');
       // TODO: Only create on first attach!
       $wrapper = $container.addClass('h5p-memory-game').html('');
@@ -435,6 +440,7 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       // Add cards to list
       var $list = $('<ul/>', {
         role: 'application',
+        'class': 'h5p-memory-game-cards-list',
         'aria-labelledby': 'h5p-intro-' + numInstances
       });
       for (var i = 0; i < cards.length; i++) {
@@ -490,13 +496,14 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
         timer = new MemoryGame.Timer($status.find('time')[0]);
         counter = new MemoryGame.Counter($status.find('.h5p-card-turns'));
         popup = new MemoryGame.Popup($container, parameters.l10n);
+        this.popup = popup;
 
         $container.click(function () {
           popup.close();
         });
       }
       else {
-        const $foo = $('<div/>')
+        $('<div/>')
           .text('No card was added to the memory game!')
           .appendTo($list);
 
@@ -504,79 +511,208 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       }
     };
 
-    /**
-     * Will try to scale the game so that it fits within its container.
-     * Puts the cards into a grid layout to make it as square as possible –
-     * which improves the playability on multiple devices.
-     *
-     * @private
+    self.on('resize', this.scaleGameSize);
+
+    /*
+     * Workaround (hopefully temporary) for KidsLoopLive that for whatever
+     * reason does not use h5p-resizer.js.
      */
-    var scaleGameSize = function () {
-
-      // Check how much space we have available
-      var $list = $wrapper.children('ul');
-
-      var newMaxWidth = parseFloat(window.getComputedStyle($list[0]).width);
-      if (maxWidth === newMaxWidth) {
-        return; // Same size, no need to recalculate
-      }
-      else {
-        maxWidth = newMaxWidth;
-      }
-
-      // Get the card holders
-      var $elements = $list.children();
-      if ($elements.length < 4) {
-        return; // No need to proceed
-      }
-
-      // Determine the optimal number of columns
-      var newNumCols = this.forceCols || Math.ceil(Math.sqrt($elements.length));
-
-      // Keep layout if enforced even though cards may become too small
-      if (!parameters.behaviour.keepLayout) {
-        // Do not exceed the max number of columns
-        var maxCols = Math.floor(maxWidth / CARD_MIN_SIZE);
-        if (newNumCols > maxCols) {
-          newNumCols = maxCols;
-        }
-      }
-
-      if (numCols !== newNumCols) {
-        // We need to change layout
-        numCols = newNumCols;
-
-        // Calculate new column size in percentage and round it down (we don't
-        // want things sticking out…)
-        var colSize = Math.floor((100 / numCols) * 10000) / 10000;
-        $elements.css('width', colSize + '%').each(function (i, e) {
-          $(e).removeClass('h5p-row-break');
-          if (i === numCols) {
-            $(e).addClass('h5p-row-break');
-          }
-        });
-      }
-
-      // Calculate how much one percentage of the standard/default size is
-      var onePercentage = ((CARD_STD_SIZE * numCols) + STD_FONT_SIZE) / 100;
-      var paddingSize = (STD_FONT_SIZE * LIST_PADDING) / onePercentage;
-      var cardSize = (100 - paddingSize) / numCols;
-      var fontSize = (((maxWidth * (cardSize / 100)) * STD_FONT_SIZE) / CARD_STD_SIZE);
-
-      // We use font size to evenly scale all parts of the cards.
-      $list.css('font-size', fontSize + 'px');
-      popup.setSize(fontSize);
-      // due to rounding errors in browsers the margins may vary a bit…
-    };
-
-    if (parameters.behaviour && (parameters.behaviour.useGrid || parameters.behaviour.ratio.rows || parameters.behaviour.ratio.columns) && cardsToUse.length) {
-      self.on('resize', scaleGameSize);
-    }
+    window.addEventListener('resize', function () {
+      self.scaleGameSize();
+    });
   }
 
   // Extends the event dispatcher
   MemoryGame.prototype = Object.create(EventDispatcher.prototype);
   MemoryGame.prototype.constructor = MemoryGame;
+
+  MemoryGame.prototype.scaleGameSize = function () {
+    let cardConfigurations = [];
+
+    const $list = this.$container.children('ul');
+    $list.css('max-width', '');
+    const $elements = $list.children();
+
+    // Make sure we can meet the wishes
+    if (this.parameters.behaviour.ratio.columns && this.parameters.behaviour.ratio.rows &&
+      this.parameters.behaviour.ratio.columns * this.parameters.behaviour.ratio.rows !== $elements.length
+    ) {
+      delete this.parameters.behaviour.ratio.columns;
+      delete this.parameters.behaviour.ratio.rows;
+    }
+
+    /*
+     * Determine all possible card configurations, will be only 1 if either
+     * a square shape is aspired or number of columns/rows is specified
+     */
+    if (this.parameters.behaviour.useGrid) {
+      cardConfigurations = [{
+        cols: Math.ceil(Math.sqrt($elements.length)),
+        rows: Math.ceil($elements.length / Math.ceil(Math.sqrt($elements.length)))
+      }];
+    }
+    else if (this.parameters.behaviour.ratio.columns) {
+      cardConfigurations = [{
+        cols: this.parameters.behaviour.ratio.columns,
+        rows: Math.ceil($elements.length / this.parameters.behaviour.ratio.columns)
+      }];
+    }
+    else if (this.parameters.behaviour.ratio.rows) {
+      cardConfigurations = [{
+        rows: this.parameters.behaviour.ratio.rows,
+        cols: Math.ceil($elements.length / this.parameters.behaviour.ratio.rows)
+      }];
+    }
+    else {
+      for (let index = 1; index < $elements.length + 1; index++) {
+        cardConfigurations.push({
+          cols: index,
+          rows: Math.ceil($elements.length / index)
+        });
+      }
+    }
+
+    // Determine largest possible card size
+    const displayLimits = (this.isRoot()) ? this.computeDisplayLimitsKLL() : null;
+
+    if (displayLimits) {
+      cardConfigurations = cardConfigurations
+        .map(function (config) {
+          const displayRatio = displayLimits.width / displayLimits.height;
+
+          const cardSize = ((config.cols / config.rows / 1.16 > displayRatio)) ?
+            displayLimits.width / config.cols :
+            displayLimits.height / config.rows / 1.16;
+
+          return {
+            cols: config.cols,
+            rows: config.rows,
+            cardSize: Math.max(1, cardSize - 2) // Some buffer for weird mobile behavior
+          };
+        })
+        .sort(function (a, b) {
+          return b.cardSize - a.cardSize;
+        })
+        .shift();
+    }
+    else {
+      cardConfigurations[0].cardSize = 100;
+    }
+
+    $elements.css('width', cardConfigurations.cardSize + 'px').each(function (i, e) {
+      $(e).removeClass('h5p-row-break');
+      if (i === cardConfigurations.cols) {
+        $(e).addClass('h5p-row-break');
+      }
+    });
+
+    // We use font size to evenly scale all parts of the cards.
+    $list.css('font-size', cardConfigurations.cardSize / 7.5 + 'px');
+    $list.css('max-width', (cardConfigurations.cardSize + 2) * cardConfigurations.cols + 'px');
+    this.popup.setSize(cardConfigurations.cardSize / 7.5);
+  };
+
+  /**
+   * Compute display limits.
+   * @return {object|null} Height and width in px or null if cannot be determined.
+   */
+  MemoryGame.prototype.computeDisplayLimits = function () {
+    let topWindow = this.getTopWindow();
+
+    // iOS doesn't change screen dimensions on rotation
+    let screenSize = (this.isIOS() && this.getOrientation() === 'landscape') ?
+      { height: screen.width, width: screen.height } :
+      { height: screen.height, width: screen.width };
+
+    topWindow = topWindow || {
+      innerHeight: screenSize.height,
+      innerWidth: screenSize.width
+    };
+
+    // Smallest value of viewport and container wins
+    return {
+      height: Math.min(topWindow.innerHeight, screenSize.height),
+      width: Math.min(topWindow.innerWidth, this.$container.get(0).offsetWidth)
+    };
+  };
+
+  /**
+   * Compute display limits for KidsLoop Live.
+   * @return {object|null} Height and width in px or null if cannot be determined.
+   */
+  MemoryGame.prototype.computeDisplayLimitsKLL = function () {
+    const displayLimits = this.computeDisplayLimits();
+
+    // This only works because KLL enforces height on H5P's iframe
+    displayLimits.height = Math.min(displayLimits.height, document.body.offsetHeight);
+    return displayLimits;
+  };
+
+  /**
+   * Detect whether user is running iOS.
+   * @return {boolean} True, if user is running iOS.
+   */
+  MemoryGame.prototype.isIOS = function () {
+    return (
+      ['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone', 'iPod'].includes(navigator.platform) ||
+      (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
+    );
+  };
+
+  /**
+   * Get device orientation.
+   * @return {string} 'portrait' or 'landscape'.
+   */
+  MemoryGame.prototype.getOrientation = function () {
+    if (screen.orientation && screen.orientation.type) {
+      if (screen.orientation.type.includes('portrait')) {
+        return 'portrait';
+      }
+      else if (screen.orientation.type.includes('landscape')) {
+        return 'landscape';
+      }
+    }
+
+    // Unreliable, as not clear what device's natural orientation is
+    if (typeof window.orientation === 'number') {
+      if (window.orientation === 0 || window.orientation === 180) {
+        return 'portrait';
+      }
+      else if (window.orientation === 90 || window.orientation === -90 || window.orientation === 270) {
+        return 'landscape';
+      }
+    }
+
+    return 'landscape'; // Assume default
+  };
+
+  /**
+	 * Get top DOM Window object.
+	 * @param {Window} [startWindow=window] Window to start looking from.
+	 * @return {Window|null} Top window.
+	 */
+  MemoryGame.prototype.getTopWindow = function (startWindow) {
+    let sameOrigin;
+    startWindow = startWindow || window;
+
+    // H5P iframe may be on different domain than iframe content
+    try {
+      sameOrigin = startWindow.parent.location.host === window.location.host;
+    }
+    catch (error) {
+      sameOrigin = null;
+    }
+
+    if (!sameOrigin) {
+      return null;
+    }
+
+    if (startWindow.parent === startWindow || ! startWindow.parent) {
+      return startWindow;
+    }
+
+    return this.getTopWindow(startWindow.parent);
+  };
 
   /**
    * Determine color contrast level compared to white(#fff)

@@ -66,12 +66,30 @@ pipelines:
           name: "Push docker image to AWS"
           deployment: alpha
           image: python:3.9-alpine
-          script: *build-and-push-to-aws
           services:
             - docker
           size: 2x
           caches:
             - docker
+          script: *build-and-push-to-aws
+      - step:
+          name: "Deploy"
+          image: python:3.9-alpine
+          script:
+            - ls -la
+            - pip3 install -U awscli
+            - pipe: atlassian/aws-ecs-deploy:1.6.1
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_ALPHA_OLD
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_ALPHA_OLD
+                AWS_DEFAULT_REGION: 'ap-northeast-2'
+                CLUSTER_NAME: 'kidsloop-alpha'
+                SERVICE_NAME: 'kidsloop-alpha-h5p'
+                FORCE_NEW_DEPLOYMENT: 'true'
+                WAIT: 'true'
+            - export AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID_ALPHA_OLD" AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY_ALPHA_OLD"
+            - aws cloudfront create-invalidation --distribution-id "E2RNE9HGMPLWTO" --paths "/h5p/libraries/*" "/h5p/play/*" # h5p.alpha.kidsloop.net
+            - aws cloudfront create-invalidation --distribution-id "E2694SIA1FLALO" --paths "/h5p/libraries/*" "/h5p/play/*" # live.alpha.kidsloop.net
       - step: *slack-notification
     production:
       - step:
@@ -90,41 +108,6 @@ pipelines:
           caches:
             - docker
       - step: *slack-notification
-    alpha-debug:
-      - step:
-          name: Atlassian Security Secrets Scan
-          script:
-            - pipe: atlassian/git-secrets-scan:0.5.1
-      - step: *fetch-npm-dependencies
-      - step:
-          name: "Push docker image to AWS and deploy"
-          image: python:3.9-alpine
-          services:
-            - docker
-          size: 2x
-          caches:
-            - docker
-          script:
-            - ls -la
-            - pip3 install -U awscli
-            - export REPO=$DOCKER_REPO_URL/kidsloop-h5p-service      # DOCKER_REPO_URL is workspace wide variable
-            - docker build --build-arg SSH_PRIVATE_KEY="$(cat /opt/atlassian/pipelines/agent/ssh/id_rsa)" -t kidsloop-h5p-service .
-            - aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin $DOCKER_REPO_URL
-            - docker tag kidsloop-h5p-service:latest $REPO:alpha
-            - docker push $REPO:alpha
-            - export AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID_ALPHA_OLD" AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY_ALPHA_OLD"
-            - aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 871601235178.dkr.ecr.ap-northeast-2.amazonaws.com
-            - pipe: atlassian/aws-ecs-deploy:1.6.1
-              variables:
-                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_ALPHA_OLD
-                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_ALPHA_OLD
-                AWS_DEFAULT_REGION: 'ap-northeast-2'
-                CLUSTER_NAME: 'kidsloop-alpha'
-                SERVICE_NAME: 'kidsloop-alpha-h5p'
-                FORCE_NEW_DEPLOYMENT: 'true'
-                WAIT: 'true'
-            - aws cloudfront create-invalidation --distribution-id "E2RNE9HGMPLWTO" --paths "/h5p/libraries/*" "/h5p/play/*" # h5p.alpha.kidsloop.net
-            - aws cloudfront create-invalidation --distribution-id "E2694SIA1FLALO" --paths "/h5p/libraries/*" "/h5p/play/*" # live.alpha.kidsloop.net
 
   custom:
     deploy:

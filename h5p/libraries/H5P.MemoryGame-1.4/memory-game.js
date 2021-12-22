@@ -22,7 +22,7 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
     // Initialize event inheritance
     EventDispatcher.call(self);
 
-    var flipped, timer, counter, popup, $bottom, $taskComplete, $feedback, $wrapper, maxWidth, numCols, audioCard;
+    var flipped, timer, counter, popup, $bottom, $taskComplete, $feedback, $wrapper, numCols, audioCard;
     var cards = [];
     var flipBacks = []; // Que of cards to be flipped back
     var numFlipped = 0;
@@ -185,7 +185,6 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
 
         // Scale new layout
         $wrapper.children('ul').children('.h5p-row-break').removeClass('h5p-row-break');
-        maxWidth = -1;
         self.trigger('resize');
         cards[0].setFocus();
       }, 600);
@@ -500,7 +499,7 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
         });
       }
       else {
-        const $foo = $('<div/>')
+        $('<div/>')
           .text('No card was added to the memory game!')
           .appendTo($list);
 
@@ -519,11 +518,11 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
      * Puts the cards into a grid layout to make it as square as possible –
      * which improves the playability on multiple devices.
      *
+     * Should be refactored once eventually all specs are known and stable.
+     *
      * @private
      */
     var scaleGameSize = function () {
-      const that = this;
-
       // Check how much space we have available
       var $list = this.$container.children('ul');
       $list.css('max-width', '');
@@ -536,16 +535,27 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
         return; // No need to proceed
       }
 
-      // Determine the optimal number of columns
-      var newNumCols = this.forceCols || Math.ceil(Math.sqrt($elements.length));
+      // Check how much space we have available
+      const displayLimits = this.computeDisplayLimitsKLL();
 
-      // Keep layout if enforced even though cards may become too small
-      if (!parameters.behaviour.keepLayout) {
-        // Do not exceed the max number of columns
-        var maxCols = Math.floor(maxWidth / CARD_MIN_SIZE);
-        if (newNumCols > maxCols) {
-          newNumCols = maxCols;
+      const enforceGrid = parameters.behaviour && (parameters.behaviour.useGrid || parameters.behaviour.ratio.rows || parameters.behaviour.ratio.columns) && cardsToUse.length;
+
+      var newNumCols;
+      if (enforceGrid) {
+        // Determine the optimal number of columns
+        newNumCols = this.forceCols || Math.ceil(Math.sqrt($elements.length));
+
+        // Keep layout if enforced even though cards may become too small
+        if (!parameters.behaviour.keepLayout) {
+          // Do not exceed the max number of columns
+          var maxCols = Math.floor(maxWidth / CARD_MIN_SIZE);
+          if (newNumCols > maxCols) {
+            newNumCols = maxCols;
+          }
         }
+      }
+      else {
+        newNumCols = Math.floor(displayLimits.width / CARD_MIN_SIZE);
       }
 
       if (numCols !== newNumCols) {
@@ -567,18 +577,16 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
 
       let maxCardsHeight = Infinity;
 
-      // Check how much space we have available
-      const displayLimits = this.computeDisplayLimitsKLL();
       if (displayLimits && displayLimits.height && this.wasInitialized) {
-        const cardOuter = $elements[0];
-        cardInner = cardOuter.querySelector('.h5p-memory-card');
-        const fontScale = (cardInner.offsetHeight + 0.5 * (cardOuter.offsetHeight - cardInner.offsetHeight)) / cardOuter.offsetHeight;
+        if (enforceGrid) {
+          const cardOuter = $elements[0];
+          var cardInner = cardOuter.querySelector('.h5p-memory-card');
+          const fontScale = (cardInner.offsetHeight + 0.5 * (cardOuter.offsetHeight - cardInner.offsetHeight)) / cardOuter.offsetHeight;
+          const footerHeight = this.$container.find('.h5p-status').outerHeight(true);
+          maxCardsHeight = (displayLimits.height - footerHeight) * fontScale; // Account for shadows
 
-        const containerHeight = this.$container.outerHeight();
-        const footerHeight = this.$container.find('.h5p-status').outerHeight(true);
-        maxCardsHeight = (displayLimits.height - footerHeight) * fontScale; // Account for shadows
-
-        $list.css('max-width', $(cardInner).outerWidth(true) * numCols + 'px');
+          $list.css('max-width', $(cardInner).outerWidth(true) * numCols + 'px');
+        }
       }
       this.wasInitialized = true;
 
@@ -594,9 +602,7 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       // due to rounding errors in browsers the margins may vary a bit…
     };
 
-    if (parameters.behaviour && (parameters.behaviour.useGrid || parameters.behaviour.ratio.rows || parameters.behaviour.ratio.columns) && cardsToUse.length) {
-      self.on('resize', scaleGameSize);
-    }
+    self.on('resize', scaleGameSize);
   }
 
   // Extends the event dispatcher

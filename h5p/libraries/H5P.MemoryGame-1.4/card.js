@@ -222,10 +222,10 @@
       $wrapper.attr('aria-label', l10n.cardPrefix.replace('%num', $wrapper.index() + 1) + ' ' + l10n.cardUnturned);
       $card = $wrapper.children('.h5p-memory-card')
         .children('.h5p-front')
-          .click(function () {
-            self.flip();
-          })
-          .end();
+        .click(function () {
+          self.flip();
+        })
+        .end();
 
       if (audioPlayer) {
         $wrapper.append(audioPlayer);
@@ -237,7 +237,7 @@
             else {
               audioPlayer.play();
             }
-          })
+          });
       }
     };
 
@@ -348,10 +348,10 @@
 
       styles.front += 'color:' + color + ';' +
                       'background-color:' + frontColor + ';' +
-                      'border-color:' + frontColor +';';
+                      'border-color:' + frontColor + ';';
       styles.back += 'color:' + color + ';' +
                      'background-color:' + backColor + ';' +
-                     'border-color:' + frontColor +';';
+                     'border-color:' + frontColor + ';';
     }
 
     // Add back image for card

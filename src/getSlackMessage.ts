@@ -67,13 +67,13 @@ async function getCommitHashOfLastPipelineByCurrentBranch(): Promise<
 async function getSlackMessage(
     commitHashOfLastPipelineByCurrentBranch: string
 ): Promise<string> {
-    let result = slackMessageHeader;
+    let result = slackMessageHeader + '\n';
     const currentState = branchName;
     const previousState = commitHashOfLastPipelineByCurrentBranch;
     const commits = await executeCliCommand(
         `git log ${previousState}..${currentState} --oneline --reverse | cut -d " " -f 1`
     );
-    for (const commit of commits.split('\n')) {
+    for (const commit of commits.split('\n').filter((x) => x)) {
         const header = await executeCliCommand(
             `git show --format="%s" -s ${commit}`
         );

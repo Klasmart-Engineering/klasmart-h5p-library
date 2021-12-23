@@ -29,7 +29,8 @@
         "test:integration": "npx jest --config jest.integration.config.js --maxWorkers=${BUILD_WORKERS-`nproc`} --logHeapUsage",
         "test:watch": "jest --watch",
         "test": "jest --logHeapUsage --maxWorkers=${BUILD_WORKERS-`nproc`}",
-        "uninstall": "rm -rf node_modules && rm -rf test/data/hub-content && rm test/data/content-type-cache/real-content-types.json && rm -rf h5p && rm -rf build"
+        "uninstall": "rm -rf node_modules && rm -rf test/data/hub-content && rm test/data/content-type-cache/real-content-types.json && rm -rf h5p && rm -rf build",
+        "get-slack-message": "ts-node src/getSlackMessage.ts"
     },
     "release": {
         "branch": "master"
@@ -64,7 +65,7 @@
         "@types/react": "^16.9.35",
         "ajv": "^6.12.0",
         "aws-sdk": "2.744.0",
-        "axios": "^0.21.1",
+        "axios": "^0.21.4",
         "body-parser": "1.19.0",
         "cookie": "^0.4.1",
         "cors": "^2.8.5",

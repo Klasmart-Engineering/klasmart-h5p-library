@@ -23,7 +23,7 @@ definitions:
         name: Slack Notification
         image: node:lts
         script:
-          - export SLACK_MESSAGE=$(npm run get-slack-message)
+          - export SLACK_MESSAGE=$(npm run --silent get-slack-message)
           - pipe: atlassian/slack-notify:2.0.0
             variables:
               WEBHOOK_URL: 'https://hooks.slack.com/services/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'

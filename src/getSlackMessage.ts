@@ -29,7 +29,7 @@ const password = process.env.BITBUCKET_PASSWORD;
 const previousBuildNumber = Number(process.env.BITBUCKET_BUILD_NUMBER) - 1;
 
 const maxPipelineLoops = 20;
-const slackMessageHeader = `A new build of H5P has been pushed to the "${branchName}" branch.`;
+const slackMessageHeader = `🔔 A new build of H5P has been deployed from the "${branchName}" branch.`;
 const pipelinesUrl = `https://${user}:${password}@api.bitbucket.org/2.0/repositories/${workspace}/${repository}/pipelines`;
 
 const bitBucketRequest: AxiosRequestConfig = {
@@ -85,9 +85,7 @@ async function getSlackMessage(
 async function main(): Promise<string> {
     const commitHashOfLastPipelineByCurrentBranch = await getCommitHashOfLastPipelineByCurrentBranch();
     if (!commitHashOfLastPipelineByCurrentBranch) {
-        console.log(
-            `Unable to find a previous pipeline for "${branchName}" branch. Returning default message.`
-        );
+        // Unable to find a previous pipeline for "${branchName}" branch. Returning default message.
         return slackMessageHeader;
     }
     const slackMessage = await getSlackMessage(
@@ -98,12 +96,8 @@ async function main(): Promise<string> {
 
 main()
     .then((slackMessage) => {
-        return slackMessage;
+        console.log(slackMessage);
     })
     .catch((e) => {
-        console.log(
-            'An error occured generating the slack message. Returning default message. Error:',
-            e
-        );
-        return slackMessageHeader;
+        console.log(slackMessageHeader);
     });

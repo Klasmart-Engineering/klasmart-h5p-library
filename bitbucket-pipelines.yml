@@ -21,11 +21,13 @@ definitions:
           - node_modules/**/*
     - step: &slack-notification
         name: Slack Notification
+        image: node:lts
         script:
-          - pipe: atlassian/slack-notify:1.0.1
+          - export SLACK_MESSAGE=$(npm run --silent get-slack-message)
+          - pipe: atlassian/slack-notify:2.0.0
             variables:
               WEBHOOK_URL: 'https://hooks.slack.com/services/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'
-              MESSAGE: 'A new build of H5P ($BITBUCKET_COMMIT) has been push with the "$BITBUCKET_BRANCH" tag'
+              MESSAGE: "$SLACK_MESSAGE"
 
   script: &build-and-push-to-aws
     - ls -la

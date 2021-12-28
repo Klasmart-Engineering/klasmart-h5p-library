@@ -538,15 +538,16 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       // Check how much space we have available
       const displayLimits = this.computeDisplayLimitsKLL();
 
-      const enforceGrid = parameters.behaviour && (parameters.behaviour.useGrid || parameters.behaviour.ratio.rows || parameters.behaviour.ratio.columns) && cardsToUse.length;
+      let enforceGrid = parameters.behaviour && (parameters.behaviour.useGrid || parameters.behaviour.ratio.rows || parameters.behaviour.ratio.columns) && cardsToUse.length;
+      let kllHeightOverride = (displayLimits && displayLimits.width < 400);
 
       var newNumCols;
-      if (enforceGrid) {
+      if (enforceGrid || kllHeightOverride) {
         // Determine the optimal number of columns
         newNumCols = this.forceCols || Math.ceil(Math.sqrt($elements.length));
 
         // Keep layout if enforced even though cards may become too small
-        if (!parameters.behaviour.keepLayout) {
+        if (!parameters.behaviour.keepLayout && !kllHeightOverride) {
           // Do not exceed the max number of columns
           var maxCols = Math.floor(maxWidth / CARD_MIN_SIZE);
           if (newNumCols > maxCols) {
@@ -578,17 +579,16 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       let maxCardsHeight = Infinity;
 
       if (displayLimits && displayLimits.height && this.wasInitialized) {
-        if (enforceGrid) {
-          const cardOuter = $elements[0];
-          var cardInner = cardOuter.querySelector('.h5p-memory-card');
-          const fontScale = (cardInner.offsetHeight + 0.5 * (cardOuter.offsetHeight - cardInner.offsetHeight)) / cardOuter.offsetHeight;
-          const footerHeight = this.$container.find('.h5p-status').outerHeight(true);
-          maxCardsHeight = (displayLimits.height - footerHeight) * fontScale; // Account for shadows
+        const cardOuter = $elements[0];
+        var cardInner = cardOuter.querySelector('.h5p-memory-card');
+        const fontScale = (cardInner.offsetHeight + 0.5 * (cardOuter.offsetHeight - cardInner.offsetHeight)) / cardOuter.offsetHeight;
+        const footerHeight = this.$container.find('.h5p-status').outerHeight(true);
 
+        if (numRows * CARD_MIN_SIZE > displayLimits.height) {
+          maxCardsHeight = (displayLimits.height - footerHeight) * fontScale; // Account for shadows
           $list.css('max-width', $(cardInner).outerWidth(true) * numCols + 'px');
         }
       }
-      this.wasInitialized = true;
 
       // Calculate how much one percentage of the standard/default size is
       var onePercentage = ((CARD_STD_SIZE * numCols) + STD_FONT_SIZE) / 100;
@@ -600,6 +600,15 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       $list.css('font-size', fontSize + 'px');
       popup.setSize(fontSize);
       // due to rounding errors in browsers the margins may vary a bit…
+
+      // Workaround for KidsLoop Live that is NOT using the H5P resizer.
+      if (!this.wasInitialized) {
+        setTimeout(() => {
+          this.trigger('resize');
+        }, 500);
+      }
+
+      this.wasInitialized = true;
     };
 
     self.on('resize', scaleGameSize);

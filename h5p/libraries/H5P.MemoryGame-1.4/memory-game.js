@@ -537,7 +537,6 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
 
       // Check how much space we have available
       const displayLimits = this.computeDisplayLimitsKLL();
-      console.log('resulting Limits: ', displayLimits);
 
       let enforceGrid = parameters.behaviour && (parameters.behaviour.useGrid || parameters.behaviour.ratio.rows || parameters.behaviour.ratio.columns) && cardsToUse.length;
       let kllHeightOverride = (displayLimits && displayLimits.width < 400);
@@ -577,8 +576,6 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
 
       const numRows = Math.ceil($elements.length / numCols);
 
-      console.log('Cols:', numCols, 'Rows: ', numRows);
-
       let maxCardsHeight = Infinity;
 
       if (displayLimits && displayLimits.height && this.wasInitialized) {
@@ -592,8 +589,6 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
           $list.css('max-width', $(cardInner).outerWidth(true) * numCols + 'px');
         }
       }
-
-      console.log('maxCardsHeight: ', maxCardsHeight);
 
       // Calculate how much one percentage of the standard/default size is
       var onePercentage = ((CARD_STD_SIZE * numCols) + STD_FONT_SIZE) / 100;
@@ -653,8 +648,6 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
    */
   MemoryGame.prototype.computeDisplayLimitsKLL = function () {
     const displayLimits = this.computeDisplayLimits();
-
-    console.log('display: ', displayLimits.height, 'body: ', document.body.offsetHeight);
 
     // This only works because KLL enforces height on H5P's iframe
     displayLimits.height = Math.min(displayLimits.height, document.body.offsetHeight);

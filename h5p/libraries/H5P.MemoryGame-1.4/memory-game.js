@@ -1,7 +1,7 @@
 H5P.MemoryGame = (function (EventDispatcher, $) {
 
   // We don't want to go smaller than 100px per card(including the required margin)
-  var CARD_MIN_SIZE = 48; // PX
+  var CARD_MIN_SIZE = 100; // PX
   var CARD_STD_SIZE = 116; // PX
   var STD_FONT_SIZE = 16; // PX
   var LIST_PADDING = 1; // EMs

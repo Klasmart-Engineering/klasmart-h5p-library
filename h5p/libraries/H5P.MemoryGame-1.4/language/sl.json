@@ -62,10 +62,6 @@
           ]
         },
         {
-          "label": "Enforce layout on narrow screens",
-          "description": "The content type will reduce the number of columns if the cards become too small. Activate this setting if you want to enforce a given number of columns even on a narrow screen knowing that cards may become too small to be used."
-        },
-        {
           "label": "Uporabi naslednje število parov",
           "description": "V primeru večjega nabora pripravljenih parov kartic, lahko izvajalec tukaj omeji (najmanj 2), koliko parov se dejansko uporabi. Ob ponovitvi aktivnosti bodo pari kartic iz celotnega nabora spet izbrani naključno."
         },

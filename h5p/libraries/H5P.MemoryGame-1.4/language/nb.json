@@ -62,10 +62,6 @@
           ]
         },
         {
-          "label": "Enforce layout on narrow screens",
-          "description": "The content type will reduce the number of columns if the cards become too small. Activate this setting if you want to enforce a given number of columns even on a narrow screen knowing that cards may become too small to be used."
-        },
-        {
           "label": "Antall kort som skal brukes",
           "description": "Ved å sette antallet høyere enn 2 vil spillet plukke tilfeldige kort fra listen over kort."
         },

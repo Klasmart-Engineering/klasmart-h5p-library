@@ -49,6 +49,8 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       }
     }, parameters);
 
+    this.parameters = parameters;
+
     /**
      * Check if these two cards belongs together.
      *
@@ -493,6 +495,7 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
         timer = new MemoryGame.Timer($status.find('time')[0]);
         counter = new MemoryGame.Counter($status.find('.h5p-card-turns'));
         popup = new MemoryGame.Popup($container, parameters.l10n);
+        this.popup = popup;
 
         $container.click(function () {
           popup.close();
@@ -513,110 +516,98 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       }, 0);
     };
 
-    /**
-     * Will try to scale the game so that it fits within its container.
-     * Puts the cards into a grid layout to make it as square as possible –
-     * which improves the playability on multiple devices.
-     *
-     * Should be refactored once eventually all specs are known and stable.
-     *
-     * @private
-     */
-    var scaleGameSize = function () {
-      // Check how much space we have available
-      var $list = this.$container.children('ul');
-      $list.css('max-width', '');
-
-      const maxWidth = parseFloat(window.getComputedStyle($list[0]).width);
-
-      // Get the card holders
-      var $elements = $list.children();
-      if ($elements.length < 4) {
-        return; // No need to proceed
-      }
-
-      // Check how much space we have available
-      const displayLimits = this.computeDisplayLimitsKLL();
-
-      let enforceGrid = parameters.behaviour && (parameters.behaviour.useGrid || parameters.behaviour.ratio.rows || parameters.behaviour.ratio.columns) && cardsToUse.length;
-      let kllHeightOverride = (displayLimits && displayLimits.width < 400);
-
-      var newNumCols;
-      if (enforceGrid || kllHeightOverride) {
-        // Determine the optimal number of columns
-        newNumCols = this.forceCols || Math.ceil(Math.sqrt($elements.length));
-
-        // Keep layout if enforced even though cards may become too small
-        if (!parameters.behaviour.keepLayout && !kllHeightOverride) {
-          // Do not exceed the max number of columns
-          var maxCols = Math.floor(maxWidth / CARD_MIN_SIZE);
-          if (newNumCols > maxCols) {
-            newNumCols = maxCols;
-          }
-        }
-      }
-      else {
-        newNumCols = Math.floor(displayLimits.width / CARD_MIN_SIZE);
-      }
-
-      if (numCols !== newNumCols) {
-        // We need to change layout
-        numCols = newNumCols;
-
-        // Calculate new column size in percentage and round it down (we don't
-        // want things sticking out…)
-        var colSize = Math.floor((100 / numCols) * 10000) / 10000;
-        $elements.css('width', colSize + '%').each(function (i, e) {
-          $(e).removeClass('h5p-row-break');
-          if (i === numCols) {
-            $(e).addClass('h5p-row-break');
-          }
-        });
-      }
-
-      const numRows = Math.ceil($elements.length / numCols);
-
-      let maxCardsHeight = Infinity;
-
-      if (displayLimits && displayLimits.height && this.wasInitialized) {
-        const cardOuter = $elements[0];
-        var cardInner = cardOuter.querySelector('.h5p-memory-card');
-        const fontScale = (cardInner.offsetHeight + 0.5 * (cardOuter.offsetHeight - cardInner.offsetHeight)) / cardOuter.offsetHeight;
-        const footerHeight = this.$container.find('.h5p-status').outerHeight(true);
-
-        if (numRows * CARD_MIN_SIZE > displayLimits.height) {
-          maxCardsHeight = (displayLimits.height - footerHeight) * fontScale; // Account for shadows
-          $list.css('max-width', $(cardInner).outerWidth(true) * numCols + 'px');
-        }
-      }
-
-      // Calculate how much one percentage of the standard/default size is
-      var onePercentage = ((CARD_STD_SIZE * numCols) + STD_FONT_SIZE) / 100;
-      var paddingSize = (STD_FONT_SIZE * LIST_PADDING) / onePercentage;
-      var cardSize = (100 - paddingSize) / Math.max(numCols, numRows);
-      var fontSize = (((Math.min(maxCardsHeight, maxWidth) * (cardSize / 100)) * STD_FONT_SIZE) / CARD_STD_SIZE);
-
-      // We use font size to evenly scale all parts of the cards.
-      $list.css('font-size', fontSize + 'px');
-      popup.setSize(fontSize);
-      // due to rounding errors in browsers the margins may vary a bit…
-
-      // Workaround for KidsLoop Live that is NOT using the H5P resizer.
-      if (!this.wasInitialized) {
-        setTimeout(() => {
-          this.trigger('resize');
-        }, 500);
-      }
-
-      this.wasInitialized = true;
-    };
-
-    self.on('resize', scaleGameSize);
+    self.on('resize', this.scaleGameSize);
   }
 
   // Extends the event dispatcher
   MemoryGame.prototype = Object.create(EventDispatcher.prototype);
   MemoryGame.prototype.constructor = MemoryGame;
+
+  MemoryGame.prototype.scaleGameSize = function () {
+    let cardConfigurations = [];
+
+    const $list = this.$container.children('ul');
+    $list.css('max-width', '');
+    const $elements = $list.children();
+
+    // Make sure we can meet the wishes
+    if (this.parameters.behaviour.ratio.columns && this.parameters.behaviour.ratio.rows &&
+      this.parameters.behaviour.ratio.columns * this.parameters.behaviour.ratio.rows !== $elements.length
+    ) {
+      delete this.parameters.behaviour.ratio.columns;
+      delete this.parameters.behaviour.ratio.rows;
+    }
+
+    /*
+     * Determine all possible card configurations, will be only 1 if either
+     * a square shape is aspired or number of columns/rows is specified
+     */
+    if (this.parameters.behaviour.ratio.columns) {
+      cardConfigurations = [{
+        cols: this.parameters.behaviour.ratio.columns,
+        rows: Math.ceil($elements.length / this.parameters.behaviour.ratio.columns)
+      }];
+    }
+    else if (this.parameters.behaviour.ratio.rows) {
+      cardConfigurations = [{
+        rows: this.parameters.behaviour.ratio.rows,
+        cols: Math.ceil($elements.length / this.parameters.behaviour.ratio.rows)
+      }];
+    }
+    else if (this.parameters.behaviour.useGrid) {
+      cardConfigurations = [{
+        cols: Math.ceil(Math.sqrt($elements.length)),
+        rows: Math.ceil($elements.length / Math.ceil(Math.sqrt($elements.length)))
+      }];
+    }
+    else {
+      for (let index = 1; index < $elements.length + 1; index++) {
+        cardConfigurations.push({
+          cols: index,
+          rows: Math.ceil($elements.length / index)
+        });
+      }
+    }
+
+    // Determine largest possible card size
+    const displayLimits = this.computeDisplayLimitsKLL();
+
+    if (displayLimits) {
+      cardConfigurations = cardConfigurations
+        .map(function (config) {
+          const displayRatio = displayLimits.width / displayLimits.height;
+
+          const cardSize = ((config.cols / config.rows / 1.16 > displayRatio)) ?
+            displayLimits.width / config.cols :
+            displayLimits.height / config.rows / 1.16;
+
+          return {
+            cols: config.cols,
+            rows: config.rows,
+            cardSize: cardSize
+          };
+        })
+        .sort(function (a, b) {
+          return b.cardSize - a.cardSize;
+        })
+        .shift();
+    }
+    else {
+      cardConfigurations[0].cardSize = 100;
+    }
+
+    $elements.css('width', cardConfigurations.cardSize + 'px').each(function (i, e) {
+      $(e).removeClass('h5p-row-break');
+      if (i === cardConfigurations.cols) {
+        $(e).addClass('h5p-row-break');
+      }
+    });
+
+    // We use font size to evenly scale all parts of the cards.
+    $list.css('font-size', cardConfigurations.cardSize / 7.5 + 'px');
+    $list.css('max-width', cardConfigurations.cardSize * cardConfigurations.cols + 'px');
+    this.popup.setSize(cardConfigurations.cardSize / 7.5);
+  };
 
   /**
    * Compute display limits.

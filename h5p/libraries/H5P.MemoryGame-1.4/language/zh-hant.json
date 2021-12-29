@@ -62,10 +62,6 @@
           ]
         },
         {
-          "label": "Enforce layout on narrow screens",
-          "description": "The content type will reduce the number of columns if the cards become too small. Activate this setting if you want to enforce a given number of columns even on a narrow screen knowing that cards may become too small to be used."
-        },
-        {
           "label": "卡片的使用數量",
           "description": "遊戲中配對的卡片組合數量，設定後會從卡片集中隨機挑選指定組合數，數字必須大於 2。"
         },

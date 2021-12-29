@@ -429,20 +429,6 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       const that = this;
 
       this.$container = $container;
-      this.$container.get(0).addEventListener('keydown', function () {
-        that.scaleGameSize();
-        console.log('test');
-      });
-
-      this.$container.get(0).addEventListener('click', function () {
-        that.scaleGameSize();
-        console.log('click');
-      });
-
-      this.$container.get(0).addEventListener('touchstart', function () {
-        that.scaleGameSize();
-        console.log('touch');
-      });
 
       this.triggerXAPI('attempted');
       // TODO: Only create on first attach!

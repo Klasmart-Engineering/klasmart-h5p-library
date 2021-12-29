@@ -592,7 +592,7 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
           return {
             cols: config.cols,
             rows: config.rows,
-            cardSize: cardSize
+            cardSize: Math.max(1, cardSize - 2) // Some buffer for weird mobile behavior
           };
         })
         .sort(function (a, b) {

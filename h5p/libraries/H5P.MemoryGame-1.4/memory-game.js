@@ -550,7 +550,13 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
      * Determine all possible card configurations, will be only 1 if either
      * a square shape is aspired or number of columns/rows is specified
      */
-    if (this.parameters.behaviour.ratio.columns) {
+    if (this.parameters.behaviour.useGrid) {
+      cardConfigurations = [{
+        cols: Math.ceil(Math.sqrt($elements.length)),
+        rows: Math.ceil($elements.length / Math.ceil(Math.sqrt($elements.length)))
+      }];
+    }
+    else if (this.parameters.behaviour.ratio.columns) {
       cardConfigurations = [{
         cols: this.parameters.behaviour.ratio.columns,
         rows: Math.ceil($elements.length / this.parameters.behaviour.ratio.columns)
@@ -560,12 +566,6 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       cardConfigurations = [{
         rows: this.parameters.behaviour.ratio.rows,
         cols: Math.ceil($elements.length / this.parameters.behaviour.ratio.rows)
-      }];
-    }
-    else if (this.parameters.behaviour.useGrid) {
-      cardConfigurations = [{
-        cols: Math.ceil(Math.sqrt($elements.length)),
-        rows: Math.ceil($elements.length / Math.ceil(Math.sqrt($elements.length)))
       }];
     }
     else {

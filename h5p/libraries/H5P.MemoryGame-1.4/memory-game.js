@@ -517,6 +517,14 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
     };
 
     self.on('resize', this.scaleGameSize);
+
+    /*
+     * Workaround (hopefully temporary) for KidsLoopLive that for whatever
+     * reason does not use h5p-resizer.js.
+     */
+    window.addEventListener('resize', function () {
+      self.scaleGameSize();
+    });
   }
 
   // Extends the event dispatcher

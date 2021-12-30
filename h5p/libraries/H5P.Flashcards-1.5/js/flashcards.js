@@ -865,6 +865,7 @@ H5P.Flashcards = (function ($, XapiGenerator) {
     }
 
     const displayLimits = self.computeDisplayLimitsKLL();
+    console.log(displayLimits);
 
     //Find container dimensions needed to encapsule image and text.
     self.$inner.children('.h5p-card').each(function () {
@@ -878,6 +879,7 @@ H5P.Flashcards = (function ($, XapiGenerator) {
       }
 
       if (displayLimits && window.orientation === 90) {
+        console.log('limiting height');
         // Limit card size, 8 and 4 are default margins and paddings
         $(this).css({
           'max-width': (displayLimits.width - 8 * baseFontSize) + 'px',
@@ -914,16 +916,15 @@ H5P.Flashcards = (function ($, XapiGenerator) {
         $textInput.css('padding-right', $button.outerWidth() + ($textInput.parent().hasClass('has-tip') ? emSize * 2.5 : emSize));
       }
 
-      const $answer = $(this).find('.h5p-answer');
-
-      if ($(this).find('.h5p-foot').width() < $textInput.outerWidth()) {
-        let fontSizeEm = 1;
-
-        while (fontSizeEm > 0.1 && $(this).find('.h5p-foot').width() < $textInput.outerWidth()) {
-          $answer.css('fontSize', fontSizeEm + 'em');
-          fontSizeEm -= 0.1;
-        }
-      }
+      // const $answer = $(this).find('.h5p-answer');
+      // if ($(this).find('.h5p-foot').width() < $textInput.outerWidth()) {
+      //   let fontSizeEm = 1;
+      //
+      //   while (fontSizeEm > 0.1 && $(this).find('.h5p-foot').width() < $textInput.outerWidth()) {
+      //     $answer.css('fontSize', fontSizeEm + 'em');
+      //     fontSizeEm -= 0.1;
+      //   }
+      // }
     });
 
     var freeSpaceRight = this.$inner.children('.h5p-card').last().css("marginRight");
@@ -942,6 +943,7 @@ H5P.Flashcards = (function ($, XapiGenerator) {
     // Reduce font size if mobile landscape
     if (displayLimits && window.orientation === 90) {
       this.$inner.children('.h5p-card').each(function () {
+        console.log('reduce font size');
 
         // Limit card height, 4 and 6 are default margins and paddings
         $(this).find('.h5p-cardholder').css({

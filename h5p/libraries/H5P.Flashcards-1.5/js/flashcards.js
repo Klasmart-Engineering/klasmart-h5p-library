@@ -67,6 +67,14 @@ H5P.Flashcards = (function ($, XapiGenerator) {
         that.handleOrientationChange();
       });
     }
+
+    /*
+     * Workaround (hopefully temporary) for KidsLoopLive that for whatever
+     * reason does not use h5p-resizer.js.
+     */
+    window.addEventListener('resize', function () {
+      that.resize();
+    });
   }
 
   C.prototype = Object.create(H5P.EventDispatcher.prototype);
@@ -856,7 +864,7 @@ H5P.Flashcards = (function ($, XapiGenerator) {
       self.$container.removeClass('h5p-mobile');
     }
 
-    const displayLimits = self.computeDisplayLimits();
+    const displayLimits = self.computeDisplayLimitsKLL();
 
     //Find container dimensions needed to encapsule image and text.
     self.$inner.children('.h5p-card').each(function () {
@@ -1052,7 +1060,7 @@ H5P.Flashcards = (function ($, XapiGenerator) {
 	 * @return {Window|null} Top window.
 	 */
   C.prototype.getTopWindow = function (startWindow) {
-    var sameOrigin;
+    let sameOrigin;
     startWindow = startWindow || window;
 
     // H5P iframe may be on different domain than iframe content
@@ -1072,6 +1080,18 @@ H5P.Flashcards = (function ($, XapiGenerator) {
     }
 
     return this.getTopWindow(startWindow.parent);
+  };
+
+  /**
+   * Compute display limits for KidsLoop Live.
+   * @return {object|null} Height and width in px or null if cannot be determined.
+   */
+  C.prototype.computeDisplayLimitsKLL = function () {
+    const displayLimits = this.computeDisplayLimits();
+
+    // This only works because KLL enforces height on H5P's iframe
+    displayLimits.height = Math.min(displayLimits.height, document.body.offsetHeight);
+    return displayLimits;
   };
 
   /**

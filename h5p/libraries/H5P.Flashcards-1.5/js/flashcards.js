@@ -916,15 +916,21 @@ H5P.Flashcards = (function ($, XapiGenerator) {
         $textInput.css('padding-right', $button.outerWidth() + ($textInput.parent().hasClass('has-tip') ? emSize * 2.5 : emSize));
       }
 
-      // const $answer = $(this).find('.h5p-answer');
-      // if ($(this).find('.h5p-foot').width() < $textInput.outerWidth()) {
-      //   let fontSizeEm = 1;
-      //
-      //   while (fontSizeEm > 0.1 && $(this).find('.h5p-foot').width() < $textInput.outerWidth()) {
-      //     $answer.css('fontSize', fontSizeEm + 'em');
-      //     fontSizeEm -= 0.1;
-      //   }
-      // }
+      const $answer = $(this).find('.h5p-answer');
+      if (displayLimits && window.orientation === 90) {
+        if ($(this).find('.h5p-foot').width() < $textInput.outerWidth()) {
+          let fontSizeEm = 1;
+
+          console.log('reducing input field width?', $(this).find('.h5p-foot').width(), $textInput.outerWidth());
+          while (fontSizeEm > 0.1 && $(this).find('.h5p-foot').width() < $textInput.outerWidth()) {
+            $answer.css('fontSize', fontSizeEm + 'em');
+            fontSizeEm -= 0.1;
+          }
+        }
+      }
+      else {
+        $answer.css('fontSize', '');
+      }
     });
 
     var freeSpaceRight = this.$inner.children('.h5p-card').last().css("marginRight");

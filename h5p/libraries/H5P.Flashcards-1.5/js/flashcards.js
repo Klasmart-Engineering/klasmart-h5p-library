@@ -925,7 +925,7 @@ H5P.Flashcards = (function ($, XapiGenerator) {
           while (
             fontSizeEm > 0.1 &&
             $(this).find('.h5p-foot').width() < $textInput.outerWidth() ||
-            ($(this).find('.h5p-button.h5p-icon-button').outerWidth() / $(this).find('.h5p-input').outerWidth()) > 20
+            ($(this).find('.h5p-button.h5p-icon-button').outerWidth() / $(this).find('.h5p-input').outerWidth()) > 0.2
           ) {
             $answer.css('fontSize', fontSizeEm + 'em');
             fontSizeEm -= 0.1;

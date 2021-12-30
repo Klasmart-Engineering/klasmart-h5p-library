@@ -578,7 +578,7 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
     }
 
     // Determine largest possible card size
-    const displayLimits = this.computeDisplayLimitsKLL();
+    const displayLimits = (this.isRoot()) ? this.computeDisplayLimitsKLL() : null;
 
     if (displayLimits) {
       cardConfigurations = cardConfigurations

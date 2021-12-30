@@ -865,7 +865,6 @@ H5P.Flashcards = (function ($, XapiGenerator) {
     }
 
     const displayLimits = self.computeDisplayLimitsKLL();
-    console.log(displayLimits);
 
     //Find container dimensions needed to encapsule image and text.
     self.$inner.children('.h5p-card').each(function () {
@@ -879,7 +878,6 @@ H5P.Flashcards = (function ($, XapiGenerator) {
       }
 
       if (displayLimits && window.orientation === 90) {
-        console.log('limiting height');
         // Limit card size, 8 and 4 are default margins and paddings
         $(this).css({
           'max-width': (displayLimits.width - 8 * baseFontSize) + 'px',
@@ -916,13 +914,17 @@ H5P.Flashcards = (function ($, XapiGenerator) {
         $textInput.css('padding-right', $button.outerWidth() + ($textInput.parent().hasClass('has-tip') ? emSize * 2.5 : emSize));
       }
 
+      // Workaround for very narrow landscape displays
       const $answer = $(this).find('.h5p-answer');
       if (displayLimits && window.orientation === 90) {
         if ($(this).find('.h5p-foot').width() < $textInput.outerWidth()) {
           let fontSizeEm = 1;
 
-          console.log('reducing input field width?', $(this).find('.h5p-foot').width(), $textInput.outerWidth());
-          while (fontSizeEm > 0.1 && $(this).find('.h5p-foot').width() < $textInput.outerWidth()) {
+          while (
+            fontSizeEm > 0.1 &&
+            // $(this).find('.h5p-foot').width() < $textInput.outerWidth() ||
+            $(this).find('.h5p-button.h5p-icon-button').width() / $(this).find('.h5p-foot').width() > 20
+          ) {
             $answer.css('fontSize', fontSizeEm + 'em');
             fontSizeEm -= 0.1;
           }
@@ -949,7 +951,6 @@ H5P.Flashcards = (function ($, XapiGenerator) {
     // Reduce font size if mobile landscape
     if (displayLimits && window.orientation === 90) {
       this.$inner.children('.h5p-card').each(function () {
-        console.log('reduce font size');
 
         // Limit card height, 4 and 6 are default margins and paddings
         $(this).find('.h5p-cardholder').css({

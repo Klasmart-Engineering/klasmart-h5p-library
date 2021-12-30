@@ -917,16 +917,20 @@ H5P.Flashcards = (function ($, XapiGenerator) {
       // Workaround for very narrow landscape displays
       const $answer = $(this).find('.h5p-answer');
       if (displayLimits && window.orientation === 90) {
+        console.log($(this).find('.h5p-foot').width(), $textInput.outerWidth(), $(this).find('.h5p-foot').width() < $textInput.outerWidth());
+
         if ($(this).find('.h5p-foot').width() < $textInput.outerWidth()) {
           let fontSizeEm = 1;
 
           while (
             fontSizeEm > 0.1 &&
-            // $(this).find('.h5p-foot').width() < $textInput.outerWidth() ||
-            $(this).find('.h5p-button.h5p-icon-button').width() / $(this).find('.h5p-foot').width() > 20
+            $(this).find('.h5p-foot').width() < $textInput.outerWidth() ||
+            ($(this).find('.h5p-button.h5p-icon-button').outerWidth() / $(this).find('.h5p-input').outerWidth()) > 20
           ) {
             $answer.css('fontSize', fontSizeEm + 'em');
             fontSizeEm -= 0.1;
+
+            console.log('ratio', $(this).find('.h5p-button.h5p-icon-button').outerWidth() / $(this).find('.h5p-input').outerWidth());
           }
         }
       }

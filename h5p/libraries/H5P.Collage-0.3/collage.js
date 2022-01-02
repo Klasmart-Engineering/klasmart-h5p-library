@@ -88,6 +88,11 @@ H5P.Collage = (function ($, EventDispatcher) {
         }
       }
 
+      // KidsLoop customization to prevent dragging the image
+      $wrapper.get(0).addEventListener('dragstart', function (event) {
+        event.preventDefault();
+      });
+
       // Add to DOM
       $container.addClass('h5p-collage').html('').append($wrapper);
     };

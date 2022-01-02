@@ -70,6 +70,25 @@ var H5P = H5P || {};
       }
     }
 
+    // KidsLoop customization to prevent dragging the image on desktop
+    self.$img.get(0).addEventListener('dragstart', function (event) {
+      event.preventDefault();
+    });
+    /*
+     * KidsLoop customization to prevent saving images on Android. Cannot
+     * use CSS `pointer-events: none`, because it interferes with dragstart
+     */
+    self.$img.get(0).addEventListener('contextmenu', function (event) {
+      event.preventDefault();
+      return false;
+    });
+    // KidsLoop customization to prevent dragging the image on iOS
+    self.$img.css({
+      'user-select': 'none',
+      '-webkit-user-select': 'none',
+      '-webkit-touch-callout': 'none'
+    });
+
     $wrapper.addClass('h5p-image').html(self.$img);
   };
 

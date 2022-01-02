@@ -178,6 +178,11 @@ H5P.ImageSlider = (function ($) {
       class: 'h5p-image-slider-slides-holder'
     }).appendTo($container);
 
+    // KidsLoop customization to prevent dragging the image on desktop
+    this.$slidesHolder.get(0).addEventListener('dragstart', function (event) {
+      event.preventDefault();
+    });
+
     this.$slides = $('<div>', {
       class: 'h5p-image-slider-slides'
     }).appendTo(this.$slidesHolder);

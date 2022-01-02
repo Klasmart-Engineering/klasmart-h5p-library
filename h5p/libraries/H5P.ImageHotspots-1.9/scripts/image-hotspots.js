@@ -74,6 +74,25 @@ H5P.ImageHotspots = (function ($, EventDispatcher) {
         src: H5P.getPath(this.options.image.path, this.id)
       }).appendTo(this.$hotspotContainer);
 
+      // KidsLoop customization to prevent dragging the image on desktop
+      this.$image.get(0).addEventListener('dragstart', function (event) {
+        event.preventDefault();
+      });
+      /*
+       * KidsLoop customization to prevent saving images on Android. Cannot
+       * use CSS `pointer-events: none`, because it interferes with dragstart
+       */
+      this.$image.get(0).addEventListener('contextmenu', function (event) {
+        event.preventDefault();
+        return false;
+      });
+      // KidsLoop customization to prevent dragging the image on iOS
+      this.$image.css({
+        'user-select': 'none',
+        '-webkit-user-select': 'none',
+        '-webkit-touch-callout': 'none'
+      });
+
       // Set alt text of image
       if (this.options.backgroundImageAltText) {
         this.$image.attr('alt', this.options.backgroundImageAltText);
@@ -204,8 +223,8 @@ H5P.ImageHotspots = (function ($, EventDispatcher) {
     if (!decreaseSize) {
       self.$container.css('width', '');
     }
-    
-    // If fullscreen & standalone 
+
+    // If fullscreen & standalone
     if (this.isRoot() && H5P.isFullscreen) {
       // If fullscreen, we have both a max width and max height.
       if (!forceImageHeight && height > containerHeight) {

@@ -939,6 +939,11 @@ H5P.QuestionSet = function (options, contentId, contentData) {
       $myDom = $(target);
     }
 
+    // KidsLoop customization to prevent dragging the image on desktop
+    $myDom.get(0).addEventListener('dragstart', function (event) {
+      event.preventDefault();
+    });
+
     // Render own DOM into target.
     $myDom.children().remove();
     $myDom.append($template);

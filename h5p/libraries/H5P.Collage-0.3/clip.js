@@ -88,6 +88,18 @@
           }
         }
       });
+
+      // KidsLoop customization to prevent dragging the image
+      $img.get(0).addEventListener('dragstart', function (event) {
+        event.preventDefault();
+      });
+      $img.css({
+        'user-select': 'none',
+        '-webkit-user-select': 'none',
+        '-webkit-touch-callout': 'none',
+        'pointer-events': 'none'
+      });
+
       setTimeout(function () {
         // Wait for next tick to make sure everything is visible
         self.positionImage();

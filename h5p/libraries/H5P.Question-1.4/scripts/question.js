@@ -829,6 +829,10 @@ H5P.Question = (function ($, EventDispatcher, JoubelUI) {
         'class': 'h5p-question-image h5p-question-image-fill-width'
       });
 
+      // KidsLoop customization to prevent dragging the image on desktop
+      sections.image.$element.get(0).addEventListener('dragstart', function (event) {
+        event.preventDefault();
+      });
       // Inner wrap
       var $imgWrap = $('<div/>', {
         'class': 'h5p-question-image-wrap',
@@ -847,6 +851,25 @@ H5P.Question = (function ($, EventDispatcher, JoubelUI) {
           }
         },
         appendTo: $imgWrap
+      });
+
+      // KidsLoop customization to prevent dragging the image on desktop
+      $img.get(0).addEventListener('dragstart', function (event) {
+        event.preventDefault();
+      });
+      /*
+       * KidsLoop customization to prevent saving images on Android. Cannot
+       * use CSS `pointer-events: none`, because it interferes with dragstart
+       */
+      $img.get(0).addEventListener('contextmenu', function (event) {
+        event.preventDefault();
+        return false;
+      });
+      // KidsLoop customization to prevent dragging the image on iOS
+      $img.css({
+        'user-select': 'none',
+        '-webkit-user-select': 'none',
+        '-webkit-touch-callout': 'none'
       });
 
       // Disable image zooming
@@ -911,6 +934,7 @@ H5P.Question = (function ($, EventDispatcher, JoubelUI) {
             }
           }).on('keypress', function (event) {
             if (event.which === 32) {
+              event.preventDefault(); // Prevent default behaviour; page scroll down
               scaleImage.apply(this); // Space bar pressed
             }
           });

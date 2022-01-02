@@ -132,6 +132,11 @@ H5P.GuessTheAnswer = (function () {
       '<span class="empty-text-for-nvda">&nbsp;</span>' +
       '<div class="solution-text hidden" tabindex="-1">' + params.solutionText + '</div>';
 
+      // KidsLoop customization to prevent dragging the image on desktop
+      element.addEventListener('dragstart', function (event) {
+        event.preventDefault();
+      });
+
     return element;
   };
 

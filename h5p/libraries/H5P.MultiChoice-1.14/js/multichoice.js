@@ -231,6 +231,12 @@ H5P.MultiChoice = function (options, contentId, contentData) {
 
     // Register task content area
     $myDom = $(createDOM(params));
+
+    // KidsLoop customization to prevent dragging the image on desktop
+    $myDom.get(0).addEventListener('dragstart', function (event) {
+      event.preventDefault();
+    });
+
     self.setContent($myDom, {
       'class': params.behaviour.singleAnswer ? 'h5p-radio' : 'h5p-check'
     });

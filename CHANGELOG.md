@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.7.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.7.0..v2.6.0) (2022-01-04)
+
+
+### Features
+
+* **H5P-387:** enhancements for ImageSequence & ImagePair ([2123e7a](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/2123e7a0ad917723352001230bc71c4700c0d2a1))
+
+
+### Bug Fixes
+
+* **H5P-382:** course presentation drag/drop ([0c9c03f](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/0c9c03f27d14ff411f52efe862d08655220497cf))
+* **H5P-432:** unable to load drag-and-drop inside course presentation ([edbde7c](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/edbde7cbb0003c36f01e21e9243e72f3a8016dc8))
+
 ## [2.6.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.6.0..v2.5.1) (2021-12-13)
 
 

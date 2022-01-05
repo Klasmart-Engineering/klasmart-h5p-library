@@ -440,6 +440,7 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       // Add cards to list
       var $list = $('<ul/>', {
         role: 'application',
+        'class': 'h5p-memory-game-cards-list',
         'aria-labelledby': 'h5p-intro-' + numInstances
       });
       for (var i = 0; i < cards.length; i++) {

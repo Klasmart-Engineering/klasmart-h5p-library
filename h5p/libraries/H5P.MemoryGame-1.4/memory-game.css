@@ -9,7 +9,8 @@
   height: 1px;
   color: transparent;
 }
-.h5p-memory-game > ul {
+.h5p-memory-game > ul,
+.h5p-memory-game ul.h5p-memory-game-cards-list {
   list-style: none !important;
   padding: 0 !important;
   margin: auto !important;

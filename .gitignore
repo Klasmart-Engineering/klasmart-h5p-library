@@ -8,6 +8,7 @@ build
 build-ide
 h5p/content
 h5p/core
+!h5p/core/js/xapi-uploader.js
 h5p/editor
 h5p/temporary-storage
 coverage

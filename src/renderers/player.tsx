@@ -1,6 +1,6 @@
 import ReactDOMServer from 'react-dom/server';
-import React, { useState, useEffect } from "react";
-import { IPlayerModel } from "../types"
+import React from 'react';
+import { IPlayerModel } from '@lumieducation/h5p-server';
 
 // tslint:disable-next-line: function-name
 function Player(props: any):any {
@@ -17,14 +17,18 @@ function Player(props: any):any {
                     <link rel="stylesheet" href={style} />
                 ))}
 
-                { props.model.scripts.map((script) => (
-                    <script src={script} />
-                ))}
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `H5PIntegration = ${JSON.stringify(
+                            props.model.integration,
+                            null,
+                            2
+                        )}`
+                    }}
+                />
 
-                <script dangerouslySetInnerHTML={{__html: `H5PIntegration = ${JSON.stringify(props.model.integration, null, 2)}`}} />
-                
-                { props.model.customScripts.map((script) => (
-                    <script src={script} />
+                {props.model.scripts.map((script, index) => (
+                    <script src={script} key={index} />
                 ))}
             </head>
             <body>

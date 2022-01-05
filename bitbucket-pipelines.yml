@@ -15,8 +15,6 @@ definitions:
         image: node:lts
         script:
           - npm i
-        caches:
-          - nodemodules
         artifacts:
           - node_modules/**/*
     - step: &slack-notification

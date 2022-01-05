@@ -91,6 +91,37 @@ async function main(): Promise<string> {
     const slackMessage = await getSlackMessage(
         commitHashOfLastPipelineByCurrentBranch
     );
+    const webhookUrl = process.env.WEBHOOK_URL;
+    const pretext = process.env.PRETEXT;
+    const payload = {
+        blocks: [
+            {
+                type: 'section',
+                text: {
+                    type: 'mrkdwn',
+                    text: pretext
+                }
+            },
+            {
+                type: 'divider'
+            },
+            {
+                type: 'section',
+                text: {
+                    type: 'mrkdwn',
+                    text: slackMessage
+                }
+            }
+        ]
+    };
+    const response = await axios.post(webhookUrl, payload, {
+        timeout: 10
+    });
+    if (response.status >= 200 && response.status <= 299) {
+        console.log('Notification successful');
+    } else {
+        console.log('Notification failed');
+    }
     return slackMessage;
 }
 

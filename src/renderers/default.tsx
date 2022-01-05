@@ -1,7 +1,7 @@
 // tslint:disable-next-line: no-submodule-imports
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
-import { IEditorModel } from '../types';
+import { IEditorModel } from '@lumieducation/h5p-server';
 // import $ from "jquery"
 
 // tslint:disable-next-line: function-name

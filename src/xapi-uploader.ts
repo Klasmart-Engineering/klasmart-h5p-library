@@ -2,7 +2,7 @@ import { AudioUploader, XapiUploader } from 'kidsloop-xapi-uploader';
 
 const h5p = (window as any).H5P;
 const h5pIntegration = (window as any).H5PIntegration;
-const xapiServiceEndpoint = h5pIntegration?.XAPI_EVENTS_ENDPOINT;
+const xapiServiceEndpoint = h5pIntegration?.XAPI_SERVICE_ENDPOINT;
 const audioServiceEndpoint = h5pIntegration?.AUDIO_SERVICE_ENDPOINT;
 
 let liveUrl = new URL(window.location.toString());

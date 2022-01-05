@@ -1,9 +1,18 @@
 {
-    "extends": "./tsconfig.base.json",
-    "include": ["./**/*", "./xapi-uploader.ts"],
-    "exclude": ["./build", "build-ide"],
     "compilerOptions": {
-        "outDir": "./build-ide",
-        "jsx": "react"
-    }
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "esModuleInterop": true,
+        "experimentalDecorators": true,
+        "removeComments": false,
+        "noImplicitAny": false,
+        "sourceMap": true,
+        "baseUrl": "./",
+        "jsx": "react",
+        "resolveJsonModule": true,
+        "declaration": true,
+        "outDir": "./build/"
+    },
+    "exclude": ["node_modules", "build", "build-ide"]
 }

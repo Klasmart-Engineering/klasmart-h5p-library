@@ -626,7 +626,7 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
     let topWindow = this.getTopWindow();
 
     // iOS doesn't change screen dimensions on rotation
-    let screenSize = (this.isIOS() && window.orientation === 90) ?
+    let screenSize = (this.isIOS() && this.getOrientation() === 'landscape') ?
       { height: screen.width, width: screen.height } :
       { height: screen.height, width: screen.width };
 
@@ -663,6 +663,33 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       ['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone', 'iPod'].includes(navigator.platform) ||
       (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
     );
+  };
+
+  /**
+   * Get device orientation.
+   * @return {string} 'portrait' or 'landscape'.
+   */
+  MemoryGame.prototype.getOrientation = function () {
+    if (screen.orientation && screen.orientation.type) {
+      if (screen.orientation.type.includes('portrait')) {
+        return 'portrait';
+      }
+      else if (screen.orientation.type.includes('landscape')) {
+        return 'landscape';
+      }
+    }
+
+    // Unreliable, as not clear what device's natural orientation is
+    if (typeof window.orientation === 'number') {
+      if (window.orientation === 0 || window.orientation === 180) {
+        return 'portrait';
+      }
+      else if (window.orientation === 90 || window.orientation === -90 || window.orientation === 270) {
+        return 'landscape';
+      }
+    }
+
+    return 'landscape'; // Assume default
   };
 
   /**

@@ -11,13 +11,6 @@ COPY --chown=node:node config.json config.json
 COPY --chown=node:node package.json package.json
 COPY --chown=node:node package-lock.json package-lock.json
 
-ARG SSH_PRIVATE_KEY
-RUN mkdir /home/node/.ssh/
-RUN echo "${SSH_PRIVATE_KEY}" > /home/node/.ssh/id_rsa && \
-      chmod 600 /home/node/.ssh/id_rsa && \
-      npm install ts-node && \
-      rm -f /home/node/.ssh/id_rsa
-
 RUN rm -rf h5p/content
 RUN rm -rf h5p/temporary-storage
 

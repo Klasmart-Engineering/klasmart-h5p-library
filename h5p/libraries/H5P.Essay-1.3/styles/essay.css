@@ -46,13 +46,14 @@
 }
 
 .h5p-essay .h5p-essay-input-field-textfield {
+  box-sizing: border-box;
   padding: 0.25em 0.4em;
-  width: calc(100% - 0.8em);
   resize: none;
   border: 1px solid #C7C7C7;
   border-top: 2px solid #C7C7C7;
   font-size: 16px;
   font-family: Arial, sans-serif;
+  width: 100%;
 }
 
 .h5p-essay .h5p-essay-input-field-textfield:focus {

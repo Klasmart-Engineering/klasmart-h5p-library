@@ -6,26 +6,35 @@ definitions:
     nodemodules: ./node_modules
   steps:
     - step: &commitlint-check
-        name: 'Conventional Commits check'
+        name: '📝 Conventional Commits check'
         image: node:lts
         script:
           - /bin/bash commitlint-pipeline-check.sh
     - step: &fetch-npm-dependencies
-        name: "Fetch NPM dependencies"
+        name: "⚡ Fetch NPM dependencies"
         image: node:lts
         script:
           - npm i
-        caches:
-          - nodemodules
         artifacts:
           - node_modules/**/*
-    - step: &slack-notification
-        name: Slack Notification
+    - step: &alpha-slack-notification
+        name: 🔔 Slack Notification
         script:
-          - pipe: atlassian/slack-notify:1.0.1
+          - pipe: docker://cabauman/slack-notify-commits:0.5.0
             variables:
-              WEBHOOK_URL: 'https://hooks.slack.com/services/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'
-              MESSAGE: 'A new build of H5P ($BITBUCKET_COMMIT) has been push with the "$BITBUCKET_BRANCH" tag'
+              WEBHOOK_URL: $SLACK_WEBHOOK
+              MESSAGE: '🚀 A new build of H5P has been deployed to *alpha*.'
+              BITBUCKET_USER: $BITBUCKET_PIPELINE_READER_USER
+              BITBUCKET_APP_PASSWORD: $BITBUCKET_PIPELINE_READER_APP_PASSWORD
+    - step: &prod-slack-notification
+        name: 🔔 Slack Notification
+        script:
+          - pipe: docker://cabauman/slack-notify-commits:0.5.0
+            variables:
+              WEBHOOK_URL: $SLACK_WEBHOOK
+              MESSAGE: '🚀 A new *production* build of H5P has been pushed to ECR.'
+              BITBUCKET_USER: $BITBUCKET_PIPELINE_READER_USER
+              BITBUCKET_APP_PASSWORD: $BITBUCKET_PIPELINE_READER_APP_PASSWORD
 
   script: &build-and-push-to-aws
     - ls -la
@@ -66,13 +75,31 @@ pipelines:
           name: "Push docker image to AWS"
           deployment: alpha
           image: python:3.9-alpine
-          script: *build-and-push-to-aws
           services:
             - docker
           size: 2x
           caches:
             - docker
-      - step: *slack-notification
+          script: *build-and-push-to-aws
+      - step:
+          name: "Deploy"
+          image: python:3.9-alpine
+          script:
+            - ls -la
+            - pip3 install -U awscli
+            - pipe: atlassian/aws-ecs-deploy:1.6.1
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_ALPHA_OLD
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_ALPHA_OLD
+                AWS_DEFAULT_REGION: 'ap-northeast-2'
+                CLUSTER_NAME: 'kidsloop-alpha'
+                SERVICE_NAME: 'kidsloop-alpha-h5p'
+                FORCE_NEW_DEPLOYMENT: 'true'
+                WAIT: 'true'
+            - export AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID_ALPHA_OLD" AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY_ALPHA_OLD"
+            - aws cloudfront create-invalidation --distribution-id "E2RNE9HGMPLWTO" --paths "/h5p/libraries/*" "/h5p/play/*" # h5p.alpha.kidsloop.net
+            - aws cloudfront create-invalidation --distribution-id "E2694SIA1FLALO" --paths "/h5p/libraries/*" "/h5p/play/*" # live.alpha.kidsloop.net
+      - step: *alpha-slack-notification
     production:
       - step:
           name: Atlassian Security Secrets Scan
@@ -89,27 +116,4 @@ pipelines:
           size: 2x
           caches:
             - docker
-      - step: *slack-notification
-
-  custom:
-    deploy:
-      - step:
-          name: "Fetch NPM dependencies and build docker image"
-          image: node:lts
-          script:
-            - npm i
-            - ls -la
-          caches:
-            - nodemodules
-          artifacts:
-            - node_modules/**/*
-
-      - step:
-          name: "Push docker image to AWS"
-          image: python:3.9-alpine
-          script:
-            - *build-and-push-to-aws
-          services:
-            - docker
-          caches:
-            - docker
+      - step: *prod-slack-notification

@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.8.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.8.0..v2.7.0) (2022-01-17)
+
+
+### Features
+
+* **H5P-386:** add H5P.Flashcards enhancements ([608d061](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/608d061ea6affa47d9633429db9a5a9ab4ca014a))
+* **H5P-393:** prevent dragging image off content ([cda8e29](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/cda8e29efe09b5ff7b6061329784235bd72d52bc))
+* **H5P-423:** include room ID in xAPI events ([cb7870e](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/cb7870eeb2d85d2a5f42c39fecf0ec2f82a306b5))
+
+
+### Bug Fixes
+
+* **H5P-426:** fix H5P.DragText touch issue ([63d6a9d](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/63d6a9db8c04edbcde401417f78590a6d6fbf0fa))
+* **H5P-433:** fix H5P.ImagePair image cut off ([6685597](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/66855978560d451f1aafba8dbe658cf52d7bf7b8))
+* **H5P-437:** fix H5P.MemoryGame size issue ([e66ecb2](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/e66ecb2fa7f90a1277f72edafb4820bdb75843ff))
+
 ## [2.7.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.7.0..v2.6.0) (2022-01-04)
 
 

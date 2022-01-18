@@ -25,12 +25,12 @@ import H5pError from './helpers/H5pError';
 import LibraryManager from './LibraryManager';
 
 
-const xapi_events_endpoint: string | undefined = typeof process.env.XAPI_ENDPOINT === "string" && process.env.XAPI_ENDPOINT
-if(!xapi_events_endpoint) { 
+const XAPI_EVENTS_ENDPOINT: string | undefined = typeof process.env.XAPI_ENDPOINT === "string" && process.env.XAPI_ENDPOINT
+if(!XAPI_EVENTS_ENDPOINT) { 
     console.error(`Set XAPI_ENDPOINT environment variable for xAPI event reporting`)
 }
-const audio_service_endpoint: string | undefined = typeof process.env.AUDIO_SERVICE_ENDPOINT === "string" && process.env.AUDIO_SERVICE_ENDPOINT
-if(!audio_service_endpoint) { 
+const AUDIO_SERVICE_ENDPOINT: string | undefined = typeof process.env.AUDIO_SERVICE_ENDPOINT === "string" && process.env.AUDIO_SERVICE_ENDPOINT
+if(!AUDIO_SERVICE_ENDPOINT) { 
     console.error(`Set AUDIO_SERVICE_ENDPOINT environment variable for audio upload functionality`)
 }
 
@@ -234,8 +234,8 @@ export default class H5PPlayer {
         // see https://h5p.org/creating-your-own-h5p-plugin
         log.info(`generating integration for ${contentId}`);
         return {
-            xapi_events_endpoint,
-            audio_service_endpoint,
+            XAPI_EVENTS_ENDPOINT,
+            AUDIO_SERVICE_ENDPOINT,
             contents: {
                 [`cid-${contentId}`]: {
                     displayOptions: {

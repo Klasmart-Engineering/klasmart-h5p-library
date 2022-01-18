@@ -149,8 +149,8 @@ export interface IContentMetadata {
  * server.
  */
 export interface IIntegration {
-    xapi_events_endpoint?: string
-    audio_service_endpoint?: string
+    XAPI_EVENTS_ENDPOINT?: string
+    AUDIO_SERVICE_ENDPOINT?: string
     ajax: {
         /**
          * The Ajax endpoint called when the user state has changed

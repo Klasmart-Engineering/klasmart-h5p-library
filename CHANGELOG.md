@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.8.1](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.8.1..v2.8.0) (2022-01-19)
+
+
+### Bug Fixes
+
+* xapi events not being sent ([0c15c2f](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/0c15c2f50467bc6bcb297febce2f45b619da4189))
+
 ## [2.8.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.8.0..v2.7.0) (2022-01-17)
 
 

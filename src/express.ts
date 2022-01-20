@@ -1,3 +1,14 @@
+/* #region loghack LOG HACK - ENSURE THIS EXECUTES FIRST */
+const hacked = require('./logHack');
+hacked;
+
+const Logger = require('@lumieducation/h5p-server/build/src/helpers/Logger').default;
+
+const log = new Logger('test');
+log.info('Attempting to patch Kidsloop Logger over H5P Logger');
+import path from 'path';
+/* #endregion loghack */ 
+
 import 'newrelic';
 import { dir, DirectoryResult } from 'tmp-promise';
 import bodyParser from 'body-parser';
@@ -6,7 +17,6 @@ import fileUpload from 'express-fileupload';
 import i18next from 'i18next';
 import i18nextFsBackend from 'i18next-fs-backend';
 import i18nextHttpMiddleware from 'i18next-http-middleware';
-import path from 'path';
 import cors from 'cors';
 
 import {

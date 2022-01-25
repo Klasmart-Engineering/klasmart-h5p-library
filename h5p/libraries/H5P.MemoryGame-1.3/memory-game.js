@@ -524,6 +524,7 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
      * reason does not use h5p-resizer.js.
      */
     window.addEventListener('resize', function () {
+      console.log('MEMORY GAME: internal resize listener triggered');
       self.scaleGameSize();
     });
   }
@@ -533,6 +534,8 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
   MemoryGame.prototype.constructor = MemoryGame;
 
   MemoryGame.prototype.scaleGameSize = function () {
+    console.log('MEMORY GAME: scaleGameSize');
+
     let cardConfigurations = [];
 
     const $list = this.$container.children('ul');
@@ -578,8 +581,12 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       }
     }
 
+    console.log('MEMORY GAME: cardConfigurations ', cardConfigurations);
+
     // Determine largest possible card size
     const displayLimits = (this.isRoot()) ? this.computeDisplayLimitsKLL() : null;
+
+    console.log('MEMORY GAME: displayLimits ', displayLimits);
 
     if (displayLimits) {
       cardConfigurations = cardConfigurations
@@ -604,6 +611,9 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
     else {
       cardConfigurations[0].cardSize = 100;
     }
+
+    console.log('MEMORY GAME: cardSize', cardConfigurations.cardSize, 'columns', cardConfigurations.cols);
+    console.log('MEMORY GAME: maxSize', (cardConfigurations.cardSize + 2) * cardConfigurations.cols);
 
     $elements.css('width', cardConfigurations.cardSize + 'px').each(function (i, e) {
       $(e).removeClass('h5p-row-break');

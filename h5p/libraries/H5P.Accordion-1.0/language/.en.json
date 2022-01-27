@@ -1,18 +1,18 @@
 {
   "semantics": [
     {
-      "label": "פאנלים",
-      "entity": "פאנל",
+      "label": "Panels",
+      "entity": "panel",
       "field": {
-        "label": "תוכן",
-        "entity": "תוכן",
+        "label": "Content",
+        "entity": "content",
         "fields": [
           {
-            "label": "כותרת"
+            "label": "Title"
           },
           {
-            "label": "סוג תוכן",
-            "entity": "תוכן"
+            "label": "Content type",
+            "entity": "content"
           }
         ]
       }

@@ -1,34 +1,34 @@
 {
-  "semantics": [
+  "semantics":[
     {
-      "label": "패널",
-      "entity": "패널",
-      "field": {
-        "label": "콘텐츠",
-        "entity": "컨텐츠 종류",
-        "fields": [
+      "label":"패널",
+      "entity":"패널",
+      "field":{
+        "label":"콘텐츠",
+        "entity":"콘텐츠",
+        "fields":[
           {
-            "label": "스터디 타이틀"
+            "label":"제목"
           },
           {
-            "label": "컨텐츠 타입",
-            "entity": "컨텐츠 종류"
+            "label":"콘텐츠 유형",
+            "entity":"콘텐츠"
           }
         ]
       }
     },
     {
-      "label": "레이블에 대한 H 태그(레이블 크기에 영향을 주지 않음)",
-      "description": "레이블에 사용되는 h 태그입니다. 일반적으로 H2하지만 H2 제목 아래에 속하는 경우 H3를 사용합니다. semantical 목적으로만 사용되는 레이블의 크기에는 영향을 주지 않습니다.",
-      "options": [
+      "label":"라벨을 위한 H 태그 (라벨 크기에는 영향을 주지 않음)",
+      "description":"레이블에 사용된 H 태그. 일반적으로 H2이지만 H2 머리글 아래에 속할 경우 H3을 사용하십시오. 라벨의 크기에 영향을 주지 않으며, 단지 의미상의 목적으로만 사용됨",
+      "options":[
         {
-          "label": "H2"
+          "label":"H2"
         },
         {
-          "label": "H3"
+          "label":"H3"
         },
         {
-          "label": "H4"
+          "label":"H4"
         }
       ]
     }

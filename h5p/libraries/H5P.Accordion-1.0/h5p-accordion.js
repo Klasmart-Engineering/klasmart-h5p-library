@@ -29,6 +29,9 @@ H5P.Accordion = (function ($) {
 
     this.contentData = contentData;
 
+    // Keep track of visited panels
+    this.visited = [];
+
     this.instances = [];
 
     for (var i = 0; i < this.params.panels.length; i++) {
@@ -62,6 +65,10 @@ H5P.Accordion = (function ($) {
 
     // Insert content
     $container.html('').addClass('h5p-accordion').append(self.$content);
+
+    if (this.isRoot()) {
+      this.setActivityStarted();
+    }
   };
 
   /**
@@ -74,9 +81,11 @@ H5P.Accordion = (function ($) {
     var contentId = 'h5p-panel-content-' + self.idPrefix + id;
 
     var toggleCollapse = function () {
+      self.trigger(self.createXAPIEvent('interacted'));
+
       if (self.$expandedTitle === undefined || !self.$expandedTitle.is($title)) {
         self.collapseExpandedPanels();
-        self.expandPanel($title, $content);
+        self.expandPanel($title, $content, id);
       }
       else {
         self.collapsePanel($title, $content);
@@ -91,7 +100,7 @@ H5P.Accordion = (function ($) {
       'id': titleId,
       'class': 'h5p-panel-title',
       'role': 'button',
-      'tabindex': (id === 0 ? '0' : '-1'),
+      'tabindex': '0',
       'aria-selected': (id === 0 ? 'true' : 'false'),
       'aria-expanded': 'false',
       'aria-controls': contentId,
@@ -106,11 +115,9 @@ H5P.Accordion = (function ($) {
               var $prev = $title.prev().prev();
               if ($prev.length) {
                 $prev.attr({
-                  'tabindex': '0',
                   'aria-selected': 'true'
                 }).focus();
                 $title.attr({
-                  'tabindex': '-1',
                   'aria-selected': 'false'
                 });
               }
@@ -122,11 +129,9 @@ H5P.Accordion = (function ($) {
               var $next = $content.next();
               if ($next.length) {
                 $next.attr({
-                  'tabindex': '0',
                   'aria-selected': 'true'
                 }).focus();
                 $title.attr({
-                  'tabindex': '-1',
                   'aria-selected': 'false'
                 });
               }
@@ -155,6 +160,14 @@ H5P.Accordion = (function ($) {
     // Add the content itself to the content section
     self.instances[id].attach($content);
 
+    // Attach xAPI interected listener to each anchor
+    anchors = $content.get(0).querySelectorAll('a');
+    for (let i = 0; i < anchors.length; i++) {
+      anchors[i].addEventListener('click', function () {
+        self.trigger(self.createXAPIEvent('interacted'));
+      });
+    }
+
     // Gather all content
     self.elements.push($title[0]);
     self.elements.push($content[0]);
@@ -173,10 +186,19 @@ H5P.Accordion = (function ($) {
       }
     }, {
       result: {
-        completion: true
+        completion: false
       }
     });
     this.trigger(xAPIEvent);
+  };
+
+  /**
+   * Create xAPI event.
+   */
+  Accordion.prototype.createXAPIEvent = function (verb) {
+    xAPIEvent = this.createXAPIEventTemplate(verb);
+    // Prepared for default properties
+    return xAPIEvent;
   };
 
   /**
@@ -205,9 +227,35 @@ H5P.Accordion = (function ($) {
    *
    * @param {jQuery} $title The title of the panel that is to be expanded
    * @param {jQuery} $panel The panel that is to be expanded
+   * @param {number} id Id.
    */
-  Accordion.prototype.expandPanel = function($title, $panel) {
+  Accordion.prototype.expandPanel = function($title, $panel, id) {
     var self = this;
+
+    let xAPIEvent = self.createXAPIEvent('progressed');
+    xAPIEvent.data.statement.object.definition.extensions['http://id.tincanapi.com/extension/ending-point'] = id;
+    xAPIEvent.data.statement.timestamp = (new Date()).toISOString();
+    self.trigger(xAPIEvent);
+
+    // Keep track of visited panels
+    if (self.visited.indexOf(id) === -1) {
+      self.visited.push(id);
+
+      // All panels visited
+      if (self.visited.length === self.instances.length) {
+        xAPIEvent = self.createXAPIEvent('completed');
+        xAPIEvent.data.statement.result = {
+          completion: true
+        };
+
+        if (self.activityStartTime) {
+          const duration = Math.round((Date.now() - self.activityStartTime ) / 10) / 100;
+          xAPIEvent.data.statement.result.duration = 'PT' + duration + 'S';
+        }
+
+        this.trigger(xAPIEvent);
+      }
+    }
 
     $title.attr('aria-expanded', true)
       .addClass('h5p-panel-expanded');

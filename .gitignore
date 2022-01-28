@@ -14,7 +14,6 @@ h5p/temporary-storage
 coverage
 
 # vscode
-.vscode
 .DS_Store
 microsoft.gpg
 .env

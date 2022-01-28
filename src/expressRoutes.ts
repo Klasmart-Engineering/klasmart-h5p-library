@@ -1,4 +1,4 @@
-import express, {Request, RequestHandler} from 'express';
+import express, { RequestHandler } from 'express';
 
 import * as H5P from '@lumieducation/h5p-server';
 import {
@@ -338,11 +338,9 @@ export default function (
             } catch (e) {
                 console.error(e);
             }
-        } catch(e) {
-            console.error(e)
+            res.sendStatus(500).end();
         }
-        res.sendStatus(500).end()
-    })
+    );
 
     router.post(
         '/token/:token',
@@ -371,17 +369,22 @@ export default function (
                     return;
                 }
 
-            switch(subject) {
-                case "edit":
-                    if(typeof contentId !== "string" && contentId) { res.sendStatus(400).end(); return; }
-                case "new":
-                    if(subject === "new" && contentId) { res.sendStatus(400).end(); return; }
-                    {
-                        const newContentId =
-                            await h5pEditor.saveOrUpdateContent(
+                switch (subject) {
+                    case 'edit':
+                        if (typeof contentId !== 'string' && contentId) {
+                            res.sendStatus(400).end();
+                            return;
+                        }
+                    case 'new':
+                        if (subject === 'new' && contentId) {
+                            res.sendStatus(400).end();
+                            return;
+                        }
+                        {
+                            const newContentId = await h5pEditor.saveOrUpdateContent(
                                 // When subject is 'edit', save the update with the previous contentId
                                 // Otherwise subject is 'new', allow h5p to create new contentId
-                                subject === "edit" ? contentId : undefined,
+                                subject === 'edit' ? contentId : undefined,
                                 req.body.params.params,
                                 req.body.params.metadata,
                                 req.body.library,
@@ -422,25 +425,9 @@ export default function (
             } catch (e) {
                 console.error(e);
             }
-        } catch(e) {
-            console.error(e)
+            res.sendStatus(500).end();
         }
-        res.sendStatus(500).end()
-    })
+    );
 
     return router;
-}
-
-const requireTokenParameter: RequestHandler = async (req, res, next) => {
-    try {
-        const encodedToken = req.params.token
-        if(typeof encodedToken !== "string") { res.sendStatus(401).end(); return }
-        res.locals["token"] = await verifyToken(encodedToken)
-        next()
-    } catch(e) {
-        console.error(e)
-        res.sendStatus(403).end()
-        return
-    }
-
 }

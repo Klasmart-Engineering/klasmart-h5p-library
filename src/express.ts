@@ -17,7 +17,7 @@ import fileUpload from 'express-fileupload';
 import i18next from 'i18next';
 import i18nextFsBackend from 'i18next-fs-backend';
 import i18nextHttpMiddleware from 'i18next-http-middleware';
-import cors from "cors"
+import cors from 'cors';
 
 import {
     h5pAjaxExpressRouter,
@@ -64,8 +64,8 @@ const start = async (): Promise<void> => {
     const options = {
         // Order and from where user language should be detected.
         order: ['querystring', 'cookie', 'header'],
-        lookupCookie: 'locale',
-      }
+        lookupCookie: 'locale'
+    };
 
     const translationFunction = await i18next
         .use(i18nextFsBackend)
@@ -157,7 +157,7 @@ const start = async (): Promise<void> => {
     // We now set up the Express server in the usual fashion.
     const server = express();
 
-    server.use(cors())
+    server.use(cors());
 
     server.use(bodyParser.json({ limit: '1024mb' }));
     server.use(

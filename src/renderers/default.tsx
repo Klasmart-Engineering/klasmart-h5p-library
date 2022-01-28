@@ -5,35 +5,53 @@ import { IEditorModel } from '@lumieducation/h5p-server';
 // import $ from "jquery"
 
 // tslint:disable-next-line: function-name
-function Editor(props: any):any {
+function Editor(props: any): any {
     // console.log(props.model.integration)
     return (
         <html>
             <head>
                 <meta charSet="utf-8" />
 
-                <script dangerouslySetInnerHTML={{__html: `window.H5PIntegration = ${JSON.stringify(props.model.integration, null, 2)}`}} />
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `window.H5PIntegration = ${JSON.stringify(
+                            props.model.integration,
+                            null,
+                            2
+                        )}`
+                    }}
+                />
 
-                { props.model.styles.map((style) => (
-                    <link rel="stylesheet" href={style} />
+                {props.model.styles.map((style, index) => (
+                    <link rel="stylesheet" href={style} key={index} />
                 ))}
 
-                { props.model.scripts.map((script) => (
-                    <script src={script} />
+                {props.model.scripts.map((script, index) => (
+                    <script src={script} key={index} />
                 ))}
             </head>
             <body>
-                <form method="post" encType="multipart/form-data" id="h5p-content-form">
+                <form
+                    method="post"
+                    encType="multipart/form-data"
+                    id="h5p-content-form"
+                >
                     <div id="post-body-content">
                         <div className="h5p-create">
                             <div className="h5p-editor"></div>
                         </div>
                     </div>
-                    <input type="submit" name="submit" value="Create" className="button button-primary button-large"/>
+                    <input
+                        type="submit"
+                        name="submit"
+                        value="Create"
+                        className="button button-primary button-large"
+                    />
                 </form>
             </body>
-            <script dangerouslySetInnerHTML={{
-            __html: `var ns = H5PEditor;
+            <script
+                dangerouslySetInnerHTML={{
+                    __html: `var ns = H5PEditor;
 
             (function($) {
                 H5PEditor.init = function() {
@@ -43,21 +61,21 @@ function Editor(props: any):any {
                     H5PEditor.ajaxPath = H5PIntegration.editor.ajaxPath;
                     H5PEditor.filesPath = H5PIntegration.editor.filesPath;
                     H5PEditor.apiVersion = H5PIntegration.editor.apiVersion;
-            
+
                     // Semantics describing what copyright information can be stored for media.
                     H5PEditor.copyrightSemantics = H5PIntegration.editor.copyrightSemantics;
                     H5PEditor.metadataSemantics = H5PIntegration.editor.metadataSemantics;
-            
+
                     // Required styles and scripts for the editor
                     H5PEditor.assets = H5PIntegration.editor.assets;
-            
+
                     // Required for assets
                     H5PEditor.baseUrl = '';
-            
+
                     if (H5PIntegration.editor.nodeVersionId !== undefined) {
                         H5PEditor.contentId = H5PIntegration.editor.nodeVersionId;
                     }
-            
+
                     var h5peditor;
                     var $type = $('input[name="action"]');
                     var $upload = $('.h5p-upload');
@@ -66,7 +84,7 @@ function Editor(props: any):any {
                     var $library = $('input[name="library"]');
                     var $params = $('input[name="parameters"]');
                     var library = $library.val();
-            
+
                     // $type.change(function () {
                     //   if ($type.filter(':checked').val() === 'upload') {
                     //     $create.hide();
@@ -96,7 +114,7 @@ function Editor(props: any):any {
                     $create.show();
                     //   }
                     // });
-            
+
                     if ($type.filter(':checked').val() === 'upload') {
                         $type.change();
                     } else {
@@ -105,7 +123,7 @@ function Editor(props: any):any {
                             .attr('checked', true)
                             .change();
                     }
-            
+
                     $('#h5p-content-form').submit(function(event) {
                         if (h5peditor !== undefined) {
                             var params = h5peditor.getParams();
@@ -117,13 +135,13 @@ function Editor(props: any):any {
                                 if (!h5peditor.isMainTitleSet()) {
                                     return event.preventDefault();
                                 }
-            
+
                                 // Set main library
                                 $library.val(h5peditor.getLibrary());
-            
+
                                 // Set params
                                 $params.val(JSON.stringify(params));
-            
+
                                 $.ajax({
                                     data: JSON.stringify({
                                         library: h5peditor.getLibrary(),
@@ -140,7 +158,7 @@ function Editor(props: any):any {
                                         window.location.href = '${props.model.urlGenerator.play()}/' + parsedResult.contentId;
                                     }
                                 });
-            
+
                                 return event.preventDefault();
                                 // TODO - Calculate & set max score
                                 // $maxscore.val(h5peditor.getMaxScore(params.params));
@@ -151,7 +169,7 @@ function Editor(props: any):any {
                         // Otherwise, the user is presented with a 'Malformed request' page.
                         return event.preventDefault();
                     });
-            
+
                     // Title label
                     var $title = $('#h5p-content-form #title');
                     var $label = $title.prev();
@@ -165,16 +183,16 @@ function Editor(props: any):any {
                             }
                         })
                         .focus();
-            
+
                     // Delete confirm
                     $('.submitdelete').click(function() {
                         return confirm(H5PIntegration.editor.deleteMessage);
                     });
                 };
-            
+
                 H5PEditor.getAjaxUrl = function(action, parameters) {
                     var url = H5PIntegration.editor.ajaxPath + action;
-            
+
                     if (parameters !== undefined) {
                         for (var property in parameters) {
                             if (parameters.hasOwnProperty(property)) {
@@ -182,17 +200,18 @@ function Editor(props: any):any {
                             }
                         }
                     }
-            
+
                     url += window.location.search.replace(/\\?/g, '&');
                     return url;
                 };
-            
+
                 $(document).ready(H5PEditor.init);
             })(H5P.jQuery);`
-            }} />
+                }}
+            />
         </html>
     );
 }
 
-export default (model: IEditorModel) => `${ReactDOMServer.renderToString(<Editor model={model} />)}`
-
+export default (model: IEditorModel): string =>
+    `${ReactDOMServer.renderToString(<Editor model={model} />)}`;

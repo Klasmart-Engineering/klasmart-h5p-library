@@ -3,7 +3,7 @@ import React from 'react';
 import { IPlayerModel } from '@lumieducation/h5p-server';
 
 // tslint:disable-next-line: function-name
-function Player(props: any):any {
+function Player(props: any): any {
     // console.log("render")
     // console.log(props.model.integration)
 
@@ -12,9 +12,13 @@ function Player(props: any):any {
             <head>
                 <meta charSet="utf-8" />
                 {/* Prevent right-click/context-menu from showing */}
-                <script>{"window.addEventListener(`contextmenu`, function(e){ e.preventDefault(); }, false)"}</script>
-                { props.model.styles.map((style) => (
-                    <link rel="stylesheet" href={style} />
+                <script>
+                    {
+                        'window.addEventListener(`contextmenu`, function(e){ e.preventDefault(); }, false)'
+                    }
+                </script>
+                {props.model.styles.map((style, index) => (
+                    <link rel="stylesheet" href={style} key={index} />
                 ))}
 
                 <script
@@ -32,10 +36,14 @@ function Player(props: any):any {
                 ))}
             </head>
             <body>
-                <div className="h5p-content" data-content-id={props.model.contentId}></div>
+                <div
+                    className="h5p-content"
+                    data-content-id={props.model.contentId}
+                ></div>
             </body>
         </html>
     );
 }
 
-export default (model: IPlayerModel) => `${ReactDOMServer.renderToString(<Player model={model} />)}`
+export default (model: IPlayerModel): string =>
+    `${ReactDOMServer.renderToString(<Player model={model} />)}`;

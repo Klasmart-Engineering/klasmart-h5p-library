@@ -17,7 +17,8 @@ coverage
 .vscode
 .DS_Store
 microsoft.gpg
-.env 
+.env
+.env.test
 
 # Dependency directory
 node_modules

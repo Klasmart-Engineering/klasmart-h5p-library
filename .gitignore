@@ -18,6 +18,7 @@ coverage
 .DS_Store
 microsoft.gpg
 .env
+.env.test
 
 # Dependency directory
 node_modules

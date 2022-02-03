@@ -509,6 +509,12 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
 
         $list.appendTo($container);
       }
+
+      //
+      this.trigger('resize');
+      setTimeout(function () {
+        that.trigger('resize');
+      }, 0);
     };
 
     self.on('resize', this.scaleGameSize);

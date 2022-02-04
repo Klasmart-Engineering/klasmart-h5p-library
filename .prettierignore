@@ -3,3 +3,4 @@ build-ide/
 coverage/
 h5p/
 node_modules/
+*.md

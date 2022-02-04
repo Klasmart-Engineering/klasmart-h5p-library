@@ -18,7 +18,7 @@
         "format:check": "npx prettier --check \"{src,tests}/**/*.ts\"",
         "format": "npx prettier --write \"{src,tests}/**/*.ts\"",
         "lint": "eslint -c .eslintrc.js --ext .ts src --quiet",
-        "semantic-release": "standard-version",
+        "release": "standard-version",
         "uninstall": "rm -rf node_modules && rm -rf build"
     },
     "dependencies": {

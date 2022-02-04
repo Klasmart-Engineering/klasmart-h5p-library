@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.9.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.9.0..v2.8.1) (2022-02-04)
+
+
+### Features
+
+* **H5P-416:** update NodeJS port and extract core libraries ([849569d](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/849569d1ecbf8d9f8f55cd4308adf079eadee498))
+* **H5P-439:** replace H5P logging with KL Logger ([e2f6715](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/e2f6715f0c4c6788e8bb9a8abad5ab8becc492a1))
+* **H5P-444:** add Essay, ARec, ImagePair to CP ([2240bff](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/2240bff037c9cfd6d4180a4409537ce0ecd2d398))
+* set upload limit back to 1gb ([3406873](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/34068732e38c4ee1f9074fc6af15208d3166d5c4))
+
+
+### Bug Fixes
+
+* sync memory game files ([a6b15e1](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/a6b15e1ddcb356cd62280322c6ac351f63621b6c))
+
+
+### Performance
+
+* **H5P-435:** improve H5P.JigsawPuzzle performance ([7fb286e](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/7fb286e52d42a87e09072a1c02fabe21a1f6151a))
+
 ### [2.8.1](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.8.1..v2.8.0) (2022-01-19)
 
 

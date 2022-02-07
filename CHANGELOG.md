@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.9.1](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.9.1..v2.9.0) (2022-02-07)
+
 ## [2.9.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.9.0..v2.8.1) (2022-02-04)
 
 

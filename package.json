@@ -8,8 +8,8 @@
     },
     "scripts": {
         "start": "ts-node src/express.ts",
-        "build": "npm run build:server && npm run build:client",
-        "build:webpack": "webpack",
+        "build": "webpack",
+        "build:not-working": "npm run build:server && npm run build:client",
         "build:client": "npx tsc -p ./tsconfig.client.json",
         "build:server": "npx tsc -p ./tsconfig.server.json",
         "test": "npm run test:unit && npm run test:integration",

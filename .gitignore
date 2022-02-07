@@ -6,11 +6,8 @@ npm-debug.log*
 # Compiled files
 /build
 build-ide
-h5p/content
-h5p/core
-!h5p/core/js/xapi-uploader.js
-h5p/editor
-h5p/temporary-storage
+
+# Test coverage
 coverage
 
 # vscode
@@ -22,10 +19,7 @@ microsoft.gpg
 # Dependency directory
 node_modules
 
-# Downloaded and generated files
-test/data/hub-content/*
-test/data/content-type-cache/real-content-types.json
-test/data/hub-content-extracted/*test/data/hub-content-extracted/*
-
 # Local file Storage
+h5p/content
+h5p/temporary-storage
 h5p/content-user-data

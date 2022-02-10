@@ -68,7 +68,7 @@ describe('H5PPlayer.render', () => {
                 AUDIO_SERVICE_ENDPOINT: audioEndpoint
             } as any,
             undefined,
-            undefined,
+            undefined
         )
             .setRenderer((model) => model)
             .render(contentId, new User(), 'en', {

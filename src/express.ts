@@ -2,12 +2,13 @@
 const hacked = require('./logHack');
 hacked;
 
-const Logger = require('@lumieducation/h5p-server/build/src/helpers/Logger').default;
+const Logger = require('@lumieducation/h5p-server/build/src/helpers/Logger')
+    .default;
 
 const log = new Logger('test');
 log.info('Attempting to patch Kidsloop Logger over H5P Logger');
 import path from 'path';
-/* #endregion loghack */ 
+/* #endregion loghack */
 
 import 'newrelic';
 import { dir, DirectoryResult } from 'tmp-promise';

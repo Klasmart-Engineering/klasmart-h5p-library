@@ -1,7 +1,7 @@
-import { expect } from 'chai'
+import { expect } from 'chai';
 
 describe.skip('stub', () => {
-  it('placeholder', () => {
-    expect(true).to.be.true
-  })
-})
+    it('placeholder', () => {
+        expect(true).to.be.true;
+    });
+});

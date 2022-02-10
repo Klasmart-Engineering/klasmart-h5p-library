@@ -55,16 +55,20 @@ export default function (
         }
     );
 
-    // router.get('/edit/:contentId', async (req: IRequestWithLanguage, res) => {
-    //     const page = await h5pEditor.render(
-    //         req.params.contentId,
-    //         languageOverride === 'auto'
-    //             ? req.language ?? 'en'
-    //             : languageOverride
-    //     );
-    //     res.send(page);
-    //     res.status(200).end();
-    // });
+    // router.get(
+    //     '/edit/:contentId',
+    //     async (req: IRequestWithLanguage & IRequestWithUser, res) => {
+    //         const page = await h5pEditor.render(
+    //             req.params.contentId,
+    //             languageOverride === 'auto'
+    //                 ? req.language ?? 'en'
+    //                 : languageOverride,
+    //             req.user
+    //         );
+    //         res.send(page);
+    //         res.status(200).end();
+    //     }
+    // );
 
     // router.post('/edit/:contentId', async (req: IRequestWithUser, res) => {
     //     const contentId = await h5pEditor.saveOrUpdateContent(

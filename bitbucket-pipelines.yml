@@ -68,11 +68,12 @@ definitions:
           - docker
         script:
           - docker build -t $DOCKER_REPO_NAME .
+          - export COMMIT_TAG=$(echo $BITBUCKET_COMMIT | cut -c1-7)
           - pipe: atlassian/aws-ecr-push-image:1.5.0
             variables:
               AWS_DEFAULT_REGION: eu-west-2
               IMAGE_NAME: $DOCKER_REPO_NAME
-              TAGS: 'alpha'
+              TAGS: 'alpha $COMMIT_TAG'
 
     - step: &deploy-to-alpha
         name: "🚀 deploy to alpha"

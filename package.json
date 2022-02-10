@@ -26,7 +26,7 @@
         "@lumieducation/h5p-mongos3": "bitbucket:calmisland/h5p-nodejs-library-packages#h5p-mongos3",
         "@lumieducation/h5p-redis-lock": "^9.0.5",
         "@lumieducation/h5p-server": "bitbucket:calmisland/h5p-nodejs-library-packages#h5p-server",
-        "aws-sdk": "2.744.0",
+        "aws-sdk": "^2.1072.0",
         "body-parser": "1.19.0",
         "cache-manager": "^3.6.0",
         "cache-manager-redis-store": "^2.0.0",
@@ -52,7 +52,7 @@
         "tmp-promise": "^3.0.3"
     },
     "devDependencies": {
-        "@commitlint/config-conventional": "9.1.2",
+        "@commitlint/config-conventional": "^16.0.0",
         "@types/cache-manager-redis-store": "^2.0.1",
         "@types/chai": "^4.3.0",
         "@types/cookie": "^0.4.1",
@@ -66,6 +66,7 @@
         "@types/jsonwebtoken": "^8.5.6",
         "@types/mocha": "^9.1.0",
         "@types/newrelic": "^7.0.3",
+        "@types/node": "^16.11.7",
         "@types/react": "^16.14.21",
         "@types/react-dom": "^17.0.11",
         "@types/serve-static": "^1.13.10",
@@ -78,7 +79,7 @@
         "eslint-plugin-prettier": "4.0.0",
         "eslint-plugin-react": "7.26.1",
         "eslint-plugin-react-hooks": "4.2.0",
-        "husky": "4.2.5",
+        "husky": "^4.3.8",
         "jsdom": "^19.0.0",
         "mocha": "^9.2.0",
         "prettier": "2.1.1",
@@ -88,7 +89,7 @@
         "ts-loader": "^8.3.0",
         "ts-node": "9.0.0",
         "typescript": "4.0.2",
-        "webpack": "^4.46.0",
-        "webpack-cli": "^3.3.12"
+        "webpack": "^5.68.0",
+        "webpack-cli": "^4.9.2"
     }
 }

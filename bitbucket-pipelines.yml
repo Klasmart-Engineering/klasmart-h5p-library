@@ -11,12 +11,21 @@ definitions:
   steps:
     - step: &npm-install-and-test
         name: '⚡ npm install and test'
-        image: node:16
+        image: node:16-alpine
         script:
           - npm i
           - npm test
         artifacts:
           - node_modules/**/*
+
+    - step: &npm-build-and-prune
+        name: '⚡ npm build and prune'
+        image: node:16-alpine
+        script:
+          - npm run build
+          - npm prune --production
+        artifacts:
+          - dist/**
 
     - step: &commitlint
         name: '📝 conventional commits check'
@@ -43,6 +52,7 @@ definitions:
           - docker
         script:
           - npm run release
+          - npm run build
           - npm prune --production
           - docker build -t $DOCKER_REPO_NAME .
           - docker run --add-host host.docker.internal:$BITBUCKET_DOCKER_HOST_INTERNAL -d --name=check-startup $DOCKER_REPO_NAME && sleep 10 && docker top check-startup
@@ -68,6 +78,7 @@ definitions:
           - docker
         script:
           - docker build -t $DOCKER_REPO_NAME .
+          - docker run --add-host host.docker.internal:$BITBUCKET_DOCKER_HOST_INTERNAL -d --name=check-startup $DOCKER_REPO_NAME && sleep 10 && docker top check-startup
           - export COMMIT_TAG=$(echo $BITBUCKET_COMMIT | cut -c1-7)
           - pipe: atlassian/aws-ecr-push-image:1.5.0
             variables:
@@ -132,6 +143,7 @@ pipelines:
           script:
             - pipe: atlassian/git-secrets-scan:0.5.1
       - step: *npm-install-and-test
+      - step: *npm-build-and-prune
       - step: *build-and-push-to-ecr
       - step: *deploy-to-alpha
       - step:

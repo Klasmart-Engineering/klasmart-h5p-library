@@ -12,7 +12,7 @@
         "jsx": "react",
         "resolveJsonModule": true,
         "declaration": true,
-        "outDir": "./build/"
+        "outDir": "./dist/"
     },
-    "exclude": ["node_modules", "build", "build-ide"]
+    "exclude": ["node_modules", "dist"]
 }

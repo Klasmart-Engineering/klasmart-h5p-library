@@ -1,9 +1,10 @@
 {
     "extends": "./tsconfig.json",
-    "include": ["src/**/*.ts"],
+    "include": ["src/**/*.ts", "src/**/*.js", "config.json"],
     "exclude": ["src/client/**"],
     "compilerOptions": {
+        "allowJs": true,
         "declaration": true,
-        "outDir": "./build"
+        "outDir": "./dist"
     }
 }

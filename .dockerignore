@@ -1,2 +1,4 @@
 .git
-build
+/h5p/content
+/h5p/temporary-storage
+/tests

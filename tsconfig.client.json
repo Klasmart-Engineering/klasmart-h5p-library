@@ -3,7 +3,7 @@
     "include": ["src/client/**/*.ts", "src/client/**/*.tsx"],
     "compilerOptions": {
         "module": "AMD",
-        "outDir": "./build/client",
+        "outDir": "./dist/src/client",
         "jsx": "react",
         "declaration": false
     }

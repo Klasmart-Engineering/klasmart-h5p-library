@@ -4,8 +4,7 @@ logs
 npm-debug.log*
 
 # Compiled files
-/build
-build-ide
+dist
 
 # Test coverage
 coverage

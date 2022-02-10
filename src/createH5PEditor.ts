@@ -121,12 +121,16 @@ export default async function createH5PEditor(
     }
 
     const h5pEditor = new H5P.H5PEditor(
-        new H5P.cacheImplementations.CachedKeyValueStorage('kvcache', cache), // this is a general-purpose cache
+        new H5P.cacheImplementations.CachedKeyValueStorage(
+            'h5p:kvcache',
+            cache
+        ), // this is a general-purpose cache
         config,
         process.env.CACHE
             ? new H5P.cacheImplementations.CachedLibraryStorage(
                   libraryStorage,
-                  cache
+                  cache,
+                  'h5p:'
               )
             : libraryStorage,
         process.env.CONTENTSTORAGE !== 'mongos3'

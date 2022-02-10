@@ -60,7 +60,7 @@ if (process.env.NODE_ENV !== 'prod') {
     });
 }
 
-export async function verifyToken(token: string): Promise<object> {
+export async function verifyToken(token: string): Promise<unknown> {
     try {
         const payload = decode(token);
         if (!payload || typeof payload !== 'object') {
@@ -75,7 +75,7 @@ export async function verifyToken(token: string): Promise<object> {
             throw new Error(`Unknown Issuer(${issuer})`);
         }
         const { options, secretOrPublicKey } = issuerOptions;
-        const verifiedToken = await new Promise<object>((resolve, reject) => {
+        const verifiedToken = await new Promise<unknown>((resolve, reject) => {
             verify(token, secretOrPublicKey, options, (err, decoded) => {
                 if (err) {
                     reject(err);

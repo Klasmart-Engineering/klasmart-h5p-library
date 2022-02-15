@@ -27,8 +27,16 @@ H5P.VideoHtml5 = (function ($) {
       return path
     };
 
-    
-
+    /**
+     * Detect whether user is running iOS.
+     * @return {boolean} True, if user is running iOS.
+     */
+    const isIOS = function () {
+      return (
+        ['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone', 'iPod'].includes(navigator.platform) ||
+        (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
+      );
+    }
 
     /**
      * Register track to video
@@ -86,9 +94,9 @@ H5P.VideoHtml5 = (function ($) {
       }
 
       // KLL customization to ensure preview image on IOS by skipping zero frame
-     
-      video.src += '#t=0.001';
-   
+      if (isIOS()) {
+        video.src += '#t=0.001';
+      }
 
       // Relay play/pause/seeked events
       ['play', 'pause', 'seeked'].forEach(function (type) {

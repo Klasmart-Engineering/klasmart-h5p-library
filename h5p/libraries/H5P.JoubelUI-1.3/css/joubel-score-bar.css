@@ -3,6 +3,7 @@
   display: -webkit-inline-flexbox;
   display: -ms-inline-flexbox;
   display: -webkit-inline-flex;
+  font-family: 'Roboto', sans-serif;
   width: 15em;
   max-width: 100%;
   background: #fff;
@@ -141,7 +142,7 @@
   color: #333;
 }
 .h5p-joubelui-score-number-separator {
-  color: #999;
+  color: #757575;
   padding: 0 0.1em;
 }
 .h5p-joubelui-score-bar .joubel-tip-container {

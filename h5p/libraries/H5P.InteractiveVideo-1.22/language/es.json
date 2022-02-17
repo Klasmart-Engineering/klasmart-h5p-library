@@ -14,7 +14,7 @@
               "label": "Opciones de pantalla de inicio (no soportado para videos de YouTube)",
               "fields": [
                 {
-                  "label": "Opciones de pantalla de inicio (no soportado para videos de YouTube)",
+                  "label": "The title of this interactive video",
                   "default": "Video Interactivo",
                   "description": "Usado en resúmenes, estadísticas, etc."
                 },
@@ -271,10 +271,10 @@
           "description": "Esta opción determina si el botón \"Mostrar Solución\" se mostrará para todas las preguntas, se desactivará para todas o se configurará para cada pregunta individualmente.",
           "options": [
             {
-              "label": "Habilitado"
+              "label": "Enabled"
             },
             {
-              "label": "Deshabilitado"
+              "label": "Disabled"
             }
           ]
         },

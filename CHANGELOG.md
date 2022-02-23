@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.10.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.10.0..v2.9.1) (2022-02-23)
+
+
+### Features
+
+* **H5P-391:** introduce H5P.DialogCards enhancements ([a0350da](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/a0350daf80c79894a15e675c1b8c3f79cfd6182d))
+* **H5P-403:** amend H5P.Accordion xAPI statements ([e938783](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/e938783405da9792832ce29c8688a72b5ab0ec0c))
+* **H5P-452:** prevent dragging goto-slide link ([4071d1a](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/4071d1aefff8615130aaa007b0c16f7b96c23fc3))
+* **H5P-455:** add jigsaw puzzle editor widget ([c12e0d1](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/c12e0d1dfd150145b7502cfea9f120f9ac2b697d))
+* **H5P-458:** update Korean translations (batch 1) ([574bc19](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/574bc196cab464713abc703c619addfb8e904d42))
+* **H5P-459:** update Korean translations (batch 2) ([23e366f](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/23e366fb14a5216602b422a733ca134b805af7fd))
+* **H5P-499:** fix H5P.InteractiveVideo observe mode sizing ([4184a0b](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/4184a0b3ddf38383e6b2c97f940b914096114aa2))
+
+
+### Bug Fixes
+
+* **KLL-1357:** hotspots replication issue ([70603ed](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/70603edaa2d0274e1d73e8aa85643d3b02314352))
+
 ### [2.9.1](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.9.1..v2.9.0) (2022-02-07)
 
 ## [2.9.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.9.0..v2.8.1) (2022-02-04)

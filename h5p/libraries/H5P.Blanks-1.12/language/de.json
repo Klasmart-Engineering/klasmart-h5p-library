@@ -1,14 +1,14 @@
 {
   "semantics": [
     {
-      "label": "Medien",
+      "label": "Medium",
       "fields": [
         {
           "label": "Typ",
-          "description": "Medium, das wahlweise oberhalb der Aufgabe angezeigt wird."
+          "description": "Optionales Medium, das über der Frage dargestellt wird."
         },
         {
-          "label": "Bildzoom deaktivieren"
+          "label": "Bild-Zoom deaktivieren"
         }
       ]
     },
@@ -23,7 +23,6 @@
       "field": {
         "label": "Textzeile",
         "placeholder": "Berlin ist die Hauptstadt von *Deutschland*.",
-        "description": "",
         "important": {
           "description": "<ul><li>Lücken werden mit einem Sternchen (*) vor und hinter dem richtigen Wort markiert.</li><li>Alternative Antworten können jeweils mit einem Schrägstrich (/) angefügt werden.</li><li>Du kannst einen Tipp mit einem Doppelpunkt (:) davor hinzufügen.</li></ul>",
           "example": "H5P-Inhalte können mit einem *Browser/Web-Browser:Etwas, das du jeden Tag nutzt* betrachtet werden."
@@ -36,7 +35,7 @@
         {
           "widgets": [
             {
-              "label": "Eingabemaske"
+              "label": "Voreinstellung"
             }
           ],
           "label": "Lege Rückmeldungen für einzelne Punktebereiche fest",
@@ -68,6 +67,10 @@
     {
       "label": "Beschriftung des \"Überprüfen\"-Buttons",
       "default": "Überprüfen"
+    },
+    {
+      "label": "Text for \"Submit\" button",
+      "default": "Submit"
     },
     {
       "label": "Text der \"Nicht ausgefüllt\"-Nachricht",
@@ -190,6 +193,22 @@
     {
       "label": "Anzeigetext der Punkteleiste für Vorlesewerkzeuge (Barrierefreiheit)",
       "default": "Du hast :num von :total Punkten erreicht."
+    },
+    {
+      "label": "Beschreibung des \"Überprüfen\"-Buttons (für Hilfsmittel zur Barrierefreiheit)",
+      "default": "Die Antworten überprüfen. Die Eingaben werden als richtig, falsch oder unbeantwortet markiert."
+    },
+    {
+      "label": "Beschreibung des \"Lösung anzeigen\"-Buttons (für Hilfsmittel zur Barrierefreiheit)",
+      "default": "Die Lösung anzeigen. Die richtigen Lösungen werden in der Aufgabe angezeigt."
+    },
+    {
+      "label": "Beschreibung des \"Wiederholen\"-Buttons (für Hilfsmittel zur Barrierefreiheit)",
+      "default": "Die Aufgabe wiederholen. Alle Eingaben werden zurückgesetzt und die Aufgabe wird erneut gestartet."
+    },
+    {
+      "label": "Beschreibung zu Beginn der Aufgabe, nachdem der \"Überprüfen\"-Button geklickt wurde (für Hilfsmittel zur Barrierefreiheit)",
+      "default": "Überprüfen-Modus aktiv"
     }
   ]
 }

@@ -11,6 +11,7 @@ import path from 'path';
 /* #endregion loghack */
 
 import 'newrelic';
+import 'dotenv/config';
 import { dir, DirectoryResult } from 'tmp-promise';
 import bodyParser from 'body-parser';
 import express from 'express';
@@ -26,9 +27,10 @@ import {
     contentTypeCacheExpressRouter,
     IRequestWithUser
 } from '@lumieducation/h5p-express';
+import H5PHtmlExporter from '@lumieducation/h5p-html-exporter';
 import * as H5P from '@lumieducation/h5p-server';
 
-import startPageRenderer from './startPageRenderer';
+import kidsloopStartPageRenderer from './kidsloopStartPageRenderer';
 import expressRoutes from './expressRoutes';
 import User from './User';
 import createH5PEditor from './createH5PEditor';
@@ -140,17 +142,7 @@ const start = async (): Promise<void> => {
         config,
         { XAPI_SERVICE_ENDPOINT, AUDIO_SERVICE_ENDPOINT } as any,
         undefined,
-        (key, language) => translationFunction(key, { lng: language }),
-        {
-            customization: {
-                global: {
-                    scripts: [
-                        '/h5p/core/js/xapi-uploader.js',
-                        '/h5p/core/js/triggerXAPIExperienced.js'
-                    ]
-                }
-            }
-        }
+        (key, language) => translationFunction(key, { lng: language })
     );
 
     h5pPlayer.setRenderer(player);
@@ -248,9 +240,35 @@ const start = async (): Promise<void> => {
         contentTypeCacheExpressRouter(h5pEditor.contentTypeCache)
     );
 
+    // Serve custom files statically
+    server.use('/custom', express.static(path.join(__dirname, '../custom')));
+
+    const htmlExporter = new H5PHtmlExporter(
+        h5pEditor.libraryStorage,
+        h5pEditor.contentStorage,
+        h5pEditor.config,
+        path.join(__dirname, '../h5p/core'),
+        path.join(__dirname, '../h5p/editor')
+    );
+    server.get('/h5p/html/:contentId', async (req, res) => {
+        const html = await htmlExporter.createSingleBundle(
+            req.params.contentId,
+            (req as any).user,
+            {
+                language: req.language ?? 'en',
+                showLicenseButton: true
+            }
+        );
+        res.setHeader(
+            'Content-disposition',
+            `attachment; filename=${req.params.contentId}.html`
+        );
+        res.status(200).send(html);
+    });
+
     // The startPageRenderer displays a list of content objects and shows
     // buttons to display, edit, delete and download existing content.
-    server.get('/', startPageRenderer(h5pEditor));
+    server.get('/', kidsloopStartPageRenderer(h5pEditor));
 
     server.get('/.well-known/express/server-health', (req, res) => {
         res.sendStatus(200);
@@ -258,32 +276,74 @@ const start = async (): Promise<void> => {
 
     server.use('/client', express.static(path.join(__dirname, 'client')));
 
+    // We only include the whole node_modules directory for convenience. Don't
+    // do this in a production app.
+    //server.get('/', startPageRenderer(h5pEditor));
+    // server.use(
+    //     '/node_modules',
+    //     express.static(path.join(__dirname, '../node_modules'))
+    // );
+
+    // STUB, not implemented yet. You have to get the user id through a session
+    // cookie as h5P does not add it to the request. Alternatively you could add
+    // it to the URL generator.
+    server.post(
+        '/h5p/contentUserData/:contentId/:dataType/:subContentId',
+        (
+            req: express.Request<
+                { contentId: string; dataType: string; subContentId: string },
+                {},
+                H5P.IPostContentUserData
+            >,
+            res
+        ) => {
+            res.status(200).send();
+        }
+    );
+
+    // STUB, not implemented yet. You have to get the user id through a session
+    // cookie as h5P does not add it to the request. Alternatively you could add
+    // it to the URL generator.
+    server.get(
+        '/h5p/contentUserData/:contentId/:dataType/:subContentId',
+        (
+            req: express.Request<{
+                contentId: string;
+                dataType: string;
+                subContentId: string;
+            }>,
+            res: express.Response<H5P.IGetContentUserData | {}>
+        ) => {
+            res.status(200).json({});
+        }
+    );
+
+    // STUB, not implemented yet. You have to get the user id through a session
+    // cookie as h5P does not add it to the request. Alternatively you could add
+    // it to the URL generator.
+    server.post(
+        '/h5p/setFinished',
+        (req: express.Request<{}, {}, H5P.IPostContentUserData>, res) => {
+            res.status(200).send();
+        }
+    );
+
     // Remove temporary directory on shutdown
     if (useTempUploads) {
-        const signals: NodeJS.Signals[] = [
+        [
+            'beforeExit',
+            'uncaughtException',
+            'unhandledRejection',
             'SIGQUIT',
             'SIGABRT',
             'SIGSEGV',
             'SIGTERM'
-        ];
-        signals.forEach((evt) =>
+        ].forEach((evt) =>
             process.on(evt, async () => {
                 await tmpDir?.cleanup();
                 tmpDir = null;
             })
         );
-        process.on('beforeExit', async () => {
-            await tmpDir?.cleanup();
-            tmpDir = null;
-        });
-        process.on('uncaughtException', async () => {
-            await tmpDir?.cleanup();
-            tmpDir = null;
-        });
-        process.on('unhandledRejection', async () => {
-            await tmpDir?.cleanup();
-            tmpDir = null;
-        });
     }
 
     const port = process.env.PORT || '8080';

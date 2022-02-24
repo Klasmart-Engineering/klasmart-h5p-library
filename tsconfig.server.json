@@ -1,6 +1,6 @@
 {
     "extends": "./tsconfig.json",
-    "include": ["src/**/*.ts", "src/**/*.js", "config.json"],
+    "include": ["src/**/*.ts", "src/**/*.js"],
     "exclude": ["src/client/**"],
     "compilerOptions": {
         "allowJs": true,

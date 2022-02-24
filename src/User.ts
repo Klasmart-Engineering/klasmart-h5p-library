@@ -7,9 +7,9 @@ export default class User implements IUser {
     constructor() {
         this.id = '1';
         this.name = 'Firstname Surname';
-        this.canInstallRecommended = false;
-        this.canUpdateAndInstallLibraries = false;
-        this.canCreateRestricted = true;
+        this.canInstallRecommended = false; // KidsLoop custom
+        this.canUpdateAndInstallLibraries = false; // KidsLoop custom
+        this.canCreateRestricted = false; // KidsLoop custom
         this.type = 'local';
         this.email = 'test@example.com';
     }

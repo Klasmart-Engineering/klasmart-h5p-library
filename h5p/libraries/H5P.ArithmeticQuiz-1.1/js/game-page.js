@@ -145,7 +145,8 @@ H5P.ArithmeticQuiz.GamePage = (function ($, UI, QuizType) {
     this.$gamepage.find('.reveal-wrong').removeClass('reveal-wrong');
     this.$gamepage.find('.reveal-correct').removeClass('reveal-correct');
     this.$gamepage.find('.h5p-baq-alternatives .h5p-joubelui-button')
-      .attr('aria-checked', 'false');
+      .attr('aria-checked', 'false')
+      .removeClass('selected');
     this.$gamepage.addClass('counting-down');
     this.countdownWidget.restart();
     this.$gamepage.find('.h5p-joubelui-button:first-child, .h5p-joubelui-button:last-child').attr('tabindex', 0);
@@ -296,6 +297,16 @@ H5P.ArithmeticQuiz.GamePage = (function ($, UI, QuizType) {
           alt.reveal();
         });
 
+        setTimeout(function () {
+          // Emit screenshot
+          if (H5P && H5P.KLScreenshot) {
+            H5P.KLScreenshot.takeScreenshot(
+              self,
+              self.$gamepage.get(0).parentNode
+            );
+          }
+        }, 2000); // Allow score indicator to turn
+
         setTimeout(function(){
           self.slider.next();
         }, 3500);
@@ -431,15 +442,19 @@ H5P.ArithmeticQuiz.GamePage = (function ($, UI, QuizType) {
           }
         },
         'focus': function () {
-          if (self.$button.is('.reveal-correct, reveal-wrong')) {
+          if (self.$button.is('.reveal-correct, .reveal-wrong')) {
             return;
           }
           self.trigger('focus');
         },
         'click': function (event) {
-          if (self.$button.is('.reveal-correct, reveal-wrong')) {
+          if (self.$button.is('.reveal-correct, .reveal-wrong')) {
             return;
           }
+
+          // Required for KL screenshot
+          self.$button.addClass('selected');
+
           // Answer question
           answer(event);
         }

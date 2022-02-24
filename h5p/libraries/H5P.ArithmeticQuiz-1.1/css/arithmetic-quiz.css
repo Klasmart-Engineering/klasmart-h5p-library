@@ -37,7 +37,7 @@
 .h5p-baq-game {
   display: table-cell;
 }
-/* Don not show progress when igniting or when showing results*/
+/* Do not show progress when igniting or when showing results*/
 .h5p-baq-game.counting-down .h5p-joubelui-progressbar,
 .h5p-baq-game.result-page .h5p-joubelui-progressbar {
   visibility: hidden;
@@ -227,8 +227,15 @@
     width: 29%;
   }
 }
-.h5p-baq-alternatives > .h5p-joubelui-button:active,
-.h5p-baq-alternatives > .h5p-joubelui-button:hover {
+.h5p-baq-alternatives > .h5p-joubelui-button:not(.reveal-correct):not(.reveal-wrong):active,
+.h5p-baq-alternatives > .h5p-joubelui-button:not(.reveal-correct):not(.reveal-wrong):hover {
+  background: #005f9b;
+}
+.h5p-baq-alternatives > .h5p-joubelui-button.reveal-correct:hover,
+.h5p-baq-alternatives > .h5p-joubelui-button.reveal-wrong:hover {
+  cursor: default;
+}
+.h5p-baq-alternatives > .h5p-joubelui-button:not(.reveal-correct).selected {
   background: #005f9b;
 }
 .h5p-baq-alternatives > .h5p-joubelui-button.reveal-correct {

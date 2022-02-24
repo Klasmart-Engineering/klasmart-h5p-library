@@ -5,7 +5,7 @@
       "fields": [
         {
           "label": "Tipo",
-          "description": "Media facoltativo da mostrare sopra la domanda."
+          "description": "Media facoltativo da mostrare sopra la domanda"
         },
         {
           "label": "Disabilita lo zoom dell'immagine"
@@ -23,7 +23,6 @@
       "field": {
         "label": "Linea di testo",
         "placeholder": "Oslo è la capitale della *Norvegia*.",
-        "description": "",
         "important": {
           "description": "<ul><li>Gli spazi vuoti sono aggiunti con un asterisco (*) all'inizio e alla fine della frase corretta.</li> <li>Le risposte alternative sono separate da una barra (/).</li> <li>Si può aggiungere un testo di suggerimento facendolo precedere da due punti (:).</li></ul>",
           "example": "I contenuti H5P possono essere editati usando un *browser/browser web:Qualcosa che usi ogni giorno*."
@@ -68,6 +67,10 @@
     {
       "label": "Testo per il pulsante \"Verifica\"",
       "default": "Verifica"
+    },
+    {
+      "label": "Text for \"Submit\" button",
+      "default": "Submit"
     },
     {
       "label": "Testo per il messaggio \"Non compilato\"",
@@ -190,6 +193,22 @@
     {
       "label": "Rappresentazione testuale sulla barra del punteggio per chi usa un lettore vocale",
       "default": "Il tuo punteggio è :num di :total"
+    },
+    {
+      "label": "Descrizione delle tecnologie assistive per il pulsante \"Verifica\"",
+      "default": "Verifica"
+    },
+    {
+      "label": "Descrizione delle tecnologie assistive per il pulsante \"Mostra soluzione\"",
+      "default": "Mostra soluzione"
+    },
+    {
+      "label": "Descrizione delle tecnologie assistive per il pulsante \"Riprova\"",
+      "default": "Riprova"
+    },
+    {
+      "label": "Assistive technology description for starting task",
+      "default": "Checking mode"
     }
   ]
 }

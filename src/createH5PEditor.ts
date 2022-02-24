@@ -97,21 +97,22 @@ export default async function createH5PEditor(
         libraryStorage = mongoLibraryStorage;
     } else if (process.env.LIBRARYSTORAGE === 'mongos3') {
         debug('h5p-example')('Using MongoDB / S3 for library storage');
-        const mongoS3LibraryStorage = new dbImplementations.MongoS3LibraryStorage(
-            dbImplementations.initS3({
-                s3ForcePathStyle: true,
-                signatureVersion: 'v4'
-            }),
-            (await dbImplementations.initMongo()).collection(
-                process.env.LIBRARY_MONGO_COLLECTION
-            ),
-            {
-                s3Bucket: process.env.LIBRARY_AWS_S3_BUCKET,
-                maxKeyLength: process.env.AWS_S3_MAX_FILE_LENGTH
-                    ? Number.parseInt(process.env.AWS_S3_MAX_FILE_LENGTH, 10)
-                    : undefined
-            }
-        );
+        const mongoS3LibraryStorage =
+            new dbImplementations.MongoS3LibraryStorage(
+                dbImplementations.initS3({
+                    s3ForcePathStyle: true,
+                    signatureVersion: 'v4'
+                }),
+                (await dbImplementations.initMongo()).collection(
+                  process.env.LIBRARY_MONGO_COLLECTION
+                ),
+                {
+                  s3Bucket: process.env.LIBRARY_AWS_S3_BUCKET,
+                  maxKeyLength: process.env.AWS_S3_MAX_FILE_LENGTH
+                      ? Number.parseInt(process.env.AWS_S3_MAX_FILE_LENGTH, 10)
+                      : undefined
+                    }
+            );
         await mongoS3LibraryStorage.createIndexes();
         libraryStorage = mongoS3LibraryStorage;
     } else {
@@ -120,6 +121,10 @@ export default async function createH5PEditor(
         );
     }
 
+    /*
+     * Adding 'h5p:' as parameter to 'CachedLibraryStorage()' is a KidsLoop
+     * customization deviating from the current reference implementation
+     */
     const h5pEditor = new H5P.H5PEditor(
         new H5P.cacheImplementations.CachedKeyValueStorage(
             'h5p:kvcache',
@@ -187,9 +192,9 @@ export default async function createH5PEditor(
         h5pEditor.temporaryStorage instanceof
         dbImplementations.S3TemporaryFileStorage
     ) {
-        await (h5pEditor.temporaryStorage as any).setBucketLifecycleConfiguration(
-            h5pEditor.config
-        );
+        await (
+            h5pEditor.temporaryStorage as any
+        ).setBucketLifecycleConfiguration(h5pEditor.config);
     }
 
     return h5pEditor;

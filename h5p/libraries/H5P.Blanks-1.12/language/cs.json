@@ -23,7 +23,6 @@
       "field": {
         "label": "Řádek textu",
         "placeholder": "Oslo je hlavním městem *Norska*.",
-        "description": "",
         "important": {
           "description": "<ul><li>Mezery jsou přidány s hvězdičkou (*) před a za správným slovem/frází.</li><li>Alternativní odpovědi jsou odděleny lomítkem (/).</li><li>Můžete přidat textovou nápovědu pomocí dvojtečky (:) před nápovědou.</li></ul>",
           "example": "Obsah H5P lze upravovat pomocí *prohlížeče/webového prohlížeče: Něco, co používáte každý den*."
@@ -68,6 +67,10 @@
     {
       "label": "Popis tlačítka \"Zkontrolovat\" ",
       "default": "Zkontrolovat"
+    },
+    {
+      "label": "Text for \"Submit\" button",
+      "default": "Submit"
     },
     {
       "label": "Text pro zprávu  \"Nevyplněno\" ",
@@ -190,6 +193,22 @@
     {
       "label": "Textové znázornění výsledkové lišty pro ty, kteří používají čtecí zařízení",
       "default": "Získal jste :num z :total bodů"
+    },
+    {
+      "label": "Assistive technology description for \"Check\" button",
+      "default": "Check the answers. The responses will be marked as correct, incorrect, or unanswered."
+    },
+    {
+      "label": "Assistive technology description for \"Show Solution\" button",
+      "default": "Show the solution. The task will be marked with its correct solution."
+    },
+    {
+      "label": "Assistive technology description for \"Retry\" button",
+      "default": "Retry the task. Reset all responses and start the task over again."
+    },
+    {
+      "label": "Assistive technology description for starting task",
+      "default": "Checking mode"
     }
   ]
 }

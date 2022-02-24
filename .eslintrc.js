@@ -79,5 +79,6 @@ module.exports = {
         react: {
             version: '17.0'
         }
-    }
+    },
+    ignorePatterns: ['src/custom/**/*.js'], // TODO: Separate configuration for js possible?
 };

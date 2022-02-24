@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 
 const nodeEnv = process.env.NODE_ENV || 'development';
@@ -38,5 +39,10 @@ module.exports = {
   stats: {
     colors: true
   },
-  devtool: (isProd) ? undefined : 'eval-cheap-module-source-map'
+  devtool: (isProd) ? undefined : 'eval-cheap-module-source-map',
+  plugins: [
+    new webpack.ProvidePlugin({
+        Buffer: ['buffer', 'Buffer'],
+    })
+  ]
 };

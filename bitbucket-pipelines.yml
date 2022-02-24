@@ -54,7 +54,12 @@ definitions:
           - npm run build
           - npm prune --production
           - docker build -t $DOCKER_REPO_NAME .
-          - docker run --add-host host.docker.internal:$BITBUCKET_DOCKER_HOST_INTERNAL -d --name=check-startup $DOCKER_REPO_NAME && sleep 10 && docker top check-startup
+          - >
+            docker run --add-host host.docker.internal:$BITBUCKET_DOCKER_HOST_INTERNAL \
+              -d \
+              --name=check-startup \
+              --env-file ./.env.ci \
+              $DOCKER_REPO_NAME && sleep 8 && docker logs check-startup && docker top check-startup
           - export VERSION_TAG=$(git describe --tags --abbrev=0)
           - echo $VERSION_TAG > ./version.txt
           - pipe: atlassian/aws-ecr-push-image:1.5.0
@@ -67,7 +72,7 @@ definitions:
           - git push origin $VERSION_TAG
 
     - step: &build-and-push-to-ecr
-        name: "Push docker image to AWS"
+        name: "🐳 push docker image to AWS"
         deployment: alpha
         image: python:3.9-alpine
         services:

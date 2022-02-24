@@ -24,6 +24,7 @@ definitions:
           - npm prune --production
         artifacts:
           - dist/**
+          - custom/**
 
     - step: &commitlint
         name: '📝 conventional commits check'
@@ -116,6 +117,7 @@ pipelines:
     '**':
       - step: *npm-install-and-test
       - step: *commitlint
+      - step: *npm-build-and-prune
       - step: *docker-build-and-run
 
   branches:

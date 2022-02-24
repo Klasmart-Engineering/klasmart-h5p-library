@@ -7,12 +7,21 @@
     "hubContentTypesEndpoint": "https://api.h5p.org/v1/content-types/",
     "contentTypeCacheRefreshInterval": 86400000,
     "enableLrsContentTypes": true,
+    "maxFileSize": 1073741824,
+    "maxTotalSize": 1073741824,
     "editorAddons": {
         "H5P.CoursePresentation": ["H5P.MathDisplay"],
         "H5P.InteractiveVideo": ["H5P.MathDisplay"],
         "H5P.DragQuestion": ["H5P.MathDisplay"]
     },
     "contentWhitelist": "json png jpg jpeg gif bmp tif tiff svg eot ttf woff woff2 otf mp4 ogg mp3 m4a wav txt pdf rtf doc docx xls xlsx ppt pptx odt ods odp xml csv diff patch swf md textile vtt webvtt",
-    "maxFileSize": 1073741824,
-    "maxTotalSize": 1073741824
+    "customization": {
+        "global": {
+            "player": {
+                "scripts": [
+                    "/custom/customScripts.js"
+                ]
+            }
+        }
+      }
 }

@@ -349,6 +349,8 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
    * @param {Object} hotspot Hotspot parameters.
    */
   ImageMultipleHotspotQuestion.prototype.createHotspotFeedback = function ($clickedElement, mouseEvent, hotspot) {
+    const that = this;
+
     this.answerGiven = true;
 
     let feedbackText;
@@ -421,6 +423,18 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
 
     // Finally add fade in animation to hotspot feedback
     this.hotspotFeedback.$element.addClass('fade-in');
+
+    if (this.score === this.maxScore) {
+      // Emit screenshot
+      setTimeout(function () {
+        if (H5P && H5P.KLScreenshot) {
+          H5P.KLScreenshot.takeScreenshot(
+            that,
+            that.$wrapper.get(0).closest('.h5p-container')
+          );
+        }
+      }, 1000); // Allow results to display
+    }
 
     // Trigger xAPI completed event
     this.trigger(this.getXAPIAnswerEvent());

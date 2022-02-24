@@ -237,7 +237,9 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
         }
       });
 
-      that.$listWrapper = $('<div class="list-wrapper">');
+      if (!that.$listWrapper) {
+        that.$listWrapper = $('<div class="list-wrapper">');
+      }
     };
 
     /**
@@ -414,6 +416,16 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
       // that.trigger(completedEvent);
       //for implementing question contract
       */
+
+      // Emit screenshot
+      setTimeout(function() {
+        if (H5P && H5P.KLScreenshot) {
+          H5P.KLScreenshot.takeScreenshot(
+            that,
+            that.$wrapper.get(0)
+          );
+        }
+      }, 1000); // Allow results to display
 
       const xAPIEvent = that.createXAPIEventTemplate('answered');
       that.addQuestionToXAPI(xAPIEvent);

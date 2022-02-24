@@ -1,1 +1,4006 @@
-!function(e){function t(o){if(n[o])return n[o].exports;var i=n[o]={i:o,l:!1,exports:{}};return e[o].call(i.exports,i,i.exports,t),i.l=!0,i.exports}var n={};t.m=e,t.c=n,t.d=function(e,n,o){t.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:o})},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p="",t(t.s=3)}([function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var o=t.curry=function(e){var t=e.length;return function n(){var o=Array.prototype.slice.call(arguments,0);return o.length>=t?e.apply(null,o):function(){var e=Array.prototype.slice.call(arguments,0);return n.apply(null,o.concat(e))}}},i=(t.compose=function(){for(var e=arguments.length,t=Array(e),n=0;n<e;n++)t[n]=arguments[n];return t.reduce(function(e,t){return function(){return e(t.apply(void 0,arguments))}})},t.forEach=o(function(e,t){t.forEach(e)}),t.map=o(function(e,t){return t.map(e)}),t.filter=o(function(e,t){return t.filter(e)})),r=(t.some=o(function(e,t){return t.some(e)}),t.contains=o(function(e,t){return-1!=t.indexOf(e)}));t.without=o(function(e,t){return i(function(t){return!r(t,e)},t)}),t.inverseBooleanString=function(e){return("true"!==e).toString()}},function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.createElement=t.toggleClass=t.toggleVisibility=t.show=t.hide=t.removeClass=t.addClass=t.classListContains=t.removeChild=t.querySelectorAll=t.nodeListToArray=t.querySelector=t.appendChild=t.toggleAttribute=t.attributeEquals=t.hasAttribute=t.removeAttribute=t.setAttribute=t.getAttribute=void 0;var o=n(0),i=t.getAttribute=(0,o.curry)(function(e,t){return t.getAttribute(e)}),r=t.setAttribute=(0,o.curry)(function(e,t,n){return n.setAttribute(e,t)}),a=(t.removeAttribute=(0,o.curry)(function(e,t){return t.removeAttribute(e)}),t.hasAttribute=(0,o.curry)(function(e,t){return t.hasAttribute(e)}),t.attributeEquals=(0,o.curry)(function(e,t,n){return n.getAttribute(e)===t}),t.toggleAttribute=(0,o.curry)(function(e,t){var n=i(e,t);r(e,(0,o.inverseBooleanString)(n),t)}),t.appendChild=(0,o.curry)(function(e,t){return e.appendChild(t)}),t.querySelector=(0,o.curry)(function(e,t){return t.querySelector(e)}),t.nodeListToArray=function(e){return Array.prototype.slice.call(e)}),s=(t.querySelectorAll=(0,o.curry)(function(e,t){return a(t.querySelectorAll(e))}),t.removeChild=(0,o.curry)(function(e,t){return e.removeChild(t)}),t.classListContains=(0,o.curry)(function(e,t){return t.classList.contains(e)}),t.addClass=(0,o.curry)(function(e,t){return t.classList.add(e)})),l=t.removeClass=(0,o.curry)(function(e,t){return t.classList.remove(e)}),u=t.hide=s("hidden"),c=t.show=l("hidden");t.toggleVisibility=(0,o.curry)(function(e,t){return(e?c:u)(t)}),t.toggleClass=(0,o.curry)(function(e,t,n){n.classList[t?"add":"remove"](e)}),t.createElement=function(e){var t=e.tag,n=e.id,o=e.classes,i=e.attributes,r=document.createElement(t);return n&&(r.id=n),o&&o.forEach(function(e){r.classList.add(e)}),i&&Object.keys(i).forEach(function(e){r.setAttribute(e,i[e])}),r}},function(e,t,n){"use strict";function o(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(t,"__esModule",{value:!0});var i=function(){function e(e,t){for(var n=0;n<t.length;n++){var o=t[n];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(e,o.key,o)}}return function(t,n,o){return n&&e(t.prototype,n),o&&e(t,o),t}}(),r=function(){function e(){o(this,e)}return i(e,null,[{key:"setElementOpacity",value:function(t,n){e.setOpacity(t,"borderColor",n),e.setOpacity(t,"boxShadow",n),e.setOpacity(t,"background",n)}},{key:"setOpacity",value:function(t,n,o){function i(e,t){switch(e){case"borderColor":return{borderTopColor:t,borderRightColor:t,borderBottomColor:t,borderLeftColor:t};default:var n={};return n[e]=t,n}}if("background"===n)return e.setOpacity(t,"backgroundColor",o),void e.setOpacity(t,"backgroundImage",o);o=void 0===o?1:o/100;var r=t.css(n),a=i(n,"");t.css(a);for(var s in a)break;var l=t.css(s);""!==l&&"none"!==l||(l=r),l=e.setAlphas(l,"rgba(",o),l=e.setAlphas(l,"rgb(",o),t.css(i(n,l))}},{key:"setAlphas",value:function(e,t,n){if(e){for(var o=e.indexOf(t);-1!==o;){var i=e.indexOf(")",o),r=e.substring(o+t.length,i).split(",");r[3]=void 0!==r[3]?parseFloat(r[3])*n:n,e=e.substring(0,o)+"rgba("+r.join(",")+e.substring(i,e.length),o=e.indexOf(t,i)}return e}}},{key:"elementToDraggable",value:function(e,t){for(var n=0;n<e.length;n++)if(e[n]){var o=e[n].findElement(t);if(o)return o.draggable=e[n],o}}},{key:"elementToDropZone",value:function(e,t){for(var n=0;n<e.length;n++)if(e[n].$dropZone.is(t))return e[n]}},{key:"positionToPercentage",value:function(e,t){return{top:100*parseInt(t.css("top"))/e.innerHeight()+"%",left:100*parseInt(t.css("left"))/e.innerWidth()+"%"}}},{key:"addHover",value:function(t,n){t.hover(function(){t.addClass("h5p-draggable-hover"),t.parent().hasClass("h5p-dragging")||e.setElementOpacity(t,n)},function(){t.parent().hasClass("h5p-dragging")||setTimeout(function(){t.removeClass("h5p-draggable-hover"),e.setElementOpacity(t,n)},1)}),e.setElementOpacity(t,n)}},{key:"strip",value:function(e){var t=document.createElement("div");return t.innerHTML=e,t.textContent||t.innerText||""}}]),e}();t.default=r},function(e,t,n){"use strict";function o(e){return e&&e.__esModule?e:{default:e}}function i(e,t,n){var o,i,r=this,a=this;k++,this.id=this.contentId=t,this.contentData=n,H5P.Question.call(a,"dragquestion"),this.options=y.extend(!0,{},{scoreShow:"Check",tryAgain:"Retry",grabbablePrefix:"Grabbable {num} of {total}.",grabbableSuffix:"Placed in dropzone {num}.",dropzonePrefix:"Dropzone {num} of {total}.",noDropzone:"No dropzone",tipLabel:"Show tip.",tipAvailable:"Tip available",correctAnswer:"Correct answer",wrongAnswer:"Wrong answer",feedbackHeader:"Feedback",scoreBarLabel:"You got :num out of :total points",scoreExplanationButtonLabel:"Show score explanation",question:{settings:{questionTitle:this.contentData&&this.contentData.metadata&&this.contentData.metadata.title?this.contentData.metadata.title:"Drag and drop",size:{width:620,height:310}},task:{elements:[],dropZones:[]}},overallFeedback:[],audio:{},behaviour:{enableRetry:!0,enableCheckButton:!0,preventResize:!1,singlePoint:!1,showSolutionsRequiresInput:!0,applyPenalties:!0,enableScoreExplanation:!0,autoCheckSolutions:!1,compactMode:!1,dropZoneHighlighting:"dragging",autoAlignSpacing:2,showScorePoints:!0,showTitle:!1},a11yCheck:"Check the answers. The responses will be marked as correct, incorrect, or unanswered.",a11yRetry:"Retry the task. Reset all responses and start the task over again."},e),this.options.behaviour.compactMode&&(this.options.behaviour.showTitle=!1),this.options.behaviour.singlePoint&&(this.options.behaviour.enableScoreExplanation=!1),this.draggables=[],this.dropZones=[],this.answered=n&&void 0!==n.previousState&&void 0!==n.previousState.answers&&n.previousState.answers.length,this.blankIsCorrect=!0,this.players={},this.audios=[],this.backgroundOpacity=void 0===this.options.behaviour.backgroundOpacity||""===this.options.behaviour.backgroundOpacity.trim()?void 0:this.options.behaviour.backgroundOpacity,a.$noDropZone=y('<div class="h5p-dq-no-dz" role="button" style="display:none;"><span class="h5p-hidden-read">'+a.options.noDropzone+"</span></div>");var s=w(a.draggables,a.dropZones,a.$noDropZone[0]),l=function(e){for(var t=0;t<s.drop.elements.length;t++)s.drop.elements[t].setAttribute("aria-dropeffect",e)},u=[],c=this.options.question.task;for(this.correctDZs=[],o=0;o<c.dropZones.length;o++){u.push(!0);var d=c.dropZones[o].correctElements;for(i=0;i<d.length;i++){var p=d[i];void 0===this.correctDZs[p]&&(this.correctDZs[p]=[]),this.correctDZs[p].push(o)}}this.weight=1;var h={prefix:a.options.grabbablePrefix.replace("{total}",c.elements.length),suffix:a.options.grabbableSuffix,correctAnswer:a.options.correctAnswer,wrongAnswer:a.options.wrongAnswer};for(o=0;o<c.elements.length;o++){var g=c.elements[o];if(void 0!==g.dropZones&&g.dropZones.length){void 0!==this.backgroundOpacity&&(g.backgroundOpacity=this.backgroundOpacity);var v=null;n&&void 0!==n.previousState&&void 0!==n.previousState.answers&&void 0!==n.previousState.answers[o]&&(v=n.previousState.answers[o]);var x=new m.default(g,o,v,h),E="dragging"===a.options.behaviour.dropZoneHighlighting;for(x.on("elementadd",function(e){s.drag.addElement(e.data);for(var t=e.data.querySelectorAll("audio"),n=0;n<t.length;n++)a.audios.push(t[n])}),x.on("elementremove",function(e){s.drag.removeElement(e.data),"true"===e.data.getAttribute("aria-grabbed")&&(s.drag.firesEvent("select",e.data),e.data.removeAttribute("aria-grabbed"))}),x.on("pickedUp",function(e){var t=a.draggables[e.data];r.taskCompleted||(r.resetAudios(),t.audios&&t.audios.pickedUp?t.audios.pickedUp.play():r.playAudio(r.players.pickedUp))}),x.on("focus",function(e){s.drag.setTabbable(e.data),e.data.focus()}),x.on("dragstart",function(e){E&&a.$container.addClass("h5p-dq-highlight-dz"),l(e.data)}),x.on("dragend",function(e){if(!a.isAudioPlaying(["droppedWrong","droppedCorrect"])&&!this.taskCompleted){a.resetAudios();var t=a.draggables[e.data];t.audios&&t.audios.dropped?t.audios.dropped.play():a.playAudio(a.players.dropped)}E&&a.$container.removeClass("h5p-dq-highlight-dz"),l("none")}),x.on("interacted",function(){a.answered=!0,a.triggerXAPI("interacted"),a.options.behaviour.autoCheckSolutions&&a.getScore()>=a.getMaxScore()&&(a.$mainContainer.find(".h5p-question-check-answer").click(),a.$mainContainer.find(".h5p-question-buttons").addClass("h5p-display-inline-block"))}),x.on("leavingDropZone",function(e){a.dropZones[e.data.dropZone].removeAlignable(e.data.$)}),this.draggables[o]=x,i=0;i<g.dropZones.length;i++)u[g.dropZones[i]]=!1}}this.numDropZonesWithoutElements=0;var A={prefix:a.options.dropzonePrefix.replace("{total}",c.dropZones.length),tipLabel:a.options.tipLabel,tipAvailable:a.options.tipAvailable};for(o=0;o<c.dropZones.length;o++){var P=c.dropZones[o];!0===u[o]&&(this.numDropZonesWithoutElements+=1),this.blankIsCorrect&&P.correctElements.length&&(this.blankIsCorrect=!1),P.autoAlign={enabled:P.autoAlign,spacing:a.options.behaviour.autoAlignSpacing,size:a.options.question.settings.size},this.dropZones[o]=new b.default(P,o,A),this.dropZones[o].on("elementaligned",function(e){for(var t=e.data,n=0;n<a.draggables.length;n++){var o=a.draggables[n];if(o&&o.elements&&o.elements.length)for(var i=0;i<o.elements.length;i++){var r=o.elements[i];if(r&&r.$[0]===t[0])return void(r.position=f.default.positionToPercentage(a.$container,r.$))}}}),this.dropZones[o].on("dropped",function(e){var t=r.options.question.task.dropZones[e.data.dropzoneId].correctElements;r.resetAudios(),-1!==t.indexOf(""+e.data.draggableId)?r.playAudio(r.players.droppedCorrect):r.playAudio(r.players.droppedWrong)})}this.on("resize",a.resize,a),this.on("domChanged",function(e){a.contentId===e.data.contentId&&a.trigger("resize")}),this.on("enterFullScreen",function(){a.$container&&(a.$container.parents(".h5p-content").css("height","100%"),a.trigger("resize"))}),this.on("exitFullScreen",function(){a.$container&&(a.$container.parents(".h5p-content").css("height","auto"),a.trigger("resize"))})}var r=n(4),a=o(r),s=n(6),l=o(s),u=n(7),c=o(u),d=n(8),p=o(d),h=n(2),f=o(h),g=n(9),b=o(g),v=n(10),m=o(v),y=H5P.jQuery,k=0;i.prototype=Object.create(H5P.Question.prototype),i.prototype.constructor=i,i.prototype.registerDomElements=function(){var e=this;e.options.behaviour.showTitle&&(e.$introduction=y('<p class="h5p-dragquestion-introduction" id="dq-intro-'+k+'">'+e.options.question.settings.questionTitle+"</p>"),e.setIntroduction(e.$introduction));var t="";if(void 0===this.options.question.settings.background||e.options.behaviour.compactMode||(t+="h5p-dragquestion-has-no-background"),"always"===e.options.behaviour.dropZoneHighlighting&&(t&&(t+=" "),t+="h5p-dq-highlight-dz-always"),e.setContent(e.createQuestionContent(),{class:t}),!1!==H5P.canHasFullScreen&&this.options.behaviour.enableFullScreen){var n=function(){H5P.isFullscreen?H5P.exitFullScreen(e.$container):H5P.fullScreen(e.$container.parent().parent(),e)},o=y("<div/>",{class:"h5p-my-fullscreen-button-enter",title:this.options.localize.fullscreen,role:"button",tabindex:0,on:{click:n,keypress:function(e){13!==e.which&&32!==e.which||(n(),e.preventDefault())}},prependTo:this.$container.parent()});this.on("enterFullScreen",function(){o.attr("class","h5p-my-fullscreen-button-exit"),o.attr("title",this.options.localize.exitFullscreen)}),this.on("exitFullScreen",function(){o.attr("class","h5p-my-fullscreen-button-enter"),o.attr("title",this.options.localize.fullscreen)})}e.registerButtons()},i.prototype.getXAPIData=function(){var e=this.createXAPIEventTemplate("answered");return this.addQuestionToXAPI(e),this.addResponseToXAPI(e),{statement:e.data.statement}},i.prototype.addQuestionToXAPI=function(e){var t=e.getVerifiedStatementValue(["object","definition"]);y.extend(t,this.getXAPIDefinition())},i.prototype.getXAPIDefinition=function(){var e={};e.description={"en-US":y("<div>"+this.options.question.settings.questionTitle+"</div>").text()},e.type="http://adlnet.gov/expapi/activities/cmi.interaction",e.interactionType="matching",e.source=[];for(var t=0;t<this.options.question.task.elements.length;t++){var n=this.options.question.task.elements[t];if(n.dropZones&&n.dropZones.length){var o=n.type.params.alt?n.type.params.alt:n.type.params.text;e.source.push({id:""+t,description:{"en-US":y("<div>"+o+"</div>").text()}})}}e.correctResponsesPattern=[""],e.target=[];var i=!0;for(t=0;t<this.options.question.task.dropZones.length;t++)if(e.target.push({id:""+t,description:{"en-US":y("<div>"+this.options.question.task.dropZones[t].label+"</div>").text()}}),this.options.question.task.dropZones[t].correctElements)for(var r=0;r<this.options.question.task.dropZones[t].correctElements.length;r++){var a=this.options.question.task,s=a.elements[a.dropZones[t].correctElements[r]];!s||s.dropZones.indexOf(t.toString())<0||(i||(e.correctResponsesPattern[0]+="[,]"),e.correctResponsesPattern[0]+=t+"[.]"+a.dropZones[t].correctElements[r],i=!1)}return e},i.prototype.addResponseToXAPI=function(e){var t=this.getMaxScore(),n=this.getScore(),o=n==t;e.setScoredResult(n,t,this,!0,o),e.data.statement.result.response=this.getUserXAPIResponse()},i.prototype.getUserXAPIResponse=function(){var e=this.getUserAnswers();return e?e.filter(function(e){return e.elements.length}).map(function(e){return e.elements.filter(function(e){return void 0!==e.dropZone}).map(function(t){return t.dropZone+"[.]"+e.index}).join("[,]")}).filter(function(e){return void 0!==e&&""!==e}).join("[,]"):""},i.prototype.getUserAnswers=function(){return this.draggables.map(function(e,t){return{index:t,draggable:e}}).filter(function(e){return void 0!==e.draggable&&e.draggable.elements}).map(function(e){return{index:e.index,elements:e.draggable.elements}})},i.prototype.createQuestionContent=function(){var e,t=this;this.$container=y('<div class="h5p-inner" role="application" aria-labelledby="dq-intro-'+k+'"></div>'),void 0!==this.options.question.settings.background&&this.$container.css("backgroundImage",'url("'+H5P.getPath(this.options.question.settings.background.path,this.id)+'")');var n=this.options.question.task;for(e=0;e<n.elements.length;e++){var o=n.elements[e];if(void 0!==o.dropZones&&0!==o.dropZones.length)this.draggables[e].appendTo(this.$container,this.id);else{var i,r;!function(){i=t.addElement(o,"static",e);var n=H5P.newRunnable(o.type,t.id,i);"H5P.Audio"===o.type.library.split(" ")[0]&&t.on("resize",function(){n.resize()}),(r=function(e,t){setTimeout(function(){f.default.setOpacity(e,"background",t.backgroundOpacity)},0)})(i,o)}()}}for(this.$noDropZone.appendTo(this.$container),e=0;e<this.dropZones.length;e++)this.dropZones[e].appendTo(this.$container,this.draggables);for(var a in this.options.audio){var s=this.options.audio;if(!Array.isArray(s[a])||s[a].length<1||!s[a][0].path||!s[a][0].mime||"audio"!==s[a][0].mime.split("/")[0])return;var l=document.createElement("audio");l.classList.add("h5p-dragquestion-no-display"),l.src=H5P.getPath(s[a][0].path,this.contentId),this.$container.append(l),this.players[a]=l,this.audios.push(l)}return this.$container},i.prototype.registerButtons=function(){this.options.behaviour.enableCheckButton&&this.addSolutionButton(),this.addRetryButton()},i.prototype.addSolutionButton=function(){var e=this;this.addButton("check-answer",this.options.scoreShow,function(){e.taskCompleted=!0,e.answered=!0,e.showAllSolutions(),e.showScore(),e.addExplanation();var t=e.createXAPIEventTemplate("answered");e.addQuestionToXAPI(t),e.addResponseToXAPI(t),e.trigger(t),(e.$introduction?e.$introduction:e.$container.children().first()).focus()},!0,{"aria-label":this.options.a11yCheck})},i.prototype.addExplanation=function(){var e=this,t=this.options.question.task,n=[];t.dropZones.forEach(function(t,o){var i={correct:t.tipsAndFeedback.feedbackOnCorrect,incorrect:t.tipsAndFeedback.feedbackOnIncorrect};if(void 0!==i.correct||void 0!==i.incorrect){var r=t.correctElements,a={};e.draggables.forEach(function(e){e.elements.forEach(function(t){t.dropZone==o&&(a[e.id]={instance:e,correct:-1!==r.indexOf(""+e.id)})})}),Object.keys(a).forEach(function(e){var r=a[e],s=f.default.strip(r.instance.type.params.alt||r.instance.type.params.text)||"?",l=f.default.strip(t.label);r.correct&&i.correct?(n.push({correct:l+" + "+s,text:i.correct}),r.instance.setFeedback(i.correct,o)):!r.correct&&i.incorrect&&(n.push({correct:l+" + ",wrong:s,text:i.incorrect}),r.instance.setFeedback(i.incorrect,o))})}}),0!==n.length&&this.setExplanation(n,this.options.feedbackHeader)},i.prototype.addRetryButton=function(){var e=this;this.addButton("try-again",this.options.tryAgain,function(){e.resetTask(),e.showButton("check-answer"),e.hideButton("try-again")},!1,{"aria-label":this.options.a11yRetry})},i.prototype.addElement=function(e,t,n){return y('<div class="h5p-'+t+'" style="left:'+e.x+"%;top:"+e.y+"%;width:"+e.width+"em;height:"+e.height+'em"></div>').appendTo(this.$container).data("id",n)},i.prototype.resize=function(e){var t=this;if(void 0!==this.$container&&this.$container.is(":visible")){this.$mainContainer=this.$container.parents(".h5p-dragquestion"),t.options.behaviour.autoCheckSolutions?this.$mainContainer.addClass("h5p-auto-check"):this.$container.find(".h5p-question-buttons").addClass("h5p-display-inline-block"),t.options.behaviour.compactMode&&this.$mainContainer.addClass("h5p-compact-mode"),t.dropZones.forEach(function(e){e.updateBackgroundOpacity()});var n=e&&e.data&&e.data.decreaseSize;n||(this.$container.css("height","99999px"),t.$container.parents(".h5p-standalone.h5p-dragquestion").css("width",""));var o=this.options.question.settings.size,i=o.width/o.height,r=this.$container.parent(),a=r.width()-parseFloat(r.css("margin-left"))-parseFloat(r.css("margin-right")),s=t.$container.parents(".h5p-standalone.h5p-dragquestion.h5p-semi-fullscreen");if(s.length){s.css("width",""),n||(t.$container.css("width","10px"),s.css("width",""),setTimeout(function(){t.trigger("resize",{decreaseSize:!0})},200));var l=y(window.frameElement);if(l){a=l.parent().width(),s.css("width",a+"px")}}var u=a/i;a<=0&&(a=o.width,u=o.height),this.$container.css({width:a+"px",height:u+"px",fontSize:a/o.width*16+"px"})}},i.prototype.disableDraggables=function(){this.draggables.forEach(function(e){e.disable()})},i.prototype.enableDraggables=function(){this.draggables.forEach(function(e){e.enable()})},i.prototype.showAllSolutions=function(e){this.points=0,this.rawPoints=0,this.blankIsCorrect&&(this.points=1,this.rawPoints=1);var t;!e&&this.options.behaviour.showScorePoints&&!this.options.behaviour.singlePoint&&this.options.behaviour.applyPenalties&&(t=new H5P.Question.ScorePoints);for(var n=0;n<this.draggables.length;n++){var o=this.draggables[n];void 0!==o&&(e||o.disable(),this.points+=o.results(e,this.correctDZs[n],t),this.rawPoints+=o.rawPoints)}this.points<0&&(this.points=0),!this.answered&&this.blankIsCorrect&&(this.points=this.weight),this.options.behaviour.singlePoint&&(this.points=this.points===this.calculateMaxScore()?1:0),e||this.hideButton("check-answer"),this.options.behaviour.enableRetry&&!e&&this.showButton("try-again"),!this.hasButton("check-answer")||!1!==this.options.behaviour.enableRetry&&this.points!==this.getMaxScore()||this.hideButton("try-again")},i.prototype.showSolutions=function(){this.showAllSolutions(),this.showScore(),this.hideButton("check-answer"),this.hideButton("try-again"),this.disableDraggables()},i.prototype.resetTask=function(){this.points=0,this.rawPoints=0,this.answered=!1,this.taskCompleted=!1,this.dropZones.forEach(function(e){e.reset()}),this.enableDraggables(),this.draggables.forEach(function(e){e.resetPosition()}),this.showButton("check-answer"),this.hideButton("try-again"),this.removeFeedback(),this.setExplanation()},i.prototype.calculateMaxScore=function(){var e=0;if(this.blankIsCorrect)return 1;for(var t=this.options.question.task.elements,n=0;n<t.length;n++){var o=this.correctDZs[n];void 0!==o&&o.length&&(t[n].multiple?e+=o.length:e++)}return e},i.prototype.getMaxScore=function(){return this.options.behaviour.singlePoint?this.weight:this.calculateMaxScore()},i.prototype.getScore=function(){this.showAllSolutions(!0);var e=this.options.behaviour.applyPenalties||this.options.behaviour.singlePoint?this.points:this.rawPoints;return delete this.points,delete this.rawPoints,e},i.prototype.getAnswerGiven=function(){return!this.options.behaviour.showSolutionsRequiresInput||this.answered||this.blankIsCorrect},i.prototype.showScore=function(){var e=this.calculateMaxScore();this.options.behaviour.singlePoint&&(e=1);var t=this.options.behaviour.applyPenalties||this.options.behaviour.singlePoint?this.points:this.rawPoints,n=H5P.Question.determineOverallFeedback(this.options.overallFeedback,t/e).replace("@score",t).replace("@total",e),o=!(!this.options.behaviour.enableScoreExplanation||!this.options.behaviour.applyPenalties)&&this.options.scoreExplanation;this.setFeedback(n,t,e,this.options.scoreBarLabel,o,void 0,this.options.scoreExplanationButtonLabel)},i.prototype.getCurrentState=function(){for(var e={answers:[]},t=0;t<this.draggables.length;t++){var n=this.draggables[t];if(void 0!==n){for(var o=[],i=0;i<n.elements.length;i++){var r=n.elements[i];void 0!==r&&void 0!==r.dropZone&&o.push({x:Number(r.position.left.replace("%","")),y:Number(r.position.top.replace("%","")),dz:r.dropZone})}o.length&&(e.answers[t]=o)}}return e},i.prototype.getTitle=function(){return H5P.createTitle(this.contentData&&this.contentData.metadata&&this.contentData.metadata.title?this.contentData.metadata.title:"Drag and drop")},i.prototype.playAudio2=function(e){this.$container.closest(".h5p-content").hasClass("using-mouse")&&"string"==typeof e&&this.audios[e]&&this.audios[e].play()},i.prototype.playAudio=function(e){this.$container.closest(".h5p-content").hasClass("using-mouse")&&e&&e.play()},i.prototype.resetAudios=function(){this.audios.forEach(function(e){e.pause(),e.load()})},i.prototype.isAudioPlaying=function(e){Array.isArray(e)||(e=[e]);var t=!1;for(var n in this.players)if(!(e.length>0&&-1===e.indexOf(n)||this.players[n].paused)){t=!0;break}return t};var w=function(e,t,n){var o={drag:new a.default([new p.default,new l.default]),drop:new a.default([new p.default,new c.default])};o.drag.useNegativeTabIndex(),o.drop.useNegativeTabIndex();var i,r=function(){i.draggable.trigger("dragend"),i.element.$.removeClass("h5p-draggable-hover"),f.default.setElementOpacity(i.element.$,i.draggable.backgroundOpacity),-1!==o.drop.elements.indexOf(n)&&(o.drop.removeElement(n),n.style.display="none");for(var e=0;e<t.length;e++){var r=t[e];r.dehighlight(),-1!==o.drop.elements.indexOf(r.$dropZone[0])&&o.drop.removeElement(r.$dropZone[0])}if(i.element.$.is(":visible"))i.element.$.focus();else{var a=i.draggable.elements[i.draggable.elements.length-1].$;o.drag.setTabbable(a[0]),a.focus()}i=void 0};return o.drag.on("select",function(a){var s=f.default.elementToDraggable(e,a.element);if(i)return void r();i=s,i.element.$.addClass("h5p-draggable-hover"),f.default.setElementOpacity(i.element.$,i.draggable.backgroundOpacity),i.draggable.trigger("dragstart",i.draggable.mustCopyElement(i.element)?"copy":"move"),o.drop.addElement(n),n.style.display="block",n.style.left=i.draggable.x+"%",n.style.top=i.draggable.y+"%",n.style.width=i.draggable.width+"em",n.style.height=i.draggable.height+"em";for(var l,u=0;u<t.length;u++){var c=t[u];c.accepts(i.draggable,e)&&(c.highlight(),o.drop.addElement(c.$dropZone[0]),l&&i.element.dropZone!==c.id||(l=c.$dropZone))}l&&(o.drop.setTabbable(l[0]),l.focus())}),o.drop.on("select",function(e){if(i){if(e.element===n)return void 0!==i.element.dropZone&&i.element.reset(),void(void 0!==i&&(i.element.$.css({left:i.draggable.x+"%",top:i.draggable.y+"%",width:i.draggable.width+"em",height:i.draggable.height+"em"}),i.draggable.updatePlacement(i.element),i.element.$[0].setAttribute("aria-grabbed","false"),r()));var o=f.default.elementToDropZone(t,e.element);i.draggable.mustCopyElement(i.element)&&i.element.clone(),i.draggable.addToDropZone(i.index,i.element,o.id),i.element.$.css({left:o.x+"%",top:o.y+"%"}),-1===o.getIndexOf(i.element.$)&&o.alignables.push(i.element.$),o.autoAlign(),i.element.$[0].setAttribute("aria-grabbed","false"),r()}}),o};H5P.DragQuestion=i},function(e,t,n){"use strict";function o(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(t,"__esModule",{value:!0});var i=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var o in n)Object.prototype.hasOwnProperty.call(n,o)&&(e[o]=n[o])}return e},r=function(){function e(e,t){for(var n=0;n<t.length;n++){var o=t[n];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(e,o.key,o)}}return function(t,n,o){return n&&e(t.prototype,n),o&&e(t,o),t}}(),a=n(1),s=n(0),l=n(5),u=(0,a.removeAttribute)("tabindex"),c=((0,s.forEach)(u),(0,a.setAttribute)("tabindex","0")),d=(0,a.setAttribute)("tabindex","-1"),p=(0,a.hasAttribute)("tabindex"),h=function(){function e(t){o(this,e),i(this,(0,l.Eventful)()),this.plugins=t||[],this.elements=[],this.negativeTabIndexAllowed=!1,this.on("nextElement",this.nextElement,this),this.on("previousElement",this.previousElement,this),this.initPlugins()}return r(e,[{key:"addElement",value:function(e){this.elements.push(e),this.firesEvent("addElement",e),1===this.elements.length&&this.setTabbable(e)}},{key:"removeElement",value:function(e){this.elements=(0,s.without)([e],this.elements),p(e)&&(this.setUntabbable(e),this.elements[0]&&this.setTabbable(this.elements[0])),this.firesEvent("removeElement",e)}},{key:"firesEvent",value:function(e,t){var n=this.elements.indexOf(t);return this.fire(e,{element:t,index:n,elements:this.elements,oldElement:this.tabbableElement})}},{key:"nextElement",value:function(e){var t=e.index,n=t===this.elements.length-1,o=this.elements[n?0:t+1];this.setTabbable(o),o.focus()}},{key:"setTabbable",value:function(e){(0,s.forEach)(this.setUntabbable.bind(this),this.elements),c(e),this.tabbableElement=e}},{key:"setUntabbable",value:function(e){this.negativeTabIndexAllowed?d(e):u(e)}},{key:"previousElement",value:function(e){var t=e.index,n=0===t,o=this.elements[n?this.elements.length-1:t-1];this.setTabbable(o),o.focus()}},{key:"useNegativeTabIndex",value:function(){this.negativeTabIndexAllowed=!0,this.elements.forEach(function(e){e.hasAttribute("tabindex")||d(e)})}},{key:"initPlugins",value:function(){this.plugins.forEach(function(e){void 0!==e.init&&e.init(this)},this)}}]),e}();t.default=h},function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});t.Eventful=function(){return{listeners:{},on:function(e,t,n){var o={listener:t,scope:n};return this.listeners[e]=this.listeners[e]||[],this.listeners[e].push(o),this},fire:function(e,t){return(this.listeners[e]||[]).every(function(e){return!1!==e.listener.call(e.scope||this,t)})},propagate:function(e,t){var n=this;e.forEach(function(e){return t.on(e,function(t){return n.fire(e,t)})})}}}},function(e,t,n){"use strict";function o(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(t,"__esModule",{value:!0});var i=function(){function e(e,t){for(var n=0;n<t.length;n++){var o=t[n];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(e,o.key,o)}}return function(t,n,o){return n&&e(t.prototype,n),o&&e(t,o),t}}(),r=n(1),a=n(0),s=(0,r.setAttribute)("aria-grabbed"),l=(0,r.attributeEquals)("aria-grabbed","true"),u=(0,a.filter)((0,r.hasAttribute)("aria-grabbed")),c=(0,a.compose)((0,a.forEach)((0,r.setAttribute)("aria-grabbed","false")),u),d=(0,a.compose)((0,a.some)(l),u),p=function(){function e(){o(this,e)}return i(e,[{key:"init",value:function(e){this.controls=e,this.controls.on("select",this.select,this)}},{key:"addElement",value:function(e){s("false",e),this.controls.addElement(e)}},{key:"setAllGrabbedToFalse",value:function(){c(this.controls.elements)}},{key:"hasAnyGrabbed",value:function(){return d(this.controls.elements)}},{key:"select",value:function(e){var t=e.element,n=l(t);this.setAllGrabbedToFalse(),n||s("true",t)}}]),e}();t.default=p},function(e,t,n){"use strict";function o(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(t,"__esModule",{value:!0});var i=function(){function e(e,t){for(var n=0;n<t.length;n++){var o=t[n];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(e,o.key,o)}}return function(t,n,o){return n&&e(t.prototype,n),o&&e(t,o),t}}(),r=n(1),a=n(0),s=(0,r.setAttribute)("aria-dropeffect","none"),l=(0,r.setAttribute)("aria-dropeffect","move"),u=(0,a.filter)((0,r.hasAttribute)("aria-dropeffect")),c=(0,a.compose)((0,a.forEach)(l),u),d=(0,a.compose)((0,a.forEach)(s),u),p=function(){function e(){o(this,e)}return i(e,[{key:"init",value:function(e){this.controls=e}},{key:"setAllToMove",value:function(){c(this.controls.elements)}},{key:"setAllToNone",value:function(){d(this.controls.elements)}}]),e}();t.default=p,p.DropEffect={COPY:"copy",MOVE:"move",EXECUTE:"execute",POPUP:"popup",NONE:"none"}},function(e,t,n){"use strict";function o(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(t,"__esModule",{value:!0});var i=function(){function e(e,t){for(var n=0;n<t.length;n++){var o=t[n];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(e,o.key,o)}}return function(t,n,o){return n&&e(t.prototype,n),o&&e(t,o),t}}(),r=function(){function e(){o(this,e),this.selectability=!0}return i(e,[{key:"init",value:function(e){this.boundHandleKeyDown=this.handleKeyDown.bind(this),this.controls=e,this.controls.on("addElement",this.listenForKeyDown,this),this.controls.on("removeElement",this.removeKeyDownListener,this)}},{key:"listenForKeyDown",value:function(e){e.element.addEventListener("keydown",this.boundHandleKeyDown)}},{key:"removeKeyDownListener",value:function(e){e.element.removeEventListener("keydown",this.boundHandleKeyDown)}},{key:"handleKeyDown",value:function(e){switch(e.which){case 13:case 32:this.select(e.target),e.preventDefault();break;case 37:case 38:this.hasChromevoxModifiers(e)||(this.previousElement(e.target),e.preventDefault());break;case 39:case 40:this.hasChromevoxModifiers(e)||(this.nextElement(e.target),e.preventDefault())}}},{key:"hasChromevoxModifiers",value:function(e){return e.shiftKey||e.ctrlKey}},{key:"previousElement",value:function(e){this.controls.firesEvent("previousElement",e)}},{key:"nextElement",value:function(e){this.controls.firesEvent("nextElement",e)}},{key:"select",value:function(e){this.selectability&&!1!==this.controls.firesEvent("before-select",e)&&(this.controls.firesEvent("select",e),this.controls.firesEvent("after-select",e))}},{key:"disableSelectability",value:function(){this.selectability=!1}},{key:"enableSelectability",value:function(){this.selectability=!0}}]),e}();t.default=r},function(e,t,n){"use strict";function o(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(t,"__esModule",{value:!0});var i=function(){function e(e,t){for(var n=0;n<t.length;n++){var o=t[n];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(e,o.key,o)}}return function(t,n,o){return n&&e(t.prototype,n),o&&e(t,o),t}}(),r=n(2),a=function(e){return e&&e.__esModule?e:{default:e}}(r),s=H5P.jQuery,l=function(){function e(t,n,i){o(this,e);var r=this;H5P.EventDispatcher.call(r),r.id=n,r.showLabel=t.showLabel,r.label=t.label,r.x=t.x,r.y=t.y,r.width=t.width,r.height=t.height,r.backgroundOpacity=t.backgroundOpacity,r.tip=t.tipsAndFeedback.tip||"",r.single=t.single,r.autoAlignable=t.autoAlign,r.alignables=[],r.l10n=i}return i(e,[{key:"appendTo",value:function(e,t){var n=this,o='<div class="h5p-inner"></div>',i="";n.showLabel&&(o='<div class="h5p-label">'+n.label+'<span class="h5p-hidden-read"></span></div>'+o,i=" h5p-has-label"),o='<span class="h5p-hidden-read">'+n.l10n.prefix.replace("{num}",n.id+1)+"</span>"+o,n.$dropZone=s("<div/>",{class:"h5p-dropzone"+i,tabindex:"-1",title:n.showLabel?s("<div/>",{html:n.label}).text():null,role:"button","aria-disabled":!0,css:{left:n.x+"%",top:n.y+"%",width:n.width+"em",height:n.height+"em"},html:o}).appendTo(e).children(".h5p-inner").droppable({activeClass:"h5p-active",tolerance:"intersect",accept:function(e){var o=a.default.elementToDraggable(t,e);return!!o&&n.accepts(o.draggable,t)},drop:function(e,o){var i=a.default.elementToDraggable(t,o.draggable);n.trigger("dropped",{draggableId:i.draggable.id,dropzoneId:n.id});var r=s(this);a.default.setOpacity(r.removeClass("h5p-over"),"background",n.backgroundOpacity),o.draggable.data("addToZone",n.id),-1===n.getIndexOf(o.draggable)&&n.alignables.push(o.draggable),n.autoAlignable.enabled&&n.autoAlign()},over:function(){a.default.setOpacity(s(this).addClass("h5p-over"),"background",n.backgroundOpacity)},out:function(){a.default.setOpacity(s(this).removeClass("h5p-over"),"background",n.backgroundOpacity)}}).end().focus(function(){r instanceof H5P.jQuery&&r.attr("tabindex","0")}).blur(function(){r instanceof H5P.jQuery&&r.attr("tabindex","-1")});var r=H5P.JoubelUI.createTip(n.tip,{tipLabel:n.l10n.tipLabel,tabcontrol:!0});r instanceof H5P.jQuery&&s("<span/>",{class:"h5p-dq-tipwrap","aria-label":n.l10n.tipAvailable,append:r,appendTo:n.$dropZone}),t.forEach(function(e){var t=e.element.$;e.isInDropZone(n.id)&&-1===n.getIndexOf(t)&&n.alignables.push(t)}),n.autoAlignable.enabled&&n.autoAlign(),setTimeout(function(){n.updateBackgroundOpacity()},0)}},{key:"updateBackgroundOpacity",value:function(){a.default.setOpacity(this.$dropZone.children(".h5p-label"),"background",this.backgroundOpacity),a.default.setOpacity(this.$dropZone.children(".h5p-inner"),"background",this.backgroundOpacity)}},{key:"accepts",value:function(e,t){var n=this;if(!e.hasDropZone(n.id))return!1;if(n.single)for(var o=0;o<t.length;o++)if(t[o]&&t[o].isInDropZone(n.id))return!1;return!0}},{key:"getIndexOf",value:function(e){for(var t=this,n=0;n<t.alignables.length;n++)if(t.alignables[n][0]===e[0])return n;return-1}},{key:"removeAlignable",value:function(e){var t=this,n=t.getIndexOf(e);-1!==n&&(t.alignables.splice(n,1),void 0===t.autoAlignTimer&&t.autoAlignable.enabled&&(t.autoAlignTimer=setTimeout(function(){delete t.autoAlignTimer,t.autoAlign()},1)))}},{key:"autoAlign",value:function(){for(var e,t,n=this,o=n.$dropZone.parent()[0].getBoundingClientRect(),i={x:n.autoAlignable.spacing/n.autoAlignable.size.width*100,y:n.autoAlignable.spacing/n.autoAlignable.size.height*100},r={x:n.x+i.x,y:n.y+i.y},a=n.$dropZone[0].getBoundingClientRect(),s={x:a.width-2*i.x,y:a.height-2*i.y},l={x:s.x,y:s.y},u=0,c=function(){e.css({left:r.x+"%",top:r.y+"%"}),n.trigger("elementaligned",e);var i=t.width+n.autoAlignable.spacing;l.x-=i,r.x+=i/o.width*100;var a=t.height+n.autoAlignable.spacing;a>u&&(u=a)},d=0;d<n.alignables.length;d++)if(e=n.alignables[d],t=e[0].getBoundingClientRect(),l.x>=t.width)c();else{if(l.x=s.x,r.x=n.x+i.x,u&&(l.y-=u,r.y+=u/o.height*100,u=0),l.y<=0)return;c()}}},{key:"highlight",value:function(){this.$dropZone.attr("aria-disabled","false").children(".h5p-inner").addClass("h5p-active")}},{key:"dehighlight",value:function(){this.$dropZone.attr("aria-disabled","true").children(".h5p-inner").removeClass("h5p-active")}},{key:"reset",value:function(){this.alignables=[]}}]),e}();t.default=l},function(e,t,n){"use strict";function o(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function i(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function r(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}Object.defineProperty(t,"__esModule",{value:!0});var a=function(){function e(e,t){for(var n=0;n<t.length;n++){var o=t[n];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(e,o.key,o)}}return function(t,n,o){return n&&e(t.prototype,n),o&&e(t,o),t}}(),s=n(2),l=function(e){return e&&e.__esModule?e:{default:e}}(s),u=H5P.jQuery,c=function(e){function t(e,n,r,a){o(this,t);var s=i(this,(t.__proto__||Object.getPrototypeOf(t)).call(this)),l=s;if(l.$=u(l),l.id=n,l.elements=[],l.x=e.x,l.y=e.y,l.width=e.width,l.height=e.height,l.backgroundOpacity=e.backgroundOpacity,l.dropZones=e.dropZones,l.type=e.type,l.multiple=e.multiple,l.l10n=a,l.audios=e.audio,r){l.multiple&&l.elements.push({});for(var c=0;c<r.length;c++)l.elements.push({dropZone:r[c].dz,position:{left:r[c].x+"%",top:r[c].y+"%"}})}return s}return r(t,e),a(t,[{key:"appendTo",value:function(e,t){var n=this;if(n.elements.length)for(var o=0;o<n.elements.length;o++)n.attachElement(o,e,t);else n.attachElement(null,e,t)}},{key:"attachElement",value:function(e,t,n){var o,i=this;null===e?(o={},i.elements.push(o),e=i.elements.length-1):o=i.elements[e],u.extend(o,{clone:function(){i.attachElement(null,t,n)},reset:function(){void 0!==o.dropZone&&(i.trigger("leavingDropZone",o),delete o.dropZone),i.multiple&&(o.$.remove(),delete i.elements[e],i.trigger("elementremove",o.$[0])),delete o.position}}),o.$=u("<div/>",{class:"h5p-draggable",tabindex:"-1",role:"button",css:{left:i.x+"%",top:i.y+"%",width:i.width+"em",height:i.height+"em"},appendTo:t,title:i.type.params.title}).on("mousedown",function(){i.trigger("pickedUp",i.id)}).on("keydown",function(e){"Enter"!==e.key&&" "!==e.key||i.trigger("pickedUp")}).on("click",function(){i.trigger("focus",this)}).draggable({revert:function(e){t.removeClass("h5p-dragging");var n=u(this);return n.data("uiDraggable").originalPosition={top:i.y+"%",left:i.x+"%"},i.updatePlacement(o),n[0].setAttribute("aria-grabbed","false"),i.trigger("dragend",i.id),!e},start:function(){var e=u(this),n=i.mustCopyElement(o);n&&o.clone(),e.removeClass("h5p-wrong").detach().appendTo(t),t.addClass("h5p-dragging"),l.default.setElementOpacity(e,i.backgroundOpacity),this.setAttribute("aria-grabbed","true"),i.trigger("focus",this),i.trigger("dragstart",{element:this,effect:n?"copy":"move"})},stop:function(){var n=u(this);o.position=l.default.positionToPercentage(t,n),n.css(o.position);var r=n.data("addToZone");void 0!==r?(n.removeData("addToZone"),i.addToDropZone(e,o,r)):o.reset()}}).css("position",""),i.element=o,o.position&&(o.$.css(o.position),i.updatePlacement(o)),l.default.addHover(o.$,i.backgroundOpacity),H5P.newRunnable(i.type,n,o.$),u('<span class="h5p-hidden-read">'+i.l10n.prefix.replace("{num}",i.id+1)+"</span>").prependTo(o.$),u('<span class="h5p-hidden-read"></span>').appendTo(o.$),i.audios&&["pickedUp","dropped"].forEach(function(e){if(i.audios[e]&&Array.isArray(i.audios[e])&&!(i.audios[e].length<1)&&i.audios[e][0].path&&"audio"===i.audios[e][0].mime.split("/")[0]){var t=document.createElement("audio");t.classList.add("h5p-dragquestion-no-display"),t.src=H5P.getPath(i.audios[e][0].path,n),i.audios[e]=t,o.$.append(i.audios[e])}}),setTimeout(function(){l.default.setElementOpacity(o.$,i.backgroundOpacity)},0),i.trigger("elementadd",o.$[0])}},{key:"setFeedback",value:function(e,t){this.elements.forEach(function(n){n.dropZone===t&&(void 0===n.$feedback&&(n.$feedback=u("<span>",{class:"h5p-hidden-read",appendTo:n.$})),n.$feedback.html(e))})}},{key:"mustCopyElement",value:function(e){return this.multiple&&void 0===e.dropZone}},{key:"hasDropZone",value:function(e){for(var t=this,n=0;n<t.dropZones.length;n++)if(parseInt(t.dropZones[n])===e)return!0;return!1}},{key:"addToDropZone",value:function(e,t,n){var o=this;if(o.multiple)for(var i=0;i<o.elements.length;i++)if(i!==e&&void 0!==o.elements[i]&&o.elements[i].dropZone===n)return void 0!==o.elements[e].dropZone&&o.elements[e].dropZone!==n&&o.trigger("leavingDropZone",t),t.$.remove(),delete o.elements[e],void o.trigger("elementremove",this.element.$[0]);void 0!==t.dropZone&&t.dropZone!==n&&o.trigger("leavingDropZone",t),t.dropZone=n,o.updatePlacement(t),o.trigger("interacted")}},{key:"updatePlacement",value:function(e){e.$suffix&&e.$suffix.remove(),void 0!==e.dropZone?(e.$.addClass("h5p-dropped"),l.default.setElementOpacity(e.$,self.backgroundOpacity),e.$suffix=u('<span class="h5p-hidden-read">'+this.l10n.suffix.replace("{num}",e.dropZone+1)+". </span>").appendTo(e.$)):(e.$.removeClass("h5p-dropped").removeClass("h5p-wrong").removeClass("h5p-correct").css({border:"",background:""}),l.default.setElementOpacity(e.$,this.backgroundOpacity))}},{key:"resetPosition",value:function(){var e=this;this.elements.forEach(function(t){if(t.$feedback&&(t.$feedback.remove(),delete t.$feedback),void 0!==t.dropZone){var n=t.$;n.animate({left:e.x+"%",top:e.y+"%"},function(){e.multiple&&(void 0!==n.dropZone&&e.trigger("leavingDropZone",n),n.remove(),e.elements.indexOf(t)>=0&&delete e.elements[e.elements.indexOf(t)],e.trigger("elementremove",n[0]))}),e.updatePlacement(t)}}),void 0!==e.element.dropZone&&(e.trigger("leavingDropZone",e.element),delete e.element.dropZone),e.updatePlacement(e.element)}},{key:"findElement",value:function(e){for(var t=this,n=0;n<t.elements.length;n++)if(void 0!==t.elements[n]&&t.elements[n].$.is(e))return{element:t.elements[n],index:n}}},{key:"isInDropZone",value:function(e){for(var t=this,n=0;n<t.elements.length;n++)if(void 0!==t.elements[n]&&t.elements[n].dropZone===e)return!0;return!1}},{key:"disable",value:function(){for(var e=this,t=0;t<e.elements.length;t++){var n=e.elements[t];n&&(n.$.draggable("disable"),e.trigger("elementremove",n.$[0]))}}},{key:"enable",value:function(){for(var e=this,t=0;t<e.elements.length;t++){var n=e.elements[t];n&&(n.$.draggable("enable"),e.trigger("elementadd",n.$[0]))}}},{key:"results",value:function(e,t,n){var o,i,r,a,s=this,l=0;if(s.rawPoints=0,void 0===t){for(o=0;o<s.elements.length;o++)void 0!==(r=s.elements[o])&&void 0!==r.dropZone&&(!0!==e&&s.markElement(r,"wrong",n),l--);return l}for(o=0;o<s.elements.length;o++)if(void 0!==(r=s.elements[o])&&void 0!==r.dropZone){for(a=!1,i=0;i<t.length;i++)if(r.dropZone===t[i]){!0!==e&&s.markElement(r,"correct",n),a=!0,s.rawPoints++,l++;break}a||(!0!==e&&s.markElement(r,"wrong",n),l--)}return l}},{key:"markElement",value:function(e,t,n){var o=u("<span/>",{class:"h5p-hidden-read",html:this.l10n[t+"Answer"]+". "});n&&(o=o.add(n.getElement("correct"===t))),e.$suffix=e.$suffix.add(o),e.$.addClass("h5p-"+t).append(o),l.default.setElementOpacity(e.$,this.backgroundOpacity)}}]),t}(H5P.EventDispatcher);t.default=c}]);
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * Returns a curried version of a function
+ *
+ * @param {function} fn
+ *
+ * @public
+ *
+ * @return {function}
+ */
+var curry = exports.curry = function curry(fn) {
+  var arity = fn.length;
+
+  return function f1() {
+    var args = Array.prototype.slice.call(arguments, 0);
+    if (args.length >= arity) {
+      return fn.apply(null, args);
+    } else {
+      return function f2() {
+        var args2 = Array.prototype.slice.call(arguments, 0);
+        return f1.apply(null, args.concat(args2));
+      };
+    }
+  };
+};
+
+/**
+ * Compose functions together, executing from right to left
+ *
+ * @param {function...} fns
+ *
+ * @function
+ * @public
+ *
+ * @return {function}
+ */
+var compose = exports.compose = function compose() {
+  for (var _len = arguments.length, fns = Array(_len), _key = 0; _key < _len; _key++) {
+    fns[_key] = arguments[_key];
+  }
+
+  return fns.reduce(function (f, g) {
+    return function () {
+      return f(g.apply(undefined, arguments));
+    };
+  });
+};
+
+/**
+ * Applies a function to each element in an array
+ *
+ * @param {function} fn
+ * @param {Array} arr
+ *
+ * @function
+ * @public
+ *
+ * @return {function}
+ */
+var forEach = exports.forEach = curry(function (fn, arr) {
+  arr.forEach(fn);
+});
+
+/**
+ * Maps a function to an array
+ *
+ * @param {function} fn
+ * @param {Array} arr
+ *
+ * @function
+ * @public
+ *
+ * @return {function}
+ */
+var map = exports.map = curry(function (fn, arr) {
+  return arr.map(fn);
+});
+
+/**
+ * Applies a filter to an array
+ *
+ * @param {function} fn
+ * @param {Array} arr
+ *
+ * @function
+ * @public
+ *
+ * @return {function}
+ */
+var filter = exports.filter = curry(function (fn, arr) {
+  return arr.filter(fn);
+});
+
+/**
+ * Applies a some to an array
+ *
+ * @param {function} fn
+ * @param {Array} arr
+ *
+ * @function
+ * @public
+ *
+ * @return {function}
+ */
+var some = exports.some = curry(function (fn, arr) {
+  return arr.some(fn);
+});
+
+/**
+ * Returns true if an array contains a value
+ *
+ * @param {*} value
+ * @param {Array} arr
+ *
+ * @function
+ * @public
+ *
+ * @return {function}
+ */
+var contains = exports.contains = curry(function (value, arr) {
+  return arr.indexOf(value) != -1;
+});
+
+/**
+ * Returns an array without the supplied values
+ *
+ * @param {Array} values
+ * @param {Array} arr
+ *
+ * @function
+ * @public
+ *
+ * @return {function}
+ */
+var without = exports.without = curry(function (values, arr) {
+  return filter(function (value) {
+    return !contains(value, values);
+  }, arr);
+});
+
+/**
+ * Takes a string that is either 'true' or 'false' and returns the opposite
+ *
+ * @param {string} bool
+ *
+ * @public
+ * @return {string}
+ */
+var inverseBooleanString = exports.inverseBooleanString = function inverseBooleanString(bool) {
+  return (bool !== 'true').toString();
+};
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createElement = exports.toggleClass = exports.toggleVisibility = exports.show = exports.hide = exports.removeClass = exports.addClass = exports.classListContains = exports.removeChild = exports.querySelectorAll = exports.nodeListToArray = exports.querySelector = exports.appendChild = exports.toggleAttribute = exports.attributeEquals = exports.hasAttribute = exports.removeAttribute = exports.setAttribute = exports.getAttribute = undefined;
+
+var _functional = __webpack_require__(0);
+
+/**
+ * Get an attribute value from element
+ *
+ * @param {string} name
+ * @param {HTMLElement} el
+ *
+ * @function
+ * @return {string}
+ */
+var getAttribute = exports.getAttribute = (0, _functional.curry)(function (name, el) {
+  return el.getAttribute(name);
+});
+
+/**
+ * Set an attribute on a html element
+ *
+ * @param {string} name
+ * @param {string} value
+ * @param {HTMLElement} el
+ *
+ * @function
+ */
+var setAttribute = exports.setAttribute = (0, _functional.curry)(function (name, value, el) {
+  return el.setAttribute(name, value);
+});
+
+/**
+ * Remove attribute from html element
+ *
+ * @param {string} name
+ * @param {HTMLElement} el
+ *
+ * @function
+ */
+var removeAttribute = exports.removeAttribute = (0, _functional.curry)(function (name, el) {
+  return el.removeAttribute(name);
+});
+
+/**
+ * Check if element has an attribute
+ *
+ * @param {string} name
+ * @param {HTMLElement} el
+ *
+ * @function
+ * @return {boolean}
+ */
+var hasAttribute = exports.hasAttribute = (0, _functional.curry)(function (name, el) {
+  return el.hasAttribute(name);
+});
+
+/**
+ * Check if element has an attribute that equals
+ *
+ * @param {string} name
+ * @param {string} value
+ * @param {HTMLElement} el
+ *
+ * @function
+ * @return {boolean}
+ */
+var attributeEquals = exports.attributeEquals = (0, _functional.curry)(function (name, value, el) {
+  return el.getAttribute(name) === value;
+});
+
+/**
+ * Toggles an attribute between 'true' and 'false';
+ *
+ * @param {string} name
+ * @param {HTMLElement} el
+ *
+ * @function
+ */
+var toggleAttribute = exports.toggleAttribute = (0, _functional.curry)(function (name, el) {
+  var value = getAttribute(name, el);
+  setAttribute(name, (0, _functional.inverseBooleanString)(value), el);
+});
+
+/**
+ * The appendChild() method adds a node to the end of the list of children of a specified parent node.
+ *
+ * @param {HTMLElement} parent
+ * @param {HTMLElement} child
+ *
+ * @function
+ * @return {HTMLElement}
+ */
+var appendChild = exports.appendChild = (0, _functional.curry)(function (parent, child) {
+  return parent.appendChild(child);
+});
+
+/**
+ * Returns the first element that is a descendant of the element on which it is invoked
+ * that matches the specified group of selectors.
+ *
+ * @param {string} selector
+ * @param {HTMLElement} el
+ *
+ * @function
+ * @return {HTMLElement}
+ */
+var querySelector = exports.querySelector = (0, _functional.curry)(function (selector, el) {
+  return el.querySelector(selector);
+});
+
+/**
+ * Transforms a NodeList to an Array
+ *
+ * @param {NodeList} nodeList
+ *
+ * @return {Node[]}
+ */
+var nodeListToArray = exports.nodeListToArray = function nodeListToArray(nodeList) {
+  return Array.prototype.slice.call(nodeList);
+};
+
+/**
+ * Returns a non-live NodeList of all elements descended from the element on which it
+ * is invoked that matches the specified group of CSS selectors.
+ *
+ * @param {string} selector
+ * @param {HTMLElement} el
+ *
+ * @function
+ * @return {Node[]}
+ */
+var querySelectorAll = exports.querySelectorAll = (0, _functional.curry)(function (selector, el) {
+  return nodeListToArray(el.querySelectorAll(selector));
+});
+
+/**
+ * The removeChild() method removes a child node from the DOM. Returns removed node.
+ *
+ * @param {Node} parent
+ * @param {Node} oldChild
+ *
+ * @return {Node}
+ */
+var removeChild = exports.removeChild = (0, _functional.curry)(function (parent, oldChild) {
+  return parent.removeChild(oldChild);
+});
+
+/**
+ * Returns true if a node has a class
+ *
+ * @param {string} cls
+ * @param {HTMLElement} el
+ *
+ * @function
+ */
+var classListContains = exports.classListContains = (0, _functional.curry)(function (cls, el) {
+  return el.classList.contains(cls);
+});
+
+/**
+ * Adds a css class to an element
+ *
+ * @param {string} cls
+ * @param {Element} element
+ *
+ * @function
+ */
+var addClass = exports.addClass = (0, _functional.curry)(function (cls, element) {
+  return element.classList.add(cls);
+});
+
+/**
+ * Removes a css class from an element
+ *
+ * @param {string} cls
+ * @param {Element} element
+ *
+ * @function
+ */
+var removeClass = exports.removeClass = (0, _functional.curry)(function (cls, element) {
+  return element.classList.remove(cls);
+});
+
+/**
+ * Adds hidden class on an element
+ *
+ * @param {HTMLElement} element
+ * @function
+ */
+var hide = exports.hide = addClass('hidden');
+
+/**
+ * Removes hidden class from an element
+ * @function
+ */
+var show = exports.show = removeClass('hidden');
+
+/**
+ * Toggles hidden class on an element
+ *
+ * @param {boolean} visible
+ * @param {HTMLElement} element
+ */
+var toggleVisibility = exports.toggleVisibility = (0, _functional.curry)(function (visible, element) {
+  return (visible ? show : hide)(element);
+});
+
+/**
+ * Toggles a class on an element
+ *
+ * @param {string} cls
+ * @param {boolean} add
+ * @param {HTMLElement} element
+ */
+var toggleClass = exports.toggleClass = (0, _functional.curry)(function (cls, add, element) {
+  element.classList[add ? 'add' : 'remove'](cls);
+});
+
+/**
+ * Helper for creating a DOM element
+ *
+ * @function
+ *
+ * @param {string} tag
+ * @param {string} [id]
+ * @param {string[]} [classes] - array of strings
+ * @param {Object} [attributes]
+ *
+ * @return {HTMLElement}
+ */
+var createElement = exports.createElement = function createElement(_ref) {
+  var tag = _ref.tag,
+      id = _ref.id,
+      classes = _ref.classes,
+      attributes = _ref.attributes;
+
+  var element = document.createElement(tag);
+
+  if (id) {
+    element.id = id;
+  }
+  if (classes) {
+    classes.forEach(function (clazz) {
+      element.classList.add(clazz);
+    });
+  }
+  if (attributes) {
+    Object.keys(attributes).forEach(function (key) {
+      element.setAttribute(key, attributes[key]);
+    });
+  }
+
+  return element;
+};
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var DragUtils = function () {
+  function DragUtils() {
+    _classCallCheck(this, DragUtils);
+  }
+
+  _createClass(DragUtils, null, [{
+    key: 'setElementOpacity',
+
+
+    /**
+     * Makes element background transparent.
+     *
+     * @param {jQuery} $element
+     * @param {Number} opacity
+     */
+    value: function setElementOpacity($element, opacity) {
+      DragUtils.setOpacity($element, 'borderColor', opacity);
+      DragUtils.setOpacity($element, 'boxShadow', opacity);
+      DragUtils.setOpacity($element, 'background', opacity);
+    }
+
+    /**
+     * Makes element background, border and shadow transparent.
+     *
+     * @param {jQuery} $element
+     * @param {String} property
+     * @param {Number} opacity
+     */
+
+  }, {
+    key: 'setOpacity',
+    value: function setOpacity($element, property, opacity) {
+      if (property === 'background') {
+        // Set both color and gradient.
+        DragUtils.setOpacity($element, 'backgroundColor', opacity);
+        DragUtils.setOpacity($element, 'backgroundImage', opacity);
+        return;
+      }
+
+      opacity = opacity === undefined ? 1 : opacity / 100;
+
+      // Private. Get css properties objects.
+      function getProperties(property, value) {
+        switch (property) {
+          case 'borderColor':
+            return {
+              borderTopColor: value,
+              borderRightColor: value,
+              borderBottomColor: value,
+              borderLeftColor: value
+            };
+
+          default:
+            var properties = {};
+            properties[property] = value;
+            return properties;
+        }
+      }
+
+      var original = $element.css(property);
+
+      // Reset css to be sure we're using CSS and not inline values.
+      var properties = getProperties(property, '');
+      $element.css(properties);
+
+      // Determine prop and assume all props are the same and use the first.
+      for (var prop in properties) {
+        break;
+      }
+
+      // Get value from css
+      var style = $element.css(prop);
+      if (style === '' || style === 'none') {
+        // No value from CSS, fall back to original
+        style = original;
+      }
+
+      style = DragUtils.setAlphas(style, 'rgba(', opacity); // Update rgba
+      style = DragUtils.setAlphas(style, 'rgb(', opacity); // Convert rgb
+
+      $element.css(getProperties(property, style));
+    }
+
+    /**
+     * Updates alpha channel for colors in the given style.
+     *
+     * @param {String} style
+     * @param {String} prefix
+     * @param {Number} alpha
+     */
+
+  }, {
+    key: 'setAlphas',
+    value: function setAlphas(style, prefix, alpha) {
+      // Style undefined
+      if (!style) {
+        return;
+      }
+      var colorStart = style.indexOf(prefix);
+
+      while (colorStart !== -1) {
+        var colorEnd = style.indexOf(')', colorStart);
+        var channels = style.substring(colorStart + prefix.length, colorEnd).split(',');
+
+        // Set alpha channel
+        channels[3] = channels[3] !== undefined ? parseFloat(channels[3]) * alpha : alpha;
+
+        style = style.substring(0, colorStart) + 'rgba(' + channels.join(',') + style.substring(colorEnd, style.length);
+
+        // Look for more colors
+        colorStart = style.indexOf(prefix, colorEnd);
+      }
+
+      return style;
+    }
+
+    /**
+     * Find draggable instance from element
+     *
+     * @private
+     * @param {Draggable[]} draggables
+     * @param {Element} element
+     */
+
+  }, {
+    key: 'elementToDraggable',
+    value: function elementToDraggable(draggables, element) {
+      for (var i = 0; i < draggables.length; i++) {
+        if (!draggables[i]) {
+          continue;
+        }
+        var result = draggables[i].findElement(element);
+        if (result) {
+          result.draggable = draggables[i];
+          return result;
+        }
+      }
+    }
+
+    /**
+     * Find draggable instance from element
+     *
+     * @private
+     * @param {DropZone[]} dropZones
+     * @param {Element} element
+     */
+
+  }, {
+    key: 'elementToDropZone',
+    value: function elementToDropZone(dropZones, element) {
+      for (var i = 0; i < dropZones.length; i++) {
+        if (dropZones[i].$dropZone.is(element)) {
+          return dropZones[i];
+        }
+      }
+    }
+
+    /**
+     * Get css position in percentage.
+     *
+     * @param {jQuery} $container
+     * @param {jQuery} $element
+     * @returns {Object} CSS position
+     */
+
+  }, {
+    key: 'positionToPercentage',
+    value: function positionToPercentage($container, $element) {
+      return {
+        top: parseInt($element.css('top')) * 100 / $container.innerHeight() + '%',
+        left: parseInt($element.css('left')) * 100 / $container.innerWidth() + '%'
+      };
+    }
+
+    /**
+     * Makes sure element gets correct opacity when hovered.
+     *
+     * @param {jQuery} $element
+     * @param {Object} element
+     */
+
+  }, {
+    key: 'addHover',
+    value: function addHover($element, backgroundOpacity) {
+      $element.hover(function () {
+        $element.addClass('h5p-draggable-hover');
+        if (!$element.parent().hasClass('h5p-dragging')) {
+          DragUtils.setElementOpacity($element, backgroundOpacity);
+        }
+      }, function () {
+        if (!$element.parent().hasClass('h5p-dragging')) {
+          setTimeout(function () {
+            $element.removeClass('h5p-draggable-hover');
+            DragUtils.setElementOpacity($element, backgroundOpacity);
+          }, 1);
+        }
+      });
+      DragUtils.setElementOpacity($element, backgroundOpacity);
+    }
+
+    /**
+     * Stripping away html tags
+     *
+     * @param {string} html
+     * @return {string}
+     */
+
+  }, {
+    key: 'strip',
+    value: function strip(html) {
+      var tmp = document.createElement('div');
+      tmp.innerHTML = html;
+      return tmp.textContent || tmp.innerText || '';
+    }
+  }]);
+
+  return DragUtils;
+}();
+
+exports.default = DragUtils;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _controls = __webpack_require__(4);
+
+var _controls2 = _interopRequireDefault(_controls);
+
+var _drag = __webpack_require__(6);
+
+var _drag2 = _interopRequireDefault(_drag);
+
+var _drop = __webpack_require__(7);
+
+var _drop2 = _interopRequireDefault(_drop);
+
+var _keyboard = __webpack_require__(8);
+
+var _keyboard2 = _interopRequireDefault(_keyboard);
+
+var _dragUtils = __webpack_require__(2);
+
+var _dragUtils2 = _interopRequireDefault(_dragUtils);
+
+var _dropzone = __webpack_require__(9);
+
+var _dropzone2 = _interopRequireDefault(_dropzone);
+
+var _draggable2 = __webpack_require__(10);
+
+var _draggable3 = _interopRequireDefault(_draggable2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var $ = H5P.jQuery;
+var numInstances = 0;
+
+/**
+ * Constructor
+ *
+ * @class
+ * @extends H5P.Question
+ * @param {Object} options Run parameters
+ * @param {number} id Content identification
+ * @param {Object} contentData
+ */
+function C(options, contentId, contentData) {
+  var _this = this;
+
+  var self = this;
+  var i, j;
+  numInstances++;
+  this.id = this.contentId = contentId;
+  this.contentData = contentData;
+
+  H5P.Question.call(self, 'dragquestion');
+  this.options = $.extend(true, {}, {
+    scoreShow: 'Check',
+    tryAgain: 'Retry',
+    grabbablePrefix: 'Grabbable {num} of {total}.',
+    grabbableSuffix: 'Placed in dropzone {num}.',
+    dropzonePrefix: 'Dropzone {num} of {total}.',
+    noDropzone: 'No dropzone',
+    tipLabel: 'Show tip.',
+    tipAvailable: 'Tip available',
+    correctAnswer: 'Correct answer',
+    wrongAnswer: 'Wrong answer',
+    feedbackHeader: 'Feedback',
+    scoreBarLabel: 'You got :num out of :total points',
+    scoreExplanationButtonLabel: 'Show score explanation',
+    question: {
+      settings: {
+        questionTitle: this.contentData && this.contentData.metadata && this.contentData.metadata.title ? this.contentData.metadata.title : 'Drag and drop',
+        size: {
+          width: 620,
+          height: 310
+        }
+      },
+      task: {
+        elements: [],
+        dropZones: []
+      }
+    },
+    overallFeedback: [],
+    audio: {},
+    behaviour: {
+      enableRetry: true,
+      enableCheckButton: true,
+      preventResize: false,
+      singlePoint: false,
+      showSolutionsRequiresInput: true,
+      applyPenalties: true,
+      enableScoreExplanation: true,
+      autoCheckSolutions: false,
+      compactMode: false,
+      dropZoneHighlighting: 'dragging',
+      autoAlignSpacing: 2,
+      showScorePoints: true,
+      showTitle: false
+    },
+    a11yCheck: 'Check the answers. The responses will be marked as correct, incorrect, or unanswered.',
+    a11yRetry: 'Retry the task. Reset all responses and start the task over again.'
+  }, options);
+
+  if (this.options.behaviour.compactMode) {
+    this.options.behaviour.showTitle = false;
+  }
+
+  // If single point is enabled, it makes no sense displaying
+  // the score explanation. Note: In the editor, the score explanation is hidden
+  // by the showWhen widget if singlePoint is enabled
+  if (this.options.behaviour.singlePoint) {
+    this.options.behaviour.enableScoreExplanation = false;
+  }
+
+  this.draggables = [];
+  this.dropZones = [];
+  this.answered = contentData && contentData.previousState !== undefined && contentData.previousState.answers !== undefined && contentData.previousState.answers.length;
+  this.blankIsCorrect = true;
+
+  this.players = {};
+  this.audios = [];
+
+  this.backgroundOpacity = this.options.behaviour.backgroundOpacity === undefined || this.options.behaviour.backgroundOpacity.trim() === '' ? undefined : this.options.behaviour.backgroundOpacity;
+
+  self.$noDropZone = $('<div class="h5p-dq-no-dz" role="button" style="display:none;"><span class="h5p-hidden-read">' + self.options.noDropzone + '</span></div>');
+
+  // Initialize controls for good a11y
+  var controls = getControls(self.draggables, self.dropZones, self.$noDropZone[0]);
+
+  /**
+   * Update the drop effect for all drop zones accepting this draggable.
+   *
+   * @private
+   * @param {string} effect
+   */
+  var setDropEffect = function setDropEffect(effect) {
+    for (var i = 0; i < controls.drop.elements.length; i++) {
+      controls.drop.elements[i].setAttribute('aria-dropeffect', effect);
+    }
+  };
+
+  // List of drop zones that has no elements, i.e. not used for the task
+  var dropZonesWithoutElements = [];
+
+  // Create map over correct drop zones for elements
+  var task = this.options.question.task;
+  this.correctDZs = [];
+  for (i = 0; i < task.dropZones.length; i++) {
+    dropZonesWithoutElements.push(true); // All true by default
+
+    var correctElements = task.dropZones[i].correctElements;
+    for (j = 0; j < correctElements.length; j++) {
+      var correctElement = correctElements[j];
+      if (this.correctDZs[correctElement] === undefined) {
+        this.correctDZs[correctElement] = [];
+      }
+      this.correctDZs[correctElement].push(i);
+    }
+  }
+
+  this.weight = 1;
+
+  // Add draggable elements
+  var grabbablel10n = {
+    prefix: self.options.grabbablePrefix.replace('{total}', task.elements.length),
+    suffix: self.options.grabbableSuffix,
+    correctAnswer: self.options.correctAnswer,
+    wrongAnswer: self.options.wrongAnswer
+  };
+  for (i = 0; i < task.elements.length; i++) {
+    var element = task.elements[i];
+
+    if (element.dropZones === undefined || !element.dropZones.length) {
+      continue; // Not a draggable
+    }
+
+    if (this.backgroundOpacity !== undefined) {
+      element.backgroundOpacity = this.backgroundOpacity;
+    }
+
+    // Restore answers from last session
+    var answers = null;
+    if (contentData && contentData.previousState !== undefined && contentData.previousState.answers !== undefined && contentData.previousState.answers[i] !== undefined) {
+      answers = contentData.previousState.answers[i];
+    }
+
+    // Create new draggable instance
+    var draggable = new _draggable3.default(element, i, answers, grabbablel10n);
+    var highlightDropZones = self.options.behaviour.dropZoneHighlighting === 'dragging';
+    draggable.on('elementadd', function (event) {
+      controls.drag.addElement(event.data);
+
+      // Track custom audios
+      var customAudios = event.data.querySelectorAll('audio');
+      for (var _i = 0; _i < customAudios.length; _i++) {
+        self.audios.push(customAudios[_i]);
+      }
+    });
+    draggable.on('elementremove', function (event) {
+      controls.drag.removeElement(event.data);
+      if (event.data.getAttribute('aria-grabbed') === 'true') {
+        controls.drag.firesEvent('select', event.data);
+        event.data.removeAttribute('aria-grabbed');
+      }
+    });
+    draggable.on('pickedUp', function (event) {
+      var currentDraggable = self.draggables[event.data];
+
+      if (_this.taskCompleted) {
+        return;
+      }
+
+      _this.resetAudios();
+
+      if (currentDraggable.audios && currentDraggable.audios.pickedUp) {
+        currentDraggable.audios.pickedUp.play();
+      } else {
+        _this.playAudio(_this.players['pickedUp']);
+      }
+    });
+    draggable.on('focus', function (event) {
+      controls.drag.setTabbable(event.data);
+      event.data.focus();
+    });
+    draggable.on('dragstart', function (event) {
+      if (highlightDropZones) {
+        self.$container.addClass('h5p-dq-highlight-dz');
+      }
+      setDropEffect(event.data);
+    });
+    draggable.on('dragend', function (event) {
+      // The special dropped sounds are more important and should not be stopped
+      if (!self.isAudioPlaying(['droppedWrong', 'droppedCorrect']) && !this.taskCompleted) {
+        self.resetAudios();
+
+        var currentDraggable = self.draggables[event.data];
+        if (currentDraggable.audios && currentDraggable.audios.dropped) {
+          currentDraggable.audios.dropped.play();
+        } else {
+          self.playAudio(self.players['dropped']);
+        }
+      }
+
+      if (highlightDropZones) {
+        self.$container.removeClass('h5p-dq-highlight-dz');
+      }
+      setDropEffect('none');
+    });
+    draggable.on('interacted', function () {
+      self.answered = true;
+      self.triggerXAPI('interacted');
+
+      if (self.options.behaviour.autoCheckSolutions && self.getScore() >= self.getMaxScore()) {
+        self.$mainContainer.find('.h5p-question-check-answer').click();
+        self.$mainContainer.find('.h5p-question-buttons').addClass('h5p-display-inline-block');
+      }
+    });
+    draggable.on('leavingDropZone', function (event) {
+      self.dropZones[event.data.dropZone].removeAlignable(event.data.$);
+    });
+
+    this.draggables[i] = draggable;
+
+    for (j = 0; j < element.dropZones.length; j++) {
+      dropZonesWithoutElements[element.dropZones[j]] = false;
+    }
+  }
+
+  // Create a count to subtrack from score
+  this.numDropZonesWithoutElements = 0;
+
+  var dropzonel10n = {
+    prefix: self.options.dropzonePrefix.replace('{total}', task.dropZones.length),
+    tipLabel: self.options.tipLabel,
+    tipAvailable: self.options.tipAvailable
+  };
+
+  // Add drop zones
+  for (i = 0; i < task.dropZones.length; i++) {
+    var dropZone = task.dropZones[i];
+
+    if (dropZonesWithoutElements[i] === true) {
+      this.numDropZonesWithoutElements += 1;
+    }
+
+    if (this.blankIsCorrect && dropZone.correctElements.length) {
+      this.blankIsCorrect = false;
+    }
+
+    dropZone.autoAlign = {
+      enabled: dropZone.autoAlign,
+      spacing: self.options.behaviour.autoAlignSpacing,
+      size: self.options.question.settings.size
+    };
+
+    this.dropZones[i] = new _dropzone2.default(dropZone, i, dropzonel10n);
+
+    // Update element internal position when aligned
+    this.dropZones[i].on('elementaligned', function (event) {
+      var $aligned = event.data;
+
+      for (var _i2 = 0; _i2 < self.draggables.length; _i2++) {
+        var _draggable = self.draggables[_i2];
+        if (!_draggable || !_draggable.elements || !_draggable.elements.length) {
+          continue;
+        }
+
+        for (var _j = 0; _j < _draggable.elements.length; _j++) {
+          var _element = _draggable.elements[_j];
+          if (!_element || _element.$[0] !== $aligned[0]) {
+            continue;
+          }
+
+          // Update position
+          _element.position = _dragUtils2.default.positionToPercentage(self.$container, _element.$);
+          return;
+        }
+      }
+    });
+
+    // React on dropping draggable on dropzone
+    this.dropZones[i].on('dropped', function (event) {
+      var correctElements = _this.options.question.task.dropZones[event.data.dropzoneId].correctElements;
+      _this.resetAudios();
+      if (correctElements.indexOf('' + event.data.draggableId) !== -1) {
+        _this.playAudio(_this.players['droppedCorrect']);
+      } else {
+        _this.playAudio(_this.players['droppedWrong']);
+      }
+    });
+  }
+
+  this.on('resize', self.resize, self);
+  this.on('domChanged', function (event) {
+    if (self.contentId === event.data.contentId) {
+      self.trigger('resize');
+    }
+  });
+
+  this.on('enterFullScreen', function () {
+    if (self.$container) {
+      self.$container.parents('.h5p-content').css('height', '100%');
+      self.trigger('resize');
+    }
+  });
+
+  this.on('exitFullScreen', function () {
+    if (self.$container) {
+      self.$container.parents('.h5p-content').css('height', 'auto');
+      self.trigger('resize');
+    }
+  });
+}
+
+C.prototype = Object.create(H5P.Question.prototype);
+C.prototype.constructor = C;
+
+/**
+ * Registers this question type's DOM elements before they are attached.
+ * Called from H5P.Question.
+ */
+C.prototype.registerDomElements = function () {
+  var self = this;
+
+  // Register introduction section
+  if (self.options.behaviour.showTitle) {
+    self.$introduction = $('<p class="h5p-dragquestion-introduction" id="dq-intro-' + numInstances + '">' + self.options.question.settings.questionTitle + '</p>');
+    self.setIntroduction(self.$introduction);
+  }
+
+  // Set class if no background
+  var classes = '';
+  if (this.options.question.settings.background !== undefined && !self.options.behaviour.compactMode) {
+    classes += 'h5p-dragquestion-has-no-background';
+  }
+  if (self.options.behaviour.dropZoneHighlighting === 'always') {
+    if (classes) {
+      classes += ' ';
+    }
+    classes += 'h5p-dq-highlight-dz-always';
+  }
+
+  // Register task content area
+  self.setContent(self.createQuestionContent(), {
+    'class': classes
+  });
+
+  // First we check if full screen is supported
+  if (H5P.canHasFullScreen !== false && this.options.behaviour.enableFullScreen) {
+
+    // We create a function that is used to enter or
+    // exit full screen when our button is pressed
+    var toggleFullScreen = function toggleFullScreen() {
+      if (H5P.isFullscreen) {
+        H5P.exitFullScreen(self.$container);
+      } else {
+        H5P.fullScreen(self.$container.parent().parent(), self);
+      }
+    };
+
+    // Create full screen button
+    var $fullScreenButton = $('<div/>', {
+      'class': 'h5p-my-fullscreen-button-enter',
+      title: this.options.localize.fullscreen,
+      role: 'button',
+      tabindex: 0,
+      on: {
+        click: toggleFullScreen,
+        keypress: function keypress(event) {
+          if (event.which === 13 || event.which === 32) {
+            toggleFullScreen();
+            event.preventDefault();
+          }
+        }
+      },
+      prependTo: this.$container.parent()
+    });
+
+    // Respond to enter full screen event
+    this.on('enterFullScreen', function () {
+      $fullScreenButton.attr('class', 'h5p-my-fullscreen-button-exit');
+      $fullScreenButton.attr('title', this.options.localize.exitFullscreen);
+    });
+
+    // Respond to exit full screen event
+    this.on('exitFullScreen', function () {
+      $fullScreenButton.attr('class', 'h5p-my-fullscreen-button-enter');
+      $fullScreenButton.attr('title', this.options.localize.fullscreen);
+    });
+  }
+
+  // ... and buttons
+  self.registerButtons();
+};
+
+/**
+ * Get xAPI data.
+ * Contract used by report rendering engine.
+ *
+ * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-6}
+ *
+ * @return {Object} xAPI data
+ */
+C.prototype.getXAPIData = function () {
+  var xAPIEvent = this.createXAPIEventTemplate('answered');
+  this.addQuestionToXAPI(xAPIEvent);
+  this.addResponseToXAPI(xAPIEvent);
+  return {
+    statement: xAPIEvent.data.statement
+  };
+};
+
+/**
+ * Add the question itselt to the definition part of an xAPIEvent
+ */
+C.prototype.addQuestionToXAPI = function (xAPIEvent) {
+  var definition = xAPIEvent.getVerifiedStatementValue(['object', 'definition']);
+  $.extend(definition, this.getXAPIDefinition());
+};
+
+/**
+ * Get object definition for xAPI statement.
+ *
+ * @return {Object} xAPI object definition
+ */
+C.prototype.getXAPIDefinition = function () {
+  var definition = {};
+  definition.description = {
+    // Remove tags, must wrap in div tag because jQuery 1.9 will crash if the string isn't wrapped in a tag.
+    'en-US': $('<div>' + this.options.question.settings.questionTitle + '</div>').text()
+  };
+  definition.type = 'http://adlnet.gov/expapi/activities/cmi.interaction';
+  definition.interactionType = 'matching';
+
+  // Add sources, i.e. draggables
+  definition.source = [];
+  for (var i = 0; i < this.options.question.task.elements.length; i++) {
+    var el = this.options.question.task.elements[i];
+    if (el.dropZones && el.dropZones.length) {
+      var desc = el.type.params.alt ? el.type.params.alt : el.type.params.text;
+
+      definition.source.push({
+        'id': '' + i,
+        'description': {
+          // Remove tags, must wrap in div tag because jQuery 1.9 will crash if the string isn't wrapped in a tag.
+          'en-US': $('<div>' + desc + '</div>').text()
+        }
+      });
+    }
+  }
+
+  // Add targets, i.e. drop zones, and the correct response pattern.
+  definition.correctResponsesPattern = [''];
+  definition.target = [];
+  var firstCorrectPair = true;
+  for (i = 0; i < this.options.question.task.dropZones.length; i++) {
+    definition.target.push({
+      'id': '' + i,
+      'description': {
+        // Remove tags, must wrap in div tag because jQuery 1.9 will crash if the string isn't wrapped in a tag.
+        'en-US': $('<div>' + this.options.question.task.dropZones[i].label + '</div>').text()
+      }
+    });
+    if (this.options.question.task.dropZones[i].correctElements) {
+      for (var j = 0; j < this.options.question.task.dropZones[i].correctElements.length; j++) {
+        /**
+         * NOTE: The editor allows you to turn a draggable that was correct
+         * in a dropzone into a non-draggable, but leaves the non-draggable
+         * associated with the dropzone if it was previously marked as correct
+         * within that dropzone.
+         * Because of this we have to check if the draggable that is marked
+         * as correct within this dropzone can actually be dropped on this
+         * dropzone in the draggable's data.
+         */
+        var task = this.options.question.task;
+        var draggable = task.elements[task.dropZones[i].correctElements[j]];
+        if (!draggable || draggable.dropZones.indexOf(i.toString()) < 0) {
+          continue;
+        }
+
+        if (!firstCorrectPair) {
+          definition.correctResponsesPattern[0] += '[,]';
+        }
+        definition.correctResponsesPattern[0] += i + '[.]' + task.dropZones[i].correctElements[j];
+        firstCorrectPair = false;
+      }
+    }
+  }
+
+  return definition;
+};
+
+/**
+ * Add the response part to an xAPI event
+ *
+ * @param {H5P.XAPIEvent} xAPIEvent
+ *  The xAPI event we will add a response to
+ */
+C.prototype.addResponseToXAPI = function (xAPIEvent) {
+  var maxScore = this.getMaxScore();
+  var score = this.getScore();
+  var success = score == maxScore ? true : false;
+  xAPIEvent.setScoredResult(score, maxScore, this, true, success);
+  xAPIEvent.data.statement.result.response = this.getUserXAPIResponse();
+};
+
+/**
+ * Get what the user has answered encoded as an xAPI response pattern
+ *
+ * @return {string} xAPI encoded user response pattern
+ */
+C.prototype.getUserXAPIResponse = function () {
+  var answers = this.getUserAnswers();
+  if (!answers) {
+    return '';
+  }
+
+  return answers.filter(function (answerMapping) {
+    return answerMapping.elements.length;
+  }).map(function (answerMapping) {
+    return answerMapping.elements.filter(function (element) {
+      return element.dropZone !== undefined;
+    }).map(function (element) {
+      return element.dropZone + '[.]' + answerMapping.index;
+    }).join('[,]');
+  }).filter(function (pattern) {
+    return pattern !== undefined && pattern !== '';
+  }).join('[,]');
+};
+
+/**
+ * Returns user answers
+ */
+C.prototype.getUserAnswers = function () {
+  return this.draggables.map(function (draggable, index) {
+    return {
+      index: index,
+      draggable: draggable
+    };
+  }).filter(function (draggableMapping) {
+    return draggableMapping.draggable !== undefined && draggableMapping.draggable.elements;
+  }).map(function (draggableMapping) {
+    return {
+      index: draggableMapping.index,
+      elements: draggableMapping.draggable.elements
+    };
+  });
+};
+
+/**
+ * Append field to wrapper.
+ */
+C.prototype.createQuestionContent = function () {
+  var _this2 = this;
+
+  var i;
+  // If reattaching, we no longer show solution. So forget that we
+  // might have done so before.
+
+  this.$container = $('<div class="h5p-inner" role="application" aria-labelledby="dq-intro-' + numInstances + '"></div>');
+  if (this.options.question.settings.background !== undefined) {
+    this.$container.css('backgroundImage', 'url("' + H5P.getPath(this.options.question.settings.background.path, this.id) + '")');
+  }
+
+  var task = this.options.question.task;
+
+  // Add elements (static and draggable)
+  for (i = 0; i < task.elements.length; i++) {
+    var element = task.elements[i];
+
+    if (element.dropZones !== undefined && element.dropZones.length !== 0) {
+      // Attach draggable elements
+      this.draggables[i].appendTo(this.$container, this.id);
+    } else {
+      var $element;
+      var timedOutOpacity;
+
+      (function () {
+        // Add static element
+        $element = _this2.addElement(element, 'static', i);
+
+        var instance = H5P.newRunnable(element.type, _this2.id, $element);
+
+        // Resize audio button manually, because wrapper uses relative dimensions
+        var libraryName = element.type.library.split(' ')[0];
+        if (libraryName === 'H5P.Audio') {
+          _this2.on('resize', function () {
+            instance.resize();
+          });
+        }
+
+        timedOutOpacity = function timedOutOpacity($el, el) {
+          setTimeout(function () {
+            _dragUtils2.default.setOpacity($el, 'background', el.backgroundOpacity);
+          }, 0);
+        };
+
+        timedOutOpacity($element, element);
+      })();
+    }
+  }
+
+  // Attach invisible 'reset' drop zone for keyboard users
+  this.$noDropZone.appendTo(this.$container);
+
+  // Attach drop zones
+  for (i = 0; i < this.dropZones.length; i++) {
+    this.dropZones[i].appendTo(this.$container, this.draggables);
+  }
+
+  // Create audio
+  for (var type in this.options.audio) {
+    var audio = this.options.audio;
+
+    // Semantics might get other audio options, filter for audio content
+    if (!Array.isArray(audio[type]) || audio[type].length < 1 || !audio[type][0].path || !audio[type][0].mime || audio[type][0].mime.split('/')[0] !== 'audio') {
+      return;
+    }
+
+    // Attach audio elements
+    var player = document.createElement('audio');
+    player.classList.add('h5p-dragquestion-no-display');
+    player.src = H5P.getPath(audio[type][0].path, this.contentId);
+    this.$container.append(player);
+
+    // Track audio elements
+    this.players[type] = player;
+    this.audios.push(player);
+  }
+
+  return this.$container;
+};
+
+C.prototype.registerButtons = function () {
+  if (this.options.behaviour.enableCheckButton) {
+    // Add show score button
+    this.addSolutionButton();
+  }
+
+  this.addRetryButton();
+};
+
+/**
+ * Add solution button to our container.
+ */
+C.prototype.addSolutionButton = function () {
+  var that = this;
+
+  this.addButton('check-answer', this.options.scoreShow, function () {
+    that.taskCompleted = true;
+    that.answered = true;
+    that.showAllSolutions();
+    that.showScore();
+    that.addExplanation();
+
+    // Emit screenshot
+    setTimeout(function () {
+      if (H5P && H5P.KLScreenshot) {
+        H5P.KLScreenshot.takeScreenshot(that, that.$mainContainer.get(0));
+      }
+    }, 500); // Give result time to appear
+
+    var xAPIEvent = that.createXAPIEventTemplate('answered');
+    that.addQuestionToXAPI(xAPIEvent);
+    that.addResponseToXAPI(xAPIEvent);
+    that.trigger(xAPIEvent);
+
+    // Focus top of task for better focus and read-speaker flow
+    var $nextFocus = that.$introduction ? that.$introduction : that.$container.children().first();
+    $nextFocus.focus();
+  }, true, {
+    'aria-label': this.options.a11yCheck
+  });
+};
+
+/**
+ * Add explanation/feedback (the part on the bottom part)
+ */
+C.prototype.addExplanation = function () {
+  var _this3 = this;
+
+  var task = this.options.question.task;
+
+  var explanations = [];
+
+  // Go through all dropzones, and find answers:
+  task.dropZones.forEach(function (dropZone, dropZoneId) {
+    var feedback = {
+      correct: dropZone.tipsAndFeedback.feedbackOnCorrect,
+      incorrect: dropZone.tipsAndFeedback.feedbackOnIncorrect
+    };
+    // Don't run this code if feedback is not configured;
+    if (feedback.correct === undefined && feedback.incorrect === undefined) {
+      return;
+    }
+
+    // Index for correct draggables
+    var correctElements = dropZone.correctElements;
+
+    // Find all dragables placed on this dropzone:
+    var placedDraggables = {};
+    _this3.draggables.forEach(function (draggable) {
+      draggable.elements.forEach(function (dz) {
+        if (dz.dropZone == dropZoneId) {
+          // Save reference to draggable, and mark it as correct/incorrect
+          placedDraggables[draggable.id] = {
+            instance: draggable,
+            correct: correctElements.indexOf("" + draggable.id) !== -1
+          };
+        }
+      });
+    });
+
+    // Go through each placed draggable
+    Object.keys(placedDraggables).forEach(function (draggableId) {
+      var draggable = placedDraggables[draggableId];
+      var draggableLabel = _dragUtils2.default.strip(draggable.instance.type.params.alt || draggable.instance.type.params.text) || '?';
+      var dropZoneLabel = _dragUtils2.default.strip(dropZone.label);
+
+      if (draggable.correct && feedback.correct) {
+        explanations.push({
+          correct: dropZoneLabel + ' + ' + draggableLabel,
+          text: feedback.correct
+        });
+
+        draggable.instance.setFeedback(feedback.correct, dropZoneId);
+      } else if (!draggable.correct && feedback.incorrect) {
+        explanations.push({
+          correct: dropZoneLabel + ' + ',
+          wrong: draggableLabel,
+          text: feedback.incorrect
+        });
+
+        draggable.instance.setFeedback(feedback.incorrect, dropZoneId);
+      }
+    });
+  });
+
+  if (explanations.length !== 0) {
+    this.setExplanation(explanations, this.options.feedbackHeader);
+  }
+};
+
+/**
+ * Add retry button to our container.
+ */
+C.prototype.addRetryButton = function () {
+  var that = this;
+
+  this.addButton('try-again', this.options.tryAgain, function () {
+    that.resetTask();
+    that.showButton('check-answer');
+    that.hideButton('try-again');
+  }, false, {
+    'aria-label': this.options.a11yRetry
+  });
+};
+
+/**
+ * Add element/drop zone to task.
+ *
+ * @param {Object} element
+ * @param {String} type Class
+ * @param {Number} id
+ * @returns {jQuery}
+ */
+C.prototype.addElement = function (element, type, id) {
+  return $('<div class="h5p-' + type + '" style="left:' + element.x + '%;top:' + element.y + '%;width:' + element.width + 'em;height:' + element.height + 'em"></div>').appendTo(this.$container).data('id', id);
+};
+
+/**
+ * Set correct height of container
+ */
+C.prototype.resize = function (e) {
+  var self = this;
+  // Make sure we use all the height we can get. Needed to scale up.
+  if (this.$container === undefined || !this.$container.is(':visible')) {
+    // Not yet attached or visible – not possible to resize correctly
+    return;
+  }
+
+  /*
+   * This is added here, because we need to set classes to the main container
+   * that may be under the control of a compound content type like IV and the
+   * wrapping container can change.
+   */
+  this.$mainContainer = this.$container.parents('.h5p-dragquestion');
+
+  // Auto check?
+  if (self.options.behaviour.autoCheckSolutions) {
+    this.$mainContainer.addClass('h5p-auto-check');
+  } else {
+    this.$container.find('.h5p-question-buttons').addClass('h5p-display-inline-block');
+  }
+
+  // Use full canvas
+  if (self.options.behaviour.compactMode) {
+    this.$mainContainer.addClass('h5p-compact-mode');
+  }
+
+  // Update background opacity for dropzones (in case they were not previously
+  // appended)
+  self.dropZones.forEach(function (dropzone) {
+    dropzone.updateBackgroundOpacity();
+  });
+
+  // Check if decreasing iframe size
+  var decreaseSize = e && e.data && e.data.decreaseSize;
+  if (!decreaseSize) {
+    this.$container.css('height', '99999px');
+    self.$container.parents('.h5p-standalone.h5p-dragquestion').css('width', '');
+  }
+
+  var size = this.options.question.settings.size;
+  var ratio = size.width / size.height;
+  var parentContainer = this.$container.parent();
+  // Use parent container as basis for resize.
+  var width = parentContainer.width() - parseFloat(parentContainer.css('margin-left')) - parseFloat(parentContainer.css('margin-right'));
+
+  // Check if we need to apply semi full screen fix.
+  var $semiFullScreen = self.$container.parents('.h5p-standalone.h5p-dragquestion.h5p-semi-fullscreen');
+  if ($semiFullScreen.length) {
+    // Reset semi fullscreen width
+    $semiFullScreen.css('width', '');
+
+    // Decrease iframe size
+    if (!decreaseSize) {
+      self.$container.css('width', '10px');
+      $semiFullScreen.css('width', '');
+
+      // Trigger changes
+      setTimeout(function () {
+        self.trigger('resize', { decreaseSize: true });
+      }, 200);
+    }
+
+    // Set width equal to iframe parent width, since iframe content has not been update yet.
+    var $iframe = $(window.frameElement);
+    if ($iframe) {
+      var $iframeParent = $iframe.parent();
+      width = $iframeParent.width();
+      $semiFullScreen.css('width', width + 'px');
+    }
+  }
+
+  var height = width / ratio;
+
+  // Set natural size if no parent width
+  if (width <= 0) {
+    width = size.width;
+    height = size.height;
+  }
+
+  this.$container.css({
+    width: width + 'px',
+    height: height + 'px',
+    fontSize: 16 * (width / size.width) + 'px'
+  });
+};
+
+/**
+ * Disables all draggables.
+ * @public
+ */
+C.prototype.disableDraggables = function () {
+  this.draggables.forEach(function (draggable) {
+    draggable.disable();
+  });
+};
+
+/**
+ * Enables all draggables.
+ * @public
+ */
+C.prototype.enableDraggables = function () {
+  this.draggables.forEach(function (draggable) {
+    draggable.enable();
+  });
+};
+
+/**
+ * Shows the correct solutions on the boxes and disables input and buttons depending on settings.
+ * @public
+ * @params {Boolean} skipVisuals Skip visual animations.
+ */
+C.prototype.showAllSolutions = function (skipVisuals) {
+  this.points = 0;
+  this.rawPoints = 0;
+
+  // One correct point for each "no solution" dropzone if there are no solutions
+  if (this.blankIsCorrect) {
+    this.points = 1;
+    this.rawPoints = 1;
+  }
+
+  var scorePoints;
+  if (!skipVisuals && this.options.behaviour.showScorePoints && !this.options.behaviour.singlePoint && this.options.behaviour.applyPenalties) {
+    scorePoints = new H5P.Question.ScorePoints();
+  }
+
+  for (var i = 0; i < this.draggables.length; i++) {
+    var draggable = this.draggables[i];
+    if (draggable === undefined) {
+      continue;
+    }
+
+    //Disable all draggables in check mode.
+    if (!skipVisuals) {
+      draggable.disable();
+    }
+
+    // Find out where we are.
+    this.points += draggable.results(skipVisuals, this.correctDZs[i], scorePoints);
+    this.rawPoints += draggable.rawPoints;
+  }
+
+  if (this.points < 0) {
+    this.points = 0;
+  }
+  if (!this.answered && this.blankIsCorrect) {
+    this.points = this.weight;
+  }
+  if (this.options.behaviour.singlePoint) {
+    this.points = this.points === this.calculateMaxScore() ? 1 : 0;
+  }
+
+  if (!skipVisuals) {
+    this.hideButton('check-answer');
+  }
+
+  if (this.options.behaviour.enableRetry && !skipVisuals) {
+    this.showButton('try-again');
+  }
+
+  if (this.hasButton('check-answer') && (this.options.behaviour.enableRetry === false || this.points === this.getMaxScore())) {
+    // Max score reached, or the user cannot try again.
+    this.hideButton('try-again');
+  }
+};
+
+/**
+ * Display the correct solutions, hides button and disables input.
+ * Used in contracts.
+ * @public
+ */
+C.prototype.showSolutions = function () {
+  this.showAllSolutions();
+  this.showScore();
+  //Hide solution button:
+  this.hideButton('check-answer');
+  this.hideButton('try-again');
+
+  //Disable dragging during "solution" mode
+  this.disableDraggables();
+};
+
+/**
+ * Resets the task.
+ * Used in contracts.
+ * @public
+ */
+C.prototype.resetTask = function () {
+  this.points = 0;
+  this.rawPoints = 0;
+  this.answered = false;
+  this.taskCompleted = false;
+
+  this.dropZones.forEach(function (dropzone) {
+    dropzone.reset();
+  });
+
+  // Enables Draggables
+  this.enableDraggables();
+
+  //Reset position and feedback.
+  this.draggables.forEach(function (draggable) {
+    draggable.resetPosition();
+  });
+
+  //Show solution button
+  this.showButton('check-answer');
+  this.hideButton('try-again');
+  this.removeFeedback();
+  this.setExplanation();
+};
+
+/**
+ * Calculates the real max score.
+ *
+ * @returns {Number} Max points
+ */
+C.prototype.calculateMaxScore = function () {
+  var max = 0;
+
+  if (this.blankIsCorrect) {
+    return 1;
+  }
+
+  var elements = this.options.question.task.elements;
+  for (var i = 0; i < elements.length; i++) {
+    var correctDropZones = this.correctDZs[i];
+
+    if (correctDropZones === undefined || !correctDropZones.length) {
+      continue;
+    }
+
+    if (elements[i].multiple) {
+      max += correctDropZones.length;
+    } else {
+      max++;
+    }
+  }
+
+  return max;
+};
+
+/**
+ * Get maximum score.
+ *
+ * @returns {Number} Max points
+ */
+C.prototype.getMaxScore = function () {
+  return this.options.behaviour.singlePoint ? this.weight : this.calculateMaxScore();
+};
+
+/**
+ * Count the number of correct answers.
+ * Only works while showing solution.
+ *
+ * @returns {Number} Points
+ */
+C.prototype.getScore = function () {
+  this.showAllSolutions(true);
+  var actualPoints = this.options.behaviour.applyPenalties || this.options.behaviour.singlePoint ? this.points : this.rawPoints;
+  delete this.points;
+  delete this.rawPoints;
+  return actualPoints;
+};
+
+/**
+ * Checks if all has been answered.
+ *
+ * @returns {Boolean}
+ */
+C.prototype.getAnswerGiven = function () {
+  return !this.options.behaviour.showSolutionsRequiresInput || this.answered || this.blankIsCorrect;
+};
+
+/**
+ * Shows the score to the user when the score button is pressed.
+ */
+C.prototype.showScore = function () {
+  var maxScore = this.calculateMaxScore();
+  if (this.options.behaviour.singlePoint) {
+    maxScore = 1;
+  }
+  var actualPoints = this.options.behaviour.applyPenalties || this.options.behaviour.singlePoint ? this.points : this.rawPoints;
+  var scoreText = H5P.Question.determineOverallFeedback(this.options.overallFeedback, actualPoints / maxScore).replace('@score', actualPoints).replace('@total', maxScore);
+  var helpText = this.options.behaviour.enableScoreExplanation && this.options.behaviour.applyPenalties ? this.options.scoreExplanation : false;
+  this.setFeedback(scoreText, actualPoints, maxScore, this.options.scoreBarLabel, helpText, undefined, this.options.scoreExplanationButtonLabel);
+};
+
+/**
+ * Packs info about the current state of the task into a object for
+ * serialization.
+ *
+ * @public
+ * @returns {object}
+ */
+C.prototype.getCurrentState = function () {
+  var state = { answers: [] };
+  for (var i = 0; i < this.draggables.length; i++) {
+    var draggable = this.draggables[i];
+    if (draggable === undefined) {
+      continue;
+    }
+
+    var draggableAnswers = [];
+    for (var j = 0; j < draggable.elements.length; j++) {
+      var element = draggable.elements[j];
+      if (element === undefined || element.dropZone === undefined) {
+        continue;
+      }
+
+      // Store position and drop zone.
+      draggableAnswers.push({
+        x: Number(element.position.left.replace('%', '')),
+        y: Number(element.position.top.replace('%', '')),
+        dz: element.dropZone
+      });
+    }
+
+    if (draggableAnswers.length) {
+      // Add answers to state object for storage
+      state.answers[i] = draggableAnswers;
+    }
+  }
+
+  return state;
+};
+
+C.prototype.getTitle = function () {
+  return H5P.createTitle(this.contentData && this.contentData.metadata && this.contentData.metadata.title ? this.contentData.metadata.title : 'Drag and drop');
+};
+
+/**
+ * Play audio sample.
+ * @param {string} identifier Identifier for audio.
+ */
+C.prototype.playAudio2 = function (identifier) {
+  if (!this.$container.closest('.h5p-content').hasClass('using-mouse')) {
+    return; // Don't disturb ARIA
+  }
+
+  if (typeof identifier !== 'string') {
+    return;
+  }
+
+  if (this.audios[identifier]) {
+    this.audios[identifier].play();
+  }
+};
+
+/**
+ * Play audio sample.
+ * @param {HTMLElement} audioElement Audio element to be played.
+ */
+C.prototype.playAudio = function (audioElement) {
+  if (!this.$container.closest('.h5p-content').hasClass('using-mouse')) {
+    return; // Don't disturb ARIA
+  }
+
+  if (!audioElement) {
+    return;
+  }
+
+  audioElement.play();
+};
+
+/**
+ * Reset audios.
+ */
+C.prototype.resetAudios = function () {
+  this.audios.forEach(function (audio) {
+    audio.pause();
+    audio.load();
+  });
+};
+
+/**
+ * Detect whether audio is playing.
+ * @param {string|string[]} checkAudios Limit check to audios with these identifiers.
+ * @return {boolean} True, if audio is playing.
+ */
+C.prototype.isAudioPlaying = function (checkAudios) {
+  if (!Array.isArray(checkAudios)) {
+    checkAudios = [checkAudios];
+  }
+
+  var audioPlaying = false;
+  for (var type in this.players) {
+    if (checkAudios.length > 0 && checkAudios.indexOf(type) === -1) {
+      continue; // Skip, not interested in that type
+    }
+
+    if (!this.players[type].paused) {
+      audioPlaying = true;
+      break;
+    }
+  }
+  return audioPlaying;
+};
+
+/**
+ * Initialize controls to improve a11Y.
+ *
+ * @private
+ * @param {Draggable[]} draggables
+ * @param {DropZone[]} dropZones
+ * @param {Element} noDropzone
+ * @return {Object<string, Controls>}
+ */
+var getControls = function getControls(draggables, dropZones, noDropzone) {
+  // Initialize controls components
+  var controls = {
+    drag: new _controls2.default([new _keyboard2.default(), new _drag2.default()]),
+    drop: new _controls2.default([new _keyboard2.default(), new _drop2.default()])
+  };
+  controls.drag.useNegativeTabIndex();
+  controls.drop.useNegativeTabIndex();
+
+  // Keep track of current selected draggable (selected via keyboard)
+  var selected;
+
+  /**
+   * De-selects the currently selected draggable element.
+   *
+   * @private
+   */
+  var deselect = function deselect() {
+    selected.draggable.trigger('dragend');
+    selected.element.$.removeClass('h5p-draggable-hover');
+    _dragUtils2.default.setElementOpacity(selected.element.$, selected.draggable.backgroundOpacity);
+
+    if (controls.drop.elements.indexOf(noDropzone) !== -1) {
+      controls.drop.removeElement(noDropzone);
+      noDropzone.style.display = 'none';
+    }
+    for (var i = 0; i < dropZones.length; i++) {
+      var dropZone = dropZones[i];
+
+      // Remove highlighting
+      dropZone.dehighlight();
+
+      if (controls.drop.elements.indexOf(dropZone.$dropZone[0]) !== -1) {
+        controls.drop.removeElement(dropZone.$dropZone[0]);
+      }
+    }
+
+    if (selected.element.$.is(':visible')) {
+      // Put focus back on element after deselecting
+      selected.element.$.focus();
+    } else {
+      // Put focus on next draggable element
+      var $next = selected.draggable.elements[selected.draggable.elements.length - 1].$;
+      controls.drag.setTabbable($next[0]);
+      $next.focus();
+    }
+    selected = undefined;
+  };
+
+  // Handle draggable selected through keyboard
+  controls.drag.on('select', function (event) {
+    var result = _dragUtils2.default.elementToDraggable(draggables, event.element);
+    if (selected) {
+      // De-select
+      deselect();
+      return;
+    }
+    selected = result;
+
+    // Select
+    selected.element.$.addClass('h5p-draggable-hover');
+    _dragUtils2.default.setElementOpacity(selected.element.$, selected.draggable.backgroundOpacity);
+    selected.draggable.trigger('dragstart', selected.draggable.mustCopyElement(selected.element) ? 'copy' : 'move');
+
+    // Add special drop zone to reset
+    controls.drop.addElement(noDropzone);
+
+    // Position at element position
+    noDropzone.style.display = 'block';
+    noDropzone.style.left = selected.draggable.x + '%';
+    noDropzone.style.top = selected.draggable.y + '%';
+    noDropzone.style.width = selected.draggable.width + 'em';
+    noDropzone.style.height = selected.draggable.height + 'em';
+
+    // Figure out which drop zones will accept this draggable
+    var $first;
+    for (var i = 0; i < dropZones.length; i++) {
+      var dropZone = dropZones[i];
+
+      if (dropZone.accepts(selected.draggable, draggables)) {
+        dropZone.highlight();
+        controls.drop.addElement(dropZone.$dropZone[0]);
+        if (!$first || selected.element.dropZone === dropZone.id) {
+          $first = dropZone.$dropZone;
+        }
+      }
+    }
+    if ($first) {
+      // Focus the first drop zone after selecting a draggable
+      controls.drop.setTabbable($first[0]);
+      $first.focus();
+    }
+  });
+
+  // Handle dropzone selected through keyboard
+  controls.drop.on('select', function (event) {
+    if (!selected) {
+      return;
+    }
+    if (event.element === noDropzone) {
+      // Reset position
+
+      if (selected.element.dropZone !== undefined) {
+        selected.element.reset();
+      }
+      if (selected !== undefined) {
+        // Equals draggable.multiple === false
+        selected.element.$.css({
+          left: selected.draggable.x + '%',
+          top: selected.draggable.y + '%',
+          width: selected.draggable.width + 'em',
+          height: selected.draggable.height + 'em'
+        });
+        selected.draggable.updatePlacement(selected.element);
+        selected.element.$[0].setAttribute('aria-grabbed', 'false');
+        deselect();
+      }
+      return;
+    }
+
+    var dropZone = _dragUtils2.default.elementToDropZone(dropZones, event.element);
+
+    var mustCopyElement = selected.draggable.mustCopyElement(selected.element);
+    if (mustCopyElement) {
+      // Leave a new element for next drag
+      selected.element.clone();
+    }
+
+    // Add draggable to drop zone
+    selected.draggable.addToDropZone(selected.index, selected.element, dropZone.id);
+
+    // Set position in case DZ is full (auto align doesn't work)
+    selected.element.$.css({
+      left: dropZone.x + '%',
+      top: dropZone.y + '%'
+    });
+
+    if (dropZone.getIndexOf(selected.element.$) === -1) {
+      // Add to alignables
+      dropZone.alignables.push(selected.element.$);
+    }
+
+    // Trigger alignment
+    dropZone.autoAlign();
+
+    // Reset selected
+    selected.element.$[0].setAttribute('aria-grabbed', 'false');
+    deselect();
+  });
+
+  return controls;
+};
+
+H5P.DragQuestion = C;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _elements = __webpack_require__(1);
+
+var _functional = __webpack_require__(0);
+
+var _eventful = __webpack_require__(5);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Controls Event
+ * @typedef {Object} ControlsEvent
+ * @property {HTMLElement} element
+ * @property {number} index
+ * @property {HTMLElement[]} elements
+ * @property {HTMLElement} oldElement
+ */
+/**
+ * Add element event
+ * @event Controls#addElement
+ * @type ControlsEvent
+ */
+/**
+ * Remove element event
+ * @event Controls#removeElement
+ * @type ControlsEvent
+ */
+/**
+ * Previous element event
+ * @event Controls#previousElement
+ * @type ControlsEvent
+ */
+/**
+ * Next element event
+ * @event Controls#nextElement
+ * @type ControlsEvent
+ */
+/**
+ * Select option event
+ * @event Controls#select
+ * @type ControlsEvent
+ */
+/**
+ * Drag element event
+ * @event Controls#drag
+ * @type ControlsEvent
+ */
+
+/**
+ * @type {function} removeTabIndex
+ */
+var removeTabIndex = (0, _elements.removeAttribute)('tabindex');
+/**
+ * @type {function} removeTabIndexForAll
+ */
+var removeTabIndexForAll = (0, _functional.forEach)(removeTabIndex);
+/**
+ * @type {function} setTabIndexZero
+ */
+var setTabIndexZero = (0, _elements.setAttribute)('tabindex', '0');
+/**
+ * @type {function} setTabIndexMinusOne
+ */
+var setTabIndexMinusOne = (0, _elements.setAttribute)('tabindex', '-1');
+/**
+ * @type {function} hasTabIndex
+ */
+var hasTabIndex = (0, _elements.hasAttribute)('tabindex');
+
+/**
+ * @class
+ * @mixes Eventful
+ */
+
+var Controls = function () {
+  function Controls(plugins) {
+    _classCallCheck(this, Controls);
+
+    // add event system
+    _extends(this, (0, _eventful.Eventful)());
+
+    /**
+     *@property {HTMLElement} tabbableElement
+     */
+    /**
+     * @property {object[]} plugins
+     */
+    this.plugins = plugins || [];
+
+    /**
+     * @property {HTMLElement[]} elements
+     */
+    this.elements = [];
+
+    /**
+     * @property {boolean} useNegativeTabIndex
+     */
+    this.negativeTabIndexAllowed = false;
+
+    // move tabindex to next element
+    this.on('nextElement', this.nextElement, this);
+
+    // move tabindex to previous element
+    this.on('previousElement', this.previousElement, this);
+
+    // init plugins
+    this.initPlugins();
+  }
+
+  /**
+   * Add controls to an element
+   *
+   * @param {HTMLElement} el
+   *
+   * @fires Controls#addElement
+   * @public
+   */
+
+
+  _createClass(Controls, [{
+    key: 'addElement',
+    value: function addElement(el) {
+      this.elements.push(el);
+
+      this.firesEvent('addElement', el);
+
+      if (this.elements.length === 1) {
+        // if first
+        this.setTabbable(el);
+      }
+    }
+  }, {
+    key: 'removeElement',
+
+
+    /**
+     * Add controls to an element
+     *
+     * @param {HTMLElement} el
+     *
+     * @fires Controls#addElement
+     * @public
+     */
+    value: function removeElement(el) {
+      this.elements = (0, _functional.without)([el], this.elements);
+
+      // if removed element was selected
+      if (hasTabIndex(el)) {
+        this.setUntabbable(el);
+
+        // set first element selected if exists
+        if (this.elements[0]) {
+          this.setTabbable(this.elements[0]);
+        }
+      }
+
+      this.firesEvent('removeElement', el);
+    }
+  }, {
+    key: 'firesEvent',
+
+
+    /**
+     * Fire event
+     *
+     * @param {string} type
+     * @param {HTMLElement|EventTarget} el
+     *
+     * @public
+     */
+    value: function firesEvent(type, el) {
+      var index = this.elements.indexOf(el);
+
+      return this.fire(type, {
+        element: el,
+        index: index,
+        elements: this.elements,
+        oldElement: this.tabbableElement
+      });
+    }
+
+    /**
+     * Sets tabindex on an element, remove it from all others
+     *
+     * @param {number} index
+     *
+     * @private
+     */
+
+  }, {
+    key: 'nextElement',
+    value: function nextElement(_ref) {
+      var index = _ref.index;
+
+      var isLastElement = index === this.elements.length - 1;
+      var nextEl = this.elements[isLastElement ? 0 : index + 1];
+
+      this.setTabbable(nextEl);
+      nextEl.focus();
+    }
+
+    /**
+     * Sets tabindex on an element, remove it from all others
+     *
+     * @param {HTMLElement} el
+     * @public
+     */
+
+  }, {
+    key: 'setTabbable',
+    value: function setTabbable(el) {
+      (0, _functional.forEach)(this.setUntabbable.bind(this), this.elements);
+      setTabIndexZero(el);
+      this.tabbableElement = el;
+    }
+
+    /**
+     * Removes tabbability from an element
+     *
+     * @param {HTMLElement} el
+     */
+
+  }, {
+    key: 'setUntabbable',
+    value: function setUntabbable(el) {
+      if (this.negativeTabIndexAllowed) {
+        setTabIndexMinusOne(el);
+      } else {
+        removeTabIndex(el);
+      }
+    }
+
+    /**
+     * Sets tabindex on an element, remove it from all others
+     *
+     * @param {number} index
+     *
+     * @private
+     */
+
+  }, {
+    key: 'previousElement',
+    value: function previousElement(_ref2) {
+      var index = _ref2.index;
+
+      var isFirstElement = index === 0;
+      var prevEl = this.elements[isFirstElement ? this.elements.length - 1 : index - 1];
+
+      this.setTabbable(prevEl);
+      prevEl.focus();
+    }
+
+    /**
+     * Use tabindex="-1" instead of removing tabindex for non-focused elements
+     */
+
+  }, {
+    key: 'useNegativeTabIndex',
+    value: function useNegativeTabIndex() {
+      this.negativeTabIndexAllowed = true;
+      this.elements.forEach(function (element) {
+        if (!element.hasAttribute('tabindex')) {
+          setTabIndexMinusOne(element);
+        }
+      });
+    }
+
+    /**
+     * Initializes the plugins
+     *
+     * @private
+     */
+
+  }, {
+    key: 'initPlugins',
+    value: function initPlugins() {
+      this.plugins.forEach(function (plugin) {
+        if (plugin.init !== undefined) {
+          plugin.init(this);
+        }
+      }, this);
+    }
+  }]);
+
+  return Controls;
+}();
+
+exports.default = Controls;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * @mixin
+ */
+var Eventful = exports.Eventful = function Eventful() {
+  return {
+    listeners: {},
+
+    /**
+     * Listen to event
+     *
+     * @param {string} type
+     * @param {function} listener
+     * @param {object} [scope]
+     *
+     * @function
+     * @return {Eventful}
+     */
+    on: function on(type, listener, scope) {
+      /**
+       * @typedef {object} Trigger
+       * @property {function} listener
+       * @property {object} scope
+       */
+      var trigger = {
+        'listener': listener,
+        'scope': scope
+      };
+
+      this.listeners[type] = this.listeners[type] || [];
+      this.listeners[type].push(trigger);
+
+      return this;
+    },
+
+    /**
+     * Fire event. If any of the listeners returns false, return false
+     *
+     * @param {string} type
+     * @param {object} [event]
+     *
+     * @function
+     * @return {boolean}
+     */
+    fire: function fire(type, event) {
+      var triggers = this.listeners[type] || [];
+
+      return triggers.every(function (trigger) {
+        return trigger.listener.call(trigger.scope || this, event) !== false;
+      });
+    },
+
+    /**
+     * Listens for events on another Eventful, and propagate it trough this Eventful
+     *
+     * @param {string[]} types
+     * @param {Eventful} eventful
+     */
+    propagate: function propagate(types, eventful) {
+      var self = this;
+      types.forEach(function (type) {
+        return eventful.on(type, function (event) {
+          return self.fire(type, event);
+        });
+      });
+    }
+  };
+};
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _elements = __webpack_require__(1);
+
+var _functional = __webpack_require__(0);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * @type {string}
+ * @readonly
+ */
+var ATTRIBUTE_ARIA_GRABBED = 'aria-grabbed';
+
+/**
+ * @type {function} setGrabbedTrue
+ * @param {HTMLElement} element
+ */
+var setGrabbed = (0, _elements.setAttribute)(ATTRIBUTE_ARIA_GRABBED);
+
+/**
+ * @type {function} isGrabbed
+ * @param {HTMLElement} element
+ */
+var isGrabbed = (0, _elements.attributeEquals)(ATTRIBUTE_ARIA_GRABBED, 'true');
+
+/**
+ * @type {function} filterHasAttributeDropEffect
+ */
+var filterHasAttributeGrabbed = (0, _functional.filter)((0, _elements.hasAttribute)(ATTRIBUTE_ARIA_GRABBED));
+
+/**
+ * Sets all aria-grabbed to 'false'
+ * @param {HTMLElement[]} elements
+ * @type {function} setAllGrabbedToFalse
+ */
+var _setAllGrabbedToFalse = (0, _functional.compose)((0, _functional.forEach)((0, _elements.setAttribute)(ATTRIBUTE_ARIA_GRABBED, 'false')), filterHasAttributeGrabbed);
+
+/**
+ * @type {function} hasGrabbed
+ * @param {HTMLElement[]} elements
+ */
+var hasGrabbed = (0, _functional.compose)((0, _functional.some)(isGrabbed), filterHasAttributeGrabbed);
+
+/**
+ * @class
+ */
+
+var Drag = function () {
+  function Drag() {
+    _classCallCheck(this, Drag);
+  }
+
+  _createClass(Drag, [{
+    key: 'init',
+
+    /**
+     * Inits this class
+     *
+     * @param {Controls} controls
+     */
+    value: function init(controls) {
+      /**
+       * @type {Controls}
+       */
+      this.controls = controls;
+
+      // handle select event
+      this.controls.on('select', this.select, this);
+    }
+  }, {
+    key: 'addElement',
+
+
+    /**
+     * Marks element as aria-grabbed = 'false' and adds to controller
+     *
+     * @param element
+     */
+    value: function addElement(element) {
+      setGrabbed('false', element);
+      this.controls.addElement(element);
+    }
+
+    /**
+     * Sets aria-grabbed to 'false' for all elements that has it
+     */
+
+  }, {
+    key: 'setAllGrabbedToFalse',
+    value: function setAllGrabbedToFalse() {
+      _setAllGrabbedToFalse(this.controls.elements);
+    }
+
+    /**
+     * Returns true if any of the elements are grabbed
+     *
+     * @return {boolean}
+     */
+
+  }, {
+    key: 'hasAnyGrabbed',
+    value: function hasAnyGrabbed() {
+      return hasGrabbed(this.controls.elements);
+    }
+
+    /**
+     * Un selects all, but selects new element if not already selected
+     *
+     * @param {HTMLElement} element
+     */
+
+  }, {
+    key: 'select',
+    value: function select(_ref) {
+      var element = _ref.element;
+
+      var alreadyGrabbed = isGrabbed(element);
+
+      this.setAllGrabbedToFalse();
+
+      if (!alreadyGrabbed) {
+        setGrabbed('true', element);
+      }
+    }
+  }]);
+
+  return Drag;
+}();
+
+exports.default = Drag;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _elements = __webpack_require__(1);
+
+var _functional = __webpack_require__(0);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * @type {string}
+ * @readonly
+ */
+var ATTRIBUTE_ARIA_DROPEFFECT = 'aria-dropeffect';
+
+/**
+ * @type {function} setDropEffectNone
+ */
+var setDropEffectNone = (0, _elements.setAttribute)(ATTRIBUTE_ARIA_DROPEFFECT, 'none');
+
+/**
+ * @type {function} setDropEffectNone
+ */
+var setDropEffectMove = (0, _elements.setAttribute)(ATTRIBUTE_ARIA_DROPEFFECT, 'move');
+
+/**
+ * @type {function} filterHasAttributeDropEffect
+ */
+var filterHasAttributeDropEffect = (0, _functional.filter)((0, _elements.hasAttribute)(ATTRIBUTE_ARIA_DROPEFFECT));
+
+/**
+ * Sets all drop zones to move
+ * @param {HTMLElement[]} elements
+ * @type {function} setDropZoneEffectsToMove
+ */
+var setAllDropEffectsToMove = (0, _functional.compose)((0, _functional.forEach)(setDropEffectMove), filterHasAttributeDropEffect);
+
+/**
+ * Sets all drop zones to none
+ * @param {HTMLElement[]} elements
+ * @type {function} setAllDropEffectsToNone
+ */
+var setAllDropEffectsToNone = (0, _functional.compose)((0, _functional.forEach)(setDropEffectNone), filterHasAttributeDropEffect);
+
+/**
+ * Class for handling Drop Zones
+ *
+ * @class
+ */
+
+var Drop = function () {
+  function Drop() {
+    _classCallCheck(this, Drop);
+  }
+
+  _createClass(Drop, [{
+    key: 'init',
+
+    /**
+     * Inits this class
+     * @param {Controls} controls
+     */
+    value: function init(controls) {
+      /**
+       * @type {Controls}
+       */
+      this.controls = controls;
+    }
+  }, {
+    key: 'setAllToMove',
+
+
+    /**
+     * On elements with aria-dropeffect, set aria-dropeffect to 'move'
+     * @public
+     */
+    value: function setAllToMove() {
+      setAllDropEffectsToMove(this.controls.elements);
+    }
+
+    /**
+     * On elements with aria-dropeffect, set aria-dropeffect to 'none'
+     * @public
+     */
+
+  }, {
+    key: 'setAllToNone',
+    value: function setAllToNone() {
+      setAllDropEffectsToNone(this.controls.elements);
+    }
+  }]);
+
+  return Drop;
+}();
+
+/**
+ * Enum for ARIA drop effects
+ * @readonly
+ * @enum {string}
+ */
+
+
+exports.default = Drop;
+Drop.DropEffect = {
+  COPY: 'copy',
+  MOVE: 'move',
+  EXECUTE: 'execute',
+  POPUP: 'popup',
+  NONE: 'none'
+};
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * @class
+ * @classdesc Keyboard navigation for accessibility support
+ */
+var Keyboard = function () {
+  function Keyboard() {
+    _classCallCheck(this, Keyboard);
+
+    /**
+     * @property {boolean} selectability
+     */
+    this.selectability = true;
+  }
+
+  /**
+   * Inits this class
+   *
+   * @param {Controls} controls
+   */
+
+
+  _createClass(Keyboard, [{
+    key: 'init',
+    value: function init(controls) {
+      /**
+       * Need to have a common binding of handleKeyDown, so that it can be a
+       * common instance to be used for addEventListener and removeEventListener
+       * @type {function}
+       */
+      this.boundHandleKeyDown = this.handleKeyDown.bind(this);
+
+      /**
+       * @type {Controls}
+       */
+      this.controls = controls;
+      this.controls.on('addElement', this.listenForKeyDown, this);
+      this.controls.on('removeElement', this.removeKeyDownListener, this);
+    }
+  }, {
+    key: 'listenForKeyDown',
+
+
+    /**
+     * Listens for a keyboard press when element is focused
+     *
+     * @param {HTMLElement} element
+     * @private
+     */
+    value: function listenForKeyDown(_ref) {
+      var element = _ref.element;
+
+      element.addEventListener('keydown', this.boundHandleKeyDown);
+    }
+  }, {
+    key: 'removeKeyDownListener',
+
+
+    /**
+     * Remove a keyboard press listener
+     *
+     * @param {HTMLElement} element
+     * @private
+     */
+    value: function removeKeyDownListener(_ref2) {
+      var element = _ref2.element;
+
+      element.removeEventListener('keydown', this.boundHandleKeyDown);
+    }
+  }, {
+    key: 'handleKeyDown',
+
+
+    /**
+     * Handles key down
+     *
+     * @param {KeyboardEvent} event Keyboard event
+     * @private
+     */
+    value: function handleKeyDown(event) {
+      switch (event.which) {
+        case 13: // Enter
+        case 32:
+          // Space
+          this.select(event.target);
+          event.preventDefault();
+          break;
+
+        case 37: // Left Arrow
+        case 38:
+          // Up Arrow
+          // ignore with modifiers, so not to interfere with Chromevox
+          if (!this.hasChromevoxModifiers(event)) {
+            this.previousElement(event.target);
+            event.preventDefault();
+          }
+          break;
+        case 39: // Right Arrow
+        case 40:
+          // Down Arrow
+          // ignore with modifiers, so not to interfere with Chromevox
+          if (!this.hasChromevoxModifiers(event)) {
+            this.nextElement(event.target);
+            event.preventDefault();
+          }
+          break;
+      }
+    }
+  }, {
+    key: 'hasChromevoxModifiers',
+
+
+    /**
+     * Checks if the Chromevox modifiers are pressed
+     *
+     * @param {KeyboardEvent} event Keyboard event
+     * @private
+     */
+    value: function hasChromevoxModifiers(event) {
+      return event.shiftKey || event.ctrlKey;
+    }
+
+    /**
+     * Fires the previous element event
+     *
+     * @param {HTMLElement|EventTarget} el
+     * @fires Controls#previousElement
+     */
+
+  }, {
+    key: 'previousElement',
+    value: function previousElement(el) {
+      this.controls.firesEvent('previousElement', el);
+    }
+  }, {
+    key: 'nextElement',
+
+
+    /**
+     * Fire the next element event
+     *
+     * @param {HTMLElement|EventTarget} el
+     * @fires Controls#nextElement
+     */
+    value: function nextElement(el) {
+      this.controls.firesEvent('nextElement', el);
+    }
+  }, {
+    key: 'select',
+
+
+    /**
+     * Fires the select event
+     *
+     * @param {EventTarget|HTMLElement} el
+     * @fires Controls#select
+     */
+    value: function select(el) {
+      if (this.selectability) {
+        if (this.controls.firesEvent('before-select', el) !== false) {
+          this.controls.firesEvent('select', el);
+          this.controls.firesEvent('after-select', el);
+        }
+      }
+    }
+  }, {
+    key: 'disableSelectability',
+
+
+    /**
+     * Disable possibility to select a word trough click and space or enter
+     *
+     * @public
+     */
+    value: function disableSelectability() {
+      this.selectability = false;
+    }
+  }, {
+    key: 'enableSelectability',
+
+
+    /**
+     * Enable possibility to select a word trough click and space or enter
+     *
+     * @public
+     */
+    value: function enableSelectability() {
+      this.selectability = true;
+    }
+  }]);
+
+  return Keyboard;
+}();
+
+exports.default = Keyboard;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _dragUtils = __webpack_require__(2);
+
+var _dragUtils2 = _interopRequireDefault(_dragUtils);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var $ = H5P.jQuery;
+
+var DropZone = function () {
+
+  /**
+   * Creates a new drop zone instance.
+   * Makes it easy to keep track of all instance variables.
+   *
+   * @param {Object} dropZone
+   * @param {Number} id
+   * @param {string[]} l10n
+   * @returns {_L8.DropZone}
+   */
+  function DropZone(dropZone, id, l10n) {
+    _classCallCheck(this, DropZone);
+
+    var self = this;
+    H5P.EventDispatcher.call(self);
+
+    self.id = id;
+    self.showLabel = dropZone.showLabel;
+    self.label = dropZone.label;
+    self.x = dropZone.x;
+    self.y = dropZone.y;
+    self.width = dropZone.width;
+    self.height = dropZone.height;
+    self.backgroundOpacity = dropZone.backgroundOpacity;
+    self.tip = dropZone.tipsAndFeedback.tip || '';
+    self.single = dropZone.single;
+    self.autoAlignable = dropZone.autoAlign;
+    self.alignables = [];
+    self.l10n = l10n;
+  }
+
+  /**
+   * Insert drop zone in the given container.
+   *
+   * @param {jQuery} $container
+   * @param {Array} draggables
+   * @returns {undefined}
+   */
+
+
+  _createClass(DropZone, [{
+    key: 'appendTo',
+    value: function appendTo($container, draggables) {
+      var self = this;
+
+      // Prepare inner html with prefix for good a11y
+      var html = '<div class="h5p-inner"></div>';
+      var extraClass = '';
+      if (self.showLabel) {
+        html = '<div class="h5p-label">' + self.label + '<span class="h5p-hidden-read"></span></div>' + html;
+        extraClass = ' h5p-has-label';
+      }
+      html = '<span class="h5p-hidden-read">' + self.l10n.prefix.replace('{num}', self.id + 1) + '</span>' + html;
+
+      // Create drop zone element
+      self.$dropZone = $('<div/>', {
+        class: 'h5p-dropzone' + extraClass,
+        tabindex: '-1',
+        title: self.showLabel ? $('<div/>', { html: self.label }).text() : null,
+        role: 'button',
+        'aria-disabled': true,
+        css: {
+          left: self.x + '%',
+          top: self.y + '%',
+          width: self.width + 'em',
+          height: self.height + 'em'
+        },
+        html: html
+      }).appendTo($container).children('.h5p-inner').droppable({
+        activeClass: 'h5p-active',
+        tolerance: 'intersect',
+        accept: function accept(element) {
+          /**
+           * Functional note:
+           * This will fire every time a draggable is starting to get dragged, globally
+           * for all initialized drop zones  <-> draggables. That means in a compound H5P this
+           * function will fire for all Drag Questions within that compound content type,
+           * no matter if it is at a different timestamp, already completed or otherwise
+           * intuitively would be disabled. This can lead to some unexpected behaviour if you
+           * don't take this into consideration.
+           */
+
+          // Find draggable element belongs to
+          var result = _dragUtils2.default.elementToDraggable(draggables, element);
+
+          // Found no Draggable that the element belongs to. Don't accept it.
+          if (!result) {
+            return false;
+          }
+
+          // Figure out if the drop zone will accept the draggable
+          return self.accepts(result.draggable, draggables);
+        },
+        drop: function drop(event, ui) {
+          // Report dropped element
+          var draggable = _dragUtils2.default.elementToDraggable(draggables, ui.draggable);
+          self.trigger('dropped', {
+            draggableId: draggable.draggable.id,
+            dropzoneId: self.id
+          });
+
+          var $this = $(this);
+          _dragUtils2.default.setOpacity($this.removeClass('h5p-over'), 'background', self.backgroundOpacity);
+          ui.draggable.data('addToZone', self.id);
+
+          if (self.getIndexOf(ui.draggable) === -1) {
+            // Add to alignables
+            self.alignables.push(ui.draggable);
+          }
+
+          if (self.autoAlignable.enabled) {
+            // Trigger alignment
+            self.autoAlign();
+          }
+        },
+        over: function over() {
+          _dragUtils2.default.setOpacity($(this).addClass('h5p-over'), 'background', self.backgroundOpacity);
+        },
+        out: function out() {
+          _dragUtils2.default.setOpacity($(this).removeClass('h5p-over'), 'background', self.backgroundOpacity);
+        }
+      }).end().focus(function () {
+        if ($tip instanceof H5P.jQuery) {
+          $tip.attr('tabindex', '0');
+        }
+      }).blur(function () {
+        if ($tip instanceof H5P.jQuery) {
+          $tip.attr('tabindex', '-1');
+        }
+      });
+
+      // Add tip after setOpacity(), so this does not get background opacity:
+      var $tip = H5P.JoubelUI.createTip(self.tip, {
+        tipLabel: self.l10n.tipLabel,
+        tabcontrol: true
+      });
+      if ($tip instanceof H5P.jQuery) {
+        // Create wrapper for tip
+        $('<span/>', {
+          'class': 'h5p-dq-tipwrap',
+          'aria-label': self.l10n.tipAvailable,
+          'append': $tip,
+          'appendTo': self.$dropZone
+        });
+      }
+
+      draggables.forEach(function (draggable) {
+        var dragEl = draggable.element.$;
+
+        // Add to alignables
+        if (draggable.isInDropZone(self.id) && self.getIndexOf(dragEl) === -1) {
+          self.alignables.push(dragEl);
+        }
+      });
+      if (self.autoAlignable.enabled) {
+        self.autoAlign();
+      }
+
+      // Set element opacity when element has been appended
+      setTimeout(function () {
+        self.updateBackgroundOpacity();
+      }, 0);
+    }
+
+    /**
+     * Update the background opacity
+     */
+
+  }, {
+    key: 'updateBackgroundOpacity',
+    value: function updateBackgroundOpacity() {
+      _dragUtils2.default.setOpacity(this.$dropZone.children('.h5p-label'), 'background', this.backgroundOpacity);
+      _dragUtils2.default.setOpacity(this.$dropZone.children('.h5p-inner'), 'background', this.backgroundOpacity);
+    }
+
+    /**
+     * Help determine if the drop zone can accept this draggable
+     */
+
+  }, {
+    key: 'accepts',
+    value: function accepts(draggable, draggables) {
+      var self = this;
+      if (!draggable.hasDropZone(self.id)) {
+        // Doesn't belong in this drop zone
+        return false;
+      }
+
+      if (self.single) {
+        // Make sure no other draggable is placed here
+        for (var i = 0; i < draggables.length; i++) {
+          if (draggables[i] && draggables[i].isInDropZone(self.id)) {
+            // This drop zone is occupied
+            return false;
+          }
+        }
+      }
+
+      return true;
+    }
+
+    /**
+     * Find index of given alignable
+     *
+     * @param {jQuery} $alignable
+     * @return {number}
+     */
+
+  }, {
+    key: 'getIndexOf',
+    value: function getIndexOf($alignable) {
+      var self = this;
+
+      for (var i = 0; i < self.alignables.length; i++) {
+        if (self.alignables[i][0] === $alignable[0]) {
+          return i;
+        }
+      }
+
+      return -1;
+    }
+
+    /**
+     * Remove alignable
+     *
+     * @param {jQuery} $alignable
+     */
+
+  }, {
+    key: 'removeAlignable',
+    value: function removeAlignable($alignable) {
+      var self = this;
+
+      // Find alignable index
+      var index = self.getIndexOf($alignable);
+      if (index !== -1) {
+
+        // Remove alignable
+        self.alignables.splice(index, 1);
+
+        if (self.autoAlignTimer === undefined && self.autoAlignable.enabled) {
+          // Schedule re-aligment of alignables left
+          self.autoAlignTimer = setTimeout(function () {
+            delete self.autoAlignTimer;
+            self.autoAlign();
+          }, 1);
+        }
+      }
+    }
+
+    /**
+     * Auto-align alignable elements inside drop zone.
+     */
+
+  }, {
+    key: 'autoAlign',
+    value: function autoAlign() {
+      var self = this;
+
+      // Determine container size in order to calculate percetages
+      var containerSize = self.$dropZone.parent()[0].getBoundingClientRect();
+
+      // Calcuate borders and spacing values in percetage
+      var spacing = {
+        x: self.autoAlignable.spacing / self.autoAlignable.size.width * 100,
+        y: self.autoAlignable.spacing / self.autoAlignable.size.height * 100
+      };
+
+      // Determine coordinates for first 'spot'
+      var pos = {
+        x: self.x + spacing.x,
+        y: self.y + spacing.y
+      };
+
+      // Determine space inside drop zone
+      var dropZoneSize = self.$dropZone[0].getBoundingClientRect();
+      var space = {
+        x: dropZoneSize.width - spacing.x * 2,
+        y: dropZoneSize.height - spacing.y * 2
+      };
+
+      // Set current space left inside drop zone
+      var spaceLeft = {
+        x: space.x,
+        y: space.y
+      };
+
+      // Set height for the active row of elements
+      var currentRowHeight = 0;
+
+      // Current alignable element and it's size
+      var $alignable, alignableSize;
+
+      /**
+       * Helper doing the actual positioning of the element + recalculating
+       * next position and space left.
+       *
+       * @private
+       */
+      var alignElement = function alignElement() {
+        // Position element at current spot
+        $alignable.css({
+          left: pos.x + '%',
+          top: pos.y + '%'
+        });
+        self.trigger('elementaligned', $alignable);
+
+        // Update horizontal space left + next position
+        var spaceDiffX = alignableSize.width + self.autoAlignable.spacing;
+        spaceLeft.x -= spaceDiffX;
+        pos.x += spaceDiffX / containerSize.width * 100;
+
+        // Keep track of the highest element in this row
+        var spaceDiffY = alignableSize.height + self.autoAlignable.spacing;
+        if (spaceDiffY > currentRowHeight) {
+          currentRowHeight = spaceDiffY;
+        }
+      };
+
+      // Try to order and align the alignables inside the drop zone
+      // (in the order they were added)
+      for (var i = 0; i < self.alignables.length; i++) {
+
+        // Determine alignable size
+        $alignable = self.alignables[i];
+        alignableSize = $alignable[0].getBoundingClientRect();
+
+        // Try to fit on the current row
+        if (spaceLeft.x >= alignableSize.width) {
+          alignElement();
+        } else {
+          // Did not fit, try next row
+
+          // Reset X values
+          spaceLeft.x = space.x;
+          pos.x = self.x + spacing.x;
+
+          // Bump Y values
+          if (currentRowHeight) {
+            // Update Y space and position according to previous row height
+            spaceLeft.y -= currentRowHeight;
+            pos.y += currentRowHeight / containerSize.height * 100;
+
+            // Reset
+            currentRowHeight = 0;
+          }
+          if (spaceLeft.y <= 0) {
+            return; // No more vertical space left, stop all aliging
+          }
+          alignElement();
+        }
+      }
+    }
+
+    /**
+     * Highlight the current drop zone
+     */
+
+  }, {
+    key: 'highlight',
+    value: function highlight() {
+      this.$dropZone.attr('aria-disabled', 'false').children('.h5p-inner').addClass('h5p-active');
+    }
+
+    /**
+     * De-highlight the current drop zone
+     */
+
+  }, {
+    key: 'dehighlight',
+    value: function dehighlight() {
+      this.$dropZone.attr('aria-disabled', 'true').children('.h5p-inner').removeClass('h5p-active');
+    }
+
+    /**
+     * Invoked when reset task is run. Cleanup any internal states.
+     */
+
+  }, {
+    key: 'reset',
+    value: function reset() {
+      // Remove alignables
+      this.alignables = [];
+    }
+  }]);
+
+  return DropZone;
+}();
+
+exports.default = DropZone;
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _dragUtils = __webpack_require__(2);
+
+var _dragUtils2 = _interopRequireDefault(_dragUtils);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var $ = H5P.jQuery;
+
+var Draggable = function (_H5P$EventDispatcher) {
+  _inherits(Draggable, _H5P$EventDispatcher);
+
+  /**
+   * Creates a new draggable instance.
+   * Makes it easier to keep track of all instance variables and elements.
+   *
+   * @class
+   * @param {Object} element
+   * @param {number} id
+   * @param {Array} [answers] from last session
+   * @param {Object.<string, string>} l10n
+   */
+  function Draggable(element, id, answers, l10n) {
+    _classCallCheck(this, Draggable);
+
+    var _this = _possibleConstructorReturn(this, (Draggable.__proto__ || Object.getPrototypeOf(Draggable)).call(this));
+
+    var self = _this;
+
+    self.$ = $(self);
+    self.id = id;
+    self.elements = [];
+    self.x = element.x;
+    self.y = element.y;
+    self.width = element.width;
+    self.height = element.height;
+    self.backgroundOpacity = element.backgroundOpacity;
+    self.dropZones = element.dropZones;
+    self.type = element.type;
+    self.multiple = element.multiple;
+    self.l10n = l10n;
+    self.audios = element.audio;
+
+    if (answers) {
+      if (self.multiple) {
+        // Add base element
+        self.elements.push({});
+      }
+
+      // Add answers
+      for (var i = 0; i < answers.length; i++) {
+        self.elements.push({
+          dropZone: answers[i].dz,
+          position: {
+            left: answers[i].x + '%',
+            top: answers[i].y + '%'
+          }
+        });
+      }
+    }
+    return _this;
+  }
+
+  /**
+   * Insert draggable elements into the given container.
+   *
+   * @param {jQuery} $container
+   * @param {Number} contentId
+   * @returns {undefined}
+   */
+
+
+  _createClass(Draggable, [{
+    key: 'appendTo',
+    value: function appendTo($container, contentId) {
+      var self = this;
+
+      if (!self.elements.length) {
+        self.attachElement(null, $container, contentId);
+      } else {
+        for (var i = 0; i < self.elements.length; i++) {
+          self.attachElement(i, $container, contentId);
+        }
+      }
+    }
+
+    /**
+     * Attach the given element to the given container.
+     *
+     * @param {Number} index
+     * @param {jQuery} $container
+     * @param {Number} contentId
+     * @returns {undefined}
+     */
+
+  }, {
+    key: 'attachElement',
+    value: function attachElement(index, $container, contentId) {
+      var self = this;
+
+      var element;
+      if (index === null) {
+        // Create new element
+        element = {};
+        self.elements.push(element);
+        index = self.elements.length - 1;
+      } else {
+        // Get old element
+        element = self.elements[index];
+      }
+
+      $.extend(element, {
+        clone: function clone() {
+          self.attachElement(null, $container, contentId);
+        },
+        reset: function reset() {
+          if (element.dropZone !== undefined) {
+            // Let everyone know we're leaving the drop zone
+            self.trigger('leavingDropZone', element);
+            delete element.dropZone;
+          }
+
+          if (self.multiple) {
+            // Remove element
+            element.$.remove();
+            delete self.elements[index];
+            self.trigger('elementremove', element.$[0]);
+          }
+          delete element.position;
+        }
+      });
+
+      // Attach element
+      element.$ = $('<div/>', {
+        class: 'h5p-draggable',
+        tabindex: '-1',
+        role: 'button',
+        css: {
+          left: self.x + '%',
+          top: self.y + '%',
+          width: self.width + 'em',
+          height: self.height + 'em'
+        },
+        appendTo: $container,
+        title: self.type.params.title
+      }).on('mousedown', function () {
+        self.trigger('pickedUp', self.id);
+      }).on('keydown', function (event) {
+        if (event.key !== 'Enter' && event.key !== ' ') {
+          return;
+        }
+        self.trigger('pickedUp');
+      }).on('click', function () {
+        self.trigger('focus', this);
+      }).draggable({
+        revert: function revert(dropZone) {
+          $container.removeClass('h5p-dragging');
+          var $this = $(this);
+
+          $this.data("uiDraggable").originalPosition = {
+            top: self.y + '%',
+            left: self.x + '%'
+          };
+          self.updatePlacement(element);
+          $this[0].setAttribute('aria-grabbed', 'false');
+
+          self.trigger('dragend', self.id);
+
+          return !dropZone;
+        },
+        start: function start() {
+          var $this = $(this);
+
+          var mustCopyElement = self.mustCopyElement(element);
+          if (mustCopyElement) {
+            // Leave a new element for next drag
+            element.clone();
+          }
+
+          // Send element to the top!
+          $this.removeClass('h5p-wrong').detach().appendTo($container);
+          $container.addClass('h5p-dragging');
+          _dragUtils2.default.setElementOpacity($this, self.backgroundOpacity);
+          this.setAttribute('aria-grabbed', 'true');
+
+          self.trigger('focus', this);
+          self.trigger('dragstart', {
+            element: this,
+            effect: mustCopyElement ? 'copy' : 'move'
+          });
+        },
+        stop: function stop() {
+          var $this = $(this);
+
+          // Convert position to % to support scaling.
+          element.position = _dragUtils2.default.positionToPercentage($container, $this);
+          $this.css(element.position);
+
+          var addToZone = $this.data('addToZone');
+          if (addToZone !== undefined) {
+            $this.removeData('addToZone');
+            self.addToDropZone(index, element, addToZone);
+          } else {
+            element.reset();
+          }
+        }
+      }).css('position', '');
+      self.element = element;
+
+      if (element.position) {
+        // Restore last position
+        element.$.css(element.position);
+        self.updatePlacement(element);
+      }
+
+      _dragUtils2.default.addHover(element.$, self.backgroundOpacity);
+      H5P.newRunnable(self.type, contentId, element.$);
+
+      // Add prefix for good a11y
+      $('<span class="h5p-hidden-read">' + self.l10n.prefix.replace('{num}', self.id + 1) + '</span>').prependTo(element.$);
+
+      // Add suffix for good a11y
+      $('<span class="h5p-hidden-read"></span>').appendTo(element.$);
+
+      if (self.audios) {
+        ['pickedUp', 'dropped'].forEach(function (type) {
+          if (!self.audios[type] || !Array.isArray(self.audios[type]) || self.audios[type].length < 1 || !self.audios[type][0].path || self.audios[type][0].mime.split('/')[0] !== 'audio') {
+            return;
+          }
+
+          // Attach audio element
+          var player = document.createElement('audio');
+          player.classList.add('h5p-dragquestion-no-display');
+          player.src = H5P.getPath(self.audios[type][0].path, contentId);
+
+          self.audios[type] = player;
+          element.$.append(self.audios[type]);
+        });
+      }
+
+      // Update opacity when element is attached.
+      setTimeout(function () {
+        _dragUtils2.default.setElementOpacity(element.$, self.backgroundOpacity);
+      }, 0);
+
+      self.trigger('elementadd', element.$[0]);
+    }
+
+    /**
+     * Set feedback for a draggable.
+     * @param {string} feedback
+     * @param {number} dropZoneId
+     */
+
+  }, {
+    key: 'setFeedback',
+    value: function setFeedback(feedback, dropZoneId) {
+      this.elements.forEach(function (element) {
+        if (element.dropZone === dropZoneId) {
+          if (element.$feedback === undefined) {
+            element.$feedback = $('<span>', {
+              'class': 'h5p-hidden-read',
+              appendTo: element.$
+            });
+          }
+          element.$feedback.html(feedback);
+        }
+      });
+    }
+
+    /**
+     * Determine if element should be copied when tragging, i.e. infinity instances.
+     *
+     * @param {Object} element
+     * @returns {boolean}
+     */
+
+  }, {
+    key: 'mustCopyElement',
+    value: function mustCopyElement(element) {
+      return this.multiple && element.dropZone === undefined;
+    }
+
+    /**
+     * Check if this element can be dragged to the given drop zone.
+     *
+     * @param {Number} id
+     * @returns {Boolean}
+     */
+
+  }, {
+    key: 'hasDropZone',
+    value: function hasDropZone(id) {
+      var self = this;
+
+      for (var i = 0; i < self.dropZones.length; i++) {
+        if (parseInt(self.dropZones[i]) === id) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    /**
+     * Places the draggable element in the given drop zone.
+     *
+     * @param {number} index Internal element index
+     * @param {Object} element
+     * @param {number} addToZone Dropzone index
+     */
+
+  }, {
+    key: 'addToDropZone',
+    value: function addToDropZone(index, element, addToZone) {
+      var self = this;
+
+      if (self.multiple) {
+        // Check that we're the only element here
+        for (var i = 0; i < self.elements.length; i++) {
+          if (i !== index && self.elements[i] !== undefined && self.elements[i].dropZone === addToZone) {
+            // Copy of element already in drop zone
+
+            // Remove current element
+            if (self.elements[index].dropZone !== undefined && self.elements[index].dropZone !== addToZone) {
+              // Leaving old drop zone!
+              self.trigger('leavingDropZone', element);
+            }
+            element.$.remove();
+            delete self.elements[index];
+            self.trigger('elementremove', this.element.$[0]);
+            return;
+          }
+        }
+      }
+
+      if (element.dropZone !== undefined && element.dropZone !== addToZone) {
+        // Leaving old drop zone!
+        self.trigger('leavingDropZone', element);
+      }
+      element.dropZone = addToZone;
+      self.updatePlacement(element);
+
+      self.trigger('interacted');
+    }
+
+    /**
+     * Update the visuals to match the position of the element
+     */
+
+  }, {
+    key: 'updatePlacement',
+    value: function updatePlacement(element) {
+      if (element.$suffix) {
+        // Always remove old a11y text. (drop zone may have changed)
+        element.$suffix.remove();
+      }
+
+      if (element.dropZone !== undefined) {
+        element.$.addClass('h5p-dropped');
+        _dragUtils2.default.setElementOpacity(element.$, self.backgroundOpacity);
+
+        // Add suffix for good a11y
+        element.$suffix = $('<span class="h5p-hidden-read">' + this.l10n.suffix.replace('{num}', element.dropZone + 1) + '. </span>').appendTo(element.$);
+      } else {
+        element.$.removeClass('h5p-dropped').removeClass('h5p-wrong').removeClass('h5p-correct').css({
+          border: '',
+          background: ''
+        });
+        _dragUtils2.default.setElementOpacity(element.$, this.backgroundOpacity);
+      }
+    }
+
+    /**
+     * Resets the position of the draggable to its' original position.
+     */
+
+  }, {
+    key: 'resetPosition',
+    value: function resetPosition() {
+      var self = this;
+
+      this.elements.forEach(function (draggable) {
+
+        if (draggable.$feedback) {
+          draggable.$feedback.remove();
+          delete draggable.$feedback;
+        }
+
+        //If the draggable is in a dropzone reset its' position and feedback.
+        if (draggable.dropZone !== undefined) {
+          var element = draggable.$;
+
+          //Revert the button to initial position and then remove it.
+          element.animate({
+            left: self.x + '%',
+            top: self.y + '%'
+          }, function () {
+            //Remove the draggable if it is an infinity draggable.
+            if (self.multiple) {
+              if (element.dropZone !== undefined) {
+                self.trigger('leavingDropZone', element);
+              }
+              element.remove();
+              //Delete the element from elements list to avoid a cluster of draggables on top of infinity draggable.
+              if (self.elements.indexOf(draggable) >= 0) {
+                delete self.elements[self.elements.indexOf(draggable)];
+              }
+              self.trigger('elementremove', element[0]);
+            }
+          });
+
+          // Reset element style
+          self.updatePlacement(draggable);
+        }
+      });
+
+      // Draggable removed from dropzone.
+      if (self.element.dropZone !== undefined) {
+        self.trigger('leavingDropZone', self.element);
+        delete self.element.dropZone;
+      }
+
+      // Reset style on initial element
+      // Reset element style
+      self.updatePlacement(self.element);
+    }
+
+    /**
+     * Look for the given DOM element inside this draggable.
+     *
+     * @param {Element} element
+     * @returns {Object}
+     */
+
+  }, {
+    key: 'findElement',
+    value: function findElement(element) {
+      var self = this;
+
+      for (var i = 0; i < self.elements.length; i++) {
+        if (self.elements[i] !== undefined && self.elements[i].$.is(element)) {
+          return {
+            element: self.elements[i],
+            index: i
+          };
+        }
+      }
+    }
+
+    /**
+     * Detemine if any of our elements is in the given drop zone.
+     *
+     * @param {Number} id
+     * @returns {Boolean}
+     */
+
+  }, {
+    key: 'isInDropZone',
+    value: function isInDropZone(id) {
+      var self = this;
+
+      for (var i = 0; i < self.elements.length; i++) {
+        if (self.elements[i] !== undefined && self.elements[i].dropZone === id) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    /**
+     * Disables the draggable.
+     * @public
+     */
+
+  }, {
+    key: 'disable',
+    value: function disable() {
+      var self = this;
+
+      for (var i = 0; i < self.elements.length; i++) {
+        var element = self.elements[i];
+
+        if (element) {
+          element.$.draggable('disable');
+          self.trigger('elementremove', element.$[0]);
+        }
+      }
+    }
+
+    /**
+     * Enables the draggable.
+     * @public
+     */
+
+  }, {
+    key: 'enable',
+    value: function enable() {
+      var self = this;
+
+      for (var i = 0; i < self.elements.length; i++) {
+        var element = self.elements[i];
+
+        if (element) {
+          element.$.draggable('enable');
+          self.trigger('elementadd', element.$[0]);
+        }
+      }
+    }
+
+    /**
+     * Calculate score for this draggable.
+     *
+     * @param {boolean} skipVisuals
+     * @param {Array} solutions
+     * @param {H5P.Question.ScorePoints} scorePoints
+     * @returns {number}
+     */
+
+  }, {
+    key: 'results',
+    value: function results(skipVisuals, solutions, scorePoints) {
+      var self = this;
+      var i,
+          j,
+          element,
+          correct,
+          points = 0;
+      self.rawPoints = 0;
+
+      if (solutions === undefined) {
+        // We should not be anywhere.
+        for (i = 0; i < self.elements.length; i++) {
+          element = self.elements[i];
+          if (element !== undefined && element.dropZone !== undefined) {
+            // ... but we are!
+            if (skipVisuals !== true) {
+              self.markElement(element, 'wrong', scorePoints);
+            }
+            points--;
+          }
+        }
+        return points;
+      }
+
+      // Are we somewhere we should be?
+      for (i = 0; i < self.elements.length; i++) {
+        element = self.elements[i];
+
+        if (element === undefined || element.dropZone === undefined) {
+          continue; // We have not been placed anywhere, we're neither wrong nor correct.
+        }
+
+        correct = false;
+        for (j = 0; j < solutions.length; j++) {
+          if (element.dropZone === solutions[j]) {
+            // Yepp!
+            if (skipVisuals !== true) {
+              self.markElement(element, 'correct', scorePoints);
+            }
+            correct = true;
+            self.rawPoints++;
+            points++;
+            break;
+          }
+        }
+
+        if (!correct) {
+          // Nope, we're in another zone
+          if (skipVisuals !== true) {
+            self.markElement(element, 'wrong', scorePoints);
+          }
+          points--;
+        }
+      }
+
+      return points;
+    }
+
+    /**
+     * Marks given element as either correct or wrong
+     *
+     * @param {Object} element
+     * @param {string} status 'correct' or 'wrong'
+     * @param {H5P.Question.ScorePoints} scorePoints
+     */
+
+  }, {
+    key: 'markElement',
+    value: function markElement(element, status, scorePoints) {
+      var $elementResult = $('<span/>', {
+        'class': 'h5p-hidden-read',
+        html: this.l10n[status + 'Answer'] + '. '
+      });
+      if (scorePoints) {
+        $elementResult = $elementResult.add(scorePoints.getElement(status === 'correct'));
+      }
+      element.$suffix = element.$suffix.add($elementResult);
+      element.$.addClass('h5p-' + status).append($elementResult);
+      _dragUtils2.default.setElementOpacity(element.$, this.backgroundOpacity);
+    }
+  }]);
+
+  return Draggable;
+}(H5P.EventDispatcher);
+
+exports.default = Draggable;
+
+/***/ })
+/******/ ]);

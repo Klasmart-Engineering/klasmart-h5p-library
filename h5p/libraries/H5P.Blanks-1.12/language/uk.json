@@ -23,7 +23,6 @@
       "field": {
         "label": "Рядок тексту",
         "placeholder": "Київ столиця *України*.",
-        "description": "",
         "important": {
           "description": "<ul><li>Пропуски добавляються із ззірочкою (*) спереду та ззаду правильного слова/фрази.</li><li>Додаткові варіанти відповідей відділяються косою рискою (/).</li><li>Ви можете добавити текстову підказку, використовуючи двокрапку (:) перед підказкою.</li></ul>",
           "example": "Вміст H5P можна редагувати за допомогою *браузера/веб-браузера: те, що ви використовуєте щодня*."
@@ -68,6 +67,10 @@
     {
       "label": "Текст для кнопки \"Перевірити\"",
       "default": "Перевірити"
+    },
+    {
+      "label": "Text for \"Submit\" button",
+      "default": "Submit"
     },
     {
       "label": "Текст для повідомлення \"Не заповнено\"",
@@ -190,6 +193,22 @@
     {
       "label": "Текстове представлення шкали балів для тих, хто використовує озвучку тексту",
       "default": "Ви отримали :num із :total балів"
+    },
+    {
+      "label": "Assistive technology description for \"Check\" button",
+      "default": "Check the answers. The responses will be marked as correct, incorrect, or unanswered."
+    },
+    {
+      "label": "Assistive technology description for \"Show Solution\" button",
+      "default": "Show the solution. The task will be marked with its correct solution."
+    },
+    {
+      "label": "Assistive technology description for \"Retry\" button",
+      "default": "Retry the task. Reset all responses and start the task over again."
+    },
+    {
+      "label": "Assistive technology description for starting task",
+      "default": "Checking mode"
     }
   ]
 }

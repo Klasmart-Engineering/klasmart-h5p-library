@@ -1,7 +1,7 @@
 import { AudioUploader, XapiUploader } from 'kidsloop-xapi-uploader';
 
-const h5p = (window as any).H5P;
-const h5pIntegration = (window as any).H5PIntegration;
+const h5p = window.H5P;
+const h5pIntegration = window.H5PIntegration;
 const xapiServiceEndpoint = h5pIntegration?.XAPI_SERVICE_ENDPOINT;
 const audioServiceEndpoint = h5pIntegration?.AUDIO_SERVICE_ENDPOINT;
 
@@ -30,7 +30,7 @@ if (xapiServiceEndpoint && typeof xapiServiceEndpoint === 'string') {
         xapiServiceEndpoint,
         liveAuthorizationToken
     );
-    h5p.externalDispatcher.on('xAPI', (event: any) => {
+    h5p.externalDispatcher.on('xAPI', (event) => {
         console.log(event);
         Object.assign(event, { clientTimestamp: Date.now() });
         xapiUploader.uploadEvent(JSON.stringify(event));
@@ -43,7 +43,7 @@ if (audioServiceEndpoint && typeof audioServiceEndpoint === 'string') {
         audioServiceEndpoint,
         liveAuthorizationToken
     );
-    h5p.externalDispatcher.on('exportFile', (event: any) => {
+    h5p.externalDispatcher.on('exportFile', (event) => {
         console.log('audio', event);
         audioUploader
             .uploadAudio(event)

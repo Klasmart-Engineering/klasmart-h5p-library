@@ -56,7 +56,7 @@ H5P.Blanks = (function ($, Question) {
     this.params = $.extend(true, {}, {
       text: "Fill in",
       questions: [
-        "Oslo is the capital of *Norway*."
+        "<p>Oslo is the capital of *Norway*.</p>"
       ],
       overallFeedback: [],
       userAnswers: [], // TODO This isn't in semantics?
@@ -82,7 +82,12 @@ H5P.Blanks = (function ($, Question) {
         showSolutionsRequiresInput: true,
         autoCheck: false,
         separateLines: false
-      }
+      },
+      a11yCheck: 'Check the answers. The responses will be marked as correct, incorrect, or unanswered.',
+      a11yShowSolution: 'Show the solution. The task will be marked with its correct solution.',
+      a11yRetry: 'Retry the task. Reset all responses and start the task over again.',
+      a11yHeader: 'Checking mode',
+      submitAnswer: 'Submit',
     }, params);
 
     // Delete empty questions
@@ -113,6 +118,13 @@ H5P.Blanks = (function ($, Question) {
         self.shiftPressed = false;
       }
     });
+
+    // Using instructions as label for our text groups
+    this.labelId = 'h5p-blanks-instructions-' + Blanks.idCounter;
+    this.content = self.createQuestions();
+
+    // Restore previous state
+    self.setH5PUserState();
   }
 
   // Inheritance
@@ -149,22 +161,16 @@ H5P.Blanks = (function ($, Question) {
       }
     }
 
-    // Using instructions as label for our text groups
-    const labelId = 'h5p-blanks-instructions-' + Blanks.idCounter;
-
     // Register task introduction text
-    self.setIntroduction('<div id="' + labelId + '">' + self.params.text + '</div>');
+    self.setIntroduction('<div id="' + this.labelId + '">' + self.params.text + '</div>');
 
     // Register task content area
-    self.setContent(self.createQuestions(labelId), {
+    self.setContent(self.content, {
       'class': self.params.behaviour.separateLines ? 'h5p-separate-lines' : ''
     });
 
     // ... and buttons
     self.registerButtons();
-
-    // Restore previous state
-    self.setH5PUserState();
   };
 
   /**
@@ -192,31 +198,55 @@ H5P.Blanks = (function ($, Question) {
     if (!self.params.behaviour.autoCheck && this.params.behaviour.enableCheckButton) {
       // Check answer button
       self.addButton('check-answer', self.params.checkAnswer, function () {
+        // Move focus to top of content
+        self.a11yHeader.innerHTML = self.params.a11yHeader;
+        self.a11yHeader.focus();
+
         self.toggleButtonVisibility(STATE_CHECKING);
         self.markResults();
         self.showEvaluation();
+
+        // Emit screenshot
+        setTimeout(function() {
+          if (H5P && H5P.KLScreenshot) {
+            H5P.KLScreenshot.takeScreenshot(
+              self,
+              $container.get(0).querySelector('.h5p-container')
+            );
+          }
+        }, 1000); // Allow results to display
+
         self.triggerAnswered();
-      }, true, {}, {
+      }, true, {
+        'aria-label': self.params.a11yCheck,
+      }, {
         confirmationDialog: {
           enable: self.params.behaviour.confirmCheckDialog,
           l10n: self.params.confirmCheck,
           instance: self,
           $parentElement: $container
-        }
+        },
+        textIfSubmitting: self.params.submitAnswer,
+        contentData: self.contentData,
       });
     }
 
     // Show solution button
     self.addButton('show-solution', self.params.showSolutions, function () {
       self.showCorrectAnswers(false);
-    }, self.params.behaviour.enableSolutionsButton);
+    }, self.params.behaviour.enableSolutionsButton, {
+      'aria-label': self.params.a11yShowSolution,
+    });
 
     // Try again button
     if (self.params.behaviour.enableRetry === true) {
       self.addButton('try-again', self.params.tryAgain, function () {
+        self.a11yHeader.innerHTML = '';
         self.resetTask();
         self.$questions.filter(':first').find('input:first').focus();
-      }, true, {}, {
+      }, true, {
+        'aria-label': self.params.a11yRetry,
+      }, {
         confirmationDialog: {
           enable: self.params.behaviour.confirmRetryDialog,
           l10n: self.params.confirmRetry,
@@ -269,7 +299,7 @@ H5P.Blanks = (function ($, Question) {
   /**
    * Create questitons html for DOM
    */
-  Blanks.prototype.createQuestions = function (labelId) {
+  Blanks.prototype.createQuestions = function () {
     var self = this;
 
     var html = '';
@@ -295,11 +325,16 @@ H5P.Blanks = (function ($, Question) {
         return cloze;
       });
 
-      html += '<div role="group" aria-labelledby="' + labelId + '">' + question + '</div>';
+      html += '<div role="group" aria-labelledby="' + self.labelId + '">' + question + '</div>';
     }
 
     self.hasClozes = clozeNumber > 0;
     this.$questions = $(html);
+
+    self.a11yHeader = document.createElement('div');
+    self.a11yHeader.classList.add('hidden-but-read');
+    self.a11yHeader.tabIndex = -1;
+    self.$questions[0].insertBefore(self.a11yHeader, this.$questions[0].childNodes[0] || null);
 
     // Set input fields.
     this.$questions.find('input').each(function (i) {
@@ -672,7 +707,7 @@ H5P.Blanks = (function ($, Question) {
     $.extend(true, definition, this.getxAPIDefinition());
 
     // Set reporting module version if alternative extension is used
-    if (definition.extensions && definition.extensions[XAPI_ALTERNATIVE_EXTENSION]) {
+    if (this.hasAlternatives) {
       const context = xAPIEvent.getVerifiedStatementValue(['context']);
       context.extensions = context.extensions || {};
       context.extensions[XAPI_REPORTING_VERSION_EXTENSION] = '1.1.0';
@@ -702,6 +737,7 @@ H5P.Blanks = (function ($, Question) {
 
     // Split up alternatives
     var solutions = solution.split('/');
+    this.hasAlternatives = this.hasAlternatives || solutions.length > 1;
 
     // Trim solutions
     for (var i = 0; i < solutions.length; i++) {
@@ -841,7 +877,7 @@ H5P.Blanks = (function ($, Question) {
 
     // Get user input for every cloze
     this.clozes.forEach(function (cloze) {
-      clozesContent.push(cloze.getUserInput());
+      clozesContent.push(cloze.getUserAnswer());
     });
     return clozesContent;
   };
@@ -901,3 +937,66 @@ H5P.Blanks = (function ($, Question) {
 
   return Blanks;
 })(H5P.jQuery, H5P.Question);
+
+/**
+ * Static utility method for parsing H5P.Blanks qestion into a format useful
+ * for creating reports.
+ *
+ * Example question: 'H5P content may be edited using a *browser/web-browser:something you use every day*.'
+ *
+ * Produces the following result:
+ * [
+ *   {
+ *     type: 'text',
+ *     content: 'H5P content may be edited using a '
+ *   },
+ *   {
+ *     type: 'answer',
+ *     correct: ['browser', 'web-browser']
+ *   },
+ *   {
+ *     type: 'text',
+ *     content: '.'
+ *   }
+ * ]
+ *
+ * @param {string} question
+ */
+H5P.Blanks.parseText = function (question) {
+  var blank = new H5P.Blanks({ question: question });
+
+  /**
+   * Parses a text into an array where words starting and ending
+   * with an asterisk are separated from other text.
+   * e.g ["this", "*is*", " an ", "*example*"]
+   *
+   * @param {string} text
+   *
+   * @return {string[]}
+   */
+  function tokenizeQuestionText(text) {
+    return text.split(/(\*.*?\*)/).filter(function (str) {
+      return str.length > 0; }
+    );
+  }
+
+  function startsAndEndsWithAnAsterisk(str) {
+    return str.substr(0,1) === '*' && str.substr(-1) === '*';
+  }
+
+  function replaceHtmlTags(str, value) {
+    return str.replace(/<[^>]*>/g, value);
+  }
+
+  return tokenizeQuestionText(replaceHtmlTags(question, '')).map(function (part) {
+    return startsAndEndsWithAnAsterisk(part) ?
+      ({
+        type: 'answer',
+        correct: blank.parseSolution(part.slice(1, -1)).solutions
+      }) :
+      ({
+        type: 'text',
+        content: part
+      });
+  });
+};

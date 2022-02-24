@@ -45,7 +45,14 @@ export default function (
                     req.user,
                     languageOverride === 'auto'
                         ? req.language ?? 'en'
-                        : languageOverride
+                        : languageOverride,
+                    {
+                        showCopyButton: false,
+                        showDownloadButton: false,
+                        showFrame: false,
+                        showH5PIcon: false,
+                        showLicenseButton: false
+                    }
                 );
                 res.send(h5pPage);
                 res.status(200).end();
@@ -54,6 +61,12 @@ export default function (
             }
         }
     );
+
+    /*
+     * This route was a custom KidsLoop customization that's not actually
+     * needed (anymore) and also will be implemented in the official
+     * node.js port of H5P shortly. Stub already in express.ts
+     */
 
     // router.get(
     //     '/edit/:contentId',
@@ -70,6 +83,10 @@ export default function (
     //     }
     // );
 
+    /*
+     * This seems to be handled differently outside the integration
+     */
+
     // router.post('/edit/:contentId', async (req: IRequestWithUser, res) => {
     //     const contentId = await h5pEditor.saveOrUpdateContent(
     //         req.params.contentId.toString(),
@@ -82,6 +99,11 @@ export default function (
     //     res.send(JSON.stringify({ contentId }));
     //     res.status(200).end();
     // });
+
+    /*
+     * This was just for testing whether JWT authentication works - can
+     * probably be removed.
+     */
 
     // Set sample cookie for 24 hours, TODO: Remove
     // router.get(
@@ -104,6 +126,12 @@ export default function (
     //         return;
     //     }
     // );
+
+    /*
+     * This route was a custom KidsLoop customization that's not actually
+     * needed (anymore) and also will be implemented in the official
+     * node.js port of H5P shortly. Stub already in express.ts
+     */
 
     // Route for posting content state data for a user
     // router.post(
@@ -139,6 +167,12 @@ export default function (
     //     }
     // );
 
+    /*
+     * This route was a custom KidsLoop customization that's not actually
+     * needed (anymore) and also will be implemented in the official
+     * node.js port of H5P shortly. Stub already in express.ts
+     */
+
     // // Route for getting content state data for a user
     // router.get(
     //     '/contentUserData',
@@ -169,6 +203,12 @@ export default function (
     //             .end();
     //     }
     // );
+
+    /*
+     * This route was a custom KidsLoop customization that's not actually
+     * needed (anymore) and also will be implemented in the official
+     * node.js port of H5P shortly. Stub already in express.ts
+     */
 
     // // Route for getting content state data for a user
     // router.get(
@@ -242,6 +282,10 @@ export default function (
         res.send(JSON.stringify({ contentId }));
         res.status(200).end();
     });
+
+    /*
+     * This seems to be handled differently outside the integration
+     */
 
     // router.get('/delete/:contentId', async (req: IRequestWithUser, res) => {
     //     try {

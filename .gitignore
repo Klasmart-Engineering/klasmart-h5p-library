@@ -5,6 +5,7 @@ npm-debug.log*
 
 # Compiled files
 dist
+/custom
 
 # Test coverage
 coverage

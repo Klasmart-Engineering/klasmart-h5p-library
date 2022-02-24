@@ -260,6 +260,8 @@ H5P.FindTheWords = (function ($, UI) {
    * gameSubmitted - callback function for check button.
    */
   FindTheWords.prototype.gameSubmitted = function () {
+    const that = this;
+
     const totalScore = this.vocabulary.words.length;
     const scoreText = this.options.l10n.score
       .replace('@score', this.numFound)
@@ -283,6 +285,16 @@ H5P.FindTheWords = (function ($, UI) {
 
     this.$feedbackContainer.addClass('feedback-show'); //show feedbackMessage
     this.$feedback.focus();
+
+    // Emit screenshot
+    setTimeout(function() {
+      if (H5P && H5P.KLScreenshot) {
+        H5P.KLScreenshot.takeScreenshot(
+          that,
+          that.$container.get(0)
+        );
+      }
+    }, 1000); // Allow results to display
 
     const xAPIEvent = this.createXAPIEventTemplate('answered');
     this.addQuestionToXAPI(xAPIEvent);

@@ -23,7 +23,6 @@
       "field": {
         "label": "Besedilo naloge",
         "placeholder": "Oslo je glavno mesto *Norveške*.",
-        "description": "",
         "important": {
           "description": "<ul><li>Prazno polje se označi z zvezdico (*) pred in za besedo/besedno zvezo.</li><li>Nadomestni odgovor se loči s poševnico (/).</li><li>Namig za udeležence se od odgovora loči z dvopičjem (:).</li></ul>",
           "example": "Za brskanje po spletu lahko uporabimo *brskalnik/spletni brskalnik:Takšen program je na primer Chrome*."
@@ -68,6 +67,10 @@
     {
       "label": "Besedilo za gumb \"Preveri\"",
       "default": "Preveri"
+    },
+    {
+      "label": "Text for \"Submit\" button",
+      "default": "Submit"
     },
     {
       "label": "Besedilo za manjkajoč odgovor",
@@ -190,6 +193,22 @@
     {
       "label": "Besedilo, ki ga bralnik zaslona uporabi za izražanje napredka",
       "default": "Napredek :num od :total"
+    },
+    {
+      "label": "Assistive technology description for \"Check\" button",
+      "default": "Check the answers. The responses will be marked as correct, incorrect, or unanswered."
+    },
+    {
+      "label": "Assistive technology description for \"Show Solution\" button",
+      "default": "Show the solution. The task will be marked with its correct solution."
+    },
+    {
+      "label": "Assistive technology description for \"Retry\" button",
+      "default": "Retry the task. Reset all responses and start the task over again."
+    },
+    {
+      "label": "Assistive technology description for starting task",
+      "default": "Checking mode"
     }
   ]
 }

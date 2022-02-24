@@ -391,6 +391,16 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
 
       // Trigger overall answered xAPI event when finished
       if (finished) {
+        // Emit screenshot
+        setTimeout(function () {
+          if (H5P && H5P.KLScreenshot) {
+            H5P.KLScreenshot.takeScreenshot(
+              that,
+              that.$myDom.get(0).closest('.h5p-container')
+            );
+          }
+        }, 1750); // Allow results to display
+
         that.triggerXAPIScored(that.getScore(), that.getMaxScore(), 'answered');
       }
     };

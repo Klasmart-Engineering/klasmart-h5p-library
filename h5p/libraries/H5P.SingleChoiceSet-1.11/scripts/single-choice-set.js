@@ -228,6 +228,16 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
 
     self.trigger(xapiEvent);
 
+    // Emit screenshot
+    setTimeout(function() {
+      if (H5P && H5P.KLScreenshot) {
+        H5P.KLScreenshot.takeScreenshot(
+          self,
+          self.$container.get(0)
+        );
+      }
+    }, 1000); // Allow results to display
+
     self.continue();
   };
 

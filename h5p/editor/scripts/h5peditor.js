@@ -8,7 +8,7 @@ var h5pEditor = window.self.H5PEditor
 try {
   h5pEditor = window.parent.H5PEditor
 } catch (e) {
-  console.error('h5pEditor = window.parent.H5PEditor:', e)
+  // Ignore.
 }
 window.ns = window.H5PEditor = H5P.jQuery.extend(false, {}, h5pEditor);
 ns.$ = H5P.jQuery;
@@ -18,7 +18,7 @@ var h5pIntegration = window.self.H5PIntegration
 try {
   h5pIntegration = window.parent.H5PIntegration
 } catch (e) {
-  console.error('h5pIntegration = window.parent.H5PIntegration:', e)
+  // Ignore.
 }
 H5PIntegration = H5P.jQuery.extend(false, {}, h5pIntegration);
 H5PIntegration.loadedJs = [];

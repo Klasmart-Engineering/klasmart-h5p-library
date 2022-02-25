@@ -241,7 +241,10 @@ const start = async (): Promise<void> => {
     );
 
     // Serve custom files statically
-    server.use('/custom', express.static(path.join(__dirname, '../custom')));
+    server.use(
+        '/h5p/custom',
+        express.static(path.join(__dirname, '../h5p/custom'))
+    );
 
     const htmlExporter = new H5PHtmlExporter(
         h5pEditor.libraryStorage,

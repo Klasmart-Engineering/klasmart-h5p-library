@@ -18,10 +18,8 @@
     "customization": {
         "global": {
             "player": {
-                "scripts": [
-                    "/custom/customScripts.js"
-                ]
+                "scripts": ["/h5p/custom/customScripts.js"]
             }
         }
-      }
+    }
 }

@@ -8,41 +8,6 @@ import fs from 'fs';
 import sinon from 'sinon';
 
 describe('H5PPlayer.render', () => {
-    it('includes custom scripts in the returned html object', async () => {
-        const contentId = 'foo';
-        const contentObject = {};
-        const h5pObject = {};
-
-        const mockLibraryStorage: any = {
-            getLibrary: async (libName: ILibraryName) => ({})
-        };
-
-        const player = new H5PPlayer(
-            mockLibraryStorage,
-            undefined,
-            new H5PConfig(undefined),
-            undefined,
-            undefined,
-            undefined,
-            {
-                customization: {
-                    global: {
-                        scripts: ['/custom/customScripts.js']
-                    }
-                }
-            }
-        );
-        player.setRenderer((mod) => mod);
-        const model = await player.render(contentId, new User(), 'en', {
-            parametersOverride: contentObject,
-            metadataOverride: h5pObject as any
-        });
-
-        expect(
-            (model as any).scripts.includes('/custom/customScripts.js')
-        ).to.equal(true);
-    });
-
     it('includes custom endpoints in the H5P integration object', () => {
         const contentId = 'foo';
         const contentObject = {};
@@ -100,7 +65,7 @@ describe('H5PPlayer.render', () => {
             {
                 customization: {
                     global: {
-                        scripts: ['/custom/customScripts.js']
+                        scripts: ['/h5p/custom/customScripts.js']
                     }
                 }
             }
@@ -119,7 +84,10 @@ describe('H5PPlayer.render', () => {
                 });
                 const xapiUploaderCode = fs
                     .readFileSync(
-                        path.resolve(__dirname, '../../custom/customScripts.js')
+                        path.resolve(
+                            __dirname,
+                            '../../h5p/custom/customScripts.js'
+                        )
                     )
                     .toString();
                 dom.window.eval(xapiUploaderCode);

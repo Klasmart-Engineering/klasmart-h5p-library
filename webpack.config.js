@@ -23,7 +23,7 @@ module.exports = {
     dist: './src/custom/entry.js'
   },
   output: {
-    filename: 'custom/customScripts.js',
+    filename: 'h5p/custom/customScripts.js',
     path: path.resolve(__dirname, '')
   },
   target: ['web'],

@@ -24,7 +24,7 @@ definitions:
           - npm prune --production
         artifacts:
           - dist/**
-          - custom/**
+          - h5p/custom/**
 
     - step: &commitlint
         name: '📝 conventional commits check'

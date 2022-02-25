@@ -5,7 +5,6 @@ npm-debug.log*
 
 # Compiled files
 /dist
-/custom
 
 # Test coverage
 coverage
@@ -20,6 +19,7 @@ microsoft.gpg
 node_modules
 
 # Local file Storage
-h5p/content
-h5p/temporary-storage
-h5p/content-user-data
+/h5p/content
+/h5p/temporary-storage
+/h5p/content-user-data
+/h5p/custom

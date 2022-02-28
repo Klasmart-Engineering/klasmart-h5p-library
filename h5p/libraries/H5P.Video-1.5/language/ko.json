@@ -34,7 +34,7 @@
       ]
     },
     {
-      "label": "맞춤형 설정",
+      "label": "번역",
       "fields": [
         {
           "label": "이름",
@@ -43,10 +43,10 @@
         },
         {
           "label": "로딩중",
-          "default": "비디오 재생기 로딩중..."
+          "default": "동영상 플레이어 로드 중..."
         },
         {
-          "label": "재생기가 없음",
+          "label": "플레이어를 찾을 수 없습니다.",
           "default": "주어진 비디오 형식을 지원하는 비디오 플레이어를 찾을 수 없음."
         },
         {
@@ -92,7 +92,7 @@
       ]
     },
     {
-      "label": "접근서",
+      "label": "접근성",
       "fields": [
         {
           "label": "비디오 트랙 추가",
@@ -101,7 +101,7 @@
             "label": "트랙",
             "fields": [
               {
-                "label": "트랙 라벨"
+                "label": "트랙 텍스트"
               },
               {
                 "label": "타입 종류, 참조, <a target=\"_blank\" href=\"https://html.spec.whatwg.org/multipage/embedded-content.html#the-track-element\">HTML living standard</a>",

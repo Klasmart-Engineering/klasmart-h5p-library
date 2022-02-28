@@ -245,43 +245,45 @@ export default function (
      * TODO: delete route + function to delete data for user (required if user is removed or garbage collection cron)
      */
 
-    router.get(
-        '/new',
-        async (req: IRequestWithLanguage & IRequestWithUser, res) => {
-            const page = await h5pEditor.render(
-                undefined,
-                languageOverride === 'auto'
-                    ? req.language ?? 'en'
-                    : languageOverride,
-                req.user
-            );
-            res.send(page);
-            res.status(200).end();
-        }
-    );
-
-    router.post('/new', async (req: IRequestWithUser, res) => {
-        if (
-            !req.body.params ||
-            !req.body.params.params ||
-            !req.body.params.metadata ||
-            !req.body.library ||
-            !req.user
-        ) {
-            res.status(400).send('Malformed request').end();
-            return;
-        }
-        const contentId = await h5pEditor.saveOrUpdateContent(
-            undefined,
-            req.body.params.params,
-            req.body.params.metadata,
-            req.body.library,
-            req.user
+    if (process.env.NODE_ENV === 'localdev') {
+        router.get(
+            '/new',
+            async (req: IRequestWithLanguage & IRequestWithUser, res) => {
+                const page = await h5pEditor.render(
+                    undefined,
+                    languageOverride === 'auto'
+                        ? req.language ?? 'en'
+                        : languageOverride,
+                    req.user
+                );
+                res.send(page);
+                res.status(200).end();
+            }
         );
 
-        res.send(JSON.stringify({ contentId }));
-        res.status(200).end();
-    });
+        router.post('/new', async (req: IRequestWithUser, res) => {
+            if (
+                !req.body.params ||
+                !req.body.params.params ||
+                !req.body.params.metadata ||
+                !req.body.library ||
+                !req.user
+            ) {
+                res.status(400).send('Malformed request').end();
+                return;
+            }
+            const contentId = await h5pEditor.saveOrUpdateContent(
+                undefined,
+                req.body.params.params,
+                req.body.params.metadata,
+                req.body.library,
+                req.user
+            );
+
+            res.send(JSON.stringify({ contentId }));
+            res.status(200).end();
+        });
+    }
 
     /*
      * This seems to be handled differently outside the integration

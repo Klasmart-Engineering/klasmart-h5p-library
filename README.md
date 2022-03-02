@@ -7,12 +7,13 @@
 
 - [Source H5P library](https://github.com/Lumieducation/H5P-Nodejs-library)
 - [Our fork of the H5P library](https://bitbucket.org/calmisland/h5p-nodejs-library)
-- [Referenced H5P packages](https://bitbucket.org/calmisland/h5p-nodejs-library-packages)
+- [Build artifacts of our fork](https://bitbucket.org/calmisland/h5p-nodejs-library-packages)
 
 **Branching model**
 
 - `feature/fix/etc` -> `alpha`
 - Merging commits into the alpha branch will automatically deploy to alpha.
+- Cherry-pick commits into master branch that are approved by project manager.
 - The master branch serves as the "production" branch.
 - The master branch pipeline has a manual _version bump_ step.
 - That step will build/push a docker image to ECR with the version tag.
@@ -28,7 +29,13 @@
 
 - Node v16.x.x
 - Npm v6.x.x
-- Docker (if you plan on testing ElasticSearch and/or Postgres)
+- Docker (if you plan on using MinIO, Redis, and MongoDB features)
+
+### Notes
+
+- The `.env` and `docker-compose` files are only used for local development.
+- The CMS service only uses the `/token/:token` endpoints. The other ones are only convenience for local development, which can be enabled by setting `NODE_ENV=localdev`.
+- Detailed docs can be found in the source repository.
 
 #### Configuration
 
@@ -48,10 +55,17 @@ Run
 npm start
 ```
 
+Run transpiled version
+
+```
+npm run build
+npm run start:dist
+```
+
 ### Debugging
 
 1. Navigate to the VS Code sidebar debug panel
-2. Select `index.ts` from the dropdown
+2. Select `express.ts` from the dropdown
 3. Click the green arrow debug button
 
 ### Testing

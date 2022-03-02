@@ -136,6 +136,23 @@ function Editor(props: any): any {
                                     return event.preventDefault();
                                 }
 
+                                // Don't proceed if H5P editor reports errors
+                                if (
+                                  h5peditor.iframeWindow &&
+                                  h5peditor.iframeWindow.document
+                                ) {
+                                  const errorNodes = h5peditor.iframeWindow.document.querySelectorAll('.h5p-errors');
+                                  if (errorNodes) {
+                                    const actualErrorNodes = Array.from(errorNodes)
+                                      .filter(node => node.innerHTML !== '');
+
+                                    if (actualErrorNodes.length !== 0) {
+                                      actualErrorNodes[0].parentNode.scrollIntoView(true);
+                                      return event.preventDefault();
+                                    }
+                                  }
+                                }
+
                                 // Set main library
                                 $library.val(h5peditor.getLibrary());
 

@@ -2,11 +2,7 @@ import ReactDOMServer from 'react-dom/server';
 import React from 'react';
 import { IPlayerModel } from '@lumieducation/h5p-server';
 
-// tslint:disable-next-line: function-name
 function Player(props: any): any {
-    // console.log("render")
-    // console.log(props.model.integration)
-
     return (
         <html className="h5p-iframe">
             <head>

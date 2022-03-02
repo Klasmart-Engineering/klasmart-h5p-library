@@ -36,76 +36,11 @@ export default function (
 ): express.Router {
     const router = express.Router();
 
-    router.get(
-        `${h5pEditor.config.playUrl}/:contentId`,
-        async (req: IRequestWithUser, res) => {
-            try {
-                const h5pPage = await h5pPlayer.render(
-                    req.params.contentId,
-                    req.user,
-                    languageOverride === 'auto'
-                        ? req.language ?? 'en'
-                        : languageOverride,
-                    {
-                        showCopyButton: false,
-                        showDownloadButton: false,
-                        showFrame: false,
-                        showH5PIcon: false,
-                        showLicenseButton: false
-                    }
-                );
-                res.send(h5pPage);
-                res.status(200).end();
-            } catch (error) {
-                res.status(500).end(error.message);
-            }
-        }
-    );
-
     /*
-     * This route was a custom KidsLoop customization that's not actually
-     * needed (anymore) and also will be implemented in the official
-     * node.js port of H5P shortly. Stub already in express.ts
+     * This was just for testing whether JWT authentication works.
+    Set sample cookie for 24 hours.
      */
 
-    // router.get(
-    //     '/edit/:contentId',
-    //     async (req: IRequestWithLanguage & IRequestWithUser, res) => {
-    //         const page = await h5pEditor.render(
-    //             req.params.contentId,
-    //             languageOverride === 'auto'
-    //                 ? req.language ?? 'en'
-    //                 : languageOverride,
-    //             req.user
-    //         );
-    //         res.send(page);
-    //         res.status(200).end();
-    //     }
-    // );
-
-    /*
-     * This seems to be handled differently outside the integration
-     */
-
-    // router.post('/edit/:contentId', async (req: IRequestWithUser, res) => {
-    //     const contentId = await h5pEditor.saveOrUpdateContent(
-    //         req.params.contentId.toString(),
-    //         req.body.params.params,
-    //         req.body.params.metadata,
-    //         req.body.library,
-    //         req.user
-    //     );
-
-    //     res.send(JSON.stringify({ contentId }));
-    //     res.status(200).end();
-    // });
-
-    /*
-     * This was just for testing whether JWT authentication works - can
-     * probably be removed.
-     */
-
-    // Set sample cookie for 24 hours, TODO: Remove
     // router.get(
     //     '/testcookie',
     //     async (req: express.Request, res: express.Response): Promise<void> => {
@@ -127,125 +62,33 @@ export default function (
     //     }
     // );
 
-    /*
-     * This route was a custom KidsLoop customization that's not actually
-     * needed (anymore) and also will be implemented in the official
-     * node.js port of H5P shortly. Stub already in express.ts
-     */
-
-    // Route for posting content state data for a user
-    // router.post(
-    //     '/contentUserData/:contentId/:dataType/:subContentId',
-    //     async (req: express.Request, res: express.Response): Promise<void> => {
-    //         const userId = await new H5P.H5PUser(req).getId();
-
-    //         if (
-    //             !req.body.data ||
-    //             !req.body.preload ||
-    //             !req.body.invalidate ||
-    //             !req.params.contentId ||
-    //             !req.params.dataType ||
-    //             !req.params.subContentId ||
-    //             !userId
-    //         ) {
-    //             res.status(400).send('Invalid request').end();
-    //             return;
-    //         }
-
-    //         h5pPlayer.getContentUserDataStorage().set({
-    //             userId: userId,
-    //             contentId: req.params.contentId,
-    //             subContentId: req.params.subContentId,
-    //             dataType: req.params.dataType,
-    //             data: req.body.data,
-    //             invalidate: req.body.invalidate === '0' ? 0 : 1,
-    //             preload: req.body.preload === '0' ? 0 : 1,
-    //             updatedAt: Date.now()
-    //         });
-
-    //         res.status(200).send({ success: true }).end();
-    //     }
-    // );
-
-    /*
-     * This route was a custom KidsLoop customization that's not actually
-     * needed (anymore) and also will be implemented in the official
-     * node.js port of H5P shortly. Stub already in express.ts
-     */
-
-    // // Route for getting content state data for a user
-    // router.get(
-    //     '/contentUserData',
-    //     async (req: express.Request, res: express.Response): Promise<void> => {
-    //         const userId = await new H5P.H5PUser(req).getId();
-
-    //         if (
-    //             !req.query.contentId ||
-    //             !req.query.dataType ||
-    //             !req.query.subContentId ||
-    //             !userId
-    //         ) {
-    //             res.status(400).send('Invalid request').end();
-    //             return;
-    //         }
-
-    //         res.send(
-    //             await h5pPlayer
-    //                 .getContentUserDataStorage()
-    //                 .getData(
-    //                     req.query.contentId as string,
-    //                     userId,
-    //                     req.query.subContentId as string,
-    //                     req.query.dataType as string
-    //                 )
-    //         )
-    //             .status(200)
-    //             .end();
-    //     }
-    // );
-
-    /*
-     * This route was a custom KidsLoop customization that's not actually
-     * needed (anymore) and also will be implemented in the official
-     * node.js port of H5P shortly. Stub already in express.ts
-     */
-
-    // // Route for getting content state data for a user
-    // router.get(
-    //     '/contentUserData/:contentId/:dataType/:subContentId',
-    //     async (req: express.Request, res: express.Response): Promise<void> => {
-    //         const userId = await new H5P.H5PUser(req).getId();
-
-    //         if (
-    //             !req.params.contentId ||
-    //             !req.params.dataType ||
-    //             !req.params.subContentId ||
-    //             !userId
-    //         ) {
-    //             res.status(400).send('Invalid request').end();
-    //             return;
-    //         }
-
-    //         res.send(
-    //             await h5pPlayer
-    //                 .getContentUserDataStorage()
-    //                 .getData(
-    //                     req.params.contentId,
-    //                     userId,
-    //                     req.params.subContentId,
-    //                     req.params.dataType
-    //                 )
-    //         )
-    //             .status(200)
-    //             .end();
-    //     }
-    // );
-
-    /*
-     * TODO: delete route + function to delete data for user (required if user is removed or garbage collection cron)
-     */
-
     if (process.env.NODE_ENV === 'localdev') {
+        router.get(
+            `${h5pEditor.config.playUrl}/:contentId`,
+            async (req: IRequestWithUser, res) => {
+                try {
+                    const h5pPage = await h5pPlayer.render(
+                        req.params.contentId,
+                        req.user,
+                        languageOverride === 'auto'
+                            ? req.language ?? 'en'
+                            : languageOverride,
+                        {
+                            showCopyButton: false,
+                            showDownloadButton: false,
+                            showFrame: false,
+                            showH5PIcon: false,
+                            showLicenseButton: false
+                        }
+                    );
+                    res.send(h5pPage);
+                    res.status(200).end();
+                } catch (error) {
+                    res.status(500).end(error.message);
+                }
+            }
+        );
+
         router.get(
             '/new',
             async (req: IRequestWithLanguage & IRequestWithUser, res) => {
@@ -283,28 +126,52 @@ export default function (
             res.send(JSON.stringify({ contentId }));
             res.status(200).end();
         });
+
+        router.get(
+            '/edit/:contentId',
+            async (req: IRequestWithLanguage & IRequestWithUser, res) => {
+                const page = await h5pEditor.render(
+                    req.params.contentId,
+                    languageOverride === 'auto'
+                        ? req.language ?? 'en'
+                        : languageOverride,
+                    req.user
+                );
+                res.send(page);
+                res.status(200).end();
+            }
+        );
+
+        router.post('/edit/:contentId', async (req: IRequestWithUser, res) => {
+            const contentId = await h5pEditor.saveOrUpdateContent(
+                req.params.contentId.toString(),
+                req.body.params.params,
+                req.body.params.metadata,
+                req.body.library,
+                req.user
+            );
+
+            res.send(JSON.stringify({ contentId }));
+            res.status(200).end();
+        });
+
+        router.get('/delete/:contentId', async (req: IRequestWithUser, res) => {
+            try {
+                await h5pEditor.deleteContent(req.params.contentId, req.user);
+            } catch (error) {
+                res.send(
+                    `Error deleting content with id ${req.params.contentId}: ${error.message}<br/><a href="javascript:window.location=document.referrer">Go Back</a>`
+                );
+                res.status(500).end();
+                return;
+            }
+
+            res.send(
+                `Content ${req.params.contentId} successfully deleted.<br/><a href="javascript:window.location=document.referrer">Go Back</a>`
+            );
+            res.status(200).end();
+        });
     }
-
-    /*
-     * This seems to be handled differently outside the integration
-     */
-
-    // router.get('/delete/:contentId', async (req: IRequestWithUser, res) => {
-    //     try {
-    //         await h5pEditor.deleteContent(req.params.contentId, req.user);
-    //     } catch (error) {
-    //         res.send(
-    //             `Error deleting content with id ${req.params.contentId}: ${error.message}<br/><a href="javascript:window.location=document.referrer">Go Back</a>`
-    //         );
-    //         res.status(500).end();
-    //         return;
-    //     }
-
-    //     res.send(
-    //         `Content ${req.params.contentId} successfully deleted.<br/><a href="javascript:window.location=document.referrer">Go Back</a>`
-    //     );
-    //     res.status(200).end();
-    // });
 
     router.get(
         '/token/:token',
@@ -330,7 +197,17 @@ export default function (
                         }
                         const h5pPage = await h5pPlayer.render(
                             contentId,
-                            req.user
+                            req.user,
+                            languageOverride === 'auto'
+                                ? req.language ?? 'en'
+                                : languageOverride,
+                            {
+                                showCopyButton: false,
+                                showDownloadButton: false,
+                                showFrame: false,
+                                showH5PIcon: false,
+                                showLicenseButton: false
+                            }
                         );
                         res.status(200).send(h5pPage).end();
                         return;

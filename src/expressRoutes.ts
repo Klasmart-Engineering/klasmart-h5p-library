@@ -36,6 +36,32 @@ export default function (
 ): express.Router {
     const router = express.Router();
 
+    router.get(
+        `${h5pEditor.config.playUrl}/:contentId`,
+        async (req: IRequestWithUser, res) => {
+            try {
+                const h5pPage = await h5pPlayer.render(
+                    req.params.contentId,
+                    req.user,
+                    languageOverride === 'auto'
+                        ? req.language ?? 'en'
+                        : languageOverride,
+                    {
+                        showCopyButton: false,
+                        showDownloadButton: false,
+                        showFrame: false,
+                        showH5PIcon: false,
+                        showLicenseButton: false
+                    }
+                );
+                res.send(h5pPage);
+                res.status(200).end();
+            } catch (error) {
+                res.status(500).end(error.message);
+            }
+        }
+    );
+
     /*
      * This was just for testing whether JWT authentication works.
     Set sample cookie for 24 hours.
@@ -63,32 +89,6 @@ export default function (
     // );
 
     if (process.env.NODE_ENV === 'localdev') {
-        router.get(
-            `${h5pEditor.config.playUrl}/:contentId`,
-            async (req: IRequestWithUser, res) => {
-                try {
-                    const h5pPage = await h5pPlayer.render(
-                        req.params.contentId,
-                        req.user,
-                        languageOverride === 'auto'
-                            ? req.language ?? 'en'
-                            : languageOverride,
-                        {
-                            showCopyButton: false,
-                            showDownloadButton: false,
-                            showFrame: false,
-                            showH5PIcon: false,
-                            showLicenseButton: false
-                        }
-                    );
-                    res.send(h5pPage);
-                    res.status(200).end();
-                } catch (error) {
-                    res.status(500).end(error.message);
-                }
-            }
-        );
-
         router.get(
             '/new',
             async (req: IRequestWithLanguage & IRequestWithUser, res) => {

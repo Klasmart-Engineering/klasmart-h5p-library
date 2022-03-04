@@ -57,7 +57,7 @@ export default class KLStateStorer {
     document.addEventListener('readystatechange', (event) => {
       if (document.readyState === 'interactive') {
         this.contentId = this.getContentId();
-        if (typeof this.contentId !== 'number') {
+        if (typeof this.contentId !== 'string') {
           return; // No content id found
         }
 
@@ -78,7 +78,7 @@ export default class KLStateStorer {
 
     // Start storing the state once H5P content is initialized
     H5P.externalDispatcher.once('initialized', () => {
-      if (typeof this.contentId !== 'number') {
+      if (typeof this.contentId !== 'string') {
         return; // No content id found
       }
 
@@ -137,7 +137,7 @@ export default class KLStateStorer {
   /**
    * Get H5P content id.
    * Assuming there's only one H5P instance on page!
-   * @return {number} H5P content id.
+   * @return {string} H5P content id.
    */
   getContentId() {
     const contents = Object.keys(H5PIntegration?.contents || {});
@@ -151,12 +151,16 @@ export default class KLStateStorer {
       return null; // No id
     }
 
-    const id = parseInt(idSegments[1]);
-    if (Number.isNaN(id) || typeof id !== 'number' || id.toString() !== idSegments[1]) {
-      return null; // id is not a number
+    /*
+     * Please note: Regular H5P integrations use numbers for the contentId,
+     * while the KidsLoop integration uses strings. May cause trouble at some
+     * point in the future.
+     */
+    if (idSegments[1].trim() === '') {
+      return null; // No id
     }
 
-    return id;
+    return idSegments[1];
   }
 
   /**
@@ -167,7 +171,7 @@ export default class KLStateStorer {
       !this.params.storagePrefix ||
       !this.instance ||
       typeof this.instance.getCurrentState !== 'function' ||
-      typeof this.contentId !== 'number'
+      typeof this.contentId !== 'string'
     ) {
       return;
     }
@@ -248,7 +252,7 @@ export default class KLStateStorer {
           }
           else if (
             scope === KLStateStorer.CLEAR_INSTANCE &&
-            parseInt(keySegments[1]) === this.contentId
+            keySegments[1] === this.contentId
           ) {
             this.deleteStorage(key);
           }
@@ -278,7 +282,7 @@ export default class KLStateStorer {
       return;
     }
 
-    if (typeof this.contentId !== 'number') {
+    if (typeof this.contentId !== 'string') {
       return; // No content id found
     }
 

@@ -185,7 +185,7 @@ export default class KLStateStorer {
     }
 
     this.setStorage(
-      `${this.params.storagePrefix}-${this.roomUserId}-${this.contentId}`,
+      `${this.params.storagePrefix}${KLStateStorer.DELIMITER}${this.roomUserId}${KLStateStorer.DELIMITER}${this.contentId}`,
       state,
       { timeToLive: KLStateStorer.TIME_TO_LIVE_MS }
     );
@@ -197,7 +197,7 @@ export default class KLStateStorer {
    * @return {object|undefined} Previous state.
    */
   getPreviousState(encoded = true) {
-    const encodedText = this.getStorageValue(`${this.params.storagePrefix}-${this.roomUserId}-${this.contentId}`);
+    const encodedText = this.getStorageValue(`${this.params.storagePrefix}${KLStateStorer.DELIMITER}${this.roomUserId}${KLStateStorer.DELIMITER}${this.contentId}`);
     if (!encodedText) {
       return;
     }
@@ -231,8 +231,8 @@ export default class KLStateStorer {
           continue;
         }
         const keySegments = key
-          .substring(this.params.storagePrefix.length + 1)
-          .split('-');
+          .substring(this.params.storagePrefix.length + KLStateStorer.DELIMITER.length)
+          .split(KLStateStorer.DELIMITER);
 
         if (key.startsWith(this.params.storagePrefix)) {
           if (scope === KLStateStorer.CLEAR_ALL) {
@@ -382,3 +382,6 @@ KLStateStorer.CLEAR_INSTANCE = 3;
 
 /** @constant {number} Clear states that should not live */
 KLStateStorer.CLEAR_TIME_UP = 4;
+
+/** @constant {string} Delimiter for storage key segments */
+KLStateStorer.DELIMITER = '---';

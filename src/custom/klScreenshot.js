@@ -38,7 +38,7 @@ export default class KLScreenshot {
   /**
    * Get H5P content id.
    * Assuming there's only one H5P instance on page!
-   * @return {number} H5P content id.
+   * @return {string} H5P content id.
    */
   getContentId() {
     const contents = Object.keys(H5PIntegration?.contents || {});
@@ -52,12 +52,16 @@ export default class KLScreenshot {
       return null; // No id
     }
 
-    const id = parseInt(idSegments[1]);
-    if (Number.isNaN(id) || typeof id !== 'number' || id.toString() !== idSegments[1]) {
-      return null; // id is not a number
+    /*
+     * Please note: Regular H5P integrations use numbers for the contentId,
+     * while the KidsLoop integration uses strings. May cause trouble at some
+     * point in the future.
+     */
+    if (idSegments[1].trim() === '') {
+      return null; // No id
     }
 
-    return id;
+    return idSegments[1];
   }
 
   /**

@@ -14,7 +14,7 @@ describe('H5PPlayer.render', () => {
         const h5pObject = {};
         const config = new H5PConfig(undefined);
         const xapiEndpoint = 'ws://stub.xapi-endpoint.live';
-        const audioEndpoint = 'https://stub.audio-endpoint.live';
+        const audioEndpoint = 'https://stub.media-endpoint.live';
 
         return new H5PPlayer(
             undefined,
@@ -22,7 +22,7 @@ describe('H5PPlayer.render', () => {
             config,
             {
                 XAPI_SERVICE_ENDPOINT: xapiEndpoint,
-                AUDIO_SERVICE_ENDPOINT: audioEndpoint
+                MEDIA_STORAGE_SERVICE_ENDPOINT: audioEndpoint
             } as any,
             undefined,
             undefined
@@ -37,7 +37,7 @@ describe('H5PPlayer.render', () => {
                     (model as any).integration.XAPI_SERVICE_ENDPOINT
                 ).to.equal(xapiEndpoint);
                 expect(
-                    (model as any).integration.AUDIO_SERVICE_ENDPOINT
+                    (model as any).integration.MEDIA_STORAGE_SERVICE_ENDPOINT
                 ).to.equal(audioEndpoint);
             });
     });
@@ -58,7 +58,8 @@ describe('H5PPlayer.render', () => {
             config,
             {
                 XAPI_SERVICE_ENDPOINT: 'ws://stub.xapi-endpoint.live',
-                AUDIO_SERVICE_ENDPOINT: 'https://stub.audio-endpoint.live'
+                MEDIA_STORAGE_SERVICE_ENDPOINT:
+                    'https://stub.media-endpoint.live'
             } as any,
             undefined,
             undefined,

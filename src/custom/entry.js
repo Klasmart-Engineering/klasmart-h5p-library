@@ -1,6 +1,6 @@
 H5P = H5P || {};
 
-import './xapi-uploader';
+import './xapiUploader';
 import XAPIExperienced from './triggerXAPIExperienced';
 import KLStateStorer from './klSessionStorage';
 import KLScreenshot from './klScreenshot';

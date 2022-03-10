@@ -1,9 +1,9 @@
-import { AudioUploader, XapiUploader } from 'kidsloop-xapi-uploader';
+import { MediaUploader, XapiUploader } from 'kidsloop-xapi-uploader';
 
 const h5p = window.H5P;
 const h5pIntegration = window.H5PIntegration;
 const xapiServiceEndpoint = h5pIntegration?.XAPI_SERVICE_ENDPOINT;
-const audioServiceEndpoint = h5pIntegration?.AUDIO_SERVICE_ENDPOINT;
+const mediaServiceEndpoint = h5pIntegration?.MEDIA_STORAGE_SERVICE_ENDPOINT;
 
 let liveUrl = new URL(window.location.toString());
 if (!liveUrl) {
@@ -12,7 +12,7 @@ if (!liveUrl) {
     } catch (e) {
         console.warn(
             '[xAPI Uploader] Failed to retrieve live authorization token. ' +
-                'The audio uploader needs it to authorize uploads and identify the room.',
+                'The media uploader needs it to authorize uploads and identify the room.',
             e
         );
     }
@@ -38,17 +38,17 @@ if (xapiServiceEndpoint && typeof xapiServiceEndpoint === 'string') {
     console.log('[xAPI Uploader] xAPI upload listener attached');
 }
 
-if (audioServiceEndpoint && typeof audioServiceEndpoint === 'string') {
-    const audioUploader = new AudioUploader(
-        audioServiceEndpoint,
+if (mediaServiceEndpoint && typeof mediaServiceEndpoint === 'string') {
+    const mediaUploader = new MediaUploader(
+        mediaServiceEndpoint,
         liveAuthorizationToken
     );
     h5p.externalDispatcher.on('exportFile', (event) => {
-        console.log('audio', event);
-        audioUploader
-            .uploadAudio(event)
-            .then(() => console.log('Audio upload succeeded'))
-            .catch((e) => console.error('Audio upload failed', e));
+        console.log('media event:', event);
+        mediaUploader
+            .uploadMedia(event)
+            .then(() => console.log('Media upload succeeded'))
+            .catch((e) => console.error('Media upload failed', e));
     });
-    console.log('[xAPI Uploader] Audio upload listener attached');
+    console.log('[xAPI Uploader] Media upload listener attached');
 }

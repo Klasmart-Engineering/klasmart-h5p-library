@@ -47,12 +47,12 @@ if (!XAPI_SERVICE_ENDPOINT) {
         `Set XAPI_ENDPOINT environment variable for xAPI event reporting`
     );
 }
-const AUDIO_SERVICE_ENDPOINT: string | undefined =
-    typeof process.env.AUDIO_SERVICE_ENDPOINT === 'string' &&
-    process.env.AUDIO_SERVICE_ENDPOINT;
-if (!AUDIO_SERVICE_ENDPOINT) {
+const MEDIA_STORAGE_SERVICE_ENDPOINT: string | undefined =
+    typeof process.env.MEDIA_STORAGE_SERVICE_ENDPOINT === 'string' &&
+    process.env.MEDIA_STORAGE_SERVICE_ENDPOINT;
+if (!MEDIA_STORAGE_SERVICE_ENDPOINT) {
     console.warn(
-        `Set AUDIO_SERVICE_ENDPOINT environment variable for audio upload functionality`
+        `Set MEDIA_STORAGE_SERVICE_ENDPOINT environment variable for media upload functionality`
     );
 }
 
@@ -140,7 +140,7 @@ const start = async (): Promise<void> => {
         h5pEditor.libraryStorage,
         h5pEditor.contentStorage,
         config,
-        { XAPI_SERVICE_ENDPOINT, AUDIO_SERVICE_ENDPOINT } as any,
+        { XAPI_SERVICE_ENDPOINT, MEDIA_STORAGE_SERVICE_ENDPOINT } as any,
         undefined,
         (key, language) => translationFunction(key, { lng: language })
     );

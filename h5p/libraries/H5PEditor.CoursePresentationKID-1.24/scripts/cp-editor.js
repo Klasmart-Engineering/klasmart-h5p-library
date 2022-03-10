@@ -722,7 +722,12 @@ H5PEditor.CoursePresentationKID.prototype.initializeDNB = function () {
           that.dnb.focus(that.addElement(pasted.specific, options));
         }
         else {
-          alert(H5PEditor.t('H5P.DragNBar', 'unableToPaste'));
+          that.showConfirmationDialog({
+            headerText: H5PEditor.t('core', 'pasteError'),
+            dialogText: H5PEditor.t('H5P.DragNBar', 'unableToPaste'),
+            confirmText: H5PEditor.t('H5PEditor.CoursePresentationKID', 'ok'),
+            cancelText: ' '
+          });
         }
       }
       else if (pasted.generic) {
@@ -737,7 +742,12 @@ H5PEditor.CoursePresentationKID.prototype.initializeDNB = function () {
           that.dnb.focus(that.addElement(pasted.generic.library, options));
         }
         else {
-          alert(H5PEditor.t('H5P.DragNBar', 'unableToPaste'));
+          that.showConfirmationDialog({
+            headerText: H5PEditor.t('core', 'pasteError'),
+            dialogText: H5PEditor.t('H5P.DragNBar', 'unableToPaste'),
+            confirmText: H5PEditor.t('H5PEditor.CoursePresentationKID', 'ok'),
+            cancelText: ' '
+          });
         }
       }
     });
@@ -1116,52 +1126,60 @@ H5PEditor.CoursePresentationKID.prototype.removeSlide = function () {
   var isRemovingDnbContainer = this.cp.$current.index() === this.$dnbContainer.index();
 
   // Confirm
-  if (!confirm(H5PEditor.t('H5PEditor.CoursePresentationKID', 'confirmDeleteSlide'))) {
-    return false;
-  }
+  const confirmationDialog = this.showConfirmationDialog({
+    headerText: H5PEditor.t('H5PEditor.CoursePresentationKID', 'confirmDeleteSlide'),
+    cancelText: H5PEditor.t('H5PEditor.CoursePresentationKID', 'cancel'),
+    confirmText: H5PEditor.t('H5PEditor.CoursePresentationKID', 'ok')
+  });
 
-  // Remove elements from slide
-  var slideKids = this.elements[index];
-  if (slideKids !== undefined) {
-    for (var i = 0; i < slideKids.length; i++) {
-      this.removeElement(slideKids[i], slideKids[i].$wrapper, this.cp.elementInstances[index][i].libraryInfo && this.cp.elementInstances[index][i].libraryInfo.machineName === 'H5P.ContinuousText');
+  confirmationDialog.on('canceled', () => {
+    return;
+  });
+
+  confirmationDialog.on('confirmed', () => {
+    // Remove elements from slide
+    var slideKids = this.elements[index];
+    if (slideKids !== undefined) {
+      for (var i = 0; i < slideKids.length; i++) {
+        this.removeElement(slideKids[i], slideKids[i].$wrapper, this.cp.elementInstances[index][i].libraryInfo && this.cp.elementInstances[index][i].libraryInfo.machineName === 'H5P.ContinuousText');
+      }
     }
-  }
-  this.elements.splice(index, 1);
+    this.elements.splice(index, 1);
 
-  // Change slide
-  var move = this.cp.previousSlide() ? -1 : (this.cp.nextSlide(true) ? 0 : undefined);
+    // Change slide
+    var move = this.cp.previousSlide() ? -1 : (this.cp.nextSlide(true) ? 0 : undefined);
 
-  // Replace existing DnB container used for calculating dimensions of elements
-  if (isRemovingDnbContainer) {
-    // Set new dnb container
-    this.$dnbContainer = this.cp.$current;
-    this.dnb.setContainer(this.$dnbContainer);
-  }
-  if (move === undefined) {
-    return false; // No next or previous slide
-  }
+    // Replace existing DnB container used for calculating dimensions of elements
+    if (isRemovingDnbContainer) {
+      // Set new dnb container
+      this.$dnbContainer = this.cp.$current;
+      this.dnb.setContainer(this.$dnbContainer);
+    }
+    if (move === undefined) {
+      return false; // No next or previous slide
+    }
 
-  // ExportableTextArea needs to know about the deletion:
-  H5P.ExportableTextArea.CPInterface.onDeleteSlide(index);
+    // ExportableTextArea needs to know about the deletion:
+    H5P.ExportableTextArea.CPInterface.onDeleteSlide(index);
 
-  // Update presentation params.
-  this.params.slides.splice(index, 1);
+    // Update presentation params.
+    this.params.slides.splice(index, 1);
 
-  // Update the list of element instances
-  this.cp.elementInstances.splice(index, 1);
-  this.cp.elementsAttached.splice(index, 1);
+    // Update the list of element instances
+    this.cp.elementInstances.splice(index, 1);
+    this.cp.elementsAttached.splice(index, 1);
 
-  this.cp.removeChild(index);
+    this.cp.removeChild(index);
 
-  this.cp.updateKeywordMenuFromSlides();
-  this.initKeywordMenu();
-  this.updateNavigationLine(index + move);
+    this.cp.updateKeywordMenuFromSlides();
+    this.initKeywordMenu();
+    this.updateNavigationLine(index + move);
 
-  // Remove visuals.
-  $remove.remove();
+    // Remove visuals.
+    $remove.remove();
 
-  H5P.ContinuousText.Engine.run(this);
+    H5P.ContinuousText.Engine.run(this);
+  });
 };
 
 /**
@@ -1824,14 +1842,23 @@ H5PEditor.CoursePresentationKID.prototype.addToDragNBar = function (element, ele
   element.$wrapper.find('*').attr('tabindex', '-1');
 
   dnbElement.contextMenu.on('contextMenuRemove', function () {
-    if (!confirm(H5PEditor.t('H5PEditor.CoursePresentationKID', 'confirmRemoveElement'))) {
+    const confirmationDialog = self.showConfirmationDialog({
+      headerText: H5PEditor.t('H5PEditor.CoursePresentationKID', 'confirmRemoveElement'),
+      cancelText: H5PEditor.t('H5PEditor.CoursePresentationKID', 'cancel'),
+      confirmText: H5PEditor.t('H5PEditor.CoursePresentationKID', 'ok'),
+    });
+
+    confirmationDialog.on('canceled', () => {
       return;
-    }
-    if (H5PEditor.Html) {
-      H5PEditor.Html.removeWysiwyg();
-    }
-    self.removeElement(element, element.$wrapper, (elementParams.action !== undefined && H5P.libraryFromString(elementParams.action.library).machineName === 'H5P.ContinuousText'));
-    self.dnb.blurAll();
+    });
+
+    confirmationDialog.on('confirmed', () => {
+      if (H5PEditor.Html) {
+        H5PEditor.Html.removeWysiwyg();
+      }
+      self.removeElement(element, element.$wrapper, (elementParams.action !== undefined && H5P.libraryFromString(elementParams.action.library).machineName === 'H5P.ContinuousText'));
+      self.dnb.blurAll();
+    });
   });
 
   dnbElement.contextMenu.on('contextMenuBringToFront', function () {
@@ -1978,13 +2005,21 @@ H5PEditor.CoursePresentationKID.prototype.showElementForm = function (element, $
    * @private
    */
   const handleFormremove = function (e) {
-    e.preventRemove = !confirm(H5PEditor.t('H5PEditor.CoursePresentationKID', 'confirmRemoveElement'));
-    if (e.preventRemove) {
+    const confirmationDialog = this.showConfirmationDialog({
+      headerText: H5PEditor.t('H5PEditor.CoursePresentationKID', 'confirmRemoveElement'),
+      cancelText: H5PEditor.t('H5PEditor.CoursePresentationKID', 'cancel'),
+      confirmText: H5PEditor.t('H5PEditor.CoursePresentationKID', 'ok'),
+    });
+
+    confirmationDialog.on('canceled', () => {
       return;
-    }
-    that.removeElement(element, $wrapper, isContinuousText);
-    that.dnb.blurAll();
-    that.dnb.preventPaste = false;
+    });
+
+    confirmationDialog.on('confirmed', () => {
+      that.removeElement(element, $wrapper, isContinuousText);
+      that.dnb.blurAll();
+      that.dnb.preventPaste = false;
+    });
   };
   that.on('formremove', handleFormremove);
 
@@ -2308,6 +2343,19 @@ H5PEditor.CoursePresentationKID.findField = function (name, fields) {
       return fields[i];
     }
   }
+};
+
+/**
+ * Add confirmation dialog.
+ * @param {object} dialogOptions Dialog options.
+ * @returns {HTMLElement} confirmationDialog.
+ */
+H5PEditor.CoursePresentationKID.prototype.showConfirmationDialog = function (dialogOptions) {
+  const confirmationDialog = new H5P.ConfirmationDialog(dialogOptions)
+    .appendTo(document.body);
+
+  confirmationDialog.show();
+  return confirmationDialog;
 };
 
 /** @constant {Number} */

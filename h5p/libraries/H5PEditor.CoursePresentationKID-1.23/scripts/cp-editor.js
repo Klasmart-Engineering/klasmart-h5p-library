@@ -1562,8 +1562,10 @@ H5PEditor.CoursePresentationKID.prototype.generateForm = function (elementParams
   });
 
   // Set correct aspect ratio on new images.
-  // TODO: Do not use/rely on magic numbers!
-  var library = element.children[4];
+  var library = element.children.filter(child => {
+    return child.field && child.field.name === 'action';
+  }).shift();
+
   if (!(library instanceof H5PEditor.None)) {
     var libraryChange = function () {
       if (library.children[0].field.type === 'image') {

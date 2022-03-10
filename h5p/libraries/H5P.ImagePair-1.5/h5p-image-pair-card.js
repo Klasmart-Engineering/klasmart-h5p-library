@@ -320,6 +320,10 @@
       });
 
       self.$card.click(function () {
+        if (self.blocked) {
+          return; // not allowed to be selected (yet), jQuery workaround
+        }
+
         self.trigger('selected');
       }).end();
 

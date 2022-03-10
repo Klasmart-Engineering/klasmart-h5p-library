@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.11.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.11.0..v2.10.0) (2022-03-10)
+
+
+### Features
+
+* disable session saving feature ([4fc7b7d](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/4fc7b7dd37299493c7240a29956995c290260f5e))
+* don't set s3 lifecycle from application ([57cbbe7](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/57cbbe74bc8bd61456df77e9c427936ca95119d6))
+* **H5P-342,H5P-456:** screenshots and session saving ([94ac231](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/94ac23194b82c60e3f336a8cf3d7455088b01d25))
+* **H5P-460:** update Korean translations (batch 3) ([72c6677](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/72c6677d8390e4a924c76a1046180b60c9ea2b59))
+* **H5P-461:** update Korean translations (batch 4) ([dc01b67](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/dc01b67c84a61ea7a9a67da2bccfb15949c160f9))
+* **H5P-462:** update Korean translations (batch 5) ([d766585](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/d766585280747f881fb25539dde7bc3a4a033322))
+* move non-token endpoints behind 'localdev' NODE_ENV ([f2c01ef](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/f2c01eff14ddfee749a147451c937903aadad33b))
+
+
+### Bug Fixes
+
+* audio uploader "Buffer is not defined" ([33abe36](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/33abe36cdb41ced8e1d4f81fee3fb4cfc06a76d0))
+* audio uploader "ReferenceError: Buffer is not defined" ([a288c19](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/a288c197df3f3896f3834cec129f4dacd49f20a1))
+* customScripts.js 404 not found ([2e54484](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/2e544849f48b2df696bf1ffa1a0c09051d8f28e8))
+* error when attempting to view in Live ([f5d28d8](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/f5d28d87fd76175ab23b0865f7a750e7ee977485))
+* flashcard language files out of sync ([e2bae6c](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/e2bae6c610ea3f8dd055a310819b8ff5f13020cd))
+* **H5P-280:** access to 'new' route is public ([46cfe97](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/46cfe97fa2ec013ccab0e0c0da643b140b300a51))
+* **H5P-285:** broken images when uploading h5p package ([73fdc7e](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/73fdc7e4b525703bc28abc232e7a8b2dd3f8c859))
+* **H5P-342:** change type of content id to string ([c2ba983](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/c2ba983a8768b32a3b31c7b6414c7ab55792f21b))
+* **H5P-342:** use --- as key segment delimiter ([538ba4a](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/538ba4a13a30b1544f02d37ae0c49d5feb7b3edc))
+* **H5P-456:** treat content id as string ([03b4cda](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/03b4cda3021869e780014cb0efecd952339746b5))
+* **H5P-478:** student sees black screen (video) in present mode ([377ad76](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/377ad769570fcb0ddefa278ee608accf5dfffbe9))
+
+
+### Refactor
+
+* stop logging useless editor error ([8528b1c](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/8528b1c4a6a33f8ac3c7ffbb0574f52012bb7520))
+* sync stray files with alpha ([cc8a550](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/cc8a5507ade0b4ad63d40d8376f1b1bb46bd8530))
+
 ## [2.10.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.10.0..v2.9.1) (2022-02-23)
 
 

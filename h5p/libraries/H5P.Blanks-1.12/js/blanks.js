@@ -81,7 +81,8 @@ H5P.Blanks = (function ($, Question) {
         caseSensitive: true,
         showSolutionsRequiresInput: true,
         autoCheck: false,
-        separateLines: false
+        separateLines: false,
+        clozeWidthCongruency: true
       },
       a11yCheck: 'Check the answers. The responses will be marked as correct, incorrect, or unanswered.',
       a11yShowSolution: 'Show the solution. The task will be marked with its correct solution.',
@@ -409,7 +410,59 @@ H5P.Blanks = (function ($, Question) {
   };
 
   /**
-   *
+   * Compute width of input field (for given text).
+   * @param {jQuery} $field Field to compute width of.
+   * @param {string} [text] Text to set for field.
+   * @return {number} Computed width.
+   */
+  Blanks.prototype.computeFieldWidth = function ($field, text) {
+    var tmp = $('<div>', {
+      'text': text || $field.val()
+    });
+    tmp.css({
+      'position': 'absolute',
+      'white-space': 'nowrap',
+      'font-size': $field.css('font-size'),
+      'font-family': $field.css('font-family'),
+      'padding': $field.css('padding'),
+      'width': 'initial'
+    });
+    $field.parent().append(tmp);
+    var width = tmp.width();
+    tmp.remove();
+    return width;
+  };
+
+  /**
+   * Compute widest char.
+   * @param {jQuery} input field for testing.
+   * @return {object} Result with char and width.
+   */
+  Blanks.prototype.computeWidestChar = function ($input) {
+    var allChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var result = {
+      char: null,
+      width: 0
+    };
+
+    for (let i = 0; i < allChars.length; i++) {
+      const char = allChars.substr(i, 1);
+      const width = this.computeFieldWidth($input, char);
+
+      if (width > result.width) {
+        result = {
+          char: char,
+          width: width
+        }
+      }
+    }
+
+    return result;
+  };
+
+  /**
+   * Autogrow a text field.
+   * @param {jQuery} $input Input field.
    */
   Blanks.prototype.autoGrowTextField = function ($input) {
     // Do not set text field size when separate lines is enabled
@@ -418,6 +471,25 @@ H5P.Blanks = (function ($, Question) {
     }
 
     var self = this;
+
+    if (!this.widestChar || this.widestChar.width === 0) {
+      this.widestChar = this.computeWidestChar($input);
+    }
+
+    // Determine and store width for longest solution in capital letters
+    if ($input.data('clozeWidth') === undefined || $input.data('clozeWidth') === 0) {
+      var length = self.clozes[$input.data('clozeIndex')]
+        .getSolutions()
+        .reduce(function (result, current) {
+          return (current.length > result) ? current.length : result;
+        }, 2); // 2 chars should be minimum
+
+      var widestText = new Array(length + 1).join(this.widestChar.char || 'W'); // Assuming W is widest char
+      $input.data('clozeWidth', self.computeFieldWidth($input, widestText));
+    }
+
+    this.computeWidestChar($input);
+
     var fontSize = parseInt($input.css('font-size'), 10);
     var minEm = 3;
     var minPx = fontSize * minEm;
@@ -426,33 +498,38 @@ H5P.Blanks = (function ($, Question) {
     var static_min_pad = 0.5 * fontSize;
 
     setTimeout(function () {
-      var tmp = $('<div>', {
-        'text': $input.val()
-      });
-      tmp.css({
-        'position': 'absolute',
-        'white-space': 'nowrap',
-        'font-size': $input.css('font-size'),
-        'font-family': $input.css('font-family'),
-        'padding': $input.css('padding'),
-        'width': 'initial'
-      });
-      $input.parent().append(tmp);
-      var width = tmp.width();
+      var width = self.computeFieldWidth($input);
       var parentWidth = self.$questions.width();
-      tmp.remove();
-      if (width <= minPx) {
-        // Apply min width
-        $input.width(minPx + static_min_pad);
-      }
-      else if (width + rightPadPx >= parentWidth) {
-        // Apply max width of parent
-        $input.width(parentWidth - rightPadPx);
+
+      if (!self.params.behaviour.clozeWidthCongruency) {
+        if (width <= minPx) {
+          // Apply min width
+          $input.width(minPx + static_min_pad);
+        }
+        else if (width + rightPadPx >= parentWidth) {
+          // Apply max width of parent
+          $input.width(parentWidth - rightPadPx);
+        }
+        else {
+          // Apply width that wraps input
+          $input.width(width + static_min_pad);
+        }
       }
       else {
-        // Apply width that wraps input
-        $input.width(width + static_min_pad);
+        if (width <= $input.data('clozeWidth')) {
+          // Apply min width
+          $input.width($input.data('clozeWidth'));
+        }
+        else if (width + rightPadPx >= parentWidth) {
+          // Apply max width of parent
+          $input.width(parentWidth - rightPadPx);
+        }
+        else {
+          // Apply width that wraps input
+          $input.width(width);
+        }
       }
+
     }, 1);
   };
 

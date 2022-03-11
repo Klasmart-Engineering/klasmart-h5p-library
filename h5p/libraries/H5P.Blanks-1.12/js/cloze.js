@@ -64,6 +64,14 @@
     };
 
     /**
+     * Get solutions.
+     * @return {string[]} Solutions.
+     */
+    this.getSolutions = function () {
+      return answers;
+    };
+
+    /**
      * Check if filled out.
      *
      * @param {boolean}
@@ -156,6 +164,7 @@
      */
     this.setInput = function ($element, afterCheck, afterFocus, clozeIndex, totalCloze) {
       $input = $element;
+      $input.data('clozeIndex', clozeIndex);
       $wrapper = $element.parent();
       inputLabel = inputLabel.replace('@num', (clozeIndex + 1))
         .replace('@total', totalCloze);

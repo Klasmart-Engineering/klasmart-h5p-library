@@ -155,10 +155,10 @@ pipelines:
           name: '🔔 slack notification'
           script:
             - echo 'Sending Slack notification...'
-          after-script:
-            - pipe: docker://cabauman/slack-notify-commits:0.6.1
-              variables:
-                WEBHOOK_URL: $SLACK_WEBHOOK
-                MESSAGE: '🚀 A new build of H5P service has been deployed to *alpha*.'
-                BITBUCKET_USER: $BITBUCKET_PIPELINE_READER_USER
-                BITBUCKET_APP_PASSWORD: $BITBUCKET_PIPELINE_READER_APP_PASSWORD
+          # after-script:
+          #   - pipe: docker://cabauman/slack-notify-commits:0.6.1
+          #     variables:
+          #       WEBHOOK_URL: $SLACK_WEBHOOK
+          #       MESSAGE: '🚀 A new build of H5P service has been deployed to *alpha*.'
+          #       BITBUCKET_USER: $BITBUCKET_PIPELINE_READER_USER
+          #       BITBUCKET_APP_PASSWORD: $BITBUCKET_PIPELINE_READER_APP_PASSWORD

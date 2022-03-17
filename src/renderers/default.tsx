@@ -136,15 +136,96 @@ function Editor(props: any): any {
                                     return event.preventDefault();
                                 }
 
-                                // Don't proceed if H5P editor reports errors
+                                /*
+                                 * Don't proceed if H5P editor reports errors
+                                 * - all error getMessages
+                                 * - webm files (in existing content)
+                                 */
                                 if (
                                   h5peditor.iframeWindow &&
                                   h5peditor.iframeWindow.document
                                 ) {
+
+                                  // Retrieve all HTML elements that require input
+                                  const requiredNodes = h5peditor.iframeWindow.document.querySelectorAll(
+                                    '.h5peditor-label-wrapper > .h5peditor-label.h5peditor-required'
+                                  );
+                                  const relevantFields = [...requiredNodes]
+                                    .map(requiredNode => {
+                                      const parent = requiredNode.parentNode;
+                                      if (!parent || !parent.nextSibling) {
+                                        return null;
+                                      }
+
+                                      if (!parent.nextSibling.classList.contains('h5peditor-field-description')) {
+                                        return parent.nextSibling;
+                                      }
+
+                                      return parent.nextSibling.nextSibling
+                                    })
+                                    .filter(field => {
+                                      if (
+                                        !field ||
+                                        field.classList.contains('h5p-metadata-button-wrapper') ||
+                                        field.tagName === 'OL' ||
+                                        field.tagName === 'UL'
+                                      ) {
+                                        return false;
+                                      }
+
+                                      return true;
+                                    });
+
+                                  // Custom blocker for empty required images
+                                  const emptyImages = relevantFields.filter((field) => {
+                                    return (
+                                      field.tagName === 'DIV' &&
+                                      field.classList.contains('file') &&
+                                      field.firstChild &&
+                                      field.firstChild.id &&
+                                      field.firstChild.id.substr(0, 11) === 'field-image' &&
+                                      field.firstChild.classList.contains('add')
+                                    );
+                                  });
+                                  if (emptyImages.length) {
+
+                                    // Bad hack to show error message
+                                    for (let i = 0; i < emptyImages.length; i++) {
+                                      const errorField = Array.from(emptyImages[i].parentNode.childNodes)
+                                        .find(node => node.classList.contains('h5p-errors'));
+                                      if (errorField) {
+                                        errorField.innerHTML = 'Image cannot be empty.';
+                                      }
+                                    }
+
+                                    emptyImages[0].parentNode.parentNode.scrollIntoView(true);
+                                    return event.preventDefault();
+                                  }
+
+                                  // This is a bad hack! But we cannot access the allow list or the file name here
+                                  const webMNodes = h5peditor.iframeWindow.document.querySelectorAll('.h5p-type[title="video/webm"]');
+                                  for (let i = 0; i < webMNodes.length; i++) {
+                                    const videoField = webMNodes[i].closest('.field-name-files.video');
+                                    if (videoField) {
+                                      const errorField = Array.from(videoField.childNodes)
+                                        .find(node => node.classList.contains('h5p-errors'));
+                                      if (errorField) {
+                                        errorField.innerHTML = 'Files in webM format are not allowed.';
+                                      }
+                                    }
+                                  }
+
                                   const errorNodes = h5peditor.iframeWindow.document.querySelectorAll('.h5p-errors');
                                   if (errorNodes) {
                                     const actualErrorNodes = Array.from(errorNodes)
-                                      .filter(node => node.innerHTML !== '');
+                                      .filter(node => {
+                                        return (
+                                          node.innerHTML !== '' &&
+                                          // Bad hack for IV
+                                          !node.closest('fieldset.field-name-summary') &&
+                                          !node.closest('.field.interactiveVideo')
+                                        );
+                                      });
 
                                     if (actualErrorNodes.length !== 0) {
                                       actualErrorNodes[0].parentNode.scrollIntoView(true);

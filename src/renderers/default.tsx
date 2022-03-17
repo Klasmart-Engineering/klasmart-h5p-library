@@ -146,6 +146,52 @@ function Editor(props: any): any {
                                   h5peditor.iframeWindow.document
                                 ) {
 
+                                  // Retrieve all HTML elements that require input
+                                  const requiredNodes = h5peditor.iframeWindow.document.querySelectorAll(
+                                    '.h5peditor-label-wrapper > .h5peditor-label.h5peditor-required'
+                                  );
+                                  const relevantFields = [...requiredNodes]
+                                    .map(requiredNode => {
+                                      const parent = requiredNode.parentNode;
+                                      if (!parent || !parent.nextSibling) {
+                                        return null;
+                                      }
+
+                                      if (!parent.nextSibling.classList.contains('h5peditor-field-description')) {
+                                        return parent.nextSibling;
+                                      }
+
+                                      return parent.nextSibling.nextSibling
+                                    })
+                                    .filter(field => {
+                                      if (
+                                        !field ||
+                                        field.classList.contains('h5p-metadata-button-wrapper') ||
+                                        field.tagName === 'OL' ||
+                                        field.tagName === 'UL'
+                                      ) {
+                                        return false;
+                                      }
+
+                                      return true;
+                                    });
+
+                                  // Custom blocker for empty required images
+                                  const emptyImages = relevantFields.filter((field) => {
+                                    return (
+                                      field.tagName === 'DIV' &&
+                                      field.classList.contains('file') &&
+                                      field.firstChild &&
+                                      field.firstChild.id &&
+                                      field.firstChild.id.substr(0, 11) === 'field-image' &&
+                                      field.firstChild.classList.contains('add')
+                                    );
+                                  });
+                                  if (emptyImages.length) {
+                                    emptyImages[0].parentNode.parentNode.scrollIntoView(true);
+                                    return event.preventDefault();
+                                  }
+
                                   const errorNodes = h5peditor.iframeWindow.document.querySelectorAll('.h5p-errors, .h5p-type[title="video/webm"]');
                                   if (errorNodes) {
                                     const actualErrorNodes = Array.from(errorNodes)

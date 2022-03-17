@@ -83,12 +83,13 @@ definitions:
         script:
           - docker build -t $DOCKER_REPO_NAME .
           - docker run --add-host host.docker.internal:$BITBUCKET_DOCKER_HOST_INTERNAL -d --name=check-startup $DOCKER_REPO_NAME && sleep 10 && docker top check-startup
+          - export BRANCH_TAG=$(echo "$BITBUCKET_BRANCH" | sed -E 's/([^0-9a-zA-Z]+)/-/g' | awk '{print tolower($0)}')
           - export COMMIT_TAG=$(echo $BITBUCKET_COMMIT | cut -c1-7)
           - pipe: atlassian/aws-ecr-push-image:1.5.0
             variables:
               AWS_DEFAULT_REGION: eu-west-2
               IMAGE_NAME: $DOCKER_REPO_NAME
-              TAGS: 'alpha $COMMIT_TAG'
+              TAGS: 'alpha $COMMIT_TAG $BRANCH_TAG-$COMMIT_TAG'
 
     - step: &deploy-to-alpha
         name: "🚀 deploy to alpha"
@@ -116,6 +117,58 @@ definitions:
               AWS_DEFAULT_REGION: 'ap-northeast-2'
               DISTRIBUTION_ID: 'E2694SIA1FLALO' # live.alpha.kidsloop.net
               PATHS: '/h5p/libraries/* /h5p/play/*'
+
+    # This step will deploy an image to the new "landing zone" environment via ArgoCD.
+    # See here for the equivalent Github Actions pipeline: https://github.com/KL-Engineering/user-service/pull/27
+    - step: &step-deploy-landing-zone
+        name: "Deploy built image to the Kidsloop landing zone"
+        image: argoproj/argocd:v2.3.1
+        script:
+          # What are we deploying?
+          - export BRANCH_TAG=$(echo "$BITBUCKET_BRANCH" | sed -E 's/([^0-9a-zA-Z]+)/-/g' | awk '{print tolower($0)}')
+          - export COMMIT_TAG=$(echo $BITBUCKET_COMMIT | cut -c1-7)
+          - export DEPLOY_TAG=$BRANCH_TAG-$COMMIT_TAG
+          - echo "Tag to deploy - $DEPLOY_TAG"
+
+          # Set up port forwarding
+          - echo $TOOLS_KUBECONFIG_CONTENT_B64 | base64 -d > $BITBUCKET_CLONE_DIR/kubeconfig.yml
+          - >
+            PORTFORWARD_CONTAINER=$(
+            docker run
+            --volume $BITBUCKET_CLONE_DIR/kubeconfig.yml:/mnt/kubeconfig.yml
+            --env KUBECONFIG=/mnt/kubeconfig.yml
+            --publish 8080:8080
+            --hostname kubeproxy
+            --detach bitnami/kubectl:1.21
+            port-forward -n argocd svc/argocd-server
+            --address 0.0.0.0 8080:80
+            )
+          - sleep 5
+
+          # Deploy tag to environment with ArgoCD
+          - >
+            export
+            ARGOCD_SERVER=localhost:8080
+            ARGOCD_APP=uk-landingzone-h5p-service
+            ARGOCD_APP_CHART_TAG_PATH=h5p.tag
+            ARGOCD_OPTS='--grpc-web --insecure --plaintext'
+          - >
+            argocd login $ARGOCD_SERVER
+            --username $ARGOCD_AUTH_USERNAME
+            --password $ARGOCD_AUTH_PASSWORD
+            $ARGOCD_OPTS
+          - argocd app get $ARGOCD_APP
+          - argocd app set $ARGOCD_APP -p $ARGOCD_APP_CHART_TAG_PATH=$DEPLOY_TAG
+          - argocd app sync $ARGOCD_APP --timeout 300
+
+          # Clean up tasks
+          - docker logs $PORTFORWARD_CONTAINER
+          - docker kill $PORTFORWARD_CONTAINER
+          - docker rm $PORTFORWARD_CONTAINER
+        services:
+          - docker
+        caches:
+          - docker
 
 pipelines:
   pull-requests:
@@ -151,6 +204,7 @@ pipelines:
       - step: *npm-build-and-prune
       - step: *build-and-push-to-ecr
       - step: *deploy-to-alpha
+      - step: *step-deploy-landing-zone
       - step:
           name: '🔔 slack notification'
           script:

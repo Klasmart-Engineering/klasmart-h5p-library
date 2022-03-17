@@ -3,7 +3,7 @@
   "machineName": "H5P.Question",
   "majorVersion": 1,
   "minorVersion": 5,
-  "patchVersion": 1,
+  "patchVersion": 0,
   "runnable": 0,
   "license": "MIT",
   "author": "Joubel",
@@ -37,9 +37,14 @@
       "minorVersion": 5
     },
     {
+      "machineName": "FontKidsLoop",
+      "majorVersion": 1,
+      "minorVersion": 0
+    },
+    {
       "machineName": "H5P.JoubelUI",
       "majorVersion": 1,
-      "minorVersion": 3
+      "minorVersion": 4
     }
   ]
 }

@@ -1,4 +1,5 @@
 .h5p-question-explanation {
+  font-family: 'Roboto', sans-serif;
   /* Needed this to make it display in IE 11 */
   position: relative;
 }

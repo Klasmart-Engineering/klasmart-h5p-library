@@ -136,12 +136,17 @@ function Editor(props: any): any {
                                     return event.preventDefault();
                                 }
 
-                                // Don't proceed if H5P editor reports errors
+                                /*
+                                 * Don't proceed if H5P editor reports errors
+                                 * - all error getMessages
+                                 * - webm files (in existing content)
+                                 */
                                 if (
                                   h5peditor.iframeWindow &&
                                   h5peditor.iframeWindow.document
                                 ) {
-                                  const errorNodes = h5peditor.iframeWindow.document.querySelectorAll('.h5p-errors');
+
+                                  const errorNodes = h5peditor.iframeWindow.document.querySelectorAll('.h5p-errors, .h5p-type[title="video/webm"]');
                                   if (errorNodes) {
                                     const actualErrorNodes = Array.from(errorNodes)
                                       .filter(node => node.innerHTML !== '');

@@ -208,7 +208,14 @@ function Editor(props: any): any {
                                   const errorNodes = h5peditor.iframeWindow.document.querySelectorAll('.h5p-errors');
                                   if (errorNodes) {
                                     const actualErrorNodes = Array.from(errorNodes)
-                                      .filter(node => node.innerHTML !== '');
+                                      .filter(node => {
+                                        return (
+                                          node.innerHTML !== '' &&
+                                          // Bad hack for IV
+                                          !node.closest('fieldset.field-name-summary') &&
+                                          !node.closest('.field.interactiveVideo')
+                                        );
+                                      });
 
                                     if (actualErrorNodes.length !== 0) {
                                       actualErrorNodes[0].parentNode.scrollIntoView(true);

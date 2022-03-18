@@ -188,6 +188,16 @@ function Editor(props: any): any {
                                     );
                                   });
                                   if (emptyImages.length) {
+
+                                    // Bad hack to show error message
+                                    for (let i = 0; i < emptyImages.length; i++) {
+                                      const errorField = Array.from(emptyImages[i].parentNode.childNodes)
+                                        .find(node => node.classList.contains('h5p-errors'));
+                                      if (errorField) {
+                                        errorField.innerHTML = 'Image cannot be empty';
+                                      }
+                                    }
+
                                     emptyImages[0].parentNode.parentNode.scrollIntoView(true);
                                     return event.preventDefault();
                                   }

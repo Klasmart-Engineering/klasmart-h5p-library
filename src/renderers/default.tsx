@@ -192,7 +192,20 @@ function Editor(props: any): any {
                                     return event.preventDefault();
                                   }
 
-                                  const errorNodes = h5peditor.iframeWindow.document.querySelectorAll('.h5p-errors, .h5p-type[title="video/webm"]');
+                                  // This is a bad hack! But we cannot access the allow list or the file name here
+                                  const webMNodes = h5peditor.iframeWindow.document.querySelectorAll('.h5p-type[title="video/webm"]');
+                                  for (let i = 0; i < webMNodes.length; i++) {
+                                    const videoField = webMNodes[i].closest('.field-name-files.video');
+                                    if (videoField) {
+                                      const errorField = Array.from(videoField.childNodes)
+                                        .find(node => node.classList.contains('h5p-errors'));
+                                      if (errorField) {
+                                        errorField.innerHTML = 'Files in webM format are not allowed.';
+                                      }
+                                    }
+                                  }
+
+                                  const errorNodes = h5peditor.iframeWindow.document.querySelectorAll('.h5p-errors');
                                   if (errorNodes) {
                                     const actualErrorNodes = Array.from(errorNodes)
                                       .filter(node => node.innerHTML !== '');

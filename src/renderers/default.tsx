@@ -194,7 +194,7 @@ function Editor(props: any): any {
                                       const errorField = Array.from(emptyImages[i].parentNode.childNodes)
                                         .find(node => node.classList.contains('h5p-errors'));
                                       if (errorField) {
-                                        errorField.innerHTML = 'Image cannot be empty';
+                                        errorField.innerHTML = 'Image cannot be empty.';
                                       }
                                     }
 

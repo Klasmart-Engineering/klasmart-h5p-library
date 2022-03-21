@@ -47,6 +47,22 @@ export default async function createH5PEditor(
             max: 2 ** 10
         });
     } else if (process.env.CACHE === 'redis') {
+        // KidsLoop cutomization: clear all keys with prefix h5p:*
+        // We're sharing a Redis instance with another service but
+        // Lumi doesn't support customizing the prefix. So we had to
+        // make a cutomization to h5p-server.
+        const redis = new ioredis(
+            Number.parseInt(process.env.LOCK_REDIS_PORT),
+            process.env.LOCK_REDIS_HOST
+        );
+        const keys = await redis.keys('h5p:*');
+        const pipeline = redis.pipeline();
+        keys.forEach(function (key) {
+            pipeline.del(key);
+        });
+        await pipeline.exec();
+        await redis.quit();
+
         debug('h5p-example')(
             `Using Redis for caching library storage (${process.env.REDIS_HOST}:${process.env.REDIS_PORT}, db: ${process.env.REDIS_DB})`
         );

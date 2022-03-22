@@ -13,8 +13,7 @@ import KLScreenshot from './klScreenshot';
 new XAPIExperienced();
 
 // Store state on client every 10 seconds and on special events
-// This feature is disabled until it passes QA.
-//H5P.KLStateStorer = new KLStateStorer({ storageInterval: 10 * 1000 });
+H5P.KLStateStorer = new KLStateStorer({ storageInterval: 10 * 1000 });
 
 // Allow content types to use screenshot function
 H5P.KLScreenshot = new KLScreenshot();

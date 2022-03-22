@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.12.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.12.0..v2.11.0) (2022-03-22)
+
+
+### Features
+
+* add H5P.XRay ([837934a](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/837934a00904c8e6f4e6635f1a8f55bbb40c354e))
+* clear redis cache at startup ([5002c5c](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/5002c5cb9c3be2745a19307b697cd5cb2cb20245))
+* **H5P-342:** enable session saving feature ([193941e](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/193941e9b336f6cfbaee220d9b70af041ed8c760))
+* **H5P-530,H5P-441:** content creation validation ([841dae7](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/841dae75e6afc9fd5105809dbc5a3adf29ed884b))
+* **H5P-533:** add required H5P.Question-1.5 library ([9dcd3ff](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/9dcd3ff143a016032a277131e47819aa258926c6))
+* **H5P-98:** prevent saving if an editor field doesn't validate ([ac6291f](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/ac6291fa25b8f11982a8c734e84689757d749ad4))
+* update h5p-xapi-uploader ([4b91598](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/4b91598423ac32ff1935b498abfb2ab90d6bd558))
+
+
+### Refactor
+
+* rename audio upload to media upload ([7b0a6e1](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/7b0a6e16dd837cc74a6e3188fb5a0048deba7d85))
+
 ## [2.11.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.11.0..v2.10.0) (2022-03-10)
 
 

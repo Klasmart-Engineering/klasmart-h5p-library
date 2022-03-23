@@ -7,7 +7,18 @@
     "importance": "high",
     "options": [
       "H5P.Image 1.1"
-    ]
+    ],
+    "widget": "importantDescription",
+    "importantDescription": {
+      "description": "Please note that mobile devices support pinch zoom gestures, so this content type will deliberately not show the zoom lens on mobile devices.",
+      "floatingButton": false,
+      "l10n": {
+        "hide": "Hide",
+        "hideImportantInstructions": "Hide note",
+        "importantInstructions": "Note",
+        "showImportantInstructions": "Show note"
+      }
+    }
   },
   {
     "name": "visual",

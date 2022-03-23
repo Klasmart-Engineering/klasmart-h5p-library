@@ -2,7 +2,16 @@
   "semantics": [
     {
       "label": "Bild",
-      "description": "Zu verwendendes Bild."
+      "description": "Zu verwendendes Bild.",
+      "importantDescription": {
+        "description": "Bitte beachten: Mobilgeräte verfügen bereits über Fingergesten zum Zoomen, weshalb dieser Inhaltstyp beabsichtigt dort kein Vergrößerungsglas anzeigt.",
+        "l10n": {
+          "hide": "Schließen",
+          "hideImportantInstructions": "Hinweis schließen",
+          "importantInstructions": "Hinweis",
+          "showImportantInstructions": "Hinweis zeigen"
+        }
+      }
     },
     {
       "label": "Darstellungsoptionen",

@@ -2,7 +2,16 @@
   "semantics": [
     {
       "label": "Imagen",
-      "description": "Imagen a ser usada."
+      "description": "Imagen a ser usada.",
+      "importantDescription": {
+        "description": "Please note that mobile devices support pinch zoom gestures, so this content type will deliberately not show the zoom lens on mobile devices.",
+        "l10n": {
+          "hide": "Hide",
+          "hideImportantInstructions": "Hide note",
+          "importantInstructions": "Note",
+          "showImportantInstructions": "Show note"
+        }
+      }
     },
     {
       "label": "Configuraciones visuales",

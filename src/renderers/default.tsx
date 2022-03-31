@@ -137,6 +137,50 @@ function Editor(props: any): any {
                                 }
 
                                 /*
+                                 * Try to open tab where error occurs after
+                                 * validation.
+                                 */
+                                const openTabWithError = function(errorNode) {
+                                  const vtabForm = errorNode.closest('fieldset.h5p-vtab-form');
+                                  if (vtabForm && !vtabForm.classList.contains('h5p-current')) {
+                                    /*
+                                     * Error is in a tab that's not selected,
+                                     * determine tab's index.
+                                     */
+                                    let tabIndex = -1;
+                                    const vtabForms = vtabForm.parentNode;
+                                    for (let i = 0; vtabForms.childNodes.length; i++) {
+                                      if (vtabForm.parentNode.childNodes[i] === vtabForm) {
+                                        tabIndex = i;
+                                        break;
+                                      }
+                                    }
+
+                                    // Try to find
+                                    if (tabIndex !== -1) {
+                                      const tabs = vtabForms.parentNode.querySelectorAll('.h5p-vtabs .h5p-vtab-li');
+                                      if (tabs && tabs.length > tabIndex) {
+                                        const anchor = tabs[tabIndex].querySelector('.h5p-vtab-a');
+                                        if (anchor) {
+                                          /*
+                                           * Simulate mousedown and mouseup as
+                                           * that's what the vertical tab
+                                           * widget is listening to
+                                           */
+                                          const evtMouseDown = document.createEvent('MouseEvents');
+                                          evtMouseDown.initEvent('mousedown', true, true);
+                                          anchor.dispatchEvent(evtMouseDown);
+
+                                          const evtMouseUp = document.createEvent('MouseEvents');
+                                          evtMouseUp.initEvent('mouseup', true, true);
+                                          anchor.dispatchEvent(evtMouseUp);
+                                        }
+                                      }
+                                    }
+                                  }
+                                };
+
+                                /*
                                  * Don't proceed if H5P editor reports errors
                                  * - all error getMessages
                                  * - webm files (in existing content)
@@ -198,6 +242,7 @@ function Editor(props: any): any {
                                       }
                                     }
 
+                                    openTabWithError(emptyImages[0]);
                                     emptyImages[0].parentNode.parentNode.scrollIntoView(true);
                                     return event.preventDefault();
                                   }
@@ -228,6 +273,7 @@ function Editor(props: any): any {
                                       });
 
                                     if (actualErrorNodes.length !== 0) {
+                                      openTabWithError(actualErrorNodes[0]);
                                       actualErrorNodes[0].parentNode.scrollIntoView(true);
                                       return event.preventDefault();
                                     }

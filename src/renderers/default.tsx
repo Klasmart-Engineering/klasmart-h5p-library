@@ -220,7 +220,7 @@ function Editor(props: any): any {
                                     const actualErrorNodes = Array.from(errorNodes)
                                       .filter(node => {
                                         return (
-                                          node.innerHTML !== '' &&
+                                          node.innerText !== '' &&
                                           // Bad hack for IV
                                           !node.closest('fieldset.field-name-summary') &&
                                           !node.closest('.field.interactiveVideo')

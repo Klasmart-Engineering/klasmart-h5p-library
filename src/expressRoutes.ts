@@ -9,7 +9,7 @@ import { verifyToken } from './jwt';
 
 const requireTokenParameter: RequestHandler = async (req, res, next) => {
     try {
-        const encodedToken = req.params.token;
+        const encodedToken = req.query.token || req.params.token;
         if (typeof encodedToken !== 'string') {
             res.sendStatus(401).end();
             return;
@@ -174,20 +174,21 @@ export default function (
     }
 
     router.get(
-        '/token/:token',
+        ['/token/:token', '/action/:sub/:contentId'],
         requireTokenParameter,
         async (req: IRequestWithUser & IRequestWithLanguage, res, next) => {
+            const subject = req.params.sub || res.locals.token.sub;
+            const contentId =
+                req.params.contentId || res.locals.token.contentId;
             try {
                 if (typeof res.locals.token !== 'object') {
                     res.sendStatus(401).end();
                     return;
                 }
-                const subject = res.locals.token.sub;
                 if (typeof subject !== 'string') {
                     res.sendStatus(400).end();
                     return;
                 }
-                const { contentId } = res.locals.token;
 
                 switch (subject) {
                     case 'view':
@@ -270,20 +271,21 @@ export default function (
     );
 
     router.post(
-        '/token/:token',
+        ['/token/:token', '/action/:sub/:contentId'],
         requireTokenParameter,
         async (req: IRequestWithUser & IRequestWithLanguage, res, next) => {
+            const subject = req.params.sub || res.locals.token.sub;
+            const contentId =
+                req.params.contentId || res.locals.token.contentId;
             try {
                 if (typeof res.locals.token !== 'object') {
                     res.sendStatus(401).end();
                     return;
                 }
-                const subject = res.locals.token.sub;
                 if (typeof subject !== 'string') {
                     res.sendStatus(400).end();
                     return;
                 }
-                const { contentId } = res.locals.token;
 
                 if (
                     !req.body.params ||

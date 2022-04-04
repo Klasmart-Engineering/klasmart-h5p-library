@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.13.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.13.0..v2.12.0) (2022-04-04)
+
+
+### Features
+
+* **H5P-564:** try to open tab that validation error is hinted to ([8255dbb](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/8255dbbd94553f84c3dfa273e7da8f6a2c17a3b5))
+
+
+### Bug Fixes
+
+* **H5P-563:** fix validation of memory editor widget ([e499050](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/e499050183b4d812b422b418aae8e64d89470b74))
+
 ## [2.12.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.12.0..v2.11.0) (2022-03-22)
 
 

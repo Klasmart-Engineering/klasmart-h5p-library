@@ -55,6 +55,11 @@ if (!MEDIA_STORAGE_SERVICE_ENDPOINT) {
         `Set MEDIA_STORAGE_SERVICE_ENDPOINT environment variable for media upload functionality`
     );
 }
+const DOMAIN: string | undefined =
+    typeof process.env.DOMAIN === 'string' && process.env.DOMAIN;
+if (!DOMAIN) {
+    console.error(`DOMAIN environment variable should be defined`);
+}
 
 const start = async (): Promise<void> => {
     const useTempUploads = process.env.TEMP_UPLOADS === 'true';
@@ -140,7 +145,11 @@ const start = async (): Promise<void> => {
         h5pEditor.libraryStorage,
         h5pEditor.contentStorage,
         config,
-        { XAPI_SERVICE_ENDPOINT, MEDIA_STORAGE_SERVICE_ENDPOINT } as any,
+        {
+            XAPI_SERVICE_ENDPOINT,
+            MEDIA_STORAGE_SERVICE_ENDPOINT,
+            DOMAIN
+        } as any,
         undefined,
         (key, language) => translationFunction(key, { lng: language })
     );

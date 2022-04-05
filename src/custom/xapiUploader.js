@@ -2,8 +2,26 @@ import { MediaUploader, XapiUploader } from 'kidsloop-xapi-uploader';
 
 const h5p = window.H5P;
 const h5pIntegration = window.H5PIntegration;
+const domain = h5pIntegration?.DOMAIN;
 const xapiServiceEndpoint = h5pIntegration?.XAPI_SERVICE_ENDPOINT;
 const mediaServiceEndpoint = h5pIntegration?.MEDIA_STORAGE_SERVICE_ENDPOINT;
+
+const CLASS_ACTIVE_USER_KEY = 'CLASS_ACTIVE_USER';
+let userId = sessionStorage.getItem(CLASS_ACTIVE_USER_KEY);
+if (domain) {
+    window.addEventListener('message', (messageEvent) => {
+        if (
+            messageEvent.origin !== `https://live.${domain}` ||
+            messageEvent.data?.type !== CLASS_ACTIVE_USER_KEY
+        ) {
+            return;
+        }
+        userId = messageEvent.data.user;
+        if (userId) {
+            sessionStorage.setItem(CLASS_ACTIVE_USER_KEY, userId);
+        }
+    });
+}
 
 let liveUrl = new URL(window.location.toString());
 if (!liveUrl) {
@@ -30,10 +48,10 @@ if (xapiServiceEndpoint && typeof xapiServiceEndpoint === 'string') {
         xapiServiceEndpoint,
         liveAuthorizationToken
     );
-    h5p.externalDispatcher.on('xAPI', (event) => {
-        console.log(event);
-        Object.assign(event, { clientTimestamp: Date.now() });
-        xapiUploader.uploadEvent(JSON.stringify(event));
+    h5p.externalDispatcher.on('xAPI', (xapiEvent) => {
+        Object.assign(xapiEvent, { userId, clientTimestamp: Date.now() });
+        console.log(xapiEvent);
+        xapiUploader.uploadEvent(JSON.stringify(xapiEvent));
     });
     console.log('[xAPI Uploader] xAPI upload listener attached');
 }
@@ -43,10 +61,11 @@ if (mediaServiceEndpoint && typeof mediaServiceEndpoint === 'string') {
         mediaServiceEndpoint,
         liveAuthorizationToken
     );
-    h5p.externalDispatcher.on('exportFile', (event) => {
-        console.log('media event:', event);
+    h5p.externalDispatcher.on('exportFile', (mediaEvent) => {
+        Object.assign(mediaEvent, { userId });
+        console.log('media event:', mediaEvent);
         mediaUploader
-            .uploadMedia(event)
+            .uploadMedia(mediaEvent)
             .then(() => console.log('Media upload succeeded'))
             .catch((e) => console.error('Media upload failed', e));
     });

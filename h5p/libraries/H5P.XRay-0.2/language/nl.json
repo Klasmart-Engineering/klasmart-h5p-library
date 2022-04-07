@@ -59,6 +59,28 @@
           "default": "25%"
         },
         {
+          "label": "Mobile offset",
+          "description": "Select the offset distance between the finger touchpoint to the center of the lens. By selecting 0%, the fingertip will be placed in the center of the lens.",
+          "options": [
+            {
+              "label": "0 %"
+            },
+            {
+              "label": "25 %"
+            },
+            {
+              "label": "50 %"
+            },
+            {
+              "label": "75 %"
+            },
+            {
+              "label": "100 %"
+            }
+          ],
+          "default": "100%"
+        },
+        {
           "label": "De afbeelding donkerder maken bij het gebruik van de röntgenlens",
           "description": "Indien aangevinkt, wordt de afbeelding donkerder om het scherpstellingseffect van de röntgenlens te vergroten."
         }

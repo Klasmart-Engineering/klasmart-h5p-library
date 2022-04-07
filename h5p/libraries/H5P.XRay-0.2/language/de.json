@@ -59,6 +59,28 @@
           "default": "25%"
         },
         {
+          "label": "Mobile offset",
+          "description": "Select the offset distance between the finger touchpoint to the center of the lens. By selecting 0%, the fingertip will be placed in the center of the lens.",
+          "options": [
+            {
+              "label": "0 %"
+            },
+            {
+              "label": "25 %"
+            },
+            {
+              "label": "50 %"
+            },
+            {
+              "label": "75 %"
+            },
+            {
+              "label": "100 %"
+            }
+          ],
+          "default": "100%"
+        },
+        {
           "label": "Vordergrundbild beim Röntgen abdunkeln",
           "description": "Wenn eingestellt, wird das Vordergrundbild abgedunkelt, um den Fokussierungseffekt des Röntgens zu verstärken."
         }

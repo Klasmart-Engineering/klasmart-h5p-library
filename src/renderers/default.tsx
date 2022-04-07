@@ -180,6 +180,29 @@ function Editor(props: any): any {
                                   }
                                 };
 
+                                /**
+                                 * Open group that contains error.
+                                 * @param {HTMLElement} startNode Node to start looking at.
+                                 */
+                                const openGroupWithError = function(startNode) {
+                                  const parentGroup = startNode.closest('.field.group:not(.expanded)');
+                                  if (!parentGroup || parentGroup === startNode) {
+                                    return;
+                                  }
+
+                                  const button = parentGroup.querySelector('div[role="button"]');
+                                  if (!button) {
+                                    return;
+                                  }
+
+                                  const evtMouseClick = document.createEvent('MouseEvents');
+                                  evtMouseClick.initEvent('click', true, true);
+                                  button.dispatchEvent(evtMouseClick);
+
+                                  // Open further up...
+                                  openGroupWithError(parentGroup);
+                                }
+
                                 /*
                                  * Don't proceed if H5P editor reports errors
                                  * - all error getMessages
@@ -243,6 +266,7 @@ function Editor(props: any): any {
                                     }
 
                                     openTabWithError(emptyImages[0]);
+                                    openGroupWithError(actualErrorNodes[0]);
                                     emptyImages[0].parentNode.parentNode.scrollIntoView(true);
                                     return event.preventDefault();
                                   }
@@ -274,6 +298,7 @@ function Editor(props: any): any {
 
                                     if (actualErrorNodes.length !== 0) {
                                       openTabWithError(actualErrorNodes[0]);
+                                      openGroupWithError(actualErrorNodes[0]);
                                       actualErrorNodes[0].parentNode.scrollIntoView(true);
                                       return event.preventDefault();
                                     }

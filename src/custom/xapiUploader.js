@@ -1,4 +1,7 @@
-import { MediaUploader, XapiUploader } from 'kidsloop-xapi-uploader';
+import {
+    MediaUploader,
+    XapiUploader
+} from '@kl-engineering/kidsloop-xapi-uploader';
 
 const h5p = window.H5P;
 const h5pIntegration = window.H5PIntegration;

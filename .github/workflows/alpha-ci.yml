@@ -62,14 +62,6 @@ jobs:
       - name: Login to ap-northeast-2 Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Download task definition
+      - name: Update service
         run: |
-          aws ecs describe-task-definition --task-definition my-task-definition-family --query taskDefinition > task-definition.json
-
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: task-definition.json
-          service: kidsloop-alpha-h5p
-          cluster: kidsloop-alpha
-          wait-for-service-stability: true
+          aws ecs update-service --region ap-northeast-2 --service arn:aws:ecs:ap-northeast-2:871601235178:service/kidsloop-alpha/kidsloop-alpha-h5p --force-new-deployment --cluster kidsloop-alpha

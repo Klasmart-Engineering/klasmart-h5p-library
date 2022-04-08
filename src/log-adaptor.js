@@ -3,7 +3,7 @@
  * logger while executing commands to KL logger instances
  */
 
-const { withLogger } = require('kidsloop-nodejs-logger');
+const { withLogger } = require('@kl-engineering/kidsloop-nodejs-logger');
 
 class Logger {
     _instance;

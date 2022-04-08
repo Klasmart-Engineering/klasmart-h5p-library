@@ -1,0 +1,86 @@
+name: Alpha CI
+
+on:
+  push:
+    branches: [ alpha ]
+
+jobs:
+  docker-build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: npm
+          registry-url: https://npm.pkg.github.com/
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
+      - run: |
+          git config --global url."https://${{ secrets.PAT }}@github.com/".insteadOf ssh://git@github.com/
+          npm install
+          npm test
+          npm run build
+          npm prune --production
+
+      - name: Configure eu-west-2 AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ECR_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ECR_AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: kidsloop-h5p-service
+        run: |
+          export BRANCH_TAG=$(echo "${GITHUB_REF_NAME}" | sed -E 's/([^0-9a-zA-Z]+)/-/g' | awk '{print tolower($0)}')
+          export COMMIT_TAG=${GITHUB_SHA::7}
+          docker build -t $ECR_REPOSITORY .
+          docker run -d --name=check-startup \
+            $ECR_REPOSITORY && sleep 5 && docker logs check-startup && docker top check-startup
+          docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:$BRANCH_TAG
+          docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:$BRANCH_TAG-$COMMIT_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$BRANCH_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$BRANCH_TAG-$COMMIT_TAG
+  
+  alpha-deploy:
+    runs-on: ubuntu-latest
+    needs: docker-build-and-push
+    steps:
+      - name: Configure ap-northeast-2 AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ALPHA_DEV }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ALPHA_DEV }}
+          aws-region: ap-northeast-2
+
+      - name: Login to ap-northeast-2 Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Update service
+        run: |
+          aws ecs update-service \
+            --region ap-northeast-2 \
+            --cluster kidsloop-alpha \
+            --force-new-deployment \
+            --service arn:aws:ecs:ap-northeast-2:871601235178:service/kidsloop-alpha/kidsloop-alpha-h5p
+          aws ecs wait services-stable \
+            --cluster kidsloop-alpha \
+            --services kidsloop-alpha-h5p
+          # h5p.alpha.kidsloop.net
+          aws cloudfront create-invalidation \
+            --distribution-id "E2RNE9HGMPLWTO" \
+            --paths "/h5p/libraries/*" "/h5p/play/*"
+          # live.alpha.kidsloop.net
+          aws cloudfront create-invalidation \
+            --distribution-id "E2694SIA1FLALO" \
+            --paths "/h5p/libraries/*" "/h5p/play/*"

@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.14.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.14.0..v2.13.0) (2022-04-11)
+
+
+### Features
+
+* **H5P-509:** add global KidsLoop font ([a66ae6e](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/a66ae6e2435920319f948bc349d1c40c95de8bde))
+* **H5P-516:** make cloze width reflect solution width ([e4ba624](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/e4ba624216d928525c015bc60dd410336161c478))
+* **H5P-534:** add H5P.ImageZoom ([d66aff3](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/d66aff3ed38e271bb6caf731ece3459333ed0348))
+* **H5P-555:** use classActiveUserId for xAPI events ([21f74e7](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/21f74e7270d2a57df9b4ed85473b0a7533b81cb3))
+* **H5P-565:** add new /action/<sub>/<contentId> endpoint for improved CDN caching ([5d7f217](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/5d7f2178163addbc6e28a8e8b4a4bf9258c8d0dc))
+
+
+### Bug Fixes
+
+* **H5P-544:** prevent dragging slide when dragging image ([9b3ce97](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/9b3ce974a0bdf1846f4591740b48f2491aac82d3))
+
 ## [2.13.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.13.0..v2.12.0) (2022-04-04)
 
 

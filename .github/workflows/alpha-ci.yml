@@ -45,6 +45,8 @@ jobs:
           export BRANCH_TAG=$(echo "${GITHUB_REF_NAME}" | sed -E 's/([^0-9a-zA-Z]+)/-/g' | awk '{print tolower($0)}')
           export COMMIT_TAG=${GITHUB_SHA::7}
           docker build -t $ECR_REPOSITORY .
+          docker run -d --name=check-startup \
+            $ECR_REPOSITORY && sleep 5 && docker logs check-startup && docker top check-startup
           docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:$BRANCH_TAG
           docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:$BRANCH_TAG-$COMMIT_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$BRANCH_TAG
@@ -71,6 +73,9 @@ jobs:
             --cluster kidsloop-alpha \
             --force-new-deployment \
             --service arn:aws:ecs:ap-northeast-2:871601235178:service/kidsloop-alpha/kidsloop-alpha-h5p
+          aws ecs wait services-stable \
+            --cluster kidsloop-alpha \
+            --services kidsloop-alpha-h5p
           # h5p.alpha.kidsloop.net
           aws cloudfront create-invalidation \
             --distribution-id "E2RNE9HGMPLWTO" \

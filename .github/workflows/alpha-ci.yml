@@ -66,4 +66,16 @@ jobs:
 
       - name: Update service
         run: |
-          aws ecs update-service --region ap-northeast-2 --service arn:aws:ecs:ap-northeast-2:871601235178:service/kidsloop-alpha/kidsloop-alpha-h5p --force-new-deployment --cluster kidsloop-alpha
+          aws ecs update-service \
+            --region ap-northeast-2 \
+            --cluster kidsloop-alpha \
+            --force-new-deployment \
+            --service arn:aws:ecs:ap-northeast-2:871601235178:service/kidsloop-alpha/kidsloop-alpha-h5p
+          # h5p.alpha.kidsloop.net
+          aws cloudfront create-invalidation \
+            --distribution-id "E2RNE9HGMPLWTO" \
+            --paths "/h5p/libraries/*" "/h5p/play/*"
+          # live.alpha.kidsloop.net
+          aws cloudfront create-invalidation \
+            --distribution-id "E2694SIA1FLALO" \
+            --paths "/h5p/libraries/*" "/h5p/play/*"

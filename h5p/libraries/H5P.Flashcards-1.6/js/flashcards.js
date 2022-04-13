@@ -452,7 +452,11 @@ H5P.Flashcards = (function ($, XapiGenerator) {
       var userCorrect = isCorrectAnswer(card, userAnswer, that.options.caseSensitive);
       var done = false;
 
+<<<<<<< HEAD
+      if (userAnswer === '' && !that.isMobileLandscape()) {
+=======
       if (userAnswer === '' && !that.ismobileLandscape()) {
+>>>>>>> H5P-509 Add FontKidsLoop
         $input.focus();
       }
 

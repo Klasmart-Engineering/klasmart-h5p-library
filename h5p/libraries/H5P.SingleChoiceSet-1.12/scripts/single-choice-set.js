@@ -583,7 +583,7 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
      * Workaround for KidsLoop: iframe doesn't have a fixed height, so
      * self.$container gets it.
      */
-    self.$container.css('height', '');
+    self.$container.parent().css('height', '');
 
     var maxHeight = 0;
     self.choices.forEach(function (choice) {
@@ -593,7 +593,7 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
 
     // Set minimum height for choices
     self.$choices.css({minHeight: maxHeight + 'px'});
-    self.$container.css('height', maxHeight + 'px');
+    self.$container.parent().css('height', maxHeight + 'px');
   };
 
   /**

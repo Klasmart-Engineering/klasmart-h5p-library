@@ -91,6 +91,8 @@ H5P.Blanks = (function ($, Question) {
       submitAnswer: 'Submit',
     }, params);
 
+    this.setViewState(STATE_ONGOING);
+
     // Delete empty questions
     for (var i = this.params.questions.length - 1; i >= 0; i--) {
       if (!this.params.questions[i]) {
@@ -199,25 +201,7 @@ H5P.Blanks = (function ($, Question) {
     if (!self.params.behaviour.autoCheck && this.params.behaviour.enableCheckButton) {
       // Check answer button
       self.addButton('check-answer', self.params.checkAnswer, function () {
-        // Move focus to top of content
-        self.a11yHeader.innerHTML = self.params.a11yHeader;
-        self.a11yHeader.focus();
-
-        self.toggleButtonVisibility(STATE_CHECKING);
-        self.markResults();
-        self.showEvaluation();
-
-        // Emit screenshot
-        setTimeout(function() {
-          if (H5P && H5P.KLScreenshot) {
-            H5P.KLScreenshot.takeScreenshot(
-              self,
-              $container.get(0).querySelector('.h5p-container')
-            );
-          }
-        }, 1000); // Allow results to display
-
-        self.triggerAnswered();
+        self.handleCheckAnswer();
       }, true, {
         'aria-label': self.params.a11yCheck,
       }, {
@@ -256,7 +240,46 @@ H5P.Blanks = (function ($, Question) {
         }
       });
     }
-    self.toggleButtonVisibility(STATE_ONGOING);
+
+    self.toggleButtonVisibility(self.viewState);
+  };
+
+  /**
+   * Handle check answer.
+   * @param {object} [params] Parameters.
+   * @param {boolean} [params.skipXAPI=false] If true, will not emit xAPI.
+   */
+  Blanks.prototype.handleCheckAnswer = function (params) {
+    const self = this;
+
+    params = params || {};
+
+    // Move focus to top of content
+    self.a11yHeader.innerHTML = self.params.a11yHeader;
+    self.a11yHeader.focus();
+
+    self.setViewState(STATE_CHECKING);
+
+    self.toggleButtonVisibility(STATE_CHECKING);
+    self.markResults();
+    self.showEvaluation();
+
+    if (params.skipXAPI) {
+      // Might for instance be resuming
+      return;
+    }
+
+    // Emit screenshot
+    setTimeout(function() {
+      if (H5P && H5P.KLScreenshot) {
+        H5P.KLScreenshot.takeScreenshot(
+          self,
+          $container.get(0).querySelector('.h5p-container')
+        );
+      }
+    }, 1000); // Allow results to display
+
+    self.triggerAnswered();
   };
 
   /**
@@ -346,6 +369,7 @@ H5P.Blanks = (function ($, Question) {
           self.read((this.correct() ? self.params.answerIsCorrect : self.params.answerIsWrong).replace(':ans', answer));
           if (self.done || self.allBlanksFilledOut()) {
             // All answers has been given. Show solutions button.
+            self.setViewState(STATE_CHECKING);
             self.toggleButtonVisibility(STATE_CHECKING);
             self.showEvaluation();
             self.triggerAnswered();
@@ -645,6 +669,7 @@ H5P.Blanks = (function ($, Question) {
       return;
     }
 
+    this.setViewState(STATE_SHOWING_SOLUTION);
     this.toggleButtonVisibility(STATE_SHOWING_SOLUTION);
     this.hideSolutions();
 
@@ -693,6 +718,7 @@ H5P.Blanks = (function ($, Question) {
     this.hideSolutions();
     this.clearAnswers();
     this.removeMarkedResults();
+    this.setViewState(STATE_ONGOING);
     this.toggleButtonVisibility(STATE_ONGOING);
     this.resetGrowTextField();
     this.toggleAllInputs(true);
@@ -849,7 +875,7 @@ H5P.Blanks = (function ($, Question) {
    */
   Blanks.prototype.getxAPIResponse = function () {
     var usersAnswers = this.getCurrentState();
-    return usersAnswers.join('[,]');
+    return usersAnswers.clozesContent.join('[,]');
   };
 
   /**
@@ -956,7 +982,11 @@ H5P.Blanks = (function ($, Question) {
     this.clozes.forEach(function (cloze) {
       clozesContent.push(cloze.getUserAnswer());
     });
-    return clozesContent;
+
+    return {
+      clozesContent: clozesContent,
+      viewState: this.viewState
+    };
   };
 
   /**
@@ -965,8 +995,9 @@ H5P.Blanks = (function ($, Question) {
   Blanks.prototype.setH5PUserState = function () {
     var self = this;
     var isValidState = (this.previousState !== undefined &&
-                        this.previousState.length &&
-                        this.previousState.length === this.clozes.length);
+                        this.previousState.clozesContent &&
+                        this.previousState.clozesContent.length &&
+                        this.previousState.clozesContent.length === this.clozes.length);
 
     // Check that stored user state is valid
     if (!isValidState) {
@@ -975,7 +1006,7 @@ H5P.Blanks = (function ($, Question) {
 
     // Set input from user state
     var hasAllClozesFilled = true;
-    this.previousState.forEach(function (clozeContent, ccIndex) {
+    this.previousState.clozesContent.forEach(function (clozeContent, ccIndex) {
 
       // Register that an answer has been given
       if (clozeContent.length) {
@@ -996,9 +1027,14 @@ H5P.Blanks = (function ($, Question) {
       }
     });
 
-    if (self.params.behaviour.autoCheck && hasAllClozesFilled) {
-      self.showEvaluation();
-      self.toggleButtonVisibility(STATE_CHECKING);
+    // Set previous view state
+    this.setViewState(this.previousState.viewState);
+    if (this.previousState.viewState === STATE_CHECKING) {
+      this.handleCheckAnswer({ skipXAPI: true });
+    }
+    else if (this.previousState.viewState === STATE_SHOWING_SOLUTION) {
+      this.handleCheckAnswer({ skipXAPI: true });
+      this.showCorrectAnswers(true);
     }
   };
 
@@ -1076,4 +1112,16 @@ H5P.Blanks.parseText = function (question) {
         content: part
       });
   });
+};
+
+/**
+ * Set view state.
+ * @param {string} state View state.
+ */
+H5P.Blanks.prototype.setViewState = function (state) {
+  if (['ongoing', 'checking', 'showing-solution'].indexOf(state) === -1) {
+    return;
+  }
+
+  this.viewState = state;
 };

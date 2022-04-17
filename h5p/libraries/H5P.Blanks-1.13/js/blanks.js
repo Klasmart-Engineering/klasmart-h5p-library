@@ -1123,7 +1123,7 @@ H5P.Blanks.prototype.setViewState = function (state) {
     return;
   }
 
-  this.trigger('kllStoreSessionState');
+  this.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
 
   this.viewState = state;
 };

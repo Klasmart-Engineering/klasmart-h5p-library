@@ -1123,5 +1123,7 @@ H5P.Blanks.prototype.setViewState = function (state) {
     return;
   }
 
+  this.trigger('kllStoreSessionState');
+
   this.viewState = state;
 };

@@ -186,16 +186,16 @@ H5P.Blanks = (function ($, Question) {
     var $containerParents = $content.parents('.h5p-container');
 
     // select find container to attach dialogs to
-    var $container;
+    this.$container;
     if ($containerParents.length !== 0) {
       // use parent highest up if any
-      $container = $containerParents.last();
+      this.$container = $containerParents.last();
     }
     else if ($content.length !== 0) {
-      $container = $content;
+      this.$container = $content;
     }
     else  {
-      $container = $(document.body);
+      this.$container = $(document.body);
     }
 
     if (!self.params.behaviour.autoCheck && this.params.behaviour.enableCheckButton) {
@@ -209,7 +209,7 @@ H5P.Blanks = (function ($, Question) {
           enable: self.params.behaviour.confirmCheckDialog,
           l10n: self.params.confirmCheck,
           instance: self,
-          $parentElement: $container
+          $parentElement: self.$container
         },
         textIfSubmitting: self.params.submitAnswer,
         contentData: self.contentData,
@@ -236,7 +236,7 @@ H5P.Blanks = (function ($, Question) {
           enable: self.params.behaviour.confirmRetryDialog,
           l10n: self.params.confirmRetry,
           instance: self,
-          $parentElement: $container
+          $parentElement: self.$container
         }
       });
     }
@@ -274,7 +274,7 @@ H5P.Blanks = (function ($, Question) {
       if (H5P && H5P.KLScreenshot) {
         H5P.KLScreenshot.takeScreenshot(
           self,
-          $container.get(0).querySelector('.h5p-container')
+          self.$container.get(0).querySelector('.h5p-container')
         );
       }
     }, 1000); // Allow results to display

@@ -111,6 +111,7 @@ export default class KLStateStorer {
       params.intervalMs || KLStateStorer.STORING_INTERVAL_MS
     );
     H5P.externalDispatcher.on('xAPI', this.storePreviousState);
+    H5P.externalDispatcher.on('kllStoreSessionState', this.storePreviousState);
 
     // Store on certain events
     window.addEventListener('beforeunload', this.stopStoring, { capture: true });
@@ -125,6 +126,7 @@ export default class KLStateStorer {
   stopStateStoring() {
     clearTimeout(this.storingTimer);
     H5P.externalDispatcher.off('xAPI', this.storePreviousState);
+    H5P.externalDispatcher.off('kllStoreSessionState', this.storePreviousState);
 
     window.removeEventListener('pagehide', this.storePreviousState);
     window.removeEventListener('visibilitychange', this.storePreviousState);

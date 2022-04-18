@@ -80,8 +80,12 @@ H5P.TrueFalse = (function ($, Question) {
 
     // The radio group
     var answerGroup = new H5P.TrueFalse.AnswerGroup(domId, params.correct, params.l10n);
-    if (contentData.previousState !== undefined && contentData.previousState.answer !== undefined) {
-      answerGroup.check(contentData.previousState.answer);
+    this.previousState = (contentData && contentData.previousState) ?
+      contentData.previousState :
+      {};
+
+    if (this.previousState !== undefined && this.previousState.answer !== undefined) {
+      answerGroup.check(this.previousState.answer);
     }
     answerGroup.on('selected', function () {
       self.triggerXAPI('interacted');
@@ -130,7 +134,7 @@ H5P.TrueFalse = (function ($, Question) {
       // Show solution button
       if (params.behaviour.enableSolutionsButton === true) {
         self.addButton(Button.SHOW_SOLUTION, params.l10n.showSolutionButton, function () {
-          self.showSolutions(true);
+          self.handleShowSolution();
         }, false, {
           'aria-label': params.l10n.a11yShowSolution,
         });
@@ -139,8 +143,7 @@ H5P.TrueFalse = (function ($, Question) {
       // Check button
       if (!params.behaviour.autoCheck && params.behaviour.enableCheckButton) {
         self.addButton(Button.CHECK, params.l10n.checkAnswer, function () {
-          checkAnswer();
-          triggerXAPIAnswered();
+          self.handleCheckAnswer();
         }, true, {
           'aria-label': params.l10n.a11yCheck
         }, {
@@ -339,6 +342,15 @@ H5P.TrueFalse = (function ($, Question) {
 
       // ... and buttons
       registerButtons();
+
+      this.setViewState(this.previousState.viewState || 'task');
+      if (this.viewState === 'results') {
+        this.handleCheckAnswer({ skipXAPI: true });
+      }
+      else if (this.viewState === 'solutions') {
+        this.handleCheckAnswer({ skipXAPI: true });
+        this.handleShowSolution();
+      }
     };
 
     /**
@@ -349,7 +361,10 @@ H5P.TrueFalse = (function ($, Question) {
      * @returns {object} object containing answer
      */
     self.getCurrentState = function () {
-      return {answer: answerGroup.getAnswer()};
+      return {
+        answer: answerGroup.getAnswer(),
+        viewState: this.viewState
+      };
     };
 
     /**
@@ -420,6 +435,8 @@ H5P.TrueFalse = (function ($, Question) {
      * @public
      */
     self.resetTask = function () {
+      this.setViewState('task');
+
       answerGroup.reset();
       self.removeFeedback();
       toggleButtonState(State.ONGOING);
@@ -482,11 +499,54 @@ H5P.TrueFalse = (function ($, Question) {
       }
       xAPIEvent.data.statement.result.response = currentResponse;
     };
+
+    /**
+     * Handle the evaluation.
+     * @param {object} [params = {}] Parameters.
+     * @param {boolean} [params.skipXAPI = false] If true, don't trigger xAPI.
+     */
+    self.handleCheckAnswer = function(params) {
+      params = params || {};
+
+      this.setViewState('results');
+
+      checkAnswer();
+
+      if (!params.skipXAPI) {
+        triggerXAPIAnswered();
+      }
+    };
+
+    /**
+     * Handle show solution.
+     */
+    self.handleShowSolution = function() {
+      this.setViewState('solutions');
+      this.showSolutions(true);
+    };
+
+    /**
+     * Set view state.
+     * @param {string} state View state.
+     */
+    self.setViewState = function (state) {
+      if (TrueFalse.VIEW_STATES.indexOf(state) === -1) {
+        return;
+      }
+
+      // Kidsloop Live session storage will listen
+      this.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
+
+      this.viewState = state;
+    };
    }
 
   // Inheritance
   TrueFalse.prototype = Object.create(Question.prototype);
   TrueFalse.prototype.constructor = TrueFalse;
+
+  /** @constant {string[]} view state names*/
+  TrueFalse.VIEW_STATES = ['task', 'results', 'solutions'];
 
   return TrueFalse;
 })(H5P.jQuery, H5P.Question);

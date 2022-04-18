@@ -480,6 +480,15 @@ H5P.MultiChoice = function (options, contentId, contentData) {
         self.showCheckSolution(true);
       }
     }
+
+    this.setViewState(this.previousState.viewState || 'task');
+    if (this.viewState === 'results') {
+      this.handleCheckAnswer({ skipXAPI: true });
+    }
+    else if (this.viewState === 'solutions') {
+      this.handleCheckAnswer({ skipXAPI: true });
+      this.handleShowSolution();
+    }
   };
 
   this.showAllSolutions = function () {
@@ -568,6 +577,8 @@ H5P.MultiChoice = function (options, contentId, contentData) {
    * @private
    */
   this.resetTask = function () {
+    this.setViewState('task');
+
     self.answered = false;
     instances = [];
     instancesToLoad = params.answers.length;
@@ -603,9 +614,13 @@ H5P.MultiChoice = function (options, contentId, contentData) {
   };
 
   /**
-   * Check answer
+   * Check answer.
+   * @param {object} [options = {}] Parameters.
+   * @param {boolean} [options.skipXAPI = false] If true, don't trigger xAPI.
    */
-  var checkAnswer = function () {
+  var checkAnswer = function (options) {
+    options = options || {};
+
     // Unbind removal of feedback dialogs on click
     $myDom.unbind('click', removeFeedbackDialog);
 
@@ -623,10 +638,12 @@ H5P.MultiChoice = function (options, contentId, contentData) {
     self.showCheckSolution();
     disableInput();
 
-    var xAPIEvent = self.createXAPIEventTemplate('answered');
-    addQuestionToXAPI(xAPIEvent);
-    addResponseToXAPI(xAPIEvent);
-    self.trigger(xAPIEvent);
+    if (!options.skipXAPI) {
+      var xAPIEvent = self.createXAPIEventTemplate('answered');
+      addQuestionToXAPI(xAPIEvent);
+      addResponseToXAPI(xAPIEvent);
+      self.trigger(xAPIEvent);
+    }
   };
 
   /**
@@ -661,17 +678,7 @@ H5P.MultiChoice = function (options, contentId, contentData) {
 
     // Show solution button
     self.addButton('show-solution', params.UI.showSolutionButton, function () {
-
-      if (params.behaviour.showSolutionsRequiresInput && !isAnswerSelected()) {
-        // Require answer before solution can be viewed
-        self.updateFeedbackContent(params.UI.noInput);
-        self.read(params.UI.noInput);
-      }
-      else {
-        calcScore();
-        self.showAllSolutions();
-      }
-
+      self.handleShowSolution();
     }, false, {
       'aria-label': params.UI.a11yShowSolution,
     });
@@ -680,9 +687,7 @@ H5P.MultiChoice = function (options, contentId, contentData) {
     if (params.behaviour.enableCheckButton && (!params.behaviour.autoCheck || !params.behaviour.singleAnswer)) {
       self.addButton('check-answer', params.UI.checkAnswerButton,
         function () {
-          self.answered = true;
-          muteInstances();
-          checkAnswer();
+          self.handleCheckAnswer();
         },
         true,
         {
@@ -1426,21 +1431,21 @@ H5P.MultiChoice = function (options, contentId, contentData) {
   // Start with an empty set of user answers.
   params.userAnswers = [];
 
-  // Restore previous state
-  if (contentData && contentData.previousState !== undefined) {
+  this.previousState = (contentData && contentData.previousState) ?
+    contentData.previousState :
+    {};
 
-    // Restore answers
-    if (contentData.previousState.answers) {
-      if (!idMap) {
-        params.userAnswers = contentData.previousState.answers;
-      }
-      else {
-        // The answers have been shuffled, and we must use the id mapping.
-        for (i = 0; i < contentData.previousState.answers.length; i++) {
-          for (var k = 0; k < idMap.length; k++) {
-            if (idMap[k] === contentData.previousState.answers[i]) {
-              params.userAnswers.push(k);
-            }
+  // Restore answers
+  if (this.previousState.answers) {
+    if (!idMap) {
+      params.userAnswers = this.previousState.answers;
+    }
+    else {
+      // The answers have been shuffled, and we must use the id mapping.
+      for (i = 0; i < this.previousState.answers.length; i++) {
+        for (var k = 0; k < idMap.length; k++) {
+          if (idMap[k] === this.previousState.answers[i]) {
+            params.userAnswers.push(k);
           }
         }
       }
@@ -1513,6 +1518,9 @@ H5P.MultiChoice = function (options, contentId, contentData) {
         state.answers.push(idMap[params.userAnswers[i]]);
       }
     }
+
+    state.viewState = this.viewState;
+
     return state;
   };
 
@@ -1534,7 +1542,55 @@ H5P.MultiChoice = function (options, contentId, contentData) {
   this.getTitle = function () {
     return H5P.createTitle((this.contentData && this.contentData.metadata && this.contentData.metadata.title) ? this.contentData.metadata.title : 'Multiple Choice');
   };
+
+  /**
+   * Handle the evaluation.
+   * @param {object} [options] Parameters.
+   * @param {boolean} [options.skipXAPI = false] If true, don't trigger xAPI.
+   */
+  this.handleCheckAnswer = function (options) {
+    this.setViewState('results');
+
+    this.answered = true;
+    muteInstances();
+    checkAnswer(options);
+  };
+
+  /**
+   * Handle show solutions.
+   */
+  this.handleShowSolution = function () {
+    this.setViewState('solutions');
+
+    if (params.behaviour.showSolutionsRequiresInput && !isAnswerSelected()) {
+      // Require answer before solution can be viewed
+      this.updateFeedbackContent(params.UI.noInput);
+      this.read(params.UI.noInput);
+    }
+    else {
+      calcScore();
+      this.showAllSolutions();
+    }
+  };
+
+  /**
+   * Set view state.
+   * @param {string} state View state.
+   */
+  this.setViewState = function (state) {
+    if (H5P.MultiChoice.VIEW_STATES.indexOf(state) === -1) {
+      return;
+    }
+
+    // Kidsloop Live session storage will listen
+    this.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
+
+    this.viewState = state;
+  };
 };
 
 H5P.MultiChoice.prototype = Object.create(H5P.Question.prototype);
 H5P.MultiChoice.prototype.constructor = H5P.MultiChoice;
+
+/** @constant {string[]} view state names*/
+H5P.MultiChoice.VIEW_STATES = ['task', 'results', 'solutions'];

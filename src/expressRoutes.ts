@@ -174,7 +174,7 @@ export default function (
     }
 
     router.get(
-        ['/token/:token', '/action/:sub/:contentId'],
+        ['/token/:token', '/action/:sub/:contentId?'],
         requireTokenParameter,
         async (req: IRequestWithUser & IRequestWithLanguage, res, next) => {
             const subject = req.params.sub || res.locals.token.sub;
@@ -271,7 +271,7 @@ export default function (
     );
 
     router.post(
-        ['/token/:token', '/action/:sub/:contentId'],
+        ['/token/:token', '/action/:sub/:contentId?'],
         requireTokenParameter,
         async (req: IRequestWithUser & IRequestWithLanguage, res, next) => {
             const subject = req.params.sub || res.locals.token.sub;

@@ -6,23 +6,6 @@ const domain = h5pIntegration?.DOMAIN;
 const xapiServiceEndpoint = h5pIntegration?.XAPI_SERVICE_ENDPOINT;
 const mediaServiceEndpoint = h5pIntegration?.MEDIA_STORAGE_SERVICE_ENDPOINT;
 
-const CLASS_ACTIVE_USER_KEY = 'CLASS_ACTIVE_USER';
-let userId = sessionStorage.getItem(CLASS_ACTIVE_USER_KEY);
-if (domain) {
-    window.addEventListener('message', (messageEvent) => {
-        if (
-            messageEvent.origin !== `https://live.${domain}` ||
-            messageEvent.data?.type !== CLASS_ACTIVE_USER_KEY
-        ) {
-            return;
-        }
-        userId = messageEvent.data.user;
-        if (userId) {
-            sessionStorage.setItem(CLASS_ACTIVE_USER_KEY, userId);
-        }
-    });
-}
-
 let liveUrl = new URL(window.location.toString());
 if (!liveUrl) {
     try {
@@ -36,6 +19,25 @@ if (!liveUrl) {
     }
 }
 const liveAuthorizationToken = liveUrl?.searchParams?.get('token');
+let userId = liveUrl?.searchParams?.get('userId');
+console.log(`[xAPI Uploader] userId from url: ${userId}`);
+if (!userId) {
+    console.log(`[xAPI Uploader] liveUrl: ${liveUrl}`);
+}
+
+// Detect the currently selected user.
+// https://github.com/KL-Engineering/kidsloop-live-frontend/blob/main/src/components/interactiveContent/InteractionRecorder.tsx
+if (domain) {
+    window.addEventListener('message', (messageEvent) => {
+        if (
+            messageEvent.origin !== `https://live.${domain}` ||
+            messageEvent.data?.type !== 'CLASS_ACTIVE_USER'
+        ) {
+            return;
+        }
+        userId = messageEvent.data.user;
+    });
+}
 
 if (!h5p) {
     console.error('[xAPI Uploader] Could not locate H5P');
@@ -49,6 +51,7 @@ if (xapiServiceEndpoint && typeof xapiServiceEndpoint === 'string') {
         liveAuthorizationToken
     );
     h5p.externalDispatcher.on('xAPI', (xapiEvent) => {
+        userId ||= undefined;
         Object.assign(xapiEvent, { userId, clientTimestamp: Date.now() });
         console.log(xapiEvent);
         xapiUploader.uploadEvent(JSON.stringify(xapiEvent));
@@ -62,6 +65,7 @@ if (mediaServiceEndpoint && typeof mediaServiceEndpoint === 'string') {
         liveAuthorizationToken
     );
     h5p.externalDispatcher.on('exportFile', (mediaEvent) => {
+        userId ||= undefined;
         Object.assign(mediaEvent, { userId });
         console.log('media event:', mediaEvent);
         mediaUploader

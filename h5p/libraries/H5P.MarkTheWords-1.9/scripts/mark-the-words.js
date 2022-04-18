@@ -52,9 +52,9 @@ H5P.MarkTheWords = (function ($, Question, Word, KeyboardNav, XapiGenerator) {
     }, params);
 
     this.contentData = contentData;
-    if (this.contentData !== undefined && this.contentData.previousState !== undefined) {
-      this.previousState = this.contentData.previousState;
-    }
+    this.previousState = (this.contentData && this.contentData.previousState) ?
+      this.contentData.previousState :
+      {};
 
     this.keyboardNavigators = [];
 
@@ -72,9 +72,6 @@ H5P.MarkTheWords = (function ($, Question, Word, KeyboardNav, XapiGenerator) {
     this.$inner = $('<div class="h5p-word-inner"></div>');
 
     this.addTaskTo(this.$inner);
-
-    // Set user state
-    this.setH5PUserState();
   };
 
   /**
@@ -277,6 +274,36 @@ H5P.MarkTheWords = (function ($, Question, Word, KeyboardNav, XapiGenerator) {
   };
 
   /**
+   * Wait for ARIA field to be present.
+   * @param {function} callback Callback function.
+   */
+  MarkTheWords.prototype.waitForARIA = function (callback, interval, tries) {
+    const that = this;
+
+    if (tries < 0) {
+      return;
+    }
+
+    if (typeof tries !== 'number') {
+      tries = 10;
+    }
+
+    if (typeof interval !== 'number' || interval < 100) {
+      interval = 100;
+    }
+
+    if (this.a11yClickableTextLabel) {
+      callback();
+      return;
+    }
+
+    clearTimeout(this.waitForButtonsTimeout);
+    this.waitForARIATimeout = setTimeout(function () {
+      that.waitForARIA(callback, interval, tries - 1);
+    }, interval);
+  };
+
+  /**
    * Wait for H5P.Question buttons to be present.
    * @param {function} callback Callback function.
    */
@@ -317,26 +344,7 @@ H5P.MarkTheWords = (function ($, Question, Word, KeyboardNav, XapiGenerator) {
 
     if (this.params.behaviour.enableCheckButton) {
       this.addButton('check-answer', this.params.checkAnswerButton, function () {
-        self.isAnswered = true;
-        var answers = self.calculateScore();
-        self.feedbackSelectedWords();
-
-        if (!self.showEvaluation(answers)) {
-          // Only show if a correct answer was not found.
-          if (self.params.behaviour.enableSolutionsButton && (answers.correct < self.answers)) {
-            self.showButton('show-solution');
-          }
-          if (self.params.behaviour.enableRetry) {
-            self.showButton('try-again');
-          }
-        }
-        // Set focus to start of text
-        self.$a11yClickableTextLabel.html(self.params.a11yCheckingHeader + ' - ' + self.params.a11yClickableTextLabel);
-        self.$a11yClickableTextLabel.focus();
-
-        self.hideButton('check-answer');
-        self.trigger(self.XapiGenerator.generateAnsweredEvent());
-        self.toggleSelectable(true);
+        self.handleCheckAnswer();
       }, true, {
         'aria-label': this.params.a11yCheck,
       });
@@ -347,22 +355,75 @@ H5P.MarkTheWords = (function ($, Question, Word, KeyboardNav, XapiGenerator) {
     });
 
     this.addButton('show-solution', this.params.showSolutionButton, function () {
-      self.setAllMarks();
-
-      self.$a11yClickableTextLabel.html(self.params.a11ySolutionModeHeader + ' - ' + self.params.a11yClickableTextLabel);
-      self.$a11yClickableTextLabel.focus();
-
-      if (self.params.behaviour.enableRetry) {
-        self.showButton('try-again');
-      }
-      self.hideButton('check-answer');
-      self.hideButton('show-solution');
-
-      self.read(self.params.displaySolutionDescription);
-      self.toggleSelectable(true);
+      self.handleShowSolutions();
     }, false, {
       'aria-label': this.params.a11yShowSolution,
     });
+  };
+
+  /**
+   * Handle the evaluation.
+   * @param {object} [params = {}] Parameters.
+   * @param {boolean} [params.skipXAPI = false] If true, don't trigger xAPI.
+   */
+  MarkTheWords.prototype.handleCheckAnswer = function (params) {
+    const self = this;
+
+    params = params || {};
+
+    this.setViewState('results');
+
+    this.isAnswered = true;
+    var answers = this.calculateScore();
+    this.feedbackSelectedWords();
+
+    if (!this.showEvaluation(answers)) {
+      // Only show if a correct answer was not found.
+      if (this.params.behaviour.enableSolutionsButton && (answers.correct < this.answers)) {
+        this.showButton('show-solution');
+      }
+      if (this.params.behaviour.enableRetry) {
+        this.showButton('try-again');
+      }
+    }
+
+    self.waitForARIA(function () {
+      self.$a11yClickableTextLabel.html(self.params.a11yCheckingHeader + ' - ' + self.params.a11yClickableTextLabel);
+      self.$a11yClickableTextLabel.focus();
+    });
+
+    this.hideButton('check-answer');
+
+    if (!params.skipXAPI) {
+      this.trigger(this.XapiGenerator.generateAnsweredEvent());
+    }
+
+    this.toggleSelectable(true);
+  };
+
+  /**
+   * Handle show solutions.
+   */
+  MarkTheWords.prototype.handleShowSolutions = function () {
+    const self = this;
+
+    this.setViewState('solutions');
+
+    this.setAllMarks();
+
+    this.waitForARIA(function () {
+      self.$a11yClickableTextLabel.html(self.params.a11ySolutionModeHeader + ' - ' + self.params.a11yClickableTextLabel);
+      self.$a11yClickableTextLabel.focus();
+    });
+
+    if (this.params.behaviour.enableRetry) {
+      this.showButton('try-again');
+    }
+    this.hideButton('check-answer');
+    this.hideButton('show-solution');
+
+    this.read(this.params.displaySolutionDescription);
+    this.toggleSelectable(true);
   };
 
   /**
@@ -604,13 +665,20 @@ H5P.MarkTheWords = (function ($, Question, Word, KeyboardNav, XapiGenerator) {
    * @see {@link https://h5p.org/documentation/developers/contracts|Needed for contracts.}
    */
   MarkTheWords.prototype.resetTask = function () {
+    const that = this;
+
+    this.setViewState('task');
+
     this.isAnswered = false;
     this.clearAllMarks();
     this.hideEvaluation();
     this.hideButton('try-again');
     this.hideButton('show-solution');
     this.showButton('check-answer');
-    this.$a11yClickableTextLabel.html(this.params.a11yClickableTextLabel);
+
+    this.waitForARIA(function () {
+      self.$a11yClickableTextLabel.html(self.params.a11yClickableTextLabel);
+    });
 
     this.toggleSelectable(false);
     this.trigger('resize');
@@ -633,7 +701,11 @@ H5P.MarkTheWords = (function ($, Question, Word, KeyboardNav, XapiGenerator) {
         selectedWordsIndexes.push(swIndex);
       }
     });
-    return selectedWordsIndexes;
+
+    return {
+      selectedWordsIndexes: selectedWordsIndexes,
+      viewState: this.viewState
+    };
   };
 
   /**
@@ -642,18 +714,26 @@ H5P.MarkTheWords = (function ($, Question, Word, KeyboardNav, XapiGenerator) {
   MarkTheWords.prototype.setH5PUserState = function () {
     var self = this;
 
-    // Do nothing if user state is undefined
-    if (this.previousState === undefined || this.previousState.length === undefined) {
+    if (!this.previousState) {
       return;
     }
 
     // Select words from user state
-    this.previousState.forEach(function (answeredWordIndex) {
+    (this.previousState.selectedWordsIndexes || []).forEach(function (answeredWordIndex) {
       if (isNaN(answeredWordIndex) || answeredWordIndex >= self.selectableWords.length || answeredWordIndex < 0) {
         throw new Error('Stored user state is invalid');
       }
       self.selectableWords[answeredWordIndex].setSelected();
     });
+
+    this.setViewState(this.previousState.viewState || 'task');
+    if (this.viewState === 'results') {
+      this.handleCheckAnswer({ skipXAPI: true });
+    }
+    else if (this.viewState === 'solutions') {
+      this.handleCheckAnswer({ skipXAPI: true });
+      this.handleShowSolutions();
+    }
   };
 
   /**
@@ -662,6 +742,8 @@ H5P.MarkTheWords = (function ($, Question, Word, KeyboardNav, XapiGenerator) {
    * @see {@link https://github.com/h5p/h5p-question/blob/1558b6144333a431dd71e61c7021d0126b18e252/scripts/question.js#L1236|Called from H5P.Question}
    */
   MarkTheWords.prototype.registerDomElements = function () {
+    const self = this;
+
     // wrap introduction in div with id
     var introduction = '<div id="' + this.introductionId + '">' + this.params.taskDescription + '</div>';
 
@@ -678,7 +760,12 @@ H5P.MarkTheWords = (function ($, Question, Word, KeyboardNav, XapiGenerator) {
 
     // Register buttons
     this.addButtons();
+
+    // Set user state
+    self.setH5PUserState();
   };
+
+  // MarkTheWords.prototype.
 
   /**
    * Creates dom with description to be used with aria-describedby
@@ -836,3 +923,21 @@ H5P.MarkTheWords.parseText = function (question) {
       }, printableQuestion)
   };
 };
+
+/**
+ * Set view state.
+ * @param {string} state View state.
+ */
+H5P.MarkTheWords.prototype.setViewState = function (state) {
+  if (H5P.MarkTheWords.VIEW_STATES.indexOf(state) === -1) {
+    return;
+  }
+
+  // Kidsloop Live session storage will listen
+  this.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
+
+  this.viewState = state;
+};
+
+/** @constant {string[]} view state names*/
+H5P.MarkTheWords.VIEW_STATES = ['task', 'results', 'solutions'];

@@ -20,6 +20,10 @@ if (!liveUrl) {
 }
 const liveAuthorizationToken = liveUrl?.searchParams?.get('token');
 let userId = liveUrl?.searchParams?.get('userId');
+console.log(`[xAPI Uploader] userId from url: ${userId}`);
+if (!userId) {
+    console.log(`[xAPI Uploader] liveUrl: ${liveUrl}`);
+}
 
 // Detect the currently selected user.
 // https://github.com/KL-Engineering/kidsloop-live-frontend/blob/main/src/components/interactiveContent/InteractionRecorder.tsx

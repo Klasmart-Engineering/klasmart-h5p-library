@@ -47,7 +47,6 @@ if (xapiServiceEndpoint && typeof xapiServiceEndpoint === 'string') {
         liveAuthorizationToken
     );
     h5p.externalDispatcher.on('xAPI', (xapiEvent) => {
-        userId ||= undefined;
         Object.assign(xapiEvent, { userId, clientTimestamp: Date.now() });
         console.log(xapiEvent);
         xapiUploader.uploadEvent(JSON.stringify(xapiEvent));
@@ -61,7 +60,6 @@ if (mediaServiceEndpoint && typeof mediaServiceEndpoint === 'string') {
         liveAuthorizationToken
     );
     h5p.externalDispatcher.on('exportFile', (mediaEvent) => {
-        userId ||= undefined;
         Object.assign(mediaEvent, { userId });
         console.log('media event:', mediaEvent);
         mediaUploader

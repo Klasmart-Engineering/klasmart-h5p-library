@@ -118,6 +118,11 @@ H5P.Essay = function ($, Question) {
 
     this.solution = this.buildSolution();
 
+    // Re-create score
+    if (typeof this.previousState === 'object' && Object.keys(this.previousState).length) {
+      this.updateScore();
+    }
+
     // Needs extra resize when DOM is attached
     this.on('domChanged', function () {
       const that = this;
@@ -184,6 +189,30 @@ H5P.Essay = function ($, Question) {
       })
     });
 
+    this.setViewState(this.previousState && this.previousState.viewState || 'task');
+    if (this.viewState === 'results') {
+      // Need to wait until DOM is ready for us
+      H5P.externalDispatcher.on('initialized', function () {
+        that.handleCheckAnswer({ skipXAPI: true });
+      });
+    }
+    else if (this.viewState === 'solutions') {
+      // Need to wait until DOM is ready for us
+      H5P.externalDispatcher.on('initialized', function () {
+        that.handleCheckAnswer({ skipXAPI: true });
+        that.showSolutions();
+        // We need the retry button if the mastering score has not been reached or scoring is irrelevant
+        if (that.getScore() < that.getMaxScore() || that.params.behaviour.ignoreScoring || that.getMaxScore() === 0) {
+          if (that.params.behaviour.enableRetry) {
+            that.showButton('try-again');
+          }
+        }
+        else {
+          that.hideButton('try-again');
+        }
+      });
+    }
+
     // Register task introduction text
     this.setIntroduction(this.inputField.getIntroduction());
 
@@ -213,27 +242,7 @@ H5P.Essay = function ($, Question) {
 
     // Check answer button
     that.addButton('check-answer', that.params.checkAnswer, function () {
-      // Show message if the minimum number of characters has not been met
-      if (that.inputField.getText().length < that.params.behaviour.minimumLength) {
-        const message = that.params.notEnoughChars.replace(/@chars/g, that.params.behaviour.minimumLength);
-        that.inputField.setMessageChars(message, true);
-        that.read(message);
-        return;
-      }
-
-      that.inputField.disable();
-      /*
-       * Only set true on "check". Result computation may take some time if
-       * there are many keywords due to the fuzzy match checking, so it's not
-       * a good idea to do this while typing.
-       */
-      that.isAnswered = true;
-      that.handleEvaluation();
-
-      if (that.params.behaviour.enableSolutionsButton === true) {
-        that.showButton('show-solution');
-      }
-      that.hideButton('check-answer');
+      that.handleCheckAnswer();
     }, this.params.behaviour.enableCheckButton, {
       'aria-label': this.params.ariaCheck
     }, {});
@@ -247,6 +256,43 @@ H5P.Essay = function ($, Question) {
   };
 
   /**
+   * Handle the evaluation.
+   * @param {object} [params = {}] Parameters.
+   * @param {boolean} [params.skipXAPI = false] If true, don't trigger xAPI.
+   */
+  Essay.prototype.handleCheckAnswer = function (params) {
+    const that = this;
+
+    params = Essay.extend({
+      skipXAPI: false
+    }, params);
+
+    // Show message if the minimum number of characters has not been met
+    if (that.inputField.getText().length < that.params.behaviour.minimumLength) {
+      const message = that.params.notEnoughChars.replace(/@chars/g, that.params.behaviour.minimumLength);
+      that.inputField.setMessageChars(message, true);
+      that.read(message);
+      return;
+    }
+
+    that.setViewState('results');
+
+    that.inputField.disable();
+    /*
+     * Only set true on "check". Result computation may take some time if
+     * there are many keywords due to the fuzzy match checking, so it's not
+     * a good idea to do this while typing.
+     */
+    that.isAnswered = true;
+    that.handleEvaluation(params);
+
+    if (that.params.behaviour.enableSolutionsButton === true) {
+      that.showButton('show-solution');
+    }
+    that.hideButton('check-answer');
+  };
+
+  /**
    * Get the user input from DOM.
    * @param {string} [linebreakReplacement=' '] Replacement for line breaks.
    * @return {string} Cleaned input.
@@ -254,8 +300,15 @@ H5P.Essay = function ($, Question) {
   Essay.prototype.getInput = function (linebreakReplacement) {
     linebreakReplacement = linebreakReplacement || ' ';
 
-    return this.inputField
-      .getText()
+    let userText = '';
+    if (this.inputField) {
+      userText = this.inputField.getText();
+    }
+    else if (this.previousState && this.previousState.inputField) {
+      userText = this.previousState.inputField;
+    }
+
+    return userText
       .replace(/(\r\n|\r|\n)/g, linebreakReplacement)
       .replace(/\s\s/g, ' ');
   };
@@ -312,21 +365,27 @@ H5P.Essay = function ($, Question) {
    * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-4}
    */
   Essay.prototype.showSolutions = function () {
-    // We add the sample solution here to make cheating at least a little more difficult
-    if (this.solution.getElementsByClassName(SOLUTION_SAMPLE)[0].children.length === 0) {
-      const text = document.createElement('div');
-      text.classList.add(SOLUTION_SAMPLE_TEXT);
-      text.innerHTML = this.params.solution.sample;
-      this.solution.getElementsByClassName(SOLUTION_SAMPLE)[0].appendChild(text);
+    this.setViewState('solutions');
+
+    this.inputField.disable();
+
+    if (typeof this.params.solution.sample !== 'undefined' && this.params.solution.sample !== '') {
+      // We add the sample solution here to make cheating at least a little more difficult
+      if (this.solution.getElementsByClassName(SOLUTION_SAMPLE)[0].children.length === 0) {
+        const text = document.createElement('div');
+        text.classList.add(SOLUTION_SAMPLE_TEXT);
+        text.innerHTML = this.params.solution.sample;
+        this.solution.getElementsByClassName(SOLUTION_SAMPLE)[0].appendChild(text);
+      }
+
+      // Insert solution after explanations or content.
+      const predecessor = this.content.parentNode;
+
+      predecessor.parentNode.insertBefore(this.solution, predecessor.nextSibling);
+
+      // Useful for accessibility, but seems to jump to wrong position on some Safari versions
+      this.solutionAnnouncer.focus();
     }
-
-    // Insert solution after explanations or content.
-    const predecessor = this.content.parentNode;
-
-    predecessor.parentNode.insertBefore(this.solution, predecessor.nextSibling);
-
-    // Useful for accessibility, but seems to jump to wrong position on some Safari versions
-    this.solutionAnnouncer.focus();
 
     this.hideButton('show-solution');
 
@@ -344,6 +403,8 @@ H5P.Essay = function ($, Question) {
    * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-5}
    */
   Essay.prototype.resetTask = function () {
+    this.setViewState('task');
+
     this.setExplanation();
     this.removeFeedback();
     this.hideSolution();
@@ -392,8 +453,14 @@ H5P.Essay = function ($, Question) {
 
   /**
    * Handle the evaluation.
+   * @param {object} [params = {}] Parameters.
+   * @param {boolean} [params.skipXAPI = false] If true, don't trigger xAPI.
    */
-  Essay.prototype.handleEvaluation = function () {
+  Essay.prototype.handleEvaluation = function (params) {
+    params = Essay.extend({
+      skipXAPI: false
+    }, params);
+
     const results = this.computeResults();
 
     // Build explanations
@@ -422,7 +489,10 @@ H5P.Essay = function ($, Question) {
     this.handleButtons(this.getScore());
 
     // Trigger xAPI statements as necessary
-    this.handleXAPI();
+    if (!params.skipXAPI) {
+      // Trigger xAPI statements as necessary
+      this.handleXAPI();
+    }
 
     this.trigger('resize');
   };
@@ -955,12 +1025,32 @@ H5P.Essay = function ($, Question) {
    * @return {Object} Current state.
    */
   Essay.prototype.getCurrentState = function () {
+    if (!this.inputField) {
+      return; // may not be attached to the DOM yet
+    }
+
     this.inputField.updateMessageSaved(this.params.messageSave);
 
     // We could have just used a string, but you never know when you need to store more parameters
     return {
-      'inputField': this.inputField.getText()
+      'inputField': this.inputField.getText(),
+      viewState: this.viewState
     };
+  };
+
+  /**
+   * Set view state.
+   * @param {string} state View state.
+   */
+  Essay.prototype.setViewState = function (state) {
+    if (Essay.VIEW_STATES.indexOf(state) === -1) {
+      return;
+    }
+
+    // Kidsloop Live session storage will listen
+    this.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
+
+    this.viewState = state;
   };
 
   /** @constant {string}
@@ -983,6 +1073,9 @@ H5P.Essay = function ($, Question) {
 
   /** @constant {string} */
   Essay.REGULAR_EXPRESSION_ASTERISK = ':::H5P-Essay-REGEXP-ASTERISK:::';
+
+  /** @constant {string[]} view state names*/
+  Essay.VIEW_STATES = ['task', 'results', 'solutions'];
 
   return Essay;
 }(H5P.jQuery, H5P.Question);

@@ -9,7 +9,7 @@ import { verifyToken } from './jwt';
 
 const requireTokenParameter: RequestHandler = async (req, res, next) => {
     try {
-        const encodedToken = req.query.token || req.params.token;
+        const encodedToken = req.query.h5ptoken || req.params.token;
         if (typeof encodedToken !== 'string') {
             res.sendStatus(401).end();
             return;

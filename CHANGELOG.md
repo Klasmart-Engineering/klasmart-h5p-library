@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.14.2](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.14.2..v2.14.1) (2022-04-20)
+
+
+### Bug Fixes
+
+* media uploads over 64kb fail ([46b1490](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/46b149061af303f32e8082b535e10bc12642f75e))
+
 ### [2.14.1](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.14.1..v2.14.0) (2022-04-20)
 
 

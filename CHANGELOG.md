@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.14.1](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.14.1..v2.14.0) (2022-04-20)
+
+
+### Bug Fixes
+
+* **H5P-618:** flashcards method doesn't exist error ([f90ab3c](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/f90ab3c88a4f907308d0daf1abb1928e229e1134))
+
 ## [2.14.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.14.0..v2.13.0) (2022-04-11)
 
 

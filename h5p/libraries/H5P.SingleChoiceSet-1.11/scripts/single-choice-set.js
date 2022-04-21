@@ -232,13 +232,32 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
     setTimeout(function() {
       if (H5P && H5P.KLScreenshot) {
         H5P.KLScreenshot.takeScreenshot(
-          self,
+          {
+            subContentId: self.options.choices[index].subContentId,
+            getTitle: () => {
+              return self
+                .stripHTML(self.options.choices[index].question)
+                .replace('\n', '') || self.getTitle();
+            },
+            trigger: self.trigger
+          },
           self.$container.get(0)
         );
       }
     }, 1000); // Allow results to display
 
     self.continue();
+  };
+
+  /**
+   * Retrieve string without HTML tags.
+   * @param {string} input Input string.
+   * @return {string} Output string.
+   */
+  SingleChoiceSet.prototype.stripHTML = function(html) {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.textContent || div.innerText || '';
   };
 
   /**

@@ -54,6 +54,9 @@
       "label": "Kysymyksien enimmäismäärä"
     },
     {
+      "label": "Subcontent ids"
+    },
+    {
       "label": "Käyttöliittymän omat tekstit",
       "fields": [
         {

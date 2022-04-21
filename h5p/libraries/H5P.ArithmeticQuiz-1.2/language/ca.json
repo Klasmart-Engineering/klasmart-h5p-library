@@ -54,6 +54,9 @@
       "label": "Nombre màxim de preguntes"
     },
     {
+      "label": "Subcontent ids"
+    },
+    {
       "label": "Traduccions de la interfície d’usuari",
       "fields": [
         {

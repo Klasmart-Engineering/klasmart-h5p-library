@@ -54,6 +54,9 @@
       "label": "Küsimuste suurim hulk"
     },
     {
+      "label": "Subcontent ids"
+    },
+    {
       "label": "Kasutajaliidese tõlked",
       "fields": [
         {

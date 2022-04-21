@@ -54,6 +54,9 @@
       "label": "Gehienezko galdera kopurua"
     },
     {
+      "label": "Subcontent ids"
+    },
+    {
       "label": "Erabiltzaile interfazearen itzulpenak",
       "fields": [
         {

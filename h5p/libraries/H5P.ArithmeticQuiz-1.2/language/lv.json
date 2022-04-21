@@ -1,8 +1,8 @@
 {
   "semantics": [
     {
-      "description": "Ievada teksts (maksimums 100 rakstzīmes)",
-      "label": "Ievads"
+      "label": "Ievads",
+      "description": "Ievada teksts (maksimums 100 rakstzīmes)"
     },
     {
       "label": "Testa veids",
@@ -54,6 +54,9 @@
       "label": "Maksimālais jautājumu skaits"
     },
     {
+      "label": "Subcontent ids"
+    },
+    {
       "label": "Lietotāja saskarnes tulkojumi",
       "fields": [
         {
@@ -77,20 +80,20 @@
           "default": "Sākt"
         },
         {
-          "default": "Mēģināt vēlreiz",
-          "label": "Atkārtota mēģinājuma pogas etiķete"
+          "label": "Atkārtota mēģinājuma pogas etiķete",
+          "default": "Mēģināt vēlreiz"
         },
         {
           "label": "Pareizās atbildes atskaņošanas teksts asistīvajām tehnoloģijām",
           "default": "Pareizi"
         },
         {
-          "default": "Nepareizi. Pareizā atbilde bija :num",
-          "label": "Nepareizās atbildes atskaņošanas teksts asistīvajām tehnoloģijām"
+          "label": "Nepareizās atbildes atskaņošanas teksts asistīvajām tehnoloģijām",
+          "default": "Nepareizi. Pareizā atbilde bija :num"
         },
         {
-          "default": "Ilgums stundās, minūtēs un sekundēs.",
-          "label": "Taimera etiķete asistīvajām tehnoloģijām"
+          "label": "Taimera etiķete asistīvajām tehnoloģijām",
+          "default": "Ilgums stundās, minūtēs un sekundēs."
         },
         {
           "label": "Jautājuma teksts asistīvajām tehnoloģijām",
@@ -117,8 +120,8 @@
           "default": "reiz"
         },
         {
-          "default": "dalīts ar",
-          "label": "Dalīšanas operatora teksts"
+          "label": "Dalīšanas operatora teksts",
+          "default": "dalīts ar"
         },
         {
           "label": "Vienādības zīmes teksts",
@@ -126,8 +129,8 @@
         },
         {
           "label": "Slaida numura teksts",
-          "default": "Slaids :num no :total",
-          "description": "Paziņo pašreizējo slaidu un kopējo slaidu skaitu, mainīgie ir :num un :total"
+          "description": "Paziņo pašreizējo slaidu un kopējo slaidu skaitu, mainīgie ir :num un :total",
+          "default": "Slaids :num no :total"
         }
       ]
     }

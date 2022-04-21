@@ -54,6 +54,9 @@
       "label": "מספר שאלות מירבי"
     },
     {
+      "label": "Subcontent ids"
+    },
+    {
       "label": "תרגום ממשק משתמש",
       "fields": [
         {

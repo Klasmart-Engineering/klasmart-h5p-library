@@ -54,6 +54,9 @@
       "label": "Numero massimo di domande"
     },
     {
+      "label": "Subcontent ids"
+    },
+    {
       "label": "Traduzioni dell'interfaccia utente",
       "fields": [
         {

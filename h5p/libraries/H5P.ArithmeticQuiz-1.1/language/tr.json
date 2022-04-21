@@ -54,6 +54,9 @@
       "label": "Maksimum soru sayısı"
     },
     {
+      "label": "Subcontent ids"
+    },
+    {
       "label": "Kullanıcı arayüzü çevirileri",
       "fields": [
         {

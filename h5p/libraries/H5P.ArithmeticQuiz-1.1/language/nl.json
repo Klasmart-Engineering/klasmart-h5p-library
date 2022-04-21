@@ -54,6 +54,9 @@
       "label": "Max. aantal vragen"
     },
     {
+      "label": "Subcontent ids"
+    },
+    {
       "label": "Gebruikersinterface vertalingen",
       "fields": [
         {

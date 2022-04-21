@@ -94,8 +94,11 @@ export default class KLScreenshot {
        data.user = event.data.statement.actor;
      }
 
-     // If no instance found, use H5P.externalDispatcher directly
-     const triggerSource = instance || H5P.externalDispatcher;
+     // If no trigger function on instance found, use H5P.externalDispatcher directly
+     const triggerSource = (typeof instance?.trigger === 'function') ?
+       instance :
+       H5P.externalDispatcher;
+
      if (!triggerSource?.trigger) {
        return; // No trigger source available
      }

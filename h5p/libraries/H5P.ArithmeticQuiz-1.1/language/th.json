@@ -54,6 +54,9 @@
       "label": "จำนวนคำถามสูงสุด"
     },
     {
+      "label": "Subcontent ids"
+    },
+    {
       "label": "แปลส่วนผู้ใช้",
       "fields": [
         {

@@ -54,6 +54,9 @@
       "label": "最大允许题目数"
     },
     {
+      "label": "Subcontent ids"
+    },
+    {
       "label": "用户界面翻译",
       "fields": [
         {

@@ -54,6 +54,9 @@
       "label": "Maksimalt antall spørsmål"
     },
     {
+      "label": "Subcontent ids"
+    },
+    {
       "label": "Oversettelser for brukergrensesnittet",
       "fields": [
         {

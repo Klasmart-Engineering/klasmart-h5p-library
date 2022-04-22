@@ -54,6 +54,9 @@
       "label": "Maksimum aantal vrae"
     },
     {
+      "label": "Subcontent ids"
+    },
+    {
       "label": "Gebruikers paneelbord vertalings",
       "fields": [
         {

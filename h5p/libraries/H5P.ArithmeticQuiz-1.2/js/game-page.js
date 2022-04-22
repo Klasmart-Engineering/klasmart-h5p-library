@@ -25,6 +25,10 @@ H5P.ArithmeticQuiz.GamePage = (function ($, UI, QuizType) {
     self.useFractions = options.useFractions;
     self.maxQuestions = options.maxQuestions;
     self.sliding = false;
+    self.subContentIds = options.subContentIds;
+    self.callbacks = {
+      trigger: (options.callbacks || {}).trigger || H5P.externalDispatcher.trigger
+    };
 
     self.$gamepage = $('<div>', {
       'class': 'h5p-baq-game counting-down'
@@ -50,6 +54,7 @@ H5P.ArithmeticQuiz.GamePage = (function ($, UI, QuizType) {
       self.$gamepage.removeClass('counting-down');
       self.progressbar.setProgress(0);
       self.slider.next();
+      self.trigger('progressed', self.progressbar.currentStep);
       self.timer.start();
       self.trigger('started-quiz');
     });
@@ -297,11 +302,57 @@ H5P.ArithmeticQuiz.GamePage = (function ($, UI, QuizType) {
           alt.reveal();
         });
 
+        // Build xAPI object definition properties
+        var xAPIChoices = self.getCurrentChoices()
+          .map(function (choice, index) {
+            return {
+              id: index.toString(),
+              description: { 'en-US': choice.toString() }
+            };
+          });
+        var xAPICorrectResponsesPattern = [index.toString()];
+        var description = self.translations.slideOfTotal
+          .replace(':num', self.getCurrentSlide())
+          .replace(':total', self.maxQuestions);
+
+        var subContentId = self.getCurrentSubContentId();
+
+        // XAPIEvent: answered on subcontent
+        self.trigger('answered', {
+          contentId: self.id,
+          subContentId: subContentId,
+          getTitle: function () {
+            return 'Arithmetic Quiz Slide';
+          },
+          getScore: function () {
+            return alternative.correct ? 1 : 0;
+          },
+          getMaxScore: function () {
+            return 1;
+          },
+          xAPIDefinition: {
+            interactionType: 'choice',
+            description: { 'en-US': description },
+            choices: xAPIChoices,
+            correctResponsesPattern: xAPICorrectResponsesPattern,
+            type: 'http://adlnet.gov/expapi/activities/cmi.interaction'
+          },
+          xAPIResult: {
+            response: index.toString()
+          }
+        });
+
         setTimeout(function () {
           // Emit screenshot
           if (H5P && H5P.KLScreenshot) {
             H5P.KLScreenshot.takeScreenshot(
-              self,
+              {
+                subContentId: subContentId,
+                getTitle: function () {
+                  return description;
+                },
+                trigger: self.callbacks.trigger
+              },
               self.$gamepage.get(0).parentNode
             );
           }
@@ -309,6 +360,9 @@ H5P.ArithmeticQuiz.GamePage = (function ($, UI, QuizType) {
 
         setTimeout(function(){
           self.slider.next();
+
+          // Trigger xAPI progressed on content
+          self.trigger('progressed', self.getCurrentSlide());
         }, 3500);
       });
     });
@@ -317,6 +371,47 @@ H5P.ArithmeticQuiz.GamePage = (function ($, UI, QuizType) {
     return $slide;
   };
 
+  /**
+   * Get current slide number.
+   * @return {number} Current slide number or 0.
+   */
+  GamePage.prototype.getCurrentSlide = function() {
+    return this.progressbar.currentStep || 0;
+  }
+
+  /**
+   * Get current subContentId.
+   * @return {string|undefined} Current subContentId.
+   */
+  GamePage.prototype.getCurrentSubContentId = function() {
+    if (!Array.isArray(this.subContentIds)) {
+      return;
+    }
+
+    var currentSlide = this.getCurrentSlide();
+    if (this.subContentIds.length < currentSlide) {
+      return;
+    }
+
+    return this.subContentIds[currentSlide - 1];
+  }
+
+  /**
+   * Get current slide's choices.
+   * @return {number[]|undefined} Current slide's choices.
+   */
+  GamePage.prototype.getCurrentChoices = function() {
+    if (!Array.isArray(this.quizzes)) {
+      return;
+    }
+
+    var currentSlide = this.getCurrentSlide();
+    if (this.quizzes.length < currentSlide) {
+      return;
+    }
+
+    return this.quizzes[currentSlide - 1].alternatives || [];
+  }
 
   /**
    * Append game page to container

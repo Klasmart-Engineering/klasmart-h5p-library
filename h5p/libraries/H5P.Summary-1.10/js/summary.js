@@ -395,7 +395,11 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
         setTimeout(function () {
           if (H5P && H5P.KLScreenshot) {
             H5P.KLScreenshot.takeScreenshot(
-              that,
+              {
+                subContentId: that.summaries[panelId].subContentId,
+                getTitle: () => ('' + (panelId + 1) + ' / ' + that.summaries.length),
+                trigger: that.trigger
+              },
               that.$myDom.get(0).closest('.h5p-container')
             );
           }

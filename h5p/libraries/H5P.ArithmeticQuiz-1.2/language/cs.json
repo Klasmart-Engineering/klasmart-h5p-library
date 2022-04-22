@@ -54,6 +54,9 @@
       "label": "Maximální počet otázek"
     },
     {
+      "label": "Subcontent ids"
+    },
+    {
       "label": "Překlady uživatelského rozhraní",
       "fields": [
         {

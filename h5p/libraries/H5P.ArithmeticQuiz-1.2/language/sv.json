@@ -54,6 +54,9 @@
       "label": "Max number of questions"
     },
     {
+      "label": "Subcontent ids"
+    },
+    {
       "label": "User interface translations",
       "fields": [
         {

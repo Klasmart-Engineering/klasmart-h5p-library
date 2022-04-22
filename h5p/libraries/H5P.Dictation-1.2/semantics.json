@@ -76,6 +76,7 @@
       "name": "sentence",
       "type": "group",
       "label": "Sentence",
+      "isSubContent": true,
       "fields": [
         {
           "name": "description",

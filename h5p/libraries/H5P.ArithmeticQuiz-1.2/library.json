@@ -3,7 +3,7 @@
   "description": "Arithmetic quiz containing addition, division, multiplication, subtraction and linear equations",
   "majorVersion": 1,
   "minorVersion": 2,
-  "patchVersion": 0,
+  "patchVersion": 1,
   "runnable": 1,
   "author": "Joubel, fabforge",
   "license": "MIT",
@@ -79,6 +79,11 @@
     },
     {
       "machineName": "EditorFontKidsLoop",
+      "majorVersion": 1,
+      "minorVersion": 0
+    },
+    {
+      "machineName": "H5PEditor.UUID",
       "majorVersion": 1,
       "minorVersion": 0
     }

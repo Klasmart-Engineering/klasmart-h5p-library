@@ -54,6 +54,9 @@
       "label": "最大問題数"
     },
     {
+      "label": "Subcontent ids"
+    },
+    {
       "label": "UIの翻訳言語",
       "fields": [
         {

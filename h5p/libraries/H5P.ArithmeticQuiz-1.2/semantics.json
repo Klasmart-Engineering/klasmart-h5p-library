@@ -121,6 +121,17 @@
     "max": 100
   },
   {
+    "name": "subContentIds",
+    "label": "Subcontent ids",
+    "type": "text",
+    "maxLength": 524288,
+    "optional": true,
+    "widget": "uuid",
+    "uuid": {
+      "length": 100
+    }
+  },
+  {
     "name": "UI",
     "type": "group",
     "label": "User interface translations",

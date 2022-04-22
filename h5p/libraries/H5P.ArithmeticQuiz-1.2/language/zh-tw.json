@@ -54,6 +54,9 @@
       "label": "最多題數"
     },
     {
+      "label": "Subcontent ids"
+    },
+    {
       "label": "使用者介面翻譯",
       "fields": [
         {

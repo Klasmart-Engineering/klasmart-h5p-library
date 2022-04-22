@@ -54,6 +54,9 @@
       "label": "Maximale Aufgabenzahl"
     },
     {
+      "label": "Subcontent ids"
+    },
+    {
       "label": "Bezeichnungen und Beschriftungen",
       "fields": [
         {

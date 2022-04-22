@@ -54,6 +54,9 @@
       "label": "Največje število vprašanj"
     },
     {
+      "label": "Subcontent ids"
+    },
+    {
       "label": "Prevodi uporabniškega vmesnika",
       "fields": [
         {

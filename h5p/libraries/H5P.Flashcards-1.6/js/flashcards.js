@@ -324,6 +324,7 @@ H5P.Flashcards = (function ($, XapiGenerator) {
       .on('click', function () {
         that.resetAudio();
         that.enableResultScreen();
+        that.triggerXAPIProgressed(that.options.cards.length);
       })
       .appendTo($inner.parent());
   };
@@ -468,6 +469,13 @@ H5P.Flashcards = (function ($, XapiGenerator) {
         that.answers[index] = userAnswer;
         that.triggerXAPI('interacted');
 
+        that.triggerXAPIAnswered({
+          currentIndex: index,
+          correct: userCorrect,
+          answer: card.answer,
+          response: userAnswer
+        });
+
         if (userCorrect) {
           $input.parent()
             .addClass('h5p-correct')
@@ -504,10 +512,18 @@ H5P.Flashcards = (function ($, XapiGenerator) {
         done = (that.numAnswered >= that.getMaxScore());
 
         // Emit screenshot
-        setTimeout(function() {
+        setTimeout(function () {
           if (H5P && H5P.KLScreenshot) {
             H5P.KLScreenshot.takeScreenshot(
-              that,
+              {
+                subContentId: that.options.cards[index].subContentId,
+                getTitle: () => {
+                  return that.options.pageAnnouncement
+                    .replace('@current', that.$current.index() + 1)
+                    .replace('@total', that.options.cards.length.toString());
+                },
+                trigger: that.trigger
+              },
               that.$container.get(0)
             );
           }
@@ -660,6 +676,8 @@ H5P.Flashcards = (function ($, XapiGenerator) {
     this.$visualProgress
       .attr('aria-valuenow', ((index + 1) / this.options.cards.length * 100).toFixed(2))
       .find('.h5p-visual-progress-inner').width((index + 1) / this.options.cards.length * 100 + '%');
+
+    this.triggerXAPIProgressed(index);
   };
 
   /**
@@ -800,6 +818,48 @@ H5P.Flashcards = (function ($, XapiGenerator) {
     this.setProgress();
     this.$container.find('.h5p-show-results').show();
     this.trigger('resize');
+  };
+
+  /**
+   * Trigger xAPI "progressed".
+   * @param {number} index Index.
+   */
+  C.prototype.triggerXAPIProgressed = function (index) {
+    var xAPIEvent = this.createXAPIEventTemplate('progressed');
+    xAPIEvent.data.statement.object.definition.extensions['http://id.tincanapi.com/extension/ending-point'] = index + 1;
+    this.trigger(xAPIEvent);
+  };
+
+  /**
+   * Trigger xAPI "answered" for pseudo subcontent.
+   */
+  C.prototype.triggerXAPIAnswered = function (params) {
+    // Pseudo instance for pseudo subcontent
+    const instance = {
+      contentId: this.contentId,
+      subContentId: this.options.cards[params.currentIndex].subContentId,
+      createXAPIEventTemplate: this.createXAPIEventTemplate,
+      options: {
+        description: this.options.pageAnnouncement
+          .replace('@current', params.currentIndex + 1)
+          .replace('@total', this.options.cards.length),
+        cards: [this.options.cards[params.currentIndex]],
+        caseSensitive: this.options.caseSensitive
+      },
+      parent: this,
+      answers: [params.response],
+      getTitle: function () {
+        return 'Flashcards Page';
+      },
+      getScore: function () {
+        return params.correct ? 1 : 0;
+      },
+      getMaxScore: function () {
+        return 1;
+      }
+    };
+
+    this.trigger(XapiGenerator.getXapiEvent(instance));
   };
 
   /**

@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.15.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.15.0..v2.14.2) (2022-04-22)
+
+
+### Features
+
+* **H5P-288:** install H5P.MathDisplay ([28068de](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/28068de56fc6e1d058c4db4cdc93511679905618))
+* **H5P-536:** add FontKidsLoop to X-Ray ([d48f739](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/d48f7397b1a4a8af9ad1438c3fe2b42bd19133f5))
+* **H5P-557:** add option to choose touch offset on mobile ([030c2ca](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/030c2ca3eee981c4334f77b9cbfcce439486bfe4))
+* **H5P-558:** dynamic blank width for advanced-fill-in-the-blanks ([bfc3d8b](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/bfc3d8bb96e0e22423854984487498b38530e519))
+
+
+### Bug Fixes
+
+* **H5P-531:** arrow button overlaps dialog cards in Android tablet ([e69e413](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/e69e413001444f271f78e1724ef8b47d4eaa1250))
+* **H5P-594:** userId isn't set correctly when activity is first loaded ([e6bde10](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/e6bde102d6ca0c14f9e213aff0f51cf5eaec0c45))
+* **H5P-616:** unable to retry single-choice-set in same session ([3221b7d](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/3221b7d477cd871e16e4e1dadfaf9987c9b2d6f0))
+* **H5P-619:** new endpoint format 404 error for 'new' action ([ae2da82](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/ae2da82f4b564d581203aff9999e6032f34d2bc1))
+
 ### [2.14.2](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.14.2..v2.14.1) (2022-04-20)
 
 

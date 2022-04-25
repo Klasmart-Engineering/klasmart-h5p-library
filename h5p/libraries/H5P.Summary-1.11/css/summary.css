@@ -222,3 +222,7 @@
   text-indent: 1px;
   overflow: hidden;
 }
+
+.h5p-summary .hidden-but-read {
+  display: none;
+}

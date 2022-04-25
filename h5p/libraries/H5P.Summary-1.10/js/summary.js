@@ -276,20 +276,34 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
 
         // Insert correct claim into summary list
         $summary_list.append($answer);
-        $summary_container.addClass('has-results');
-        // change aria-hidden property as when correct answer is added inside list at top
-        $summary_container.attr("aria-hidden", "false");
-        that.adjustTargetHeight($summary_container, $summary_list, $answer);
-
 
         // Move into position over clicked element
         $answer.css({display: 'block', width: $el.css('width'), height: $el.css('height')});
         $answer.css({position: 'absolute', top: position.top, left: position.left});
         $answer.css({backgroundColor: '#9dd8bb', border: ''});
+
+        // Emit screenshot
+        if (H5P && H5P.KLScreenshot) {
+          H5P.KLScreenshot.takeScreenshot(
+            {
+              subContentId: that.summaries[panelId].subContentId,
+              getTitle: function () {
+                return ('' + (panelId + 1) + ' / ' + that.summaries.length);
+              },
+              trigger: that.trigger
+            },
+            that.$myDom.get(0).closest('.h5p-container')
+          );
+        }
+
         setTimeout(function () {
           $answer.css({backgroundColor: ''});
         }, 1);
-        //$answer.animate({backgroundColor: '#eee'}, 'slow');
+        $answer.animate({backgroundColor: '#eee'}, 'slow');
+        $summary_container.addClass('has-results');
+        // change aria-hidden property as when correct answer is added inside list at top
+        $summary_container.attr("aria-hidden", "false");
+        that.adjustTargetHeight($summary_container, $summary_list, $answer);
 
         var panel = parseInt($el.parent().attr('data-panel'));
         var $curr_panel = $('.h5p-panel:eq(' + panel + ')', that.$myDom);
@@ -391,20 +405,6 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
 
       // Trigger overall answered xAPI event when finished
       if (finished) {
-        // Emit screenshot
-        setTimeout(function () {
-          if (H5P && H5P.KLScreenshot) {
-            H5P.KLScreenshot.takeScreenshot(
-              {
-                subContentId: that.summaries[panelId].subContentId,
-                getTitle: () => ('' + (panelId + 1) + ' / ' + that.summaries.length),
-                trigger: that.trigger
-              },
-              that.$myDom.get(0).closest('.h5p-container')
-            );
-          }
-        }, 1750); // Allow results to display
-
         that.triggerXAPIScored(that.getScore(), that.getMaxScore(), 'answered');
       }
     };

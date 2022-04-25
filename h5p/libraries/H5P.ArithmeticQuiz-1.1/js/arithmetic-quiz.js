@@ -53,7 +53,7 @@ H5P.ArithmeticQuiz = (function ($) {
     }, options);
     self.currentWidth = 0;
 
-    self.options.subContentIds = typeof (self.options.subContentIds === 'string') ?
+    self.options.subContentIds = typeof (options.subContentIds === 'string') ?
       options.subContentIds.split(';') :
       null;
 

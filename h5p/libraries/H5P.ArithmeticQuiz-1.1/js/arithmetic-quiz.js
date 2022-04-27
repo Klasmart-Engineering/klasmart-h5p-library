@@ -73,7 +73,12 @@ H5P.ArithmeticQuiz = (function ($) {
       var instance = e.data;
 
       var xAPIEvent = self.createXAPIEventTemplate('answered');
-      xAPIEvent.setContext({ parent: self });
+      xAPIEvent.setContext({
+        parent: self,
+        libraryInfo: {
+          versionedNameNoSpaces: `H5P.ArithmeticQuizPage-${self.libraryInfo.majorVersion}.${self.libraryInfo.minorVersion}`
+        },
+      });
 
       xAPIEvent.setObject(instance);
       for (var prop in instance.xAPIDefinition) {

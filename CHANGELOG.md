@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.16.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.16.0..v2.15.0) (2022-04-28)
+
+
+### Features
+
+* don't upload xAPI events or screenshots if not done in a class ([99a700c](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/99a700ccf6ab19870d8fc564b04b97f9c149b5a5))
+* **H5P-626:** simplify screenshot trigger for content type ([e79a15e](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/e79a15e0eb8b7b056b6ded9a2a3c661768d0ccd9))
+* **H5P-627:** add xapi context for subcontentid ([0022af7](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/0022af76d211fe88cc6123699594e0e66b836c06))
+* **H5P-629:** add xAPI answered for fake subcontent ([5d49792](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/5d49792eee21f37f16a6813396141819a1cd8275))
+* **H5P-630:** add screenshot feature ([aad9b96](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/aad9b9628d3d9794b2bd7bc3901137501ca74be3))
+* **H5P-632:** take screenshot after each round ([e467f40](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/e467f404c69a86cc628216a3ac83b869441e20b8))
+
+
+### Bug Fixes
+
+* **H5P-646:** h5p-editor-image-hotspot-question fails to load ([b03fa92](https://bitbucket.org/calmisland/kidsloop-h5p-library/commits/b03fa921b9d70350d40797b8ce55ddcae50a3788))
+
 ## [2.15.0](https://bitbucket.org/calmisland/kidsloop-h5p-library/compare/v2.15.0..v2.14.2) (2022-04-22)
 
 

@@ -1,6 +1,6 @@
 {
     "name": "kidsloop-h5p-service",
-    "version": "2.15.0",
+    "version": "2.16.0",
     "description": "KidsLoop H5P Service",
     "repository": {
         "type": "git",

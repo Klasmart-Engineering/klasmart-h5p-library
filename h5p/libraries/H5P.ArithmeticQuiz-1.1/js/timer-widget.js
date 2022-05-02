@@ -9,13 +9,17 @@ H5P.ArithmeticQuiz.TimerWidget = (function ($) {
    * @param  {type} t Translation object
    */
   function TimerWidget(t) {
-    var totalTime = 0;
-    var isRunning = false;
-    var timer;
-    var startTime = 0;
-    var incrementingAria = true;
+    H5P.EventDispatcher.call(this);
 
-    var $timer = $('<time>', {
+    var self = this;
+
+    this.totalTime = 0;
+    this.isRunning = false;
+    this.timer;
+    this.startTime = 0;
+    this.incrementingAria = true;
+
+    this.$timer = $('<time>', {
       'aria-label': t.durationLabel,
       'class': 'timer',
       role: 'timer',
@@ -31,7 +35,7 @@ H5P.ArithmeticQuiz.TimerWidget = (function ($) {
      * here it makes it impossible to move forward in the task whenever the timer is updated.
      * Therefore we do not update the readable element when it is focused.
      */
-    var $ariaTimer = $('<time>', {
+    this.$ariaTimer = $('<time>', {
       'aria-label': t.durationLabel,
       'class': 'timer aria-timer',
       role: 'timer',
@@ -39,12 +43,12 @@ H5P.ArithmeticQuiz.TimerWidget = (function ($) {
       text: H5P.ArithmeticQuiz.tReplace(t.time, {time: '0'})
     });
 
-    $ariaTimer.on('focus', function () {
-      incrementingAria = false;
+    this.$ariaTimer.on('focus', function () {
+      self.incrementingAria = false;
     });
 
-    $ariaTimer.on('blur', function () {
-      incrementingAria = true;
+    this.$ariaTimer.on('blur', function () {
+      self.incrementingAria = true;
     });
 
     /**
@@ -55,7 +59,7 @@ H5P.ArithmeticQuiz.TimerWidget = (function ($) {
      * @param  {string} [separator] Separator used between the different time units
      * @return {string} The humanized time
      */
-    var humanizeTime = function (seconds, separator) {
+    this.humanizeTime = function (seconds, separator) {
       separator = separator || ':';
       var minutes = Math.floor(seconds / 60);
       var hours = Math.floor(minutes / 60);
@@ -88,35 +92,28 @@ H5P.ArithmeticQuiz.TimerWidget = (function ($) {
       return time;
     };
 
-
-    /**
-     * Calculate running time
-     *
-     * @private
-     * @return {number} Running time in seconds
-     */
-    var getTime = function () {
-      return totalTime + (isRunning ? new Date().getTime() - startTime : 0);
-    };
-
-
     /**
      * Update UI
      *
      * @private
      */
-    var update = function () {
-      $timer.text(H5P.ArithmeticQuiz.tReplace(t.time, {time: humanizeTime(getTime()/1000)}));
+    this.update = function () {
+      var self = this;
+      var seconds = this.getTime() / 1000;
 
-      if (incrementingAria) {
-        $ariaTimer.text(H5P.ArithmeticQuiz.tReplace(t.time, {time: humanizeTime(getTime()/1000, ', ')}));
+      this.$timer.text(H5P.ArithmeticQuiz.tReplace(t.time, {time: this.humanizeTime(seconds)}));
+
+      if (this.incrementingAria) {
+        this.$ariaTimer.text(H5P.ArithmeticQuiz.tReplace(t.time, {time: this.humanizeTime(seconds, ', ')}));
       }
 
-      timer = setTimeout(function(){
-        update();
+      // Kidsloop Live session storage will listen
+      this.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
+
+      this.timer = setTimeout(function(){
+        self.update();
       }, 1000);
     };
-
 
     /**
      * Append me to something
@@ -124,21 +121,27 @@ H5P.ArithmeticQuiz.TimerWidget = (function ($) {
      * @param  {H5P.jQuery} $container
      */
     this.appendTo = function ($container) {
-      $timer.appendTo($container);
-      $ariaTimer.appendTo($container);
+      this.$timer.appendTo($container);
+      this.$ariaTimer.appendTo($container);
     };
-
 
     /**
-     * Start the timer
+     * Set time.
+     * @param {number} timeMs Time to set in ms.
      */
-    this.start = function () {
-      isRunning = true;
-      clearTimeout(timer);
-      startTime = new Date().getTime();
-      update();
+    this.setTime = function (timeMs) {
+      this.totalTime = timeMs;
     };
 
+    /**
+     * Start the timer.
+     */
+    this.start = function () {
+      this.isRunning = true;
+      clearTimeout(this.timer);
+      this.startTime = new Date().getTime();
+      this.update();
+    };
 
     /**
      * Pause the timer
@@ -146,26 +149,22 @@ H5P.ArithmeticQuiz.TimerWidget = (function ($) {
      * @return {string} The humanized time
      */
     this.pause = function () {
-      isRunning = false;
-      totalTime += new Date().getTime() - startTime;
-      clearTimeout(timer);
-      update();
+      this.isRunning = false;
+      this.totalTime += new Date().getTime() - this.startTime;
+      clearTimeout(this.timer);
 
-      return humanizeTime(getTime()/1000);
+      return this.humanizeTime(this.getTime() / 1000);
     };
-
 
     /**
      * Reset timer
      */
     this.reset = function () {
-      clearTimeout(timer);
-      isRunning = false;
-      totalTime = 0;
-      startTime = 0;
-      update();
+      clearTimeout(this.timer);
+      this.isRunning = false;
+      this.totalTime = 0;
+      this.startTime = 0;
     };
-
 
     /**
      * Restart timer
@@ -174,7 +173,19 @@ H5P.ArithmeticQuiz.TimerWidget = (function ($) {
       this.reset();
       this.start();
     };
+
+    /**
+     * Calculate running time
+     *
+     * @return {number} Running time in seconds
+     */
+    this.getTime = function () {
+      return this.totalTime + (this.isRunning ? new Date().getTime() - this.startTime : 0);
+    };
   }
+  TimerWidget.prototype = Object.create(H5P.EventDispatcher.prototype);
+  TimerWidget.prototype.constructor = TimerWidget;
+
 
   return TimerWidget;
 

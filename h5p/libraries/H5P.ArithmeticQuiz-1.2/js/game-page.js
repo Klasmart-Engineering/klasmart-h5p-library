@@ -12,9 +12,10 @@ H5P.ArithmeticQuiz.GamePage = (function ($, UI, QuizType) {
    * @param  {quizType} quizType
    * @param  {Object} t Object containing all options
    * @param {number} id Unique id to identify this quiz
+   * @param {object} [extras] Extras, e.g. previous state.
    * @fires H5P.XAPIEvent
    */
-  function GamePage(quizType, options, id) {
+  function GamePage(quizType, options, id, extras) {
     H5P.EventDispatcher.call(this);
     var self = this;
     self.quizType = quizType;
@@ -34,16 +35,23 @@ H5P.ArithmeticQuiz.GamePage = (function ($, UI, QuizType) {
       'class': 'h5p-baq-game counting-down'
     });
 
+    self.previousState = extras && extras.previousState || {};
+
     if (self.quizType === H5P.ArithmeticQuiz.QuizType.ARITHMETIC) {
       self.questionsGenerator = new H5P.ArithmeticQuiz.ArithmeticGenerator(self.arithmeticType, self.maxQuestions);
     } else {
       self.questionsGenerator = new H5P.ArithmeticQuiz.EquationsGenerator(self.arithmeticType, self.equationType, self.maxQuestions, self.useFractions);
     }
-    self.score = 0;
+
     self.scoreWidget = new ScoreWidget(self.translations);
     self.scoreWidget.appendTo(self.$gamepage);
 
     self.timer = new H5P.ArithmeticQuiz.TimerWidget(self.translations);
+    // Relay to main
+    self.timer.on('kllStoreSessionState', function () {
+      self.trigger('kllStoreSessionState');
+    });
+
     self.timer.appendTo(self.$gamepage);
 
     self.slider = UI.createSlider();
@@ -52,15 +60,18 @@ H5P.ArithmeticQuiz.GamePage = (function ($, UI, QuizType) {
     self.slider.addSlide(self.countdownWidget.create());
     self.countdownWidget.on('ignition', function () {
       self.$gamepage.removeClass('counting-down');
-      self.progressbar.setProgress(0);
-      self.slider.next();
+      self.restorePreviousState(self.previousState);
+
+      if ((self.previousState.slide || 0) <= self.maxQuestions) {
+        self.timer.start();
+        self.trigger('started-quiz');
+      }
+
       self.trigger('progressed', self.progressbar.currentStep);
-      self.timer.start();
-      self.trigger('started-quiz');
     });
 
     // Shuffle quizzes:
-    self.quizzes = self.questionsGenerator.get();
+    self.quizzes = extras && extras.previousState && extras.previousState.quizzes || self.questionsGenerator.get();
 
     var numQuestions = self.quizzes.length;
     for (var i = 0; i < numQuestions; i++) {
@@ -83,12 +94,7 @@ H5P.ArithmeticQuiz.GamePage = (function ($, UI, QuizType) {
     });
 
     self.slider.on('last-slide', function () {
-      self.resultPage.update(self.score, self.timer.pause());
-      self.$gamepage.addClass('result-page');
-      self.trigger('last-slide', {
-        score: self.score,
-        numQuestions: numQuestions
-      });
+      self.handleLastSlide();
     });
 
     self.slider.on('first-slide', function () {
@@ -106,12 +112,57 @@ H5P.ArithmeticQuiz.GamePage = (function ($, UI, QuizType) {
       if ($button) {
         $button.focus();
       }
+      self.trigger('kllStoreSessionState');
     });
 
     self.slider.attach(self.$gamepage);
   }
   GamePage.prototype = Object.create(H5P.EventDispatcher.prototype);
   GamePage.prototype.constructor = GamePage;
+
+  /**
+   * Restore previousState state.
+   * @param {object} previousState Previous state data.
+   * @param {number} previousState.score Previous score.
+   * @param {number} previousState.slide Previous slide incl. intro/outro.
+   * @param {number} previousState.time Previous time.
+   */
+  GamePage.prototype.restorePreviousState = function (previousState) {
+    this.score = previousState.score || 0;
+    this.scoreWidget.update(this.score);
+    this.progressbar.setProgress(Math.max(0, previousState.slide - 1) || 0);
+    this.slider.move(previousState.slide || 1);
+    this.timer.setTime(previousState.time || 0);
+  };
+
+  /**
+   * Handle last slide reached.
+   */
+  GamePage.prototype.handleLastSlide = function () {
+    var time = this.previousState.slide > this.quizzes.length ?
+      this.timer.humanizeTime(this.previousState.time / 1000) :
+      this.timer.pause();
+
+    this.resultPage.update(this.score, time);
+    this.$gamepage.addClass('result-page');
+    this.trigger('last-slide', {
+      score: this.score,
+      numQuestions: this.quizzes.length
+    });
+  };
+
+  /**
+   * Get current state.
+   * @return {object} Current state.
+   */
+  GamePage.prototype.getCurrentState = function () {
+    return {
+      time: this.timer.getTime(),
+      score: this.score,
+      slide: this.slider.currentIndex,
+      quizzes: this.quizzes
+    }
+  };
 
   /**
    * Starts the countdown
@@ -144,6 +195,7 @@ H5P.ArithmeticQuiz.GamePage = (function ($, UI, QuizType) {
    * Resets quiz
    */
   GamePage.prototype.reset = function () {
+    this.previousState = {};
     this.score = 0;
     this.scoreWidget.update(0);
     this.timer.reset();

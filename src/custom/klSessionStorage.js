@@ -219,7 +219,11 @@ export default class KLStateStorer {
    * Clear previous states.
    * @param {number} [scope=KLStateStorer.CLEAR_OTHER_ROOMS] Scope of states to delete.
    */
-  clearPreviousStates(scope = KLStateStorer.CLEAR_OTHER_ROOMS) {
+  clearPreviousStates(scope) {
+    scope = (typeof scope !== 'number') ?
+      KLStateStorer.CLEAR_OTHER_ROOMS :
+      scope;
+
     if (!this.params.storagePrefix) {
       return;
     }

@@ -1,4 +1,7 @@
-/*global H5P*/
+/*
+ * This code really needs refactoring!
+ */
+
 H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
 
   /**
@@ -110,6 +113,7 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
      * @type {Array}
      */
     this.$hotspots = [];
+    this.$allHotspots = [];
 
     /**
      * Keep track of selected hotspots
@@ -218,6 +222,8 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
     this.$img.on('load', function () {
       $loader.replaceWith(self.$img);
       self.trigger('resize');
+
+      self.recreatePreviousState();
     });
 
     this.attachHotspots();
@@ -233,6 +239,42 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
       this.maxScore = this.$hotspots.length;
     }
     return this.$wrapper;
+  };
+
+  /**
+   * Recreate previous state.
+   */
+  ImageMultipleHotspotQuestion.prototype.recreatePreviousState = function () {
+    if (!this.previousState || !this.previousState.selectedHotspots) {
+      return;
+    }
+
+    const self = this;
+
+    this.previousState.selectedHotspots.forEach(function (hotspot) {
+      self.createHotspotFeedback(
+        self.$allHotspots[hotspot.index],
+        self.getMouseClickEvent(hotspot.position),
+        self.hotspotSettings.hotspot[hotspot.index],
+        { skipXAPI: true }
+      );
+    });
+
+    if (this.previousState.lastPosition) {
+      if (this.previousState.lastPosition.index > -1) {
+        this.createHotspotFeedback(
+          this.$allHotspots[this.previousState.lastPosition.index],
+          this.getMouseClickEvent(this.previousState.lastPosition.position),
+          self.hotspotSettings.hotspot[this.previousState.lastPosition.index],
+          { skipXAPI: true }
+        );
+      }
+      else {
+        this.$imageWrapper.trigger(
+          this.getMouseClickEvent(this.previousState.lastPosition.position)
+        );
+      }
+    }
   };
 
   /**
@@ -268,6 +310,13 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
         // Create new hotspot feedback
         self.createHotspotFeedback($(this), mouseEvent);
       }
+
+      self.lastPosition = {
+        index: -1,
+        position: self.getRelativeClickPosition(mouseEvent)
+      };
+
+      self.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
     });
   };
 
@@ -317,9 +366,19 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
         return; // done
       }
 
-      if (self.selectedHotspots.indexOf(index) === -1) {
+      self.lastPosition = {
+        index: index,
+        position: self.getRelativeClickPosition(mouseEvent)
+      };
+
+      if (!self.selectedHotspots.some(function (hotspot) {
+        return hotspot.index === index;
+      })) {
         self.playAudio(index);
-        self.selectedHotspots.push(index); // add chosen hotspot to selectedHotspots list
+        self.selectedHotspots.push({
+          index: index,
+          position: self.lastPosition.position
+        }); // add chosen hotspot to selectedHotspots list
       }
       else if (!hotspot.userSettings.correct) {
         self.playAudio(index); // Wrong audios played again.
@@ -332,10 +391,14 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
       // Create new hotspot feedback
       self.createHotspotFeedback($(this), mouseEvent, hotspot);
 
+      self.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
+
       // Do not propagate
       return false;
 
     }).appendTo($hotspotWrapper);
+
+    this.$allHotspots.push($hotspot);
 
     if (hotspot.userSettings.correct) {
       this.$hotspots.push($hotspot);
@@ -343,13 +406,48 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
   };
 
   /**
+   * Update last position that was clicked at.
+   * @param {MouseEvent} mouseEvent Mouse event.
+   * @return {object} X and y coordinates on image as percentage [0-1].
+   */
+  ImageMultipleHotspotQuestion.prototype.getRelativeClickPosition = function (mouseEvent) {
+    const offset = this.$img.offset();
+
+    return {
+      x: (mouseEvent.pageX - offset.left) / this.$img.width(),
+      y: (mouseEvent.pageY - offset.top) / this.$img.height()
+    };
+  };
+
+  /**
+   * Get Mouse Click event for position.
+   * @param {object} position Position.
+   * @param {number} position.x X coordinates on image as percentage [0-1].
+   * @param {number} position.y Y coordinates on image as percentage [0-1].
+   * @return {MouseEvent} Mouse event.
+   */
+  ImageMultipleHotspotQuestion.prototype.getMouseClickEvent = function (position) {
+    const offset = this.$img.offset();
+
+    const event = new $.Event('click');
+    event.pageX = position.x * this.$img.width() + offset.left;
+    event.clientX = event.pageX;
+    event.pageY = position.y * this.$img.height() + offset.top;
+    event.clientY = event.pageY;
+
+    return event;
+  };
+
+  /**
    * Create a feedback element for a click.
    * @param {H5P.jQuery} $clickedElement The element that was clicked, a hotspot or the image wrapper.
    * @param {Object} mouseEvent Mouse event containing mouse offsets within clicked element.
    * @param {Object} hotspot Hotspot parameters.
+   * @param {object} params Extra parameters.
    */
-  ImageMultipleHotspotQuestion.prototype.createHotspotFeedback = function ($clickedElement, mouseEvent, hotspot) {
+  ImageMultipleHotspotQuestion.prototype.createHotspotFeedback = function ($clickedElement, mouseEvent, hotspot, params) {
     const that = this;
+    params = params || {};
 
     this.answerGiven = true;
 
@@ -436,8 +534,10 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
       }, 1000); // Allow results to display
     }
 
-    // Trigger xAPI completed event
-    this.trigger(this.getXAPIAnswerEvent());
+    if (!params.skipXAPI) {
+      // Trigger xAPI completed event
+      this.trigger(this.getXAPIAnswerEvent());
+    }
   };
 
   /**
@@ -488,7 +588,10 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
    * @return {array} An array containin the indexes of the clicked hotspots
    */
   ImageMultipleHotspotQuestion.prototype.getCurrentState = function () {
-    return this.selectedHotspots;
+    return {
+      lastPosition: this.lastPosition,
+      selectedHotspots: this.selectedHotspots
+    };
   };
 
   /**

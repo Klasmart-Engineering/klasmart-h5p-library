@@ -51,7 +51,7 @@ H5PPresave['H5P.ImageMultipleHotspotQuestion'] = function (content, finished) {
    * Check if content has fixed number of hotspots
    * @return {boolean}
    */
-  function hasFixedNumberOfHotspots(){
+  function hasFixedNumberOfHotspots() {
     return presave.checkNestedRequirements(content, 'content.imageMultipleHotspotQuestion.hotspotSettings.numberHotspots');
   }
 

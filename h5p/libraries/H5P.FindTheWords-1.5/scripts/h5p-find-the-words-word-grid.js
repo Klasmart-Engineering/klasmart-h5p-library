@@ -13,7 +13,7 @@
 
     EventDispatcher.call(this);
 
-    this.createWordGrid();
+    this.createWordGrid(params.previousGrid);
   };
 
   FindTheWords.WordGrid.prototype = Object.create(EventDispatcher.prototype);
@@ -466,35 +466,45 @@
     event.preventDefault();
   };
 
-  FindTheWords.WordGrid.prototype.createWordGrid = function () {
+  /**
+   * Create word grid.
+   * @param {string[][]} previousGrid Previous grid to use.
+   */
+  FindTheWords.WordGrid.prototype.createWordGrid = function (previousGrid) {
     let wordGrid = null ;
-    let attempts = 0;
 
-    // sorting the words by length speedup the word fitting algorithm
-    const wordList = this.options.vocabulary.slice(0).sort(function (a, b) {
-      return (a.length < b.length);
-    });
+    if (!previousGrid) {
+      let attempts = 0;
 
-    while (!wordGrid) {
-      while (!wordGrid && attempts++ < this.options.maxAttempts) {
-        wordGrid = fillGrid(wordList, this.options);
+      // sorting the words by length speedup the word fitting algorithm
+      const wordList = this.options.vocabulary.slice(0).sort(function (a, b) {
+        return (a.length < b.length);
+      });
+
+      while (!wordGrid) {
+        while (!wordGrid && attempts++ < this.options.maxAttempts) {
+          wordGrid = fillGrid(wordList, this.options);
+        }
+
+        // if grid cannot be formed in the current dimensions
+        if (!wordGrid) {
+          this.options.height++;
+          this.options.width++;
+          attempts = 0;
+        }
       }
 
-      // if grid cannot be formed in the current dimensions
-      if (!wordGrid) {
-        this.options.height++;
-        this.options.width++;
-        attempts = 0;
+      // fill in empty spaces with random letters
+      if (this.options.fillBlanks) {
+        wordGrid = fillBlanks(wordGrid, this.options.fillPool);
       }
+      this.wordGrid = wordGrid;
     }
-
-    // fill in empty spaces with random letters
-    if (this.options.fillBlanks) {
-      wordGrid = fillBlanks(wordGrid, this.options.fillPool);
+    else {
+      this.wordGrid = previousGrid;
     }
 
     // set the output puzzle
-    this.wordGrid = wordGrid;
 
     // Grid with characters
     this.canvas = document.createElement('div');
@@ -517,6 +527,14 @@
     // Container where results are put
     this.outputContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     this.outputContainer.classList.add('dom-canvas-output-container');
+  };
+
+  /**
+   * Get word grid.
+   * @return {string[][]} Word grid.
+   */
+  FindTheWords.WordGrid.prototype.getWordGrid = function () {
+    return this.wordGrid;
   };
 
   /**

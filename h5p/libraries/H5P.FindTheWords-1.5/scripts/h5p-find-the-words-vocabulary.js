@@ -5,8 +5,9 @@
    * @class H5P.FindTheWords.Vocabulary
    * @param {Object} params
    * @param {boolean} showVocabulary
+   * @param {object[]} wordsFound Word found previously.
    */
-  FindTheWords.Vocabulary = function (params, showVocabulary, header) {
+  FindTheWords.Vocabulary = function (params, showVocabulary, header, previouslyFound) {
     /** @alias H5P.FindTheWords.Vocabulary# */
     this.words = params;
     this.header = header;
@@ -14,6 +15,7 @@
     this.wordsFound = [];
     this.wordsNotFound = [];
     this.wordsSolved = [];
+    this.previouslyFound = previouslyFound || [];
   };
 
   FindTheWords.Vocabulary.prototype = Object.create(EventDispatcher.prototype);
@@ -38,6 +40,12 @@
     $container.addClass('vocabulary-container');
     this.$container = $container;
     this.setMode(isModeBlock);
+
+    const that = this;
+
+    this.previouslyFound.forEach(function (word) {
+      that.checkWord(word);
+    });
   };
 
   /**

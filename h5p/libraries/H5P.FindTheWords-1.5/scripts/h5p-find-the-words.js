@@ -21,6 +21,7 @@ H5P.FindTheWords = (function ($, UI) {
     this.numFound = 0;
     this.isAttempted = false;
     this.isGameStarted = false;
+    this.wordsFound = [];
 
     // Only take the unique words
     const vocabulary = options.wordList
@@ -45,6 +46,12 @@ H5P.FindTheWords = (function ($, UI) {
 
     H5P.EventDispatcher.call(this);
 
+    this.previousState = (extras && extras.previousState) ?
+      extras.previousState :
+      {};
+
+    this.setViewState(this.previousState && this.previousState.viewState || 'task');
+
     this.gridParams = {
       height: this.options.height,
       width: this.options.width,
@@ -58,11 +65,19 @@ H5P.FindTheWords = (function ($, UI) {
       charSpacingFactor: CHAR_SPACING_FACTOR
     };
 
+    if (this.previousState.grid) {
+      this.gridParams.previousGrid = this.previousState.grid;
+    }
+
     this.grid = new FindTheWords.WordGrid(this.gridParams);
+
     this.vocabulary = new FindTheWords.Vocabulary(
       this.options.vocabulary,
       this.options.behaviour.showVocabulary,
-      this.options.l10n.wordListHeader
+      this.options.l10n.wordListHeader,
+      (this.previousState.wordsFound || []).map(function (word) {
+        return word.word;
+      })
     );
     this.registerDOMElements();
 
@@ -167,7 +182,16 @@ H5P.FindTheWords = (function ($, UI) {
         this.options.l10n.timeSpent + '</span >:' +
         '<span role="definition"  class="h5p-time-spent" >0:00</span>'
     });
-    this.timer = new FindTheWords.Timer(this.$timer.find('.h5p-time-spent'));
+
+    this.timer = new FindTheWords.Timer(
+      this.$timer.find('.h5p-time-spent'),
+      this.previousState.time,
+      {
+        store: function () {
+          that.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
+        }
+      }
+    );
 
     // counter part
     const counterText = that.options.l10n.found
@@ -258,9 +282,15 @@ H5P.FindTheWords = (function ($, UI) {
 
   /**
    * gameSubmitted - callback function for check button.
+   * @param {object} [params] Parameters.
+   * @param {boolean} [params.skipXAPI] If true, don't emit xAPI.
    */
-  FindTheWords.prototype.gameSubmitted = function () {
+  FindTheWords.prototype.gameSubmitted = function (params) {
     const that = this;
+
+    this.setViewState('results');
+
+    params = params || {};
 
     const totalScore = this.vocabulary.words.length;
     const scoreText = this.options.l10n.score
@@ -287,7 +317,7 @@ H5P.FindTheWords = (function ($, UI) {
     this.$feedback.focus();
 
     // Emit screenshot
-    setTimeout(function() {
+    setTimeout(function () {
       if (H5P && H5P.KLScreenshot) {
         H5P.KLScreenshot.takeScreenshot(
           that,
@@ -296,10 +326,12 @@ H5P.FindTheWords = (function ($, UI) {
       }
     }, 1000); // Allow results to display
 
-    const xAPIEvent = this.createXAPIEventTemplate('answered');
-    this.addQuestionToXAPI(xAPIEvent);
-    this.addResponseToXAPI(xAPIEvent);
-    this.trigger(xAPIEvent);
+    if (!params.skipXAPI) {
+      const xAPIEvent = this.createXAPIEventTemplate('answered');
+      this.addQuestionToXAPI(xAPIEvent);
+      this.addResponseToXAPI(xAPIEvent);
+      this.trigger(xAPIEvent);
+    }
 
     this.trigger('resize');
   };
@@ -308,6 +340,8 @@ H5P.FindTheWords = (function ($, UI) {
    * showSolutions - call back function for show solution button.
    */
   FindTheWords.prototype.showSolutions = function () {
+    this.setViewState('solutions');
+
     this.grid.disableGrid();
     this.grid.mark(this.vocabulary.getNotFound());
     this.vocabulary.solveWords();
@@ -320,6 +354,8 @@ H5P.FindTheWords = (function ($, UI) {
    * resetTask - resetting the game.
    */
   FindTheWords.prototype.resetTask = function () {
+    this.setViewState('task');
+
     this.isGameStarted = false;
     this.numFound = 0;
     this.timer.reset();
@@ -327,6 +363,7 @@ H5P.FindTheWords = (function ($, UI) {
     this.$progressBar.reset();
     this.$puzzleContainer.empty();
     this.vocabulary.reset();
+    this.wordsFound = [];
 
     if (this.$showSolutionButton) {
       this.$showSolutionButton.detach();
@@ -343,6 +380,8 @@ H5P.FindTheWords = (function ($, UI) {
 
     this.$submitButton.appendTo(this.$buttonContainer);
     this.$puzzleContainer.focus();
+
+    this.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
 
     this.trigger('resize');
   };
@@ -434,14 +473,57 @@ H5P.FindTheWords = (function ($, UI) {
     this.grid.on('drawEnd', function (event) {
       that.isAttempted = true;
       if (that.vocabulary.checkWord(event.data['markedWord'])) {
-        that.numFound++;
-        that.counter.increment();
-        that.grid.markWord(event.data['wordObject']);
+
+        const wordObject = event.data['wordObject'];
+        wordObject.word = event.data['markedWord'];
+
+        that.handleMarkWord(wordObject);
+        this.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
+
         if (that.numFound === that.vocabulary.words.length) {
           that.gameSubmitted();
         }
       }
     });
+  };
+
+  /**
+   * Handle mark word.
+   * @param {object} wordObject Word params.
+   */
+  FindTheWords.prototype.handleMarkWord = function (wordObject) {
+    this.numFound++;
+    this.counter.increment();
+    this.grid.markWord(wordObject);
+    this.wordsFound.push(wordObject);
+  };
+
+  /**
+   * Get current state.
+   * @return {object} Current state.
+   */
+  FindTheWords.prototype.getCurrentState = function () {
+    return {
+      grid: this.grid.getWordGrid(),
+      wordsFound: this.wordsFound,
+      time: this.timer.getTime(),
+      viewState: this.viewState
+    };
+  };
+
+  /**
+   * Set view state.
+   * @param {string} state View state.
+   */
+  FindTheWords.prototype.setViewState = function (state) {
+    if (FindTheWords.VIEW_STATES.indexOf(state) === -1) {
+      return;
+    }
+
+    // Kidsloop Live session storage will listen
+    this.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
+
+    this.viewState = state;
   };
 
   /**
@@ -487,7 +569,24 @@ H5P.FindTheWords = (function ($, UI) {
     this.registerGridEvents();
 
     that.trigger('resize');
+
+    if (this.previousState.wordsFound) {
+      this.previousState.wordsFound.forEach(function (word) {
+        that.handleMarkWord(word);
+      });
+
+      if (this.previousState.viewState === 'results') {
+        this.gameSubmitted({ skipXAPI: true });
+      }
+      else if (this.previousState.viewState === 'solutions') {
+        this.gameSubmitted({ skipXAPI: true });
+        this.showSolutions();
+      }
+    }
   };
+
+  /** @constant {string[]} view state names*/
+  FindTheWords.VIEW_STATES = ['task', 'results', 'solutions'];
 
   return FindTheWords;
 

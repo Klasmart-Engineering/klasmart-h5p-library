@@ -6,9 +6,9 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
    * @extends H5P.EventDispatcher
    * @param {Object} parameters from semantics
    * @param {number} id         unique id given by the platform
-   *
+   * @param {object} extras Extras like previous state.
    */
-  function ImageSequencing(parameters, id) {
+  function ImageSequencing(parameters, id, extras) {
 
     /** @alias H5P.ImageSequencing# */
     const that = this;
@@ -44,6 +44,12 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
         ariaCardDesc: 'sequencing item'
       }
     }, parameters);
+
+    this.previousState = (extras && extras.previousState) ?
+      extras.previousState :
+      {};
+
+    this.setViewState(this.previousState.viewState || 'task');
 
     if (that.params.sequenceImages.length < that.params.behaviour.maxColumns) {
       that.params.behaviour.maxColumns = that.params.sequenceImages.length;
@@ -175,6 +181,9 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
      * @returns {type} Description
      */
     that.refreshTask = function () {
+      that.setViewState('task');
+      that.previousState = {};
+
       that.isRefresh = true;
       that.isShowSolution = false;
       that.isGamePaused = false;
@@ -284,8 +293,16 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
         '<dd role="definition" class="h5p-submits">0</dd>'
       });
 
-      that.timer = new ImageSequencing.Timer(that.$timer.find('.h5p-time-spent'));
-      that.counter = new ImageSequencing.Counter(that.$counter.find('.h5p-submits'));
+      that.timer = new ImageSequencing.Timer(
+        that.$timer.find('.h5p-time-spent'),
+        that.previousState.time,
+        {
+          store: function () {
+            that.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
+          }
+        }
+      );
+      that.counter = new ImageSequencing.Counter(that.$counter.find('.h5p-submits'), that.previousState.moves);
 
       that.$progressBar = UI.createScoreBar(that.numCards, 'scoreBarLabel');
 
@@ -348,6 +365,7 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
               return cardItem.uniqueId === parseInt(order[index].split('_')[1]);
             }))[0];
           });
+          that.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
         },
       });
 
@@ -366,8 +384,13 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
 
     /**
      * Callback for when the user clicks on check button.
+     * @param {object} params Parameters.
      */
-    that.gameSubmitted = function () {
+    that.gameSubmitted = function (params) {
+      params = params || {};
+
+      that.setViewState('results');
+
       that.isSubmitted = true;
       that.isGamePaused = true;
       that.timer.stop();
@@ -417,20 +440,23 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
       //for implementing question contract
       */
 
-      // Emit screenshot
-      setTimeout(function() {
-        if (H5P && H5P.KLScreenshot) {
-          H5P.KLScreenshot.takeScreenshot(
-            that,
-            that.$wrapper.get(0)
-          );
-        }
-      }, 1000); // Allow results to display
+      if (!params.skipXAPI) {
+        // Emit screenshot
+        setTimeout(function () {
+          if (H5P && H5P.KLScreenshot) {
+            H5P.KLScreenshot.takeScreenshot(
+              that,
+              that.$wrapper.get(0)
+            );
+          }
+        }, 1000); // Allow results to display
 
-      const xAPIEvent = that.createXAPIEventTemplate('answered');
-      that.addQuestionToXAPI(xAPIEvent);
-      that.addResponseToXAPI(xAPIEvent);
-      that.trigger(xAPIEvent);
+        const xAPIEvent = that.createXAPIEventTemplate('answered');
+        that.addQuestionToXAPI(xAPIEvent);
+        that.addResponseToXAPI(xAPIEvent);
+        that.trigger(xAPIEvent);
+      }
+
       that.trigger('resize');
     };
 
@@ -438,6 +464,8 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
      * Trigger when user clicks on show solution button
      */
     that.showSolutions = function () {
+      that.setViewState('solutions');
+
       that.isRefresh = true;
       that.isGamePaused = true;
       that.timer.stop();
@@ -569,7 +597,19 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
           extraParams, uniqueIndexes[i]);
       });
 
-    H5P.shuffleArray(that.sequencingCards);
+    if (!that.previousState.order) {
+      H5P.shuffleArray(that.sequencingCards);
+    }
+    else {
+      // Restore previous order
+      const reOrderedCards = [];
+      that.sequencingCards.forEach(function (card, index) {
+        reOrderedCards.push(that.sequencingCards[that.previousState.order[index]]);
+      });
+
+      that.sequencingCards = reOrderedCards;
+    }
+
     that.numCards = that.sequencingCards.length;
     that.buildDOMFrame();
 
@@ -612,6 +652,13 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
         that.sequencingCards[0].setFocus();
         that.activateSortableFunctionality();
         that.trigger('resize');
+      }
+
+      if (that.previousState.viewState === 'results') {
+        that.gameSubmitted({ skipXAPI: true });
+      }
+      else if (that.previousState.viewState === 'solutions') {
+        that.showSolutions();
       }
     };
 
@@ -659,6 +706,42 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
   // Extends the event dispatcher
   ImageSequencing.prototype = Object.create(EventDispatcher.prototype);
   ImageSequencing.prototype.constructor = ImageSequencing;
+
+  /**
+   * Set view state.
+   * @param {string} state View state.
+   */
+  ImageSequencing.prototype.setViewState = function (state) {
+    if (ImageSequencing.VIEW_STATES.indexOf(state) === -1) {
+      return;
+    }
+
+    // Kidsloop Live session storage will listen
+    this.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
+
+    this.viewState = state;
+  };
+
+  /**
+   * Get current state.
+   * @return {object} Current state.
+   */
+  ImageSequencing.prototype.getCurrentState = function () {
+    const state = {
+      order: this.sequencingCards.map(function (card) {
+        return card.seqNo;
+      }),
+      moves: this.counter.getValue(),
+      time: this.timer.getTime(),
+      viewState: this.viewState
+    };
+
+    return state;
+  };
+
+  /** @constant {string[]} view state names*/
+  ImageSequencing.VIEW_STATES = ['task', 'results', 'solutions'];
+
   return ImageSequencing;
 
 }) (H5P.EventDispatcher, H5P.jQuery, H5P.JoubelUI);

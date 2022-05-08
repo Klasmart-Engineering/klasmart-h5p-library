@@ -5,12 +5,13 @@
    *
    * @class H5P.ImageSequencing.Counter
    * @param {H5P.jQuery} $container
+   * @param {number} previousValue Previous state value.
    */
-  ImageSequencing.Counter = function ($container) {
+  ImageSequencing.Counter = function ($container, previousValue) {
 
     /** @alias H5P.ImageSequencing.Counter# */
     const that = this;
-    let current = 0;
+    let current = typeof previousValue === 'number' ? previousValue : 0;
 
     /**
      * update - update the counter
@@ -35,6 +36,16 @@
       current = 0;
       update();
     };
+
+    /**
+     * Get current value.
+     * @return {number} Current counter value.
+     */
+    that.getValue = function () {
+      return current;
+    };
+
+    update();
   };
 
 }) (H5P.ImageSequencing);

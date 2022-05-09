@@ -15,15 +15,22 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
    * @param {Object} parameters
    * @param {Number} id
    */
-  function MemoryGame(parameters, id) {
+  function MemoryGame(parameters, id, extras) {
     /** @alias H5P.MemoryGame# */
     var self = this;
 
     // Initialize event inheritance
     EventDispatcher.call(self);
 
-    var flipped, timer, counter, popup, $bottom, $taskComplete, $feedback, $wrapper, numCols, audioCard;
-    var cards = [];
+    self.timer = null;
+    self.counter = null;
+
+    self.previousState = (extras && extras.previousState) ?
+      extras.previousState :
+      {};
+
+    var flipped, popup, $bottom, $taskComplete, $feedback, $wrapper, audioCard;
+    this.cards = [];
     var flipBacks = []; // Que of cards to be flipped back
     var numFlipped = 0;
     var removed = 0;
@@ -77,7 +84,7 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       numFlipped -= 2;
       removed += 2;
 
-      var isFinished = (removed === cards.length);
+      var isFinished = (removed === self.cards.length);
 
       // Remove them from the game.
       card.remove(!isFinished);
@@ -86,7 +93,7 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       var desc = card.getDescription();
       if (desc !== undefined) {
         // Pause timer and show desciption.
-        timer.pause();
+        self.timer.pause();
         var imgs = [card.getImage()];
         if (card.hasTwoImages) {
           imgs.push(mate.getImage());
@@ -99,7 +106,7 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
           }
           else {
             // Popup is closed, continue.
-            timer.play();
+            self.timer.play();
 
             if (refocus) {
               card.setFocus();
@@ -118,17 +125,21 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
      * Game has finished!
      * @private
      */
-    var finished = function () {
-      timer.stop();
+    var finished = function (params) {
+      params = params || {};
+
+      self.timer.stop();
       $taskComplete.show();
       $feedback.addClass('h5p-show'); // Announce
       $bottom.focus();
 
-      // Create and trigger xAPI event 'completed'
-      var completedEvent = self.createXAPIEventTemplate('completed');
-      completedEvent.setScoredResult(1, 1, self, true, true);
-      completedEvent.data.statement.result.duration = 'PT' + (Math.round(timer.getTime() / 10) / 100) + 'S';
-      self.trigger(completedEvent);
+      if (!params.skipXAPI) {
+        // Create and trigger xAPI event 'completed'
+        var completedEvent = self.createXAPIEventTemplate('completed');
+        completedEvent.setScoredResult(1, 1, self, true, true);
+        completedEvent.data.statement.result.duration = 'PT' + (Math.round(self.timer.getTime() / 10) / 100) + 'S';
+        self.trigger(completedEvent);
+      }
 
       if (parameters.behaviour && parameters.behaviour.allowRetry) {
         // Create retry button
@@ -161,6 +172,7 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
      * @private
      */
     var resetGame = function () {
+      self.previousState = {};
 
       // Reset cards
       removed = 0;
@@ -170,26 +182,28 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       $taskComplete.hide();
 
       // Reset timer and counter
-      timer.reset();
-      counter.reset();
+      self.timer.reset();
+      self.counter.reset();
 
       // Randomize cards
-      H5P.shuffleArray(cards);
+      H5P.shuffleArray(this.cards);
 
       setTimeout(function () {
         // Re-append to DOM after flipping back
-        for (var i = 0; i < cards.length; i++) {
-          cards[i].reAppend();
+        for (var i = 0; i < self.cards.length; i++) {
+          self.cards[i].reAppend();
         }
-        for (var j = 0; j < cards.length; j++) {
-          cards[j].reset();
+        for (var j = 0; j < self.cards.length; j++) {
+          self.cards[j].reset();
         }
 
         // Scale new layout
         $wrapper.children('ul').children('.h5p-row-break').removeClass('h5p-row-break');
         self.trigger('resize');
-        cards[0].setFocus();
+        self.cards[0].setFocus();
       }, 600);
+
+      self.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
     };
 
     /**
@@ -228,22 +242,22 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
         }
 
         // Always return focus to the card last flipped
-        for (var i = 0; i < cards.length; i++) {
-          cards[i].makeUntabbable();
+        for (var i = 0; i < self.cards.length; i++) {
+          self.cards[i].makeUntabbable();
         }
         card.makeTabbable();
 
         popup.close();
         self.triggerXAPI('interacted');
         // Keep track of time spent
-        timer.play();
+        self.timer.play();
 
         // Keep track of the number of flipped cards
         numFlipped++;
 
         // Announce the card unless it's the last one and it's correct
         var isMatched = (flipped === mate);
-        var isLast = ((removed + 2) === cards.length);
+        var isLast = ((removed + 2) === self.cards.length);
         card.updateLabel(isMatched, !(isMatched && isLast));
 
         if (flipped !== undefined) {
@@ -266,7 +280,9 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
         }
 
         // Count number of cards turned
-        counter.increment();
+        self.counter.increment();
+
+        self.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
       });
       card.on('audioplay', function () {
         if (audioCard) {
@@ -289,14 +305,14 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       var createCardChangeFocusHandler = function (direction) {
         return function () {
           // Locate next card
-          for (var i = 0; i < cards.length; i++) {
-            if (cards[i] === card) {
+          for (var i = 0; i < self.cards.length; i++) {
+            if (self.cards[i] === card) {
               // Found current card
 
               var nextCard, fails = 0;
               do {
                 fails++;
-                nextCard = cards[i + (direction * fails)];
+                nextCard = self.cards[i + (direction * fails)];
                 if (!nextCard) {
                   return; // No more cards
                 }
@@ -327,13 +343,13 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       var createEndCardFocusHandler = function (direction) {
         return function () {
           var focusSet = false;
-          for (var i = 0; i < cards.length; i++) {
-            var j = (direction === -1 ? cards.length - (i + 1) : i);
-            if (!focusSet && !cards[j].isRemoved()) {
-              cards[j].setFocus();
+          for (var i = 0; i < self.cards.length; i++) {
+            var j = (direction === -1 ? self.cards.length - (i + 1) : i);
+            if (!focusSet && !self.cards[j].isRemoved()) {
+              self.cards[j].setFocus();
               focusSet = true;
             }
-            else if (cards[j] === card) {
+            else if (self.cards[j] === card) {
               card.makeUntabbable();
             }
           }
@@ -344,7 +360,7 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       card.on('first', createEndCardFocusHandler(1));
       card.on('last', createEndCardFocusHandler(-1));
 
-      cards.push(card);
+      self.cards.push(card);
     };
 
     /**
@@ -355,6 +371,8 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       flipBacks[1].flipBack();
       flipBacks.splice(0, 2);
       numFlipped -= 2;
+
+      self.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
     };
 
     /**
@@ -397,28 +415,44 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
 
     // Initialize cards.
     var cardsToUse = getCardsToUse();
+    let cardId = 0;
+
     for (var i = 0; i < cardsToUse.length; i++) {
       var cardParams = cardsToUse[i];
       if (MemoryGame.Card.isValid(cardParams)) {
         // Create first card
-        var cardTwo, cardOne = new MemoryGame.Card(cardParams.image, id, cardParams.imageAlt, parameters.l10n, cardParams.description, cardStyles, cardParams.audio);
+        var cardTwo, cardOne = new MemoryGame.Card(cardId, cardParams.image, id, cardParams.imageAlt, parameters.l10n, cardParams.description, cardStyles, cardParams.audio);
 
         if (MemoryGame.Card.hasTwoImages(cardParams)) {
           // Use matching image for card two
-          cardTwo = new MemoryGame.Card(cardParams.match, id, cardParams.matchAlt, parameters.l10n, cardParams.description, cardStyles, cardParams.matchAudio);
+          cardTwo = new MemoryGame.Card(cardId + 1, cardParams.match, id, cardParams.matchAlt, parameters.l10n, cardParams.description, cardStyles, cardParams.matchAudio);
           cardOne.hasTwoImages = cardTwo.hasTwoImages = true;
         }
         else {
           // Add two cards with the same image
-          cardTwo = new MemoryGame.Card(cardParams.image, id, cardParams.imageAlt, parameters.l10n, cardParams.description, cardStyles, cardParams.audio);
+          cardTwo = new MemoryGame.Card(cardId + 1, cardParams.image, id, cardParams.imageAlt, parameters.l10n, cardParams.description, cardStyles, cardParams.audio);
         }
 
         // Add cards to card list for shuffeling
         addCard(cardOne, cardTwo);
         addCard(cardTwo, cardOne);
+
+        cardId = cardId + 2;
       }
     }
-    H5P.shuffleArray(cards);
+
+    if (!self.previousState.cards) {
+      H5P.shuffleArray(self.cards);
+    }
+    else {
+      const reOrderedCards = [];
+
+      self.previousState.cards.forEach(function (card) {
+        reOrderedCards.push(self.cards[card.id]);
+      });
+
+      self.cards = reOrderedCards;
+    }
 
     /**
      * Attach this game's html to the given container.
@@ -443,8 +477,8 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
         'class': 'h5p-memory-game-cards-list',
         'aria-labelledby': 'h5p-intro-' + numInstances
       });
-      for (var i = 0; i < cards.length; i++) {
-        cards[i].appendTo($list);
+      for (var i = 0; i < that.cards.length; i++) {
+        that.cards[i].appendTo($list);
       }
 
       if ($list.children().length) {
@@ -462,7 +496,7 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
           }
         }
 
-        cards[0].makeTabbable();
+        that.cards[0].makeTabbable();
 
         $('<div/>', {
           id: 'h5p-intro-' + numInstances,
@@ -493,8 +527,19 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
                         '<dd class="h5p-card-turns">0<span class="h5p-memory-hidden-read">.</span></dd>' +
                         '</dl>').appendTo($bottom);
 
-        timer = new MemoryGame.Timer($status.find('time')[0]);
-        counter = new MemoryGame.Counter($status.find('.h5p-card-turns'));
+        self.timer = new MemoryGame.Timer(
+          $status.find('time')[0],
+          self.previousState.time,
+          {
+            store: function () {
+              self.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
+            }
+          }
+        );
+        self.counter = new MemoryGame.Counter(
+          $status.find('.h5p-card-turns'),
+          self.previousState.count
+        );
         popup = new MemoryGame.Popup($container, parameters.l10n);
         this.popup = popup;
 
@@ -510,10 +555,56 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
         $list.appendTo($container);
       }
 
-      //
       this.trigger('resize');
       setTimeout(function () {
         that.trigger('resize');
+        if (self.previousState.cards) {
+          for (let i = 0; i < self.cards.length; i++) {
+            const cardData = self.previousState.cards.find(function (previousCard) {
+              return previousCard.id === i;
+            });
+
+            const card = self.cards.find(function (currentCard) {
+              return currentCard.getId() === i;
+            });
+
+            if (cardData.isFlipped) {
+              card.flip({ skipPropagation: true });
+              numFlipped++;
+            }
+            if (cardData.isRemoved) {
+              card.remove();
+              card.makeUntabbable();
+              removed++;
+            }
+          }
+
+          // Determine if we have a single flipped card
+          for (let i = 0; i < self.cards.length; i = i + 2) {
+            const cardOne = self.cards.find(function (currentCard) {
+              return currentCard.getId() === i;
+            });
+            const cardTwo = self.cards.find(function (currentCard) {
+              return currentCard.getId() === i + 1;
+            });
+
+            if (cardOne.isFlipped() === cardTwo.isFlipped()) {
+              continue;
+            }
+            else {
+              flipped = cardOne.isFlipped() ? cardOne : cardTwo;
+              flipped.makeTabbable();
+              break;
+            }
+          }
+
+          if (numFlipped === self.cards.length) {
+            finished({ skipXAPI: true });
+          }
+          else {
+            self.timer.play();
+          }
+        }
       }, 0);
     };
 
@@ -531,6 +622,24 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
   // Extends the event dispatcher
   MemoryGame.prototype = Object.create(EventDispatcher.prototype);
   MemoryGame.prototype.constructor = MemoryGame;
+
+  /**
+   * Get current state.
+   * @return {object} current state.
+   */
+  MemoryGame.prototype.getCurrentState = function () {
+    return {
+      cards: this.cards.map(function (card) {
+        return {
+          id: card.getId(),
+          isFlipped: card.isFlipped(),
+          isRemoved: card.isRemoved()
+        };
+      }),
+      time: this.timer.getTime(),
+      count: this.counter.getValue()
+    };
+  };
 
   MemoryGame.prototype.scaleGameSize = function () {
     let cardConfigurations = [];

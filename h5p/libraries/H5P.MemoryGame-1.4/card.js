@@ -5,6 +5,7 @@
    *
    * @class H5P.MemoryGame.Card
    * @extends H5P.EventDispatcher
+   * @param {number} cardId Unique cardid.
    * @param {Object} image
    * @param {number} id
    * @param {string} alt
@@ -12,9 +13,11 @@
    * @param {string} [description]
    * @param {Object} [styles]
    */
-  MemoryGame.Card = function (image, id, alt, l10n, description, styles, audio) {
+  MemoryGame.Card = function (cardId, image, id, alt, l10n, description, styles, audio) {
     /** @alias H5P.MemoryGame.Card# */
     var self = this;
+
+    this.cardId = cardId;
 
     // Initialize event inheritance
     EventDispatcher.call(self);
@@ -112,17 +115,22 @@
     /**
      * Flip card.
      */
-    self.flip = function () {
+    self.flip = function (params) {
+      params = params || {};
+
       if (flippedState) {
         $wrapper.blur().focus(); // Announce card label again
         return;
       }
 
       $card.addClass('h5p-flipped');
-      self.trigger('flip');
+
+      if (!params.skipPropagation) {
+        self.trigger('flip');
+      }
       flippedState = true;
 
-      if (audioPlayer) {
+      if (audioPlayer && !params.skipPropagation) {
         audioPlayer.play();
       }
     };
@@ -275,6 +283,22 @@
       if ($wrapper) {
         $wrapper.focus();
       }
+    };
+
+    /**
+     * Get card's id.
+     * @return {number}
+     */
+    self.getId = function () {
+      return this.cardId;
+    };
+
+    /**
+     * Check if the card has been flipped.
+     * @return {boolean} True, if card is flipped, else false.
+     */
+    self.isFlipped = function () {
+      return flippedState;
     };
 
     /**

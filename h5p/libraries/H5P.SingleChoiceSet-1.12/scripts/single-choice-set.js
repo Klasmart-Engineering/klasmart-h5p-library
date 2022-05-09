@@ -31,6 +31,7 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
     if (contentData && contentData.previousState !== undefined) {
       this.currentIndex = contentData.previousState.progress;
       this.results = contentData.previousState.answers;
+      this.setViewState(contentData.previousState.viewState || 'task');
     }
     this.currentIndex = this.currentIndex || 0;
     this.results = this.results || {
@@ -431,6 +432,8 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
   SingleChoiceSet.prototype.handleViewSolution = function () {
     var self = this;
 
+    this.setViewState('solutions');
+
     var $tryAgainButton = $('.h5p-question-try-again', self.$container);
     var $showSolutionButton = $('.h5p-question-show-solution', self.$container);
     var buttons = [self.$muteButton, $tryAgainButton, $showSolutionButton];
@@ -488,6 +491,10 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
     // Question is finished
     if (this.options.choices.length === this.currentIndex) {
       this.trigger('question-finished');
+    }
+
+    if (this.viewState === 'solutions') {
+      this.showSolutions();
     }
 
     this.trigger('resize');
@@ -675,6 +682,7 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
     // if should show result slide
     if (isResultSlide) {
       self.setScore(self.results.corrects);
+      self.setViewState('results');
     }
 
     self.$container.toggleClass('navigatable', !isResultSlide);
@@ -687,6 +695,8 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
     self.recklessJump(index);
 
     self.currentIndex = index;
+
+    self.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
   };
 
   /**
@@ -829,6 +839,8 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
   SingleChoiceSet.prototype.resetTask = function () {
     var self = this;
 
+    this.setViewState('task');
+
     // Close solution view if visible:
     this.solutionView.hide();
 
@@ -861,6 +873,21 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
   };
 
   /**
+   * Set view state.
+   * @param {string} state View state.
+   */
+  SingleChoiceSet.prototype.setViewState = function (state) {
+    if (SingleChoiceSet.VIEW_STATES.indexOf(state) === -1) {
+      return;
+    }
+
+    // Kidsloop Live session storage will listen
+    this.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
+
+    this.viewState = state;
+  };
+
+  /**
    * Clever comment.
    *
    * @public
@@ -869,7 +896,8 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
   SingleChoiceSet.prototype.getCurrentState = function () {
     return {
       progress: this.currentIndex,
-      answers: this.results
+      answers: this.results,
+      viewState: this.viewState
     };
   };
 
@@ -895,6 +923,9 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
 
     return '';
   };
+
+  /** @constant {string[]} view state names*/
+  SingleChoiceSet.VIEW_STATES = ['task', 'results', 'solutions'];
 
   return SingleChoiceSet;
 })(H5P.jQuery, H5P.JoubelUI, H5P.Question, H5P.SingleChoiceSet.SingleChoice, H5P.SingleChoiceSet.SolutionView, H5P.SingleChoiceSet.ResultSlide, H5P.SingleChoiceSet.SoundEffects, H5P.SingleChoiceSet.XApiEventBuilder, H5P.SingleChoiceSet.StopWatch);

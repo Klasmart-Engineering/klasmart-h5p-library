@@ -5,11 +5,15 @@
    *
    * @class H5P.MemoryGame.Timer
    * @extends H5P.Timer
-   * @param {Element} element
+   * @param {Element} element,
+   * @param {number} previousTimeMs Previous time in MS.
+   * @param {object} callbacks Callbacks.
    */
-  MemoryGame.Timer = function (element) {
+  MemoryGame.Timer = function (element, previousTimeMs, callbacks) {
     /** @alias H5P.MemoryGame.Timer# */
     var self = this;
+
+    callbacks = callbacks || {};
 
     // Initialize event inheritance
     Timer.call(self, 1000);
@@ -38,6 +42,10 @@
       }
 
       element.innerText = minutes + ':' + seconds;
+
+      if (typeof callbacks.store === 'function') {
+        callbacks.store();
+      }
     };
 
     // Setup default behavior
@@ -46,6 +54,12 @@
       element.innerText = naturalState;
       self.notify('every_tenth_second', update);
     });
+
+    // Restore previous time
+    if (previousTimeMs) {
+      this.setClockTime(previousTimeMs);
+      update();
+    }
   };
 
   // Inheritance

@@ -5,12 +5,13 @@
    *
    * @class H5P.MemoryGame.Counter
    * @param {H5P.jQuery} $container
+   * @param {number} previousValue Previous value.
    */
-  MemoryGame.Counter = function ($container) {
+  MemoryGame.Counter = function ($container, previousValue) {
     /** @alias H5P.MemoryGame.Counter# */
     var self = this;
 
-    var current = 0;
+    var current = previousValue || 0;
 
     /**
      * @private
@@ -28,12 +29,22 @@
     };
 
     /**
+     * Get current value.
+     * @return {number} Current value.
+     */
+    self.getValue = function () {
+      return current;
+    };
+
+    /**
      * Revert counter back to its natural state
      */
     self.reset = function () {
       current = 0;
       update();
     };
+
+    update();
   };
 
 })(H5P.MemoryGame);

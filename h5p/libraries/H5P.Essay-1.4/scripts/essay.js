@@ -249,7 +249,7 @@ H5P.Essay = function ($, Question) {
 
     // Retry button
     that.addButton('try-again', that.params.tryAgain, function () {
-      that.resetTask();
+      that.resetTask({ skipClearing: true });
     }, false, {
       'aria-label': this.params.ariaRetry
     }, {});
@@ -402,7 +402,9 @@ H5P.Essay = function ($, Question) {
    * Reset task.
    * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-5}
    */
-  Essay.prototype.resetTask = function () {
+  Essay.prototype.resetTask = function (params) {
+    params = params || {};
+
     this.setViewState('task');
 
     this.setExplanation();
@@ -415,6 +417,10 @@ H5P.Essay = function ($, Question) {
     // QuestionSet can control check button despite not in Question Type contract
     if (this.params.behaviour.enableCheckButton) {
       this.showButton('check-answer');
+    }
+
+    if (!params.skipClearing) {
+      this.inputField.setText('');
     }
 
     this.inputField.enable();

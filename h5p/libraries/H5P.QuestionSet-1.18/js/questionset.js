@@ -66,6 +66,7 @@ H5P.QuestionSet = function (options, contentId, contentData) {
     disableBackwardsNavigation: false
   };
   var params = $.extend(true, {}, defaults, options);
+  this.params = params;
 
   var texttemplate =
           '<% if (introPage.showIntroPage) { %>' +
@@ -150,13 +151,19 @@ H5P.QuestionSet = function (options, contentId, contentData) {
   var showingSolutions = false;
   contentData = contentData || {};
 
-  // Bring question set up to date when resuming
-  if (contentData.previousState) {
-    if (contentData.previousState.progress) {
-      currentQuestion = contentData.previousState.progress;
-    }
-    questionOrder = contentData.previousState.order;
-  }
+  this.previousState = (contentData && contentData.previousState) ?
+    contentData.previousState :
+    {};
+
+  currentQuestion = this.previousState.progress;
+  questionOrder = this.previousState.order;
+
+  this.initialViewState = params.introPage.showIntroPage ? 'intro' : 'task';
+
+  this.setViewState((this.previousState.viewState === undefined) ?
+    this.initialViewState :
+    this.previousState.viewState
+  );
 
   /**
    * Randomizes questions in an array and updates an array containing their order
@@ -184,7 +191,7 @@ H5P.QuestionSet = function (options, contentId, contentData) {
     for (var j = 0; j < questionOrdering.length; j++) {
 
       // Use a previous order if it exists
-      if (contentData.previousState && contentData.previousState.questionOrder) {
+      if (self.previousState.questionOrder) {
         newOrder[j] = questionOrder[questionOrdering[j][1]];
       }
       else {
@@ -203,8 +210,8 @@ H5P.QuestionSet = function (options, contentId, contentData) {
   if (params.poolSize > 0) {
 
     // If a previous pool exists, recreate it
-    if (contentData.previousState && contentData.previousState.poolOrder) {
-      poolOrder = contentData.previousState.poolOrder;
+    if (self.previousState.poolOrder) {
+      poolOrder = self.previousState.poolOrder;
 
       // Recreate the pool from the saved data
       var pool = [];
@@ -284,7 +291,7 @@ H5P.QuestionSet = function (options, contentId, contentData) {
       }
 
       question.params = question.params || {};
-      var hasAnswers = contentData.previousState && contentData.previousState.answers;
+      var hasAnswers = self.previousState.answers;
 
       // Find the Hotspot needs to use non-popup mode to prevent inconsistent UX
       const libraryName = (question.library) ? question.library.split(' ')[0] : '';
@@ -296,7 +303,7 @@ H5P.QuestionSet = function (options, contentId, contentData) {
 
       var questionInstance = H5P.newRunnable(question, contentId, undefined, undefined,
         {
-          previousState: hasAnswers ? contentData.previousState.answers[i] : undefined,
+          previousState: hasAnswers ? self.previousState.answers[i] : undefined,
           parent: self
         });
       questionInstance.on('resize', function () {
@@ -313,7 +320,7 @@ H5P.QuestionSet = function (options, contentId, contentData) {
   questionInstances = createQuestionInstancesFromQuestions(params.questions);
 
   // Randomize questions only on instantiation
-  if (params.randomQuestions && contentData.previousState === undefined) {
+  if (params.randomQuestions && !Object.keys(self.previousState).length) {
     var result = randomizeQuestionOrdering(questionInstances);
     questionInstances = result.questions;
     questionOrder = result.questionOrder;
@@ -461,6 +468,8 @@ H5P.QuestionSet = function (options, contentId, contentData) {
    * @public
    */
   var showSolutions = function () {
+    self.setViewState('solutions');
+
     showingSolutions = true;
     for (var i = 0; i < questionInstances.length; i++) {
 
@@ -506,9 +515,10 @@ H5P.QuestionSet = function (options, contentId, contentData) {
    * @public
    */
   var resetTask = function () {
+    self.setViewState(self.initialViewState);
 
     // Clear previous state to ensure questions are created cleanly
-    contentData.previousState = [];
+    self.previousState = {};
 
     showingSolutions = false;
 
@@ -663,6 +673,8 @@ H5P.QuestionSet = function (options, contentId, contentData) {
       // Allow movement if backward navigation enabled or answer given
       _showQuestion(currentQuestion + direction);
     }
+
+    self.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
   };
 
   /**
@@ -718,7 +730,10 @@ H5P.QuestionSet = function (options, contentId, contentData) {
       .attr('tabindex', isCurrent && !disabledTabindex ? 0 : -1);
   };
 
-  var _displayEndGame = function () {
+  var _displayEndGame = function (skipParams) {
+    skipParams = skipParams || {};
+
+    self.setViewState('results');
     $('.progress-dot.current', $myDom).removeClass('current');
     if (rendered) {
       $myDom.children().hide().filter('.questionset-results').show();
@@ -752,8 +767,12 @@ H5P.QuestionSet = function (options, contentId, contentData) {
       });
     };
 
-    var displayResults = function () {
-      self.triggerXAPICompleted(self.getScore(), self.getMaxScore(), success);
+    var displayResults = function (skipParams) {
+      skipParams = skipParams || {};
+
+      if (!skipParams.skipXAPI) {
+        self.triggerXAPICompleted(self.getScore(), self.getMaxScore(), success);
+      }
 
       var eparams = {
         message: params.endGame.showResultPage ? params.endGame.message : params.endGame.noResultMessage,
@@ -854,7 +873,7 @@ H5P.QuestionSet = function (options, contentId, contentData) {
       }
     }
     // Trigger finished event.
-    displayResults();
+    displayResults({ skipXAPI: skipParams.skipXAPI });
     self.trigger('resize');
   };
 
@@ -986,22 +1005,34 @@ H5P.QuestionSet = function (options, contentId, contentData) {
       });
 
     $('.qs-startbutton', $myDom)
-      .click(function () {
-        $(this).parents('.intro-page').hide();
-        $('.questionset', $myDom).show();
-        _showQuestion(params.initialQuestion);
-        event.preventDefault();
+      .click(function (event) {
+        handleStartSet(event);
       })
       .keydown(function (event) {
         switch (event.which) {
           case 13: // Enter
           case 32: // Space
-            $(this).parents('.intro-page').hide();
-            $('.questionset', $myDom).show();
-            _showQuestion(params.initialQuestion);
-            event.preventDefault();
+            handleStartSet(event);
         }
       });
+
+    // Handle starting question set.
+    var handleStartSet = function (event) {
+      self.setViewState('task');
+      $('.intro-page', $myDom).hide();
+      $('.questionset', $myDom).show();
+      _showQuestion(params.initialQuestion);
+
+      if (event) {
+        event.preventDefault();
+      }
+    };
+
+    // Jump to question
+    var jumpToQuestion = function (index) {
+      _stopQuestion(currentQuestion);
+      _showQuestion(index);
+    };
 
     /**
      * Triggers changing the current question.
@@ -1062,6 +1093,22 @@ H5P.QuestionSet = function (options, contentId, contentData) {
     _updateButtons();
 
     this.trigger('resize');
+
+    // Recreate previous view
+    if (self.viewState === H5P.QuestionSet.VIEW_STATES.task) {
+      handleStartSet();
+      jumpToQuestion(self.previousState.progress || 0);
+    }
+    else if (this.viewState === H5P.QuestionSet.VIEW_STATES.results) {
+      handleStartSet();
+      _displayEndGame({ skipXAPI: true });
+    }
+    else if (this.viewState === H5P.QuestionSet.VIEW_STATES.solutions) {
+      handleStartSet();
+      showSolutions();
+      $myDom.children().hide().filter('.questionset').show();
+      jumpToQuestion(self.previousState.progress || params.initialQuestion);
+    }
 
     return this;
   };
@@ -1201,12 +1248,13 @@ H5P.QuestionSet = function (options, contentId, contentData) {
    */
   this.getCurrentState = function () {
     return {
-      progress: showingSolutions ? questionInstances.length - 1 : currentQuestion,
+      progress: currentQuestion,
       answers: questionInstances.map(function (qi) {
         return qi.getCurrentState();
       }),
       order: questionOrder,
-      poolOrder: poolOrder
+      poolOrder: poolOrder,
+      viewState: this.viewState
     };
   };
 
@@ -1270,3 +1318,32 @@ H5P.QuestionSet = function (options, contentId, contentData) {
 
 H5P.QuestionSet.prototype = Object.create(H5P.EventDispatcher.prototype);
 H5P.QuestionSet.prototype.constructor = H5P.QuestionSet;
+
+/**
+ * Set view state.
+ * @param {string|number} state View state.
+ */
+H5P.QuestionSet.prototype.setViewState = function (state) {
+  if (typeof state === 'string' && Object.keys(H5P.QuestionSet.VIEW_STATES).indexOf(state) === -1) {
+    return;
+  }
+
+  if (typeof state === 'number' && Object.values(H5P.QuestionSet.VIEW_STATES).indexOf(state) === -1) {
+    return;
+  }
+
+  // Kidsloop Live session storage will listen
+  this.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
+
+  this.viewState = (typeof state === 'string') ?
+    H5P.QuestionSet.VIEW_STATES[state] :
+    state;
+};
+
+/** @constant {string[]} view state names*/
+H5P.QuestionSet.VIEW_STATES = {
+  intro: 0,
+  task: 1,
+  results: 2,
+  solutions: 3
+};

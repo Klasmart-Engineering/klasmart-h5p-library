@@ -128,6 +128,13 @@
 .h5p-dragnbar-video-button:before,
 .h5p-dragnbar-more-button:before,
 .h5p-dragnbar-twitteruserfeed-button:before,
+.h5p-dragnbar-speakthewords-button:before,
+.h5p-dragnbar-imagemultiplehotspotquestion-button:before,
+.h5p-dragnbar-imagesequencing-button:before,
+.h5p-dragnbar-jigsawpuzzlekid-button:before,
+.h5p-dragnbar-essay-button:before,
+.h5p-dragnbar-audiorecorder-button:before,
+.h5p-dragnbar-imagepair-button:before,
 .h5p-dragnbar-interactivevideo-button:before,
 .h5p-dragnbar-chart-button:before {
   font-family: 'H5PFontAwesome4';
@@ -224,20 +231,25 @@
   content: "\e900";
 }
 .h5p-dragnbar-speakthewords-button:before {
-  font-family: 'H5PFontAwesome4';
   content: "\f130";
 }
 .h5p-dragnbar-imagemultiplehotspotquestion-button:before {
-  font-family: 'H5PFontAwesome4';
   content: "\f05d";
 }
 .h5p-dragnbar-imagesequencing-button:before {
-  font-family: 'H5PFontAwesome4';
   content: "\f009";
 }
 .h5p-dragnbar-jigsawpuzzlekid-button:before {
-  font-family: 'H5PFontAwesome4';
   content: "\f12e";
+}
+.h5p-dragnbar-essay-button:before {
+  content: "\f0f6";
+}
+.h5p-dragnbar-audiorecorder-button:before {
+  content: "\f130";
+}
+.h5p-dragnbar-imagepair-button:before {
+  content: "\f0db";
 }
 .h5p-dragnbar-shape-button:before {
   content: "\e91c";

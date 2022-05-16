@@ -2,7 +2,7 @@
   "title": "Course Presentation Editor (KidsLoop)",
   "majorVersion": 1,
   "minorVersion": 25,
-  "patchVersion": 0,
+  "patchVersion": 1,
   "runnable": 0,
   "machineName": "H5PEditor.CoursePresentationKID",
   "author": "Joubel",
@@ -198,6 +198,21 @@
       "machineName": "EditorFontKidsLoop",
       "majorVersion": 1,
       "minorVersion": 0
+    },
+    {
+      "machineName": "H5P.Essay",
+      "majorVersion": 1,
+      "minorVersion": 3
+    },
+    {
+      "machineName": "H5P.AudioRecorder",
+      "majorVersion": 1,
+      "minorVersion": 0
+    },
+    {
+      "machineName": "H5P.ImagePair",
+      "majorVersion": 1,
+      "minorVersion": 5
     }
   ]
 }

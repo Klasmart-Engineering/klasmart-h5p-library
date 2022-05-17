@@ -54,7 +54,7 @@ if (xapiServiceEndpoint && typeof xapiServiceEndpoint === 'string') {
         console.log(xapiEvent);
         // Don't upload xAPI events if it wasn't done in a Live class.
         if (!liveAuthorizationToken) {
-            return
+            return;
         }
         xapiUploader.uploadEvent(JSON.stringify(xapiEvent));
     });
@@ -69,14 +69,18 @@ if (mediaServiceEndpoint && typeof mediaServiceEndpoint === 'string') {
     h5p.externalDispatcher.on('exportFile', (mediaEvent) => {
         Object.assign(mediaEvent, { userId });
         console.log('media event:', mediaEvent);
-        const mimeType = mediaEvent?.data?.blob?.type
+        const mimeType = mediaEvent?.data?.blob?.type;
         // Don't upload screenshots if it wasn't done in a Live class.
-        if (!liveAuthorizationToken && mimeType && mimeType.startsWith('image/')) {
-            return
+        if (
+            !liveAuthorizationToken &&
+            mimeType &&
+            mimeType.startsWith('image/')
+        ) {
+            return;
         }
         mediaUploader
             .uploadMedia(mediaEvent)
-            .then(() => console.log('Media upload succeeded'))
+            .then((result) => console.log(`Media upload result: ${result}`))
             .catch((e) => console.error('Media upload failed', e));
     });
     console.log('[xAPI Uploader] Media upload listener attached');

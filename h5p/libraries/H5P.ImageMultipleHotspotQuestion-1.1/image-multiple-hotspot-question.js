@@ -258,20 +258,31 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
         self.hotspotSettings.hotspot[hotspot.index],
         { skipXAPI: true }
       );
+
+      // Add previously selected hotspots
+      self.selectedHotspots.push({
+        index: hotspot.index,
+        position: hotspot.position
+      });
     });
 
     if (this.previousState.lastPosition) {
-      if (this.previousState.lastPosition.index > -1) {
+      if (this.previousState.lastPosition.index === -1) {
+        this.$imageWrapper.trigger(
+          this.getMouseClickEvent(this.previousState.lastPosition.position)
+        );
+      }
+      else if (this.selectedHotspots.every(hotspot => {
+        return (
+          hotspot.position.x !== this.previousState.lastPosition.position.x &&
+          hotspot.position.y !== this.previousState.lastPosition.position.y
+        );
+      })) {
         this.createHotspotFeedback(
           this.$allHotspots[this.previousState.lastPosition.index],
           this.getMouseClickEvent(this.previousState.lastPosition.position),
           self.hotspotSettings.hotspot[this.previousState.lastPosition.index],
           { skipXAPI: true }
-        );
-      }
-      else {
-        this.$imageWrapper.trigger(
-          this.getMouseClickEvent(this.previousState.lastPosition.position)
         );
       }
     }

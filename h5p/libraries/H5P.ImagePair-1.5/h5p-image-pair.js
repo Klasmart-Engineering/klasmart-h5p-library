@@ -633,6 +633,9 @@ H5P.ImagePair = (function (EventDispatcher, $, UI) {
         matesReordered.push(self.mates[mate.id]);
       });
       this.mates = matesReordered;
+
+      // Rebuild previous state in local storage
+      self.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
     }
 
     /**

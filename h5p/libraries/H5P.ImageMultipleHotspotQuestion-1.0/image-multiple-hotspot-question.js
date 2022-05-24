@@ -286,6 +286,9 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
         );
       }
     }
+
+    // Rebuild previous state in local storage
+    this.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
   };
 
   /**

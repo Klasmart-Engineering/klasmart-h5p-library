@@ -608,6 +608,9 @@ H5P.ImageSequencing = (function (EventDispatcher, $, UI) {
       });
 
       that.sequencingCards = reOrderedCards;
+
+      // Rebuild previous state in local storage
+      self.trigger('kllStoreSessionState', undefined, { bubbles: true, external: true });
     }
 
     that.numCards = that.sequencingCards.length;

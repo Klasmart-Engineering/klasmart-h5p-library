@@ -121,6 +121,12 @@ H5P.Column = (function (EventDispatcher) {
         // Prevent video from growing endlessly since height is unlimited.
         content.params.visuals.fit = false;
       }
+      else if (library === 'H5P.DragQuestion') {
+        content.params.behaviour.enableFullScreen = false;
+      }
+      else if (library === 'H5P.JigsawPuzzleKID') {
+        content.params.disableFullscreen = true;
+      }
 
       // Create content instance
       var instance = H5P.newRunnable(content, id, undefined, true, contentData);
@@ -660,12 +666,24 @@ H5P.Column = (function (EventDispatcher) {
         }
         break;
 
+      case 'H5P.CoursePresentationKID':
+        if (instance.$fullScreenButton) {
+          instance.$fullScreenButton.remove();
+        }
+        break;
+
       case 'H5P.InteractiveVideo':
         instance.on('controls', function () {
           if (instance.controls.$fullscreen) {
             instance.controls.$fullscreen.remove();
           }
         });
+        break;
+
+      case 'H5P.Agamotto':
+        if (typeof instance.removeFullscreenButton === 'function') {
+          instance.removeFullscreenButton();
+        }
         break;
     }
   }

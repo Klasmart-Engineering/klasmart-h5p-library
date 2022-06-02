@@ -80,8 +80,20 @@ if (mediaServiceEndpoint && typeof mediaServiceEndpoint === 'string') {
         }
         mediaUploader
             .uploadMedia(mediaEvent)
-            .then((result) => console.log(`Media upload result: ${result}`))
-            .catch((e) => console.error('Media upload failed', e));
+            .then((result) => {
+              console.log(`Media upload result: ${result}`);
+              h5p.externalDispatcher.trigger(
+                'exportFileDone',
+                { uuid: mediaEvent?.data?.uuid }
+              );
+            })
+            .catch((e) => {
+              console.error('Media upload failed', e);
+              h5p.externalDispatcher.trigger(
+                'exportFileDone',
+                { uuid: mediaEvent?.data?.uuid }
+              );
+            });
     });
     console.log('[xAPI Uploader] Media upload listener attached');
 }

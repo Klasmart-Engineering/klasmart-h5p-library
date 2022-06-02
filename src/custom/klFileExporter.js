@@ -67,8 +67,12 @@ export default class KLFileExporter {
    * @param {function} callback Callback when progressing confirmed.
    */
   handleStudyProgressing(callback = (() => {})) {
+    // TODO: Remove
+    console.log(this);
+    console.log(this.hasPendingUploads());
+
     if (!this.hasPendingUploads()) {
-      callback();
+      return null;
     }
 
     // Allow callback to be redefined

@@ -67,19 +67,17 @@ export default class KLFileExporter {
    * @param {function} callback Callback when progressing confirmed.
    */
   handleStudyProgressing(callback = (() => {})) {
-    // TODO: Remove
-    console.log(this);
-    console.log(this.hasPendingUploads());
+    if (this.hasPendingUploads()) {
+      // Allow callback to be redefined
+      this.handleConfirmationDialogConfirmed = callback;
 
-    if (!this.hasPendingUploads()) {
-      return null;
+      // Show confirmation dialog that will exit quietly or with callback
+      this.confirmationDialog.show();
     }
-
-    // Allow callback to be redefined
-    this.handleConfirmationDialogConfirmed = callback;
-
-    // Show confirmation dialog that will exit quietly or with callback
-    this.confirmationDialog.show();
+    else {
+      // Run callback immediately
+      callback();
+    }
   }
 
   /**

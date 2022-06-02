@@ -12,7 +12,7 @@ export default class KLFileExporter {
     this.confirmationDialog = new H5P.ConfirmationDialog({
       headerText: 'Result not stored',
       dialogText: 'Your result is not stored yet. Please wait until it is completed. If you want to continue without storing it, click continue.',
-      cancelText: 'Cancel',
+      cancelText: 'OK',
       confirmText: 'Continue'
     });
     this.confirmationDialog.on('confirmed', () => {

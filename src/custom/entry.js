@@ -4,13 +4,13 @@ import './xapiUploader';
 import XAPIExperienced from './triggerXAPIExperienced';
 import KLStateStorer from './klSessionStorage';
 import KLScreenshot from './klScreenshot';
-
-// TODO: Remove when H5P-342 is accepted
-// Can be used for testing locally.
-// document.cookie = 'roomUserId=123:456';
+import KLFileExporter from './klFileExporter';
 
 // Trigger xAPI experienced once H5P content is initialized
 new XAPIExperienced();
+
+// Allow content types to export files
+H5P.KLFileExporter = new KLFileExporter();
 
 // Store state on client every 10 seconds and on special events
 H5P.KLStateStorer = new KLStateStorer({ storageInterval: 10 * 1000 });

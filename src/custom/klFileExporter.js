@@ -2,7 +2,7 @@ import URLTools from './helpers/urltools';
 
 export default class KLFileExporter {
   constructor() {
-    this.handleProgressingWhileIncomplete = this.handleProgressingWhileIncomplete.bind(this);
+    this.handleUnloadWhileIncomplete = this.handleUnloadWhileIncomplete.bind(this);
 
     // Keep track of pending uploads
     this.pendingUploadUUIDs = [];
@@ -10,6 +10,7 @@ export default class KLFileExporter {
     // Dialog to confirm progress
     this.handleConfirmationDialogConfirmed = (() => {});
     this.confirmationDialog = new H5P.ConfirmationDialog({
+      headerText: 'Result not stored',
       dialogText: 'Your result is not stored yet. Please wait until it is completed. If you want to continue without storing it, click continue.',
       cancelText: 'Cancel',
       confirmText: 'Continue'
@@ -61,21 +62,28 @@ export default class KLFileExporter {
     return this.pendingUploadUUIDs.length !== 0;
   }
 
+  /**
+   * Handle Study Progressing.
+   * @param {function} callback Callback when progressing confirmed.
+   */
   handleStudyProgressing(callback = (() => {})) {
     if (!this.hasPendingUploads()) {
-      // return;
+      callback();
     }
 
+    // Allow callback to be redefined
     this.handleConfirmationDialogConfirmed = callback;
+
+    // Show confirmation dialog that will exit quietly or with callback
     this.confirmationDialog.show();
   }
 
   /**
-   * Handle attempt to progress while file upload is incomplete.
+   * Handle attempt to unload while file upload is incomplete.
    * @param {Event} event Event.
    * @return {string} Former custom message. Deprecated.
    */
-  handleProgressingWhileIncomplete(event) {
+  handleUnloadWhileIncomplete(event) {
     event.preventDefault();
 
     // Overriding the default message is deprecated and will not work on all browsers
@@ -94,7 +102,7 @@ export default class KLFileExporter {
     this.pendingUploadUUIDs = this.pendingUploadUUIDs.filter(id => id !== uuid);
     if (!this.hasPendingUploads()) {
       ['beforeunload', 'unload'].forEach(eventName => {
-        removeEventListener(eventName, this.handleProgressingWhileIncomplete);
+        removeEventListener(eventName, this.handleUnloadWhileIncomplete);
       });
     }
   }
@@ -111,7 +119,7 @@ export default class KLFileExporter {
 
     if (!this.hasPendingUploads()) {
       ['beforeunload', 'unload'].forEach(eventName => {
-        addEventListener(eventName, this.handleProgressingWhileIncomplete);
+        addEventListener(eventName, this.handleUnloadWhileIncomplete);
       });
     }
 
@@ -176,6 +184,8 @@ export default class KLFileExporter {
      }
 
      data.uuid = H5P.createUUID();
+
+     // If on KidsLoop "Study", try to prevent "unload" while upload in progress
      const token = URLTools.getToken({ decoded: true });
      if (token?.classtype === 'study') {
        this.waitForFileExportConfirmation(data.uuid);

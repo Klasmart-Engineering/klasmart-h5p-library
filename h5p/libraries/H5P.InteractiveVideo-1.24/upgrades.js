@@ -298,6 +298,27 @@ H5PUpgrades['H5P.InteractiveVideo'] = (function () {
           };
         }
         finished(null, parameters);
+      },
+
+      /**
+       * Asynchronous content upgrade hook.
+       * Upgrades content parameters to support IV 1.24.
+       *
+       * Correct premature update of Image library
+       *
+       * @params {Object} parameters
+       * @params {function} finished
+       */
+      24: function (parameters, finished) {
+        if (parameters && parameters.interactiveVideo && parameters.interactiveVideo.assets && parameters.interactiveVideo.interactions) {
+          parameters.interactiveVideo.interactions = parameters.interactiveVideo.interactions.map(function (interaction) {
+            if (interaction.action && interaction.action.library === 'H5P.Image 1.2') {
+              interaction.action.library === 'H5P.Image 1.1';
+            }
+            return interaction;
+          });
+        }
+        finished(null, parameters);
       }
     }
   };

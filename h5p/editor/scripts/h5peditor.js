@@ -4,23 +4,11 @@
  */
 
 // Grab common resources set in parent window, but avoid sharing back resources set in iframe)
-var h5pEditor = window.self.H5PEditor
-try {
-  h5pEditor = window.parent.H5PEditor
-} catch (e) {
-  // Ignore.
-}
-window.ns = window.H5PEditor = H5P.jQuery.extend(false, {}, h5pEditor);
+window.ns = window.H5PEditor = H5P.jQuery.extend(false, {}, window.parent.H5PEditor);
 ns.$ = H5P.jQuery;
 
 // Load needed resources from parent.
-var h5pIntegration = window.self.H5PIntegration
-try {
-  h5pIntegration = window.parent.H5PIntegration
-} catch (e) {
-  // Ignore.
-}
-H5PIntegration = H5P.jQuery.extend(false, {}, h5pIntegration);
+H5PIntegration = H5P.jQuery.extend(false, {}, window.parent.H5PIntegration);
 H5PIntegration.loadedJs = [];
 H5PIntegration.loadedCss = [];
 
@@ -68,34 +56,48 @@ ns.isIE = navigator.userAgent.match(/; MSIE \d+.\d+;/) !== null;
  */
 ns.renderableCommonFields = {};
 
-/**
- * Help load JavaScripts, prevents double loading.
- *
- * @param {string} src
- * @param {Function} done Callback
- */
-ns.loadJs = function (src, done) {
-  if (H5P.jsLoaded(src)) {
-    // Already loaded
-    done();
-  }
-  else {
-    // Loading using script tag
+(() => {
+  const loading = {}; // Map of callbacks for each src being loaded
+
+  /**
+   * Help load JavaScripts, prevents double loading.
+   *
+   * @param {string} src
+   * @param {Function} done Callback
+   */
+  ns.loadJs = (src, done) => {
+    if (H5P.jsLoaded(src)) {
+      // Already loaded
+      done();
+      return;
+    }
+
+    if (loading[src] !== undefined) {
+      // Loading in progress...
+      loading[src].push(done);
+      return;
+    }
+
+    loading[src] = [done];
+
+    // Load using script tag
     var script = document.createElement('script');
     script.type = 'text/javascript';
     script.charset = 'UTF-8';
     script.async = false;
     script.onload = function () {
       H5PIntegration.loadedJs.push(src);
-      done();
+      loading[src].forEach(cb => cb());
+      delete loading[src];
     };
     script.onerror = function (err) {
-      done(err);
+      loading[src].forEach(cb => cb(err));
+      delete loading[src];
     };
     script.src = src;
     document.head.appendChild(script);
-  }
-}
+  };
+})();
 
 /**
  * Helper function invoked when a library is requested. Will add CSS and eval JS
@@ -268,16 +270,16 @@ ns.updateCommonFieldsDefault = function (semantics, translation, parentIsCommon)
   for (let i = 0; i < semantics.length; i++) {
     const isCommon = (semantics[i].common === true || parentIsCommon);
     if (isCommon && semantics[i].default !== undefined &&
-      translation[i] !== undefined && translation[i].default !== undefined) {
+        translation[i] !== undefined && translation[i].default !== undefined) {
       // Update value
       semantics[i].default = translation[i].default;
     }
     if (semantics[i].fields !== undefined && semantics[i].fields.length &&
-      translation[i].fields !== undefined && translation[i].fields.length) {
+        translation[i].fields !== undefined && translation[i].fields.length) {
       // Look into sub fields
       ns.updateCommonFieldsDefault(semantics[i].fields, translation[i].fields, isCommon);
     }
-    if (semantics[i].field !== undefined && translation[i].field !== undefined) {
+    if (semantics[i].field !== undefined && translation[i].field !== undefined ) {
       // Look into sub field
       ns.updateCommonFieldsDefault([semantics[i].field], [translation[i].field], isCommon);
     }
@@ -295,6 +297,7 @@ ns.resetLoadedLibraries = function () {
   H5PIntegration.loadedJs = [];
   ns.loadedCallbacks = [];
   ns.libraryLoaded = {};
+  ns.libraryCache = {};
 };
 
 /**
@@ -432,10 +435,10 @@ ns.processSemanticsChunk = function (semanticsChunk, params, $wrapper, parent, m
 
     // Check generic field properties.
     if (field.name === undefined) {
-      throw ns.t('core', 'missingProperty', { ':index': i, ':property': 'name' });
+      throw ns.t('core', 'missingProperty', {':index': i, ':property': 'name'});
     }
     if (field.type === undefined) {
-      throw ns.t('core', 'missingProperty', { ':index': i, ':property': 'type' });
+      throw ns.t('core', 'missingProperty', {':index': i, ':property': 'type'});
     }
 
     // Set default value.
@@ -641,11 +644,11 @@ ns.removeChildren = function (children) {
   for (var i = 0; i < children.length; i++) {
     // Common fields will be removed by library.
     var isCommonField = (children[i].field === undefined ||
-      children[i].field.common === undefined ||
-      !children[i].field.common);
+                         children[i].field.common === undefined ||
+                         !children[i].field.common);
 
     var hasRemove = (children[i].remove instanceof Function ||
-      typeof children[i].remove === 'function');
+                     typeof children[i].remove === 'function');
 
     if (isCommonField && hasRemove) {
       children[i].remove();
@@ -755,10 +758,10 @@ ns.followField = function (parent, path, callback) {
     var field = ns.findField(path, parent);
 
     if (!field) {
-      throw ns.t('core', 'unknownFieldPath', { ':path': path });
+      throw ns.t('core', 'unknownFieldPath', {':path': path});
     }
     if (field.changes === undefined) {
-      throw ns.t('core', 'noFollow', { ':path': path });
+      throw ns.t('core', 'noFollow', {':path': path});
     }
 
     var params = (field.params === undefined ? def : field.params);
@@ -805,11 +808,11 @@ ns.createImportance = function (importance) {
  */
 ns.createItem = function (type, label, description, content) {
   return '<div class="field ' + type + '">' +
-    (label ? label : '') +
-    (description ? '<div class="h5peditor-field-description">' + description + '</div>' : '') +
-    (content ? content : '') +
-    '<div class="h5p-errors"></div>' +
-    '</div>';
+           (label ? label : '') +
+           (description ? '<div class="h5peditor-field-description">' + description + '</div>' : '') +
+           (content ? content : '') +
+           '<div class="h5p-errors"></div>' +
+         '</div>';
 };
 
 /**
@@ -947,7 +950,7 @@ ns.getNextFieldId = (function (counter) {
    * @return {number}
    */
   return function (field) {
-    return 'field-' + field.name.toLowerCase() + '-' + (counter++);
+    return 'field-' + field.name.toLowerCase() +  '-' + (counter++);
   };
 })(-1);
 
@@ -976,7 +979,7 @@ ns.createLabel = function (field, content, inputId) {
   if (inputId !== undefined) {
     html += ' for="' + inputId + '"';
   }
-  html += '>'
+  html+= '>'
 
   // Temporary fix for the old version of CoursePresentation's custom editor
   if (field.widget === 'coursepresentation' && field.name === 'presentation') {
@@ -1018,44 +1021,44 @@ ns.createImportantDescription = function (importantDescription) {
 
   if (importantDescription !== undefined) {
     html += '<div class="h5peditor-field-important-description">' +
-      '<div class="important-description-tail">' +
-      '</div>' +
-      '<div class="important-description-close" role="button" tabindex="0" aria-label="' + ns.t('core', 'hideImportantInstructions') + '">' +
-      '<span>' +
-      ns.t('core', 'hide') +
-      '</span>' +
-      '</div>' +
-      '<span class="h5p-info-icon">' +
-      '</span>' +
-      '<span class="important-description-title">' +
-      ns.t('core', 'importantInstructions') +
-      '</span>';
+              '<div class="important-description-tail">' +
+              '</div>' +
+              '<div class="important-description-close" role="button" tabindex="0" aria-label="' + ns.t('core', 'hideImportantInstructions') + '">' +
+                '<span>' +
+                   ns.t('core', 'hide') +
+                '</span>' +
+              '</div>' +
+              '<span class="h5p-info-icon">' +
+              '</span>' +
+              '<span class="important-description-title">' +
+                 ns.t('core', 'importantInstructions') +
+              '</span>';
 
     if (importantDescription.description !== undefined) {
       html += '<div class="important-description-content">' +
-        importantDescription.description +
-        '</div>';
+                 importantDescription.description +
+              '</div>';
     }
 
     if (importantDescription.example !== undefined) {
       html += '<div class="important-description-example">' +
-        '<div class="important-description-example-title">' +
-        '<span>' +
-        ns.t('core', 'example') +
-        ':</span>' +
-        '</div>' +
-        '<div class="important-description-example-text">' +
-        '<span>' +
-        importantDescription.example +
-        '</span>' +
-        '</div>' +
-        '</div>';
+                '<div class="important-description-example-title">' +
+                  '<span>' +
+                     ns.t('core', 'example') +
+                  ':</span>' +
+                '</div>' +
+                '<div class="important-description-example-text">' +
+                  '<span>' +
+                     importantDescription.example +
+                  '</span>' +
+                '</div>' +
+              '</div>';
     }
 
     html += '</div>' +
-      '<span class="important-description-show" role="button" tabindex="0">' +
-      ns.t('core', 'showImportantInstructions') +
-      '</span><span class="important-description-clear-right"></span>';
+            '<span class="important-description-show" role="button" tabindex="0">' +
+              ns.t('core', 'showImportantInstructions') +
+            '</span><span class="important-description-clear-right"></span>';
   }
 
   return html;
@@ -1078,7 +1081,7 @@ ns.bindImportantDescriptionEvents = function (widget, fieldName, parent) {
   var librarySelector = ns.findLibraryAncestor(parent);
   if (librarySelector.currentLibrary !== undefined) {
     var lib = librarySelector.currentLibrary.split(' ')[0];
-    context = (lib + '-' + fieldName).replace(/\.|_/g, '-') + '-important-description-open';
+    context = (lib + '-' + fieldName).replace(/\.|_/g,'-') + '-important-description-open';
   }
 
   // Set first occurance to visible
@@ -1124,9 +1127,9 @@ ns.bindImportantDescriptionEvents = function (widget, fieldName, parent) {
  */
 ns.createCopyPasteButtons = function () {
   return '<div class="h5peditor-copypaste-wrap">' +
-    '<button class="h5peditor-copy-button disabled" title="' + H5PEditor.t('core', 'copyToClipboard') + '" disabled>' + ns.t('core', 'copyButton') + '</button>' +
-    '<button class="h5peditor-paste-button disabled" title="' + H5PEditor.t('core', 'pasteFromClipboard') + '" disabled>' + ns.t('core', 'pasteButton') + '</button>' +
-    '</div><div class="h5peditor-clearfix"></div>';
+           '<button class="h5peditor-copy-button disabled" title="' + H5PEditor.t('core', 'copyToClipboard') + '" disabled>' + ns.t('core', 'copyButton') + '</button>' +
+           '<button class="h5peditor-paste-button disabled" title="' + H5PEditor.t('core', 'pasteFromClipboard') + '" disabled>' + ns.t('core', 'pasteButton') + '</button>' +
+         '</div><div class="h5peditor-clearfix"></div>';
 };
 
 /**
@@ -1395,11 +1398,21 @@ ns.canPastePlus = function (clipboard, libs) {
 
   // Check if clipboard library version is available
   const versionClip = clipboard.generic.library.split(' ')[1];
-  const match = candidates.some(function (candidate) {
-    return ('' + candidate.majorVersion + '.' + candidate.minorVersion) === versionClip;
-  });
-  if (match) {
-    return { canPaste: true };
+  for (let i = 0; i < candidates.length; i++) {
+    if (candidates[i].majorVersion + '.' + candidates[i].minorVersion === versionClip) {
+      if (candidates[i].restricted !== true) {
+        return {
+          canPaste: true
+        };
+      }
+      else {
+        return {
+          canPaste: false,
+          reason: 'pasteContentRestricted',
+          description: ns.t('core', 'pasteContentRestricted')
+        };
+      }
+    }
   }
 
   // Sort remaining candidates by version number
@@ -1422,7 +1435,7 @@ ns.canPastePlus = function (clipboard, libs) {
   // Clipboard library is newer than latest available local library
   const candidateMax = candidates.slice(-1)[0];
   if (+candidateMax.split('.')[0] < +versionClip.split('.')[0] ||
-    (+candidateMax.split('.')[0] === +versionClip.split('.')[0] &&
+      (+candidateMax.split('.')[0] === +versionClip.split('.')[0] &&
       +candidateMax.split('.')[1] < +versionClip.split('.')[1])) {
     return {
       canPaste: false,
@@ -1437,8 +1450,8 @@ ns.canPastePlus = function (clipboard, libs) {
   // Clipboard library is older than latest available local library
   const candidateMin = candidates.slice(0, 1)[0];
   if (+candidateMin.split('.')[0] > +versionClip.split('.')[0] ||
-    (+candidateMin.split('.')[0] === +versionClip.split('.')[0] &&
-      +candidateMin.split('.')[1] > +versionClip.split('.')[1])) {
+      (+candidateMin.split('.')[0] === +versionClip.split('.')[0] &&
+       +candidateMin.split('.')[1] > +versionClip.split('.')[1])) {
     return {
       canPaste: false,
       reason: 'pasteTooOld',
@@ -1545,7 +1558,7 @@ ns.ContentType.getPossibleUpgrade = function (library, libraries) {
 ns.ContentType.isHigherVersion = function (candiate, original) {
   return (ns.ContentType.getMajorVersion(candiate) > ns.ContentType.getMajorVersion(original) ||
     (ns.ContentType.getMajorVersion(candiate) == ns.ContentType.getMajorVersion(original) &&
-      ns.ContentType.getMinorVersion(candiate) > ns.ContentType.getMinorVersion(original)));
+     ns.ContentType.getMinorVersion(candiate) > ns.ContentType.getMinorVersion(original)));
 };
 
 /**
@@ -1642,11 +1655,11 @@ ns.upgradeContent = (function () {
             let message = 'Could not upgrade content';
             switch (err.type) {
               case 'errorTooHighVersion':
-                message += ': ' + ns.t('core', 'errorTooHighVersion', { '%used': err.used, '%supported': err.supported });
+                message += ': ' + ns.t('core', 'errorTooHighVersion', {'%used': err.used, '%supported': err.supported});
                 break;
 
               case 'errorNotSupported':
-                message += ': ' + ns.t('core', 'errorNotSupported', { '%used': err.used });
+                message += ': ' + ns.t('core', 'errorNotSupported', {'%used': err.used});
                 break;
 
               case 'errorParamsBroken':
@@ -1654,11 +1667,11 @@ ns.upgradeContent = (function () {
                 break;
 
               case 'libraryMissing':
-                message += ': ' + ns.t('core', 'libraryMissing', { '%lib': err.library });
+                message += ': ' +  ns.t('core', 'libraryMissing', {'%lib': err.library});
                 break;
 
               case 'scriptMissing':
-                message += ': ' + ns.t('core', 'scriptMissing', { '%lib': err.library });
+                message += ': ' + ns.t('core', 'scriptMissing', {'%lib': err.library});
                 break;
             }
 
@@ -1719,6 +1732,7 @@ ns.supportedLanguages = {
   'en-gb': 'English, British',
   'eo': 'Esperanto',
   'es': 'Spanish (Español)',
+  'es-mx': 'Spanish, Mexican',
   'et': 'Estonian (Eesti)',
   'eu': 'Basque (Euskera)',
   'fa': 'Persian (فارسی)',
@@ -1826,6 +1840,9 @@ ns.supportedLanguages = {
   'sk': 'Slovak (Slovenčina)',
   'sl': 'Slovenian (Slovenščina)',
   'sm': 'Samoan',
+  'sma': 'Sámi (Southern)',
+  'sme': 'Sámi (Northern)',
+  'smj': 'Sámi (Lule)',
   'sn': 'Shona',
   'so': 'Somali',
   'sq': 'Albanian (Shqip)',
@@ -1861,7 +1878,9 @@ ns.supportedLanguages = {
   'yi': 'Yiddish',
   'yo': 'Yoruba (Yorùbá)',
   'za': 'Zhuang',
+  'zh': 'Chinese',
   'zh-hans': 'Chinese, Simplified (简体中文)',
   'zh-hant': 'Chinese, Traditional (繁體中文)',
+  'zh-tw': 'Chinese, Taiwan, Traditional',
   'zu': 'Zulu (isiZulu)'
 };

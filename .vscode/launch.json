@@ -20,6 +20,21 @@
             "envFile": "${workspaceFolder}/.env"
         },
         {
+            "name": "debug.ts",
+            "type": "node",
+            "request": "launch",
+            "runtimeArgs": [
+                "--nolazy",
+                "-r",
+                "ts-node/register",
+                "src/contentInfoRetriever.ts"
+            ],
+            "sourceMaps": true,
+            "smartStep": true,
+            "cwd": "${workspaceRoot}",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
             "type": "pwa-node",
             "request": "launch",
             "name": "Mocha Current File",

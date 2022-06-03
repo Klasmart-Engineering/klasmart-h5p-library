@@ -6,6 +6,12 @@ import {
     IRequestWithLanguage
 } from '@lumieducation/h5p-express';
 import { verifyToken } from './jwt';
+import ContentInfoRetriever from './contentInfoRetriever';
+import { checkAuthenticationToken } from '@kl-engineering/kidsloop-token-validation';
+import * as cookieParser from 'cookie';
+import { withLogger } from '@kl-engineering/kidsloop-nodejs-logger';
+
+const logger = withLogger('expressRoutes');
 
 const requireTokenParameter: RequestHandler = async (req, res, next) => {
     try {
@@ -16,9 +22,24 @@ const requireTokenParameter: RequestHandler = async (req, res, next) => {
         }
         res.locals.token = await verifyToken(encodedToken);
         next();
-    } catch (e) {
-        console.error(e);
+    } catch (error) {
+        logger.error('h5ptoken validation failed.', { error: error.message });
         res.sendStatus(403).end();
+    }
+};
+
+const authenticationRequestHandler: RequestHandler = async (req, res, next) => {
+    try {
+        const rawCookie = req.headers.cookie;
+        const cookie = cookieParser.parse(rawCookie);
+        await checkAuthenticationToken(cookie.access);
+        next();
+    } catch (error) {
+        logger.error('authentication cookie validation failed.', {
+            error: error.message
+        });
+        res.sendStatus(403).end();
+        return;
     }
 };
 
@@ -32,6 +53,7 @@ const requireTokenParameter: RequestHandler = async (req, res, next) => {
 export default function (
     h5pEditor: H5P.H5PEditor,
     h5pPlayer: H5P.H5PPlayer,
+    contentInfoRetriever: ContentInfoRetriever | undefined,
     languageOverride: string | 'auto' = 'auto'
 ): express.Router {
     const router = express.Router();
@@ -355,6 +377,32 @@ export default function (
                 console.error(e);
             }
             res.sendStatus(500).end();
+        }
+    );
+
+    router.get(
+        '/content_info',
+        authenticationRequestHandler,
+        async (req: IRequestWithLanguage & IRequestWithUser, res) => {
+            const contentIdCsv = req.query.contentids;
+            try {
+                const contentIds = contentIdCsv
+                    .toString()
+                    .split(',')
+                    .filter((x) => x != '');
+                const contents = await contentInfoRetriever.getContentInfo(
+                    contentIds
+                );
+                res.json(contents);
+                res.status(200).end();
+            } catch (error) {
+                logger.error('Error retrieving content info.', {
+                    error: error.message,
+                    path: '/content_info',
+                    contentIds: contentIdCsv
+                });
+                res.sendStatus(500).end();
+            }
         }
     );
 

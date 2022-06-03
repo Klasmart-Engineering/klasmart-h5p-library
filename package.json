@@ -8,6 +8,7 @@
     },
     "scripts": {
         "start": "cross-env NEW_RELIC_HOME=tests ts-node -r dotenv/config src/express.ts",
+        "debug": "cross-env NEW_RELIC_HOME=tests CONTENT_MONGO_COLLECTION=h5p ts-node -r dotenv/config src/contentInfoRetriever.ts",
         "start:dist": "node dist/express.js",
         "build": "rm -rf dist && npm run build:server && npm run build:client",
         "build:client": "npx tsc -p ./tsconfig.client.json",

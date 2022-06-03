@@ -37,6 +37,9 @@ import createH5PEditor from './createH5PEditor';
 import { displayIps, clearTempFiles } from './utils';
 import player from './renderers/player';
 import editor from './renderers/default';
+import ContentInfoRetriever from './contentInfoRetriever';
+import * as dbImplementations from '@lumieducation/h5p-mongos3';
+import { Collection, Document } from 'mongodb';
 
 let tmpDir: DirectoryResult;
 
@@ -219,6 +222,14 @@ const start = async (): Promise<void> => {
         )
     );
 
+    // TODO: Consider implementing file system version for local dev.
+    let mongoDb: Collection<Document>;
+    if (process.env.CONTENTSTORAGE === 'mongos3') {
+        mongoDb = (await dbImplementations.initMongo()).collection(
+            process.env.CONTENT_MONGO_COLLECTION
+        );
+    }
+
     // The expressRoutes are routes that create pages for these actions:
     // - Creating new content
     // - Editing content
@@ -229,6 +240,7 @@ const start = async (): Promise<void> => {
         expressRoutes(
             h5pEditor,
             h5pPlayer,
+            mongoDb ? new ContentInfoRetriever(mongoDb) : undefined,
             'auto' // You can change the language of the editor by setting
             // the language code you need here. 'auto' means the route will try
             // to use the language detected by the i18next language detector.

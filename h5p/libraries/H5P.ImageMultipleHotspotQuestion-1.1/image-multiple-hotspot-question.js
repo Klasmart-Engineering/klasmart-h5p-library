@@ -546,11 +546,11 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
           );
         }
       }, 1000); // Allow results to display
-    }
 
-    if (!params.skipXAPI) {
-      // Trigger xAPI completed event
-      this.trigger(this.getXAPIAnswerEvent());
+      if (!params.skipXAPI) {
+        // Trigger xAPI completed event
+        this.trigger(this.getXAPIAnswerEvent());
+      }
     }
   };
 

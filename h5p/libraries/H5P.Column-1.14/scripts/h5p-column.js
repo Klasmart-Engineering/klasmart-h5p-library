@@ -122,7 +122,7 @@ H5P.Column = (function (EventDispatcher) {
         content.params.visuals.fit = false;
       }
       else if (library === 'H5P.DragQuestion') {
-        content.params.enableFullScreen = false;
+        content.params.behaviour.enableFullScreen = false;
       }
       else if (library === 'H5P.JigsawPuzzleKID') {
         content.params.disableFullscreen = true;
@@ -684,12 +684,6 @@ H5P.Column = (function (EventDispatcher) {
         if (typeof instance.removeFullscreenButton === 'function') {
           instance.removeFullscreenButton();
         }
-        break;
-
-      case 'H5P.DragQuestion':
-        instance.once('resize', function () {
-          instance.$mainContainer.find('.h5p-my-fullscreen-button-enter').remove();
-        });
         break;
     }
   }

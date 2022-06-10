@@ -29,7 +29,8 @@ export default class ContentInfoRetriever {
         const contentInfo: ContentInfo = {
             id: rawh5p._id.toString(),
             // H5P.Column -> Column
-            type: rawh5p.metadata.mainLibrary.substring(4)
+            type: rawh5p.metadata.mainLibrary.substring(4),
+            name: rawh5p.metadata?.title
         };
         this.buildRecursively(rawh5p.parameters, contentInfo);
         return contentInfo;
@@ -48,6 +49,7 @@ export default class ContentInfoRetriever {
         if (node.hasOwnProperty('subContentId')) {
             const subContentId = node['subContentId'];
             const rawLibrary = node['library'];
+            const name = node['metadata']?.['title'] ?? parent.name;
             let library = rawLibrary as string;
             if (library == null) {
                 library = parent.type;
@@ -62,7 +64,8 @@ export default class ContentInfoRetriever {
             }
             const child: ContentInfo = {
                 id: subContentId,
-                type: library
+                type: library,
+                name: name
             };
             const subContents = parent.subContents ?? [];
             parent.subContents = subContents;
@@ -83,11 +86,12 @@ type ContentInfoResponse = {
 type ContentInfo = {
     id: string;
     type: string;
+    name: string;
     subContents?: ContentInfo[];
 };
 
 type RawH5P = {
     _id: ObjectId;
-    metadata: { mainLibrary: string };
+    metadata: { mainLibrary: string; title: string };
     parameters: Record<string, unknown>;
 };

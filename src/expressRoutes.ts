@@ -384,7 +384,17 @@ export default function (
         '/content_info',
         authenticationRequestHandler,
         async (req: IRequestWithLanguage & IRequestWithUser, res) => {
-            const contentIdCsv = req.query.contentids;
+            const contentIdCsv = req.query.contentIds;
+            if (!contentIdCsv) {
+                logger.error(
+                    "The 'contentIds' query parameter is required but it wasn't provided.",
+                    {
+                        path: '/content_info'
+                    }
+                );
+                res.sendStatus(500).end();
+                return;
+            }
             try {
                 const contentIds = contentIdCsv
                     .toString()

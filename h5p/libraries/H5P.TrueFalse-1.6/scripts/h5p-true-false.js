@@ -92,6 +92,9 @@ H5P.TrueFalse = (function ($, Question) {
 
       if (params.behaviour.autoCheck) {
         checkAnswer();
+        setTimeout(function () {
+          self.takeScreenshot();
+        }, 1000); // Give result time to appear
         triggerXAPIAnswered();
       }
     });
@@ -511,9 +514,24 @@ H5P.TrueFalse = (function ($, Question) {
       this.setViewState('results');
 
       checkAnswer();
+      setTimeout(function () {
+        self.takeScreenshot();
+      }, 1000); // Give result time to appear
 
       if (!params.skipXAPI) {
         triggerXAPIAnswered();
+      }
+    };
+
+    /**
+     * Take screenshot.
+     */
+    self.takeScreenshot = function() {
+      if (H5P && H5P.KLScreenshot) {
+        H5P.KLScreenshot.takeScreenshot(
+          self,
+          self.$content.get(0).closest('.h5p-container')
+        );
       }
     };
 

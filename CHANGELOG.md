@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.16.3 (2022-06-13)
+
+
+### Bug Fixes
+
+* **H5P-693:** add files via upload ([65de951](https://github.com/KL-Engineering/kidsloop-h5p-library/commits/65de951d78a93ed287fca001742ec44b0767df89))
+
 ### 2.16.2 (2022-05-25)
 
 

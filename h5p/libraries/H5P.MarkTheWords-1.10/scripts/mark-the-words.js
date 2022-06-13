@@ -394,6 +394,15 @@ H5P.MarkTheWords = (function ($, Question, Word, KeyboardNav, XapiGenerator) {
 
     this.hideButton('check-answer');
 
+    setTimeout(function () {
+      if (H5P && H5P.KLScreenshot) {
+        H5P.KLScreenshot.takeScreenshot(
+          self,
+          self.$wordContainer.get(0).closest('.h5p-container')
+        );
+      }
+    }, 1000); // Give results time to appear
+
     if (!params.skipXAPI) {
       this.trigger(this.XapiGenerator.generateAnsweredEvent());
     }

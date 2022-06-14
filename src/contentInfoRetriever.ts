@@ -26,10 +26,13 @@ export default class ContentInfoRetriever {
 
     private mapDocumentToContentInfo(doc: WithId<Document>): ContentInfo {
         const rawh5p = (doc as unknown) as RawH5P;
+        if (rawh5p.metadata.mainLibrary === 'H5P.ArithmeticQuiz') {
+            return this.mapArithmeticQuizToContentInfo(rawh5p);
+        }
         const contentInfo: ContentInfo = {
             id: rawh5p._id.toString(),
             // H5P.Column -> Column
-            type: rawh5p.metadata.mainLibrary.substring(4),
+            type: rawh5p.metadata.mainLibrary?.substring(4),
             name: rawh5p.metadata?.title
         };
         this.buildRecursively(rawh5p.parameters, contentInfo);
@@ -76,6 +79,27 @@ export default class ContentInfoRetriever {
         for (const value of Object.values(node)) {
             this.buildRecursively(value, parent);
         }
+    }
+
+    private mapArithmeticQuizToContentInfo(rawh5p: RawH5P): ContentInfo {
+        const type = rawh5p.metadata.mainLibrary?.substring(4);
+        const name = rawh5p.metadata?.title;
+        let subContents: ContentInfo[];
+        const subContentIds = rawh5p.parameters?.subContentIds as string;
+        if (subContentIds) {
+            subContents = subContentIds
+                .split(';')
+                .filter((x) => x.trim() !== '')
+                .map((x) => {
+                    return { id: x, name, type };
+                });
+        }
+        return {
+            id: rawh5p._id.toString(),
+            type,
+            name,
+            subContents
+        };
     }
 }
 

@@ -85,7 +85,7 @@ export default class ContentInfoRetriever {
     private mapArithmeticQuizToContentInfo(rawh5p: RawH5P): ContentInfo {
         const type = rawh5p.metadata.mainLibrary?.substring(4);
         const name = rawh5p.metadata?.title;
-        const maxQuestions = Number(rawh5p.parameters?.subContentIds as string);
+        const maxQuestions = Number(rawh5p.parameters?.maxQuestions as string);
         let subContents: ContentInfo[];
         const subContentIds = rawh5p.parameters?.subContentIds as string;
         if (subContentIds && !isNaN(maxQuestions)) {

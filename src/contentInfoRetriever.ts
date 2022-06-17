@@ -1,5 +1,6 @@
-import { ObjectId, Collection, Document, WithId, MongoClient } from 'mongodb';
+import { ObjectId, Collection, Document, WithId } from 'mongodb';
 
+// Sub-contents we don't care about because they don't emit xAPI events.
 const SubContentBlackList = [
     'Image',
     'Audio',
@@ -84,12 +85,14 @@ export default class ContentInfoRetriever {
     private mapArithmeticQuizToContentInfo(rawh5p: RawH5P): ContentInfo {
         const type = rawh5p.metadata.mainLibrary?.substring(4);
         const name = rawh5p.metadata?.title;
+        const maxQuestions = Number(rawh5p.parameters?.subContentIds as string);
         let subContents: ContentInfo[];
         const subContentIds = rawh5p.parameters?.subContentIds as string;
-        if (subContentIds) {
+        if (subContentIds && !isNaN(maxQuestions)) {
             subContents = subContentIds
                 .split(';')
                 .filter((x) => x.trim() !== '')
+                .slice(0, maxQuestions)
                 .map((x) => {
                     return { id: x, name, type };
                 });

@@ -82,16 +82,26 @@ if (mediaServiceEndpoint && typeof mediaServiceEndpoint === 'string') {
             .uploadMedia(mediaEvent)
             .then((result) => {
               console.log(`Media upload result: ${result}`);
+
+              // Inform content about progress
               h5p.externalDispatcher.trigger(
                 'exportFileDone',
-                { uuid: mediaEvent?.data?.uuid }
+                {
+                  uuid: mediaEvent?.data?.uuid,
+                  result: 'finished'
+                }
               );
             })
             .catch((e) => {
               console.error('Media upload failed', e);
+
+              // Inform content about progress
               h5p.externalDispatcher.trigger(
                 'exportFileDone',
-                { uuid: mediaEvent?.data?.uuid }
+                {
+                  uuid: mediaEvent?.data?.uuid,
+                  result: 'finished' // Could be 'failed', but was not requested
+                }
               );
             });
     });

@@ -94,9 +94,11 @@ export default class KLFileExporter {
 
   /**
    * Stop waiting for file export has completed.
-   * @param {string} uuid UUID of export process.
+   * @param {object} params Parameters.
+   * @param {string} params.uuid UUID of export process.
+   * @param {string} params.result 'finished|timed_out'.
    */
-  stopWaitingFileExportConfirmation(uuid) {
+  stopWaitingFileExportConfirmation({ uuid, result }) {
     if (!this.pendingUploadUUIDs.includes(uuid)) {
       return; // May have already been handled
     }
@@ -106,6 +108,12 @@ export default class KLFileExporter {
       ['beforeunload', 'unload'].forEach(eventName => {
         removeEventListener(eventName, this.handleUnloadWhileIncomplete);
       });
+
+      // Inform host system about upload result
+      window.parent.postMessage({
+        type: 'H5P_SCREENSHOT_UPLOAD',
+        status: result
+      }, '*');
     }
   }
 
@@ -125,19 +133,32 @@ export default class KLFileExporter {
       });
     }
 
+    // Inform host system about pending upload
+    if (!this.hasPendingUploads()) {
+      window.parent.postMessage({
+        type: 'H5P_SCREENSHOT_UPLOAD',
+        status: 'uploading'
+      }, '*');
+    }
+
+    // Keep track of upload
     this.pendingUploadUUIDs.push(uuid);
 
-    // Wait for response
+    // Wait for response from uploader component
     H5P.externalDispatcher.once('exportFileDone', (event) => {
       if (event?.data?.uuid === uuid) {
-        this.stopWaitingFileExportConfirmation(uuid);
+        this.stopWaitingFileExportConfirmation({
+          uuid: event.data.uuid, result: event.data.result
+        });
       }
     });
 
     // Wait for timeout
     if (timeout) {
       setTimeout(() => {
-        this.stopWaitingFileExportConfirmation(uuid);
+        this.stopWaitingFileExportConfirmation({
+          uuid: uuid, result: 'timed_out'
+        });
       }, timeout);
     }
   }
@@ -188,7 +209,8 @@ export default class KLFileExporter {
      data.uuid = H5P.createUUID();
 
      // If on KidsLoop "Study", try to prevent "unload" while upload in progress
-     const token = URLTools.getToken({ decoded: true });
+     // const token = URLTools.getToken({ decoded: true });
+     const token = { classtype: 'study' };
      if (token?.classtype === 'study') {
        this.waitForFileExportConfirmation(data.uuid);
      }

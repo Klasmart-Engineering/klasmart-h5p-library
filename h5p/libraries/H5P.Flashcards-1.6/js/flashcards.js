@@ -40,7 +40,7 @@ H5P.Flashcards = (function ($, XapiGenerator) {
       results: "Results",
       ofCorrect: "@score of @total correct",
       showResults: "Show results",
-      retry : "Retry",
+      retry: "Retry",
       cardAnnouncement: 'Incorrect answer. Correct answer was @answer',
       pageAnnouncement: 'Page @current of @total',
       audioNotSupported: 'Your browser does not support this audio.',
@@ -210,7 +210,7 @@ H5P.Flashcards = (function ($, XapiGenerator) {
    */
   C.prototype.getMaxScore = function () {
     return this.options.cards
-      .filter( function (card) {
+      .filter(function (card) {
         return typeof card.answer !== 'undefined';
       })
       .length;
@@ -226,8 +226,8 @@ H5P.Flashcards = (function ($, XapiGenerator) {
       '<div class="h5p-progress"></div>' +
       '<div class="h5p-inner" role="list"></div>' +
       '<div class="h5p-navigation">' +
-        '<button type="button" class="h5p-button h5p-previous h5p-hidden" tabindex="0" title="' + this.options.previous + '" aria-label="' + this.options.previous + '"></button>' +
-        '<button type="button" class="h5p-button h5p-next" tabindex="0" title="' + this.options.next + '" aria-label="' + this.options.next + '"></button>'
+      '<button type="button" class="h5p-button h5p-previous h5p-hidden" tabindex="0" title="' + this.options.previous + '" aria-label="' + this.options.previous + '"></button>' +
+      '<button type="button" class="h5p-button h5p-next" tabindex="0" title="' + this.options.next + '" aria-label="' + this.options.next + '"></button>'
     ).children('.h5p-inner');
 
     // Create visual progress and add accessibility attributes
@@ -341,9 +341,9 @@ H5P.Flashcards = (function ($, XapiGenerator) {
 
     var $showResults = $(
       '<div class="h5p-show-results">' +
-        '<span class="h5p-show-results-icon"></span>' +
-        '<button type="button" class="h5p-show-results-label">' + that.options.showResults + '</button>' +
-        '<button type="button" class="h5p-show-results-label-mobile">' + that.options.results + '</button>' +
+      '<span class="h5p-show-results-icon"></span>' +
+      '<button type="button" class="h5p-show-results-label">' + that.options.showResults + '</button>' +
+      '<button type="button" class="h5p-show-results-label-mobile">' + that.options.results + '</button>' +
       '</div>'
     );
 
@@ -377,24 +377,24 @@ H5P.Flashcards = (function ($, XapiGenerator) {
     // Generate a new flashcards html and add it to h5p-inner
     var $card = $(
       '<div role="listitem" class="h5p-card h5p-animate' + (index === 0 ? ' h5p-current' : '') + '" aria-hidden="' + (index === 0 ? 'false' : 'true') + '"> ' +
-        '<div class="h5p-cardholder">' +
-          '<div class="h5p-imageholder">' +
-            '<div class="h5p-flashcard-overlay">' +
-            '</div>' +
-          '</div>' +
-          '<div class="h5p-foot">' +
-            '<div class="h5p-imagetext" id="h5p-flashcard-card-' + cardId + '">' +
-              (card.text !== undefined ? card.text : '') +
-            '</div>' +
-            '<div class="h5p-answer">' +
-              '<div class="h5p-input">' +
-                '<input type="text" class="h5p-textinput" tabindex="-1" placeholder="' + this.options.defaultAnswerText + '" aria-describedby="h5p-flashcard-card-' + cardId + '" autocomplete="off" spellcheck="false"/>' +
-                '<button type="button" class="h5p-button h5p-check-button" tabindex="-1" title="' + this.options.checkAnswerText + '">' + this.options.checkAnswerText + '</button>' +
-                '<button type="button" class="h5p-button h5p-icon-button" tabindex="-1" title="' + this.options.checkAnswerText + '"/>' +
-              '</div>' +
-            '</div>' +
-          '</div>' +
-        '</div>' +
+      '<div class="h5p-cardholder">' +
+      '<div class="h5p-imageholder">' +
+      '<div class="h5p-flashcard-overlay">' +
+      '</div>' +
+      '</div>' +
+      '<div class="h5p-foot">' +
+      '<div class="h5p-imagetext" id="h5p-flashcard-card-' + cardId + '">' +
+      (card.text !== undefined ? card.text : '') +
+      '</div>' +
+      '<div class="h5p-answer">' +
+      '<div class="h5p-input">' +
+      '<input type="text" class="h5p-textinput" tabindex="-1" placeholder="' + this.options.defaultAnswerText + '" aria-describedby="h5p-flashcard-card-' + cardId + '" autocomplete="off" spellcheck="false"/>' +
+      '<button type="button" class="h5p-button h5p-check-button" tabindex="-1" title="' + this.options.checkAnswerText + '">' + this.options.checkAnswerText + '</button>' +
+      '<button type="button" class="h5p-button h5p-icon-button" tabindex="-1" title="' + this.options.checkAnswerText + '"/>' +
+      '</div>' +
+      '</div>' +
+      '</div>' +
+      '</div>' +
       '</div>')
       .appendTo($inner);
 
@@ -525,7 +525,7 @@ H5P.Flashcards = (function ($, XapiGenerator) {
 
           $('<div class="h5p-solution">' +
             '<span class="solution-icon h5p-rotate-in"></span>' +
-          '</div>').appendTo($card.find('.h5p-imageholder'));
+            '</div>').appendTo($card.find('.h5p-imageholder'));
 
           $input.siblings('.h5p-feedback-label').focus();
         }
@@ -538,10 +538,10 @@ H5P.Flashcards = (function ($, XapiGenerator) {
           $('<div class="h5p-solution">' +
             '<span class="solution-icon h5p-rotate-in"></span>' +
             '<span class="solution-text">' +
-              (that.options.cards[currentIndex].answer ?
-                that.options.showSolutionText + ': <span>' + C.splitAlternatives(that.options.cards[currentIndex].answer).join('<span> ' + that.options.or + ' </span>') + '</span>' :
-                '') + '</span>' +
-          '</div>').appendTo($card.find('.h5p-imageholder'));
+            (that.options.cards[currentIndex].answer ?
+              that.options.showSolutionText + ': <span>' + C.splitAlternatives(that.options.cards[currentIndex].answer).join('<span> ' + that.options.or + ' </span>') + '</span>' :
+              '') + '</span>' +
+            '</div>').appendTo($card.find('.h5p-imageholder'));
 
           const ariaText = that.options.cardAnnouncement.replace(
             '@answer',
@@ -727,7 +727,7 @@ H5P.Flashcards = (function ($, XapiGenerator) {
         }).appendTo($listItem);
       }
     }
-    if (this.getScore() < this.getMaxScore()) {
+    if (this.getScore() <= this.getMaxScore()) {
       this.$retryButton.removeClass('h5p-invisible');
     }
   };
@@ -1222,10 +1222,10 @@ H5P.Flashcards = (function ($, XapiGenerator) {
   };
 
   /**
-	 * Get top DOM Window object.
-	 * @param {Window} [startWindow=window] Window to start looking from.
-	 * @return {Window|null} Top window.
-	 */
+   * Get top DOM Window object.
+   * @param {Window} [startWindow=window] Window to start looking from.
+   * @return {Window|null} Top window.
+   */
   C.prototype.getTopWindow = function (startWindow) {
     let sameOrigin;
     startWindow = startWindow || window;
@@ -1242,7 +1242,7 @@ H5P.Flashcards = (function ($, XapiGenerator) {
       return null;
     }
 
-    if (startWindow.parent === startWindow || ! startWindow.parent) {
+    if (startWindow.parent === startWindow || !startWindow.parent) {
       return startWindow;
     }
 

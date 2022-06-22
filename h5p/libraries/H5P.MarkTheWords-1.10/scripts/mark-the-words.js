@@ -40,7 +40,7 @@ H5P.MarkTheWords = (function ($, Question, Word, KeyboardNav, XapiGenerator) {
       correctAnswer: "Correct!",
       incorrectAnswer: "Incorrect!",
       missedAnswer: "Answer not found!",
-      displaySolutionDescription:  "Task is updated to contain the solution.",
+      displaySolutionDescription: "Task is updated to contain the solution.",
       scoreBarLabel: 'You got :num out of :total points',
       a11yFullTextLabel: 'Full readable text',
       a11yClickableTextLabel: 'Full text where words can be marked',
@@ -138,9 +138,9 @@ H5P.MarkTheWords = (function ($, Question, Word, KeyboardNav, XapiGenerator) {
         else {
           var attributes = ' ';
           for (var j = 0; j < node.attributes.length; j++) {
-            attributes +=node.attributes[j].name + '="' + node.attributes[j].nodeValue + '" ';
+            attributes += node.attributes[j].name + '="' + node.attributes[j].nodeValue + '" ';
           }
-          html += '<' + node.nodeName +  attributes + '>';
+          html += '<' + node.nodeName + attributes + '>';
           html += self.createHtmlForWords(node.childNodes);
           html += '</' + node.nodeName + '>';
         }
@@ -382,9 +382,9 @@ H5P.MarkTheWords = (function ($, Question, Word, KeyboardNav, XapiGenerator) {
       if (this.params.behaviour.enableSolutionsButton && (answers.correct < this.answers)) {
         this.showButton('show-solution');
       }
-      if (this.params.behaviour.enableRetry) {
-        this.showButton('try-again');
-      }
+    }
+    if (this.params.behaviour.enableRetry) {
+      this.showButton('try-again');
     }
 
     self.waitForARIA(function () {

@@ -194,7 +194,7 @@ H5P.Blanks = (function ($, Question) {
     else if ($content.length !== 0) {
       this.$container = $content;
     }
-    else  {
+    else {
       this.$container = $(document.body);
     }
 
@@ -270,7 +270,7 @@ H5P.Blanks = (function ($, Question) {
     }
 
     // Emit screenshot
-    setTimeout(function() {
+    setTimeout(function () {
       if (H5P && H5P.KLScreenshot) {
         H5P.KLScreenshot.takeScreenshot(
           self,
@@ -402,7 +402,7 @@ H5P.Blanks = (function ($, Question) {
       }
 
       if ((tabPressedAutoCheck && isLastInput && !self.shiftPressed) ||
-          (enterPressed && isLastInput)) {
+        (enterPressed && isLastInput)) {
         // Focus first button on next tick
         setTimeout(function () {
           self.focusButton();
@@ -591,7 +591,7 @@ H5P.Blanks = (function ($, Question) {
     }
 
     if (this.params.behaviour.enableRetry) {
-      if ((state === STATE_CHECKING && !allCorrect) || state === STATE_SHOWING_SOLUTION) {
+      if (state === STATE_CHECKING || state === STATE_SHOWING_SOLUTION || state === STATE_FINISHED) {
         this.showButton('try-again');
       }
       else {
@@ -995,9 +995,9 @@ H5P.Blanks = (function ($, Question) {
   Blanks.prototype.setH5PUserState = function () {
     var self = this;
     var isValidState = (this.previousState !== undefined &&
-                        this.previousState.clozesContent &&
-                        this.previousState.clozesContent.length &&
-                        this.previousState.clozesContent.length === this.clozes.length);
+      this.previousState.clozesContent &&
+      this.previousState.clozesContent.length &&
+      this.previousState.clozesContent.length === this.clozes.length);
 
     // Check that stored user state is valid
     if (!isValidState) {
@@ -1089,12 +1089,13 @@ H5P.Blanks.parseText = function (question) {
    */
   function tokenizeQuestionText(text) {
     return text.split(/(\*.*?\*)/).filter(function (str) {
-      return str.length > 0; }
+      return str.length > 0;
+    }
     );
   }
 
   function startsAndEndsWithAnAsterisk(str) {
-    return str.substr(0,1) === '*' && str.substr(-1) === '*';
+    return str.substr(0, 1) === '*' && str.substr(-1) === '*';
   }
 
   function replaceHtmlTags(str, value) {

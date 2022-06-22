@@ -230,7 +230,7 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
     self.trigger(xapiEvent);
 
     // Emit screenshot
-    setTimeout(function() {
+    setTimeout(function () {
       if (H5P && H5P.KLScreenshot) {
         H5P.KLScreenshot.takeScreenshot(
           {
@@ -255,7 +255,7 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
    * @param {string} input Input string.
    * @return {string} Output string.
    */
-  SingleChoiceSet.prototype.stripHTML = function(html) {
+  SingleChoiceSet.prototype.stripHTML = function (html) {
     const div = document.createElement('div');
     div.innerHTML = html;
     return div.textContent || div.innerText || '';
@@ -298,7 +298,7 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
     this.$container.one('click.impatient', action);
     this.$container.one('keydown.impatient', function (event) {
       // If return, space or right arrow
-      if ([13,32,39].indexOf(event.which)) {
+      if ([13, 32, 39].indexOf(event.which)) {
         action();
       }
     });
@@ -329,7 +329,7 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
       .interactionType(types.CHOICE)
       .description(question.question)
       .correctResponsesPattern(self.getXApiCorrectResponsePattern())
-      .optional( self.getXApiChoices(question.answers))
+      .optional(self.getXApiChoices(question.answers))
       .build();
 
     // create the result object
@@ -402,14 +402,14 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
       return;
     }
 
-    var feedbackText = determineOverallFeedback(self.options.overallFeedback , score / self.options.choices.length)
+    var feedbackText = determineOverallFeedback(self.options.overallFeedback, score / self.options.choices.length)
       .replace(':numcorrect', score)
       .replace(':maxscore', self.options.choices.length.toString());
 
     self.setFeedback(feedbackText, score, self.options.choices.length, self.l10n.scoreBarLabel);
 
     if (score === self.options.choices.length) {
-      self.hideButton('try-again');
+      self.showButton('try-again');
       self.hideButton('show-solution');
     }
     else {
@@ -618,7 +618,7 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
     });
 
     // Set minimum height for choices
-    self.$choices.css({minHeight: maxHeight + 'px'});
+    self.$choices.css({ minHeight: maxHeight + 'px' });
     self.$container.parent().css('height', maxHeight + 'px');
   };
 
@@ -655,7 +655,7 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
    */
   SingleChoiceSet.prototype.move = function (index) {
     var self = this;
-    if (index === this.currentIndex || index > self.$slides.length-1) {
+    if (index === this.currentIndex || index > self.$slides.length - 1) {
       return;
     }
 
@@ -781,7 +781,7 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
     var self = this;
 
     // create array with userAnswer
-    var children =  self.options.choices.map(function (question, index) {
+    var children = self.options.choices.map(function (question, index) {
       var userResponse = self.userResponses[index] >= 0 ? self.userResponses[index] : '';
       var duration = self.timePassedInStopWatch(index);
       var event = self.createXApiAnsweredEvent(question, userResponse, duration);

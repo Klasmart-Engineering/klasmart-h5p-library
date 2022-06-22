@@ -656,7 +656,7 @@ H5P.Essay = function ($, Question) {
           // Main keyword defined
           word = keyword.keyword;
         }
-        explanations.push({correct: word, text: keyword.options.feedbackMissed});
+        explanations.push({ correct: word, text: keyword.options.feedbackMissed });
       }
 
       // Keyword found and feedback is provided for this case
@@ -676,7 +676,7 @@ H5P.Essay = function ($, Question) {
             word = results[i][0].match;
             break;
         }
-        explanations.push({correct: word, text: keyword.options.feedbackIncluded});
+        explanations.push({ correct: word, text: keyword.options.feedbackIncluded });
       }
     });
 
@@ -698,14 +698,11 @@ H5P.Essay = function ($, Question) {
       this.showButton('show-solution');
     }
 
-    // We need the retry button if the mastering score has not been reached or scoring is irrelevant
-    if (score < this.getMaxScore() || this.params.behaviour.ignoreScoring || this.getMaxScore() === 0) {
+    // We need the retry button if the mastering score has not been reached or not reached or scoring is irrelevant
+    if (score <= this.getMaxScore() || this.params.behaviour.ignoreScoring || this.getMaxScore() === 0) {
       if (this.params.behaviour.enableRetry) {
         this.showButton('try-again');
       }
-    }
-    else {
-      this.hideButton('try-again');
     }
   };
 
@@ -799,7 +796,7 @@ H5P.Essay = function ($, Question) {
 
     while (((pos = haystack.indexOf(needle))) !== -1 && needle !== '') {
       if (H5P.TextUtilities.isIsolated(needle, haystack)) {
-        result.push({'keyword': needle, 'match': needle, 'index': front + pos});
+        result.push({ 'keyword': needle, 'match': needle, 'index': front + pos });
       }
       front += pos + needle.length;
       haystack = haystack.substr(pos + needle.length);
@@ -832,9 +829,9 @@ H5P.Essay = function ($, Question) {
     const regexp = new RegExp(needle.replace(/\*/g, Essay.CHARS_WILDCARD + '+'), this.getRegExpModifiers(caseSensitive));
     const result = [];
     let match;
-    while ((match = regexp.exec(haystack)) !== null ) {
-      if (H5P.TextUtilities.isIsolated(match[0], haystack, {'index': match.index})) {
-        result.push({'keyword': needle, 'match': match[0], 'index': match.index});
+    while ((match = regexp.exec(haystack)) !== null) {
+      if (H5P.TextUtilities.isIsolated(match[0], haystack, { 'index': match.index })) {
+        result.push({ 'keyword': needle, 'match': match[0], 'index': match.index });
       }
     }
     return result;
@@ -860,10 +857,10 @@ H5P.Essay = function ($, Question) {
     for (let size = -windowSize; size <= windowSize; size++) {
       for (let pos = 0; pos < haystack.length; pos++) {
         const straw = haystack.substr(pos, needle.length + size);
-        if (H5P.TextUtilities.areSimilar(needle, straw) && H5P.TextUtilities.isIsolated(straw, haystack, {'index': pos})) {
+        if (H5P.TextUtilities.areSimilar(needle, straw) && H5P.TextUtilities.isIsolated(straw, haystack, { 'index': pos })) {
           // This will only add the match if it's not a duplicate that we found already in the proximity of pos
           if (!this.contains(results, pos)) {
-            results.push({'keyword': needle, 'match': straw, 'index': pos});
+            results.push({ 'keyword': needle, 'match': straw, 'index': pos });
           }
         }
       }
@@ -964,7 +961,7 @@ H5P.Essay = function ($, Question) {
       for (let key in arguments[i]) {
         if (Object.prototype.hasOwnProperty.call(arguments[i], key)) {
           if (typeof arguments[0][key] === 'object' &&
-              typeof arguments[i][key] === 'object') {
+            typeof arguments[i][key] === 'object') {
             this.extend(arguments[0][key], arguments[i][key]);
           }
           else {

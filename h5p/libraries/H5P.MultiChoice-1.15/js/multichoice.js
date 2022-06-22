@@ -183,11 +183,11 @@ H5P.MultiChoice = function (options, contentId, contentData) {
    */
   var addFeedback = function ($element, feedback) {
     $feedbackDialog = $('' +
-    '<div class="h5p-feedback-dialog">' +
+      '<div class="h5p-feedback-dialog">' +
       '<div class="h5p-feedback-inner">' +
-        '<div class="h5p-feedback-text" aria-hidden="true">' + feedback + '</div>' +
+      '<div class="h5p-feedback-text" aria-hidden="true">' + feedback + '</div>' +
       '</div>' +
-    '</div>');
+      '</div>');
 
     //make sure feedback is only added once
     if (!$element.find($('.h5p-feedback-dialog')).length) {
@@ -288,10 +288,10 @@ H5P.MultiChoice = function (options, contentId, contentData) {
       });
 
       var tipIconHtml = '<span class="joubel-icon-tip-normal">' +
-                          '<span class="h5p-icon-shadow"></span>' +
-                          '<span class="h5p-icon-speech-bubble"></span>' +
-                          '<span class="h5p-icon-info"></span>' +
-                        '</span>';
+        '<span class="h5p-icon-shadow"></span>' +
+        '<span class="h5p-icon-speech-bubble"></span>' +
+        '<span class="h5p-icon-info"></span>' +
+        '</span>';
 
       $multichoiceTip.append(tipIconHtml);
 
@@ -665,14 +665,14 @@ H5P.MultiChoice = function (options, contentId, contentData) {
 
     // select find container to attach dialogs to
     var $container;
-    if($containerParents.length !== 0) {
+    if ($containerParents.length !== 0) {
       // use parent highest up if any
       $container = $containerParents.last();
     }
-    else if($content.length !== 0){
+    else if ($content.length !== 0) {
       $container = $content;
     }
-    else  {
+    else {
       $container = $(document.body);
     }
 
@@ -710,25 +710,25 @@ H5P.MultiChoice = function (options, contentId, contentData) {
 
       if (params.behaviour.randomAnswers) {
         // reshuffle answers
-       var oldIdMap = idMap;
-       idMap = getShuffleMap();
-       var answersDisplayed = $myDom.find('.h5p-answer');
-       // remember tips
-       var tip = [];
-       for (i = 0; i < answersDisplayed.length; i++) {
-         tip[i] = $(answersDisplayed[i]).find('.h5p-multichoice-tipwrap');
-       }
-       // Those two loops cannot be merged or you'll screw up your tips
-       for (i = 0; i < answersDisplayed.length; i++) {
-         // move tips and answers on display
-         const inner = $(answersDisplayed[i]).find('.h5p-alternative-inner').get(0);
-         inner.innerHTML = '';
+        var oldIdMap = idMap;
+        idMap = getShuffleMap();
+        var answersDisplayed = $myDom.find('.h5p-answer');
+        // remember tips
+        var tip = [];
+        for (i = 0; i < answersDisplayed.length; i++) {
+          tip[i] = $(answersDisplayed[i]).find('.h5p-multichoice-tipwrap');
+        }
+        // Those two loops cannot be merged or you'll screw up your tips
+        for (i = 0; i < answersDisplayed.length; i++) {
+          // move tips and answers on display
+          const inner = $(answersDisplayed[i]).find('.h5p-alternative-inner').get(0);
+          inner.innerHTML = '';
 
-         appendAlternatives(inner, params.answerType, params.answers[i]);
+          appendAlternatives(inner, params.answerType, params.answers[i]);
 
-         $(tip[i]).detach().appendTo($(answersDisplayed[idMap.indexOf(oldIdMap[i])]).find('.h5p-alternative-container'));
-       }
-     }
+          $(tip[i]).detach().appendTo($(answersDisplayed[idMap.indexOf(oldIdMap[i])]).find('.h5p-alternative-container'));
+        }
+      }
     }, false, {
       'aria-label': params.UI.a11yRetry,
     }, {
@@ -846,7 +846,6 @@ H5P.MultiChoice = function (options, contentId, contentData) {
 
     if (fullScore) {
       self.hideButton('check-answer');
-      self.hideButton('try-again');
       self.hideButton('show-solution');
     }
 
@@ -931,7 +930,7 @@ H5P.MultiChoice = function (options, contentId, contentData) {
    *
    * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-6}
    */
-  this.getXAPIData = function(){
+  this.getXAPIData = function () {
     var xAPIEvent = this.createXAPIEventTemplate('answered');
     addQuestionToXAPI(xAPIEvent);
     addResponseToXAPI(xAPIEvent);
@@ -1018,7 +1017,7 @@ H5P.MultiChoice = function (options, contentId, contentData) {
    * @param {boolean} params.answers.checked True, if checked.
    * @param {string} params.answers.text Alternative text.
    */
-  var createDOM = function(params) {
+  var createDOM = function (params) {
     const list = document.createElement('ul');
     list.classList.add('h5p-answers');
     list.classList.add('h5p-answer-type-' + params.answerType);
@@ -1067,7 +1066,7 @@ H5P.MultiChoice = function (options, contentId, contentData) {
    * @param {string} answerType Answer type (text|audio|...).
    * @param {object} answer Parameters of current answer.
    */
-  var appendAlternatives = function(inner, answerType, answer) {
+  var appendAlternatives = function (inner, answerType, answer) {
     // Alternatives with more than just text
     if (answerType === 'image') {
       appendAlternativeImage(inner, answer.image);
@@ -1098,7 +1097,7 @@ H5P.MultiChoice = function (options, contentId, contentData) {
    * @param {HTMLElement} inner Element to attach to.
    * @param {string} text HTML as <div> or <p>.
    */
-  var appendAlternativeText = function(inner, text) {
+  var appendAlternativeText = function (inner, text) {
     text = text || '';
     text = text.trim();
 
@@ -1128,7 +1127,7 @@ H5P.MultiChoice = function (options, contentId, contentData) {
    * @param {HTMLElement} inner Element to attach to.
    * @param {object} image Image parameters.
    */
-  var appendAlternativeImage = function(inner, image) {
+  var appendAlternativeImage = function (inner, image) {
     const imageWrapper = document.createElement('div');
     imageWrapper.classList.add('h5p-alternative-inner-image');
     inner.appendChild(imageWrapper);
@@ -1159,7 +1158,7 @@ H5P.MultiChoice = function (options, contentId, contentData) {
    * @param {HTMLElement} inner Element to attach to.
    * @param {object} audio Audio parameters.
    */
-  var appendAlternativeAudio = function(inner, audio) {
+  var appendAlternativeAudio = function (inner, audio) {
     const audioWrapper = document.createElement('div');
     audioWrapper.classList.add('h5p-alternative-inner-audio');
     inner.appendChild(audioWrapper);
@@ -1179,7 +1178,7 @@ H5P.MultiChoice = function (options, contentId, contentData) {
       instances.push(instance);
 
       instance.audio.style.display = 'inline';
-      instance.audio.addEventListener('play', function() {
+      instance.audio.addEventListener('play', function () {
         muteInstances(instance);
       });
     }
@@ -1192,7 +1191,7 @@ H5P.MultiChoice = function (options, contentId, contentData) {
    * @param {HTMLElement} inner Element to attach to.
    * @param {object} video Video parameters.
    */
-  var appendAlternativeVideo = function(inner, video) {
+  var appendAlternativeVideo = function (inner, video) {
     const videoWrapper = document.createElement('div');
     videoWrapper.classList.add('h5p-alternative-inner-video');
     inner.appendChild(videoWrapper);
@@ -1223,7 +1222,7 @@ H5P.MultiChoice = function (options, contentId, contentData) {
       videoElement.style.display = 'inline';
     }
 
-    instance.on('stateChange', function(state) {
+    instance.on('stateChange', function (state) {
       if (state.data === H5P.Video.PLAYING) {
         muteInstances(instance);
       }
@@ -1266,7 +1265,7 @@ H5P.MultiChoice = function (options, contentId, contentData) {
    * @param {string} columns Mode for choosing columns ('auto' || '1' || '2').
    * @return {number} Number of columns to use.
    */
-  var computeNumberColumns = function(answerType, columns) {
+  var computeNumberColumns = function (answerType, columns) {
     columns = parseInt(columns);
     if (!Number.isNaN(columns)) {
       return columns; // Numerical value set by author
@@ -1287,7 +1286,7 @@ H5P.MultiChoice = function (options, contentId, contentData) {
    * @param {string} eventName Name of the Event
    * @param {Object} target Target to trigger event on
    */
-  var bubbleUp = function(origin, eventName, target) {
+  var bubbleUp = function (origin, eventName, target) {
     origin.on(eventName, function (event) {
       // Prevent target from sending event back down
       target.bubblingUpwards = true;
@@ -1327,7 +1326,7 @@ H5P.MultiChoice = function (options, contentId, contentData) {
    * @param {number} [interval=100] Time interval in ms to check for element.
    */
   var waitForDOM = function (selector, success, error, tries, interval) {
-    error = error || function () {};
+    error = error || function () { };
     tries = tries || 50;
     interval = interval || 100;
 
@@ -1353,7 +1352,7 @@ H5P.MultiChoice = function (options, contentId, contentData) {
   /**
    * Set alternatives height depending on largest image. Required for multi column mode.
    */
-  var setAlternativeHeight = function() {
+  var setAlternativeHeight = function () {
     if (instancesToLoad > 0) {
       return;
     }
@@ -1406,7 +1405,7 @@ H5P.MultiChoice = function (options, contentId, contentData) {
    *
    * @return {number[]} map pointing from original answers to shuffled answers
    */
-  var getShuffleMap = function() {
+  var getShuffleMap = function () {
     params.answers = H5P.shuffleArray(params.answers);
 
     // Create a map from the new id to the old one

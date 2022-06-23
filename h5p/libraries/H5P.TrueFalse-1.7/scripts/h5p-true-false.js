@@ -270,7 +270,7 @@ H5P.TrueFalse = (function ($, Question) {
     var toggleButtonState = function (state) {
       toggleButtonVisibility(Button.SHOW_SOLUTION, state === State.FINISHED_WRONG);
       toggleButtonVisibility(Button.CHECK, state === State.ONGOING);
-      toggleButtonVisibility(Button.TRYAGAIN, state === State.FINISHED_WRONG || state === State.INTERNAL_SOLUTION);
+      toggleButtonVisibility(Button.TRYAGAIN, state === State.FINISHED_WRONG || state === State.FINISHED_CORRECT || state === State.INTERNAL_SOLUTION);
     };
 
     /**

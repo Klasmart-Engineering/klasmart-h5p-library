@@ -30,7 +30,7 @@ H5P.FindTheWords = (function ($, UI) {
         return word.trim().replace(/ +/g, '');
       })
       .filter(function (word, pos, self) {
-        return self.indexOf(word) === pos && word.length > 0;
+        return self.indexOf(word) === pos && FindTheWords.Util.unicodeLength(word) > 0;
       });
 
     this.options = $.extend(true, {

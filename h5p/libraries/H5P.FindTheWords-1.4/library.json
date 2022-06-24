@@ -4,7 +4,7 @@
   "machineName": "H5P.FindTheWords",
   "majorVersion": 1,
   "minorVersion": 4,
-  "patchVersion": 4,
+  "patchVersion": 5,
   "embedTypes": [
     "iframe"
   ],
@@ -31,6 +31,9 @@
     },
     {
       "path": "scripts/h5p-find-the-words-counter.js"
+    },
+    {
+      "path": "scripts/h5p-find-the-words-util.js"
     }
   ],
   "preloadedDependencies": [

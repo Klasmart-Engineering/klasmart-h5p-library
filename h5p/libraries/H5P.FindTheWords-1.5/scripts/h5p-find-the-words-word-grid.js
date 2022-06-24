@@ -174,10 +174,10 @@
     let overlap = 0;
 
     // traverse the squares to determine if the word fits
-    for (let index = 0 ; index < word.length; index++) {
+    for (let index = 0 ; index < FindTheWords.Util.unicodeLength(word); index++) {
       const next = fnGetSquare(x, y, index);
       const square = wordGrid[next.y][next.x];
-      if (square === word[index]) {
+      if (square === FindTheWords.Util.unicodeCharAt(word, index)) {
         overlap++;
       }
       else if (square !== '') {
@@ -198,7 +198,7 @@
     const locations = [];
     const height = options.height;
     const width = options.width;
-    const wordLength = word.length;
+    const wordLength = FindTheWords.Util.unicodeLength(word);
     let maxOverlap = 0;
 
     options.orientations.forEach(function (orientation) {
@@ -251,9 +251,9 @@
     }
 
     const selectedLoc = locations[Math.floor(Math.random() * locations.length)];
-    for (let index = 0; index < word.length; index++) {
+    for (let index = 0; index < FindTheWords.Util.unicodeLength(word); index++) {
       const next = orientations[selectedLoc.orientation](selectedLoc.x, selectedLoc.y, index);
-      wordGrid[next.y][next.x] = word[index];
+      wordGrid[next.y][next.x] = FindTheWords.Util.unicodeCharAt(word, index);
     }
     return true;
   };
@@ -478,7 +478,7 @@
 
       // sorting the words by length speedup the word fitting algorithm
       const wordList = this.options.vocabulary.slice(0).sort(function (a, b) {
-        return (a.length < b.length);
+        return (FindTheWords.Util.unicodeLength(a) - FindTheWords.Util.unicodeLength(a));
       });
 
       while (!wordGrid) {
@@ -653,7 +653,7 @@
 
     words.forEach(function (word) {
       const locations = findBestLocations(that.wordGrid, options, word);
-      if (locations.length > 0 && locations[0].overlap === word.length) {
+      if (locations.length > 0 && locations[0].overlap === FindTheWords.Util.unicodeLength(word)) {
         locations[0].word = word;
         found.push(locations[0]);
       }
@@ -677,7 +677,7 @@
       const word = solution.word;
       const startX = solution.x;
       const startY = solution.y;
-      const endPos = next(startX, startY, word.length - 1);
+      const endPos = next(startX, startY, FindTheWords.Util.unicodeLength(word) - 1);
       const clickStartX = startX * that.elementSize + (that.elementSize / 2);
       const clickStartY = startY * that.elementSize + (that.elementSize / 2);
       const clickEndX = endPos.x * that.elementSize + (that.elementSize / 2);

@@ -291,8 +291,8 @@
     for (let i = 0; i < wordGrid.length; i++) {
       for (let j = 0;j < wordGrid[0].length; j++) {
         if (!wordGrid[i][j]) {
-          const randomLetter = Math.floor(Math.random() * fillPool.length);
-          wordGrid[i][j] = fillPool[randomLetter];
+          const randomLetter = Math.floor(Math.random() * FindTheWords.Util.unicodeLength(fillPool));
+          wordGrid[i][j] = FindTheWords.Util.unicodeCharAt(fillPool, randomLetter);
         }
       }
     }

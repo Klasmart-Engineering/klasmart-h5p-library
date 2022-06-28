@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.17.0 (2022-06-28)
+
+
+### Features
+
+* **H5P-754:** enable retry even after scoring max for true false ([fbd5ead](https://github.com/KL-Engineering/kidsloop-h5p-library/commits/fbd5ead67ffa79325b2f8c283de4427358643177))
+
 ### 2.16.3 (2022-06-13)
 
 

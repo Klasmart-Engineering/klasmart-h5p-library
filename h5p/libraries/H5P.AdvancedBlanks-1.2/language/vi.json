@@ -199,6 +199,9 @@
           "label": "Automatically check answers after input"
         },
         {
+          "label": "Enable dynamic blank size"
+        },
+        {
           "label": "Enable \"Show solutions\" button"
         },
         {

@@ -199,6 +199,9 @@
           "label": "Automáticamente revisar respuestas después de ingresadas"
         },
         {
+          "label": "Enable dynamic blank size"
+        },
+        {
           "label": "Habilitar botón \"Mostrar soluciones\""
         },
         {

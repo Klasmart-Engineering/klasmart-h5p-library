@@ -196,6 +196,9 @@
           "label": "Vérifier les réponses instantanément dès la saisie."
         },
         {
+          "label": "Enable dynamic blank size"
+        },
+        {
           "label": "Activer le bouton \"Voir la correction\""
         },
         {

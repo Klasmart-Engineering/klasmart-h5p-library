@@ -328,6 +328,14 @@
         "optional": true
       },
       {
+        "label": "Enable dynamic blank size",
+        "importance": "low",
+        "name": "useDynamicBlankSize",
+        "type": "boolean",
+        "default": false,
+        "optional": true
+      },
+      {
         "label": "Show confirmation dialog on \"Check\"",
         "importance": "low",
         "name": "confirmCheckDialog",

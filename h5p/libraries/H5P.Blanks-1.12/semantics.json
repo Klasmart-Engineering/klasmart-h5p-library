@@ -11,7 +11,7 @@
         "label": "Type",
         "options": [
           "H5P.Image 1.1",
-          "H5P.Video 1.5"
+          "H5P.Video 1.6"
         ],
         "optional": true,
         "description": "Optional media to display above the question."
@@ -323,6 +323,14 @@
         "label": "Put input fields on separate lines",
         "importance": "low",
         "name": "separateLines",
+        "type": "boolean",
+        "default": false,
+        "optional": true
+      },
+      {
+        "label": "Enable dynamic blank size",
+        "importance": "low",
+        "name": "useDynamicBlankSize",
         "type": "boolean",
         "default": false,
         "optional": true

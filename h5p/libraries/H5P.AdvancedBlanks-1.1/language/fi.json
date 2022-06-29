@@ -196,6 +196,9 @@
           "label": "Tarkista vastaukset automaattisesti heti vastauksen jälkeen."
         },
         {
+          "label": "Enable dynamic blank size"
+        },
+        {
           "label": "Näytä \"Show solutions\" painike"
         },
         {

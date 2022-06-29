@@ -197,6 +197,9 @@
           "label": "Antworten nach Eingabe automatisch prüfen"
         },
         {
+          "label": "Enable dynamic blank size"
+        },
+        {
           "label": "\"Lösung anzeigen\"-Button anzeigen"
         },
         {

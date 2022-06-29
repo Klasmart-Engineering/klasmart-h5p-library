@@ -23,6 +23,7 @@
       "field": {
         "label": "سطر من النص",
         "placeholder": "Oslo is the capital of *Norway*.",
+        "description": "",
         "important": {
           "description": "<ul><li>تتم إضافة الفراغات بالعلامة النجمية (*) امام وخلف الكلمة / العبارة الصحيحة.</li><li>يتم فصل الإجابات البديلة مع شرطة مائلة للأمام (/).</li><li>يمكنك إضافة تلميح نصي ، باستخدام نقطتين (:) أمام التلميح.</li></ul>",
           "example": "H5P content may be edited using a *browser/web-browser:Something you use every day*."
@@ -134,6 +135,9 @@
         },
         {
           "label": "ضع حقول الإدخال على أسطر منفصلة"
+        },
+        {
+          "label": "Enable dynamic blank size"
         },
         {
           "label": "إظهار مربع حوار التأكيد على  \"تحقق \" ",

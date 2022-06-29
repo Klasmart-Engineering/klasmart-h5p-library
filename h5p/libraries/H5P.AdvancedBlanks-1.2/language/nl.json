@@ -196,6 +196,9 @@
           "label": "Controleer automatisch de antwoorden na invoer"
         },
         {
+          "label": "Enable dynamic blank size"
+        },
+        {
           "label": "Activeer de knop \"Toon oplossingen\""
         },
         {

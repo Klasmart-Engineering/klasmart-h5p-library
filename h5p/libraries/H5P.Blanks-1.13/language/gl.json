@@ -23,6 +23,7 @@
       "field": {
         "label": "Liña de texto",
         "placeholder": "Oslo é a capital de *Noruega*.",
+        "description": "",
         "important": {
           "description": "<ul><li>Os ocos engádense cun asterísco (*) diante e detrás da palabra/frase correcta.</li><li>As respostas alternativas sepáranse cunha barra (/).</li><li>Podes engadir un texto de axuda usando dous puntos (:) diante del.</li></ul>",
           "example": "O contido H5P pódese editar usando un *navegador/navegador web:Algo que usas todos os días*."
@@ -134,6 +135,9 @@
         },
         {
           "label": "Poñer campos de entrada de texto en liñas separadas"
+        },
+        {
+          "label": "Enable dynamic blank size"
         },
         {
           "label": "Amosar diálogo de confirmación para \"Comprobar\"",

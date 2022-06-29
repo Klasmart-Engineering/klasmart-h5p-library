@@ -82,7 +82,7 @@ H5P.Blanks = (function ($, Question) {
         showSolutionsRequiresInput: true,
         autoCheck: false,
         separateLines: false,
-        clozeWidthCongruency: true
+        useDynamicBlankSize: false
       },
       a11yCheck: 'Check the answers. The responses will be marked as correct, incorrect, or unanswered.',
       a11yShowSolution: 'Show the solution. The task will be marked with its correct solution.',
@@ -525,7 +525,7 @@ H5P.Blanks = (function ($, Question) {
       var width = self.computeFieldWidth($input);
       var parentWidth = self.$questions.width();
 
-      if (!self.params.behaviour.clozeWidthCongruency) {
+      if (!self.params.behaviour.useDynamicBlankSize) {
         if (width <= minPx) {
           // Apply min width
           $input.width(minPx + static_min_pad);

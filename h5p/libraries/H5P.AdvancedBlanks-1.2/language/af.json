@@ -196,6 +196,9 @@
           "label": "Toets antwoorde outomaties na invoering"
         },
         {
+          "label": "Enable dynamic blank size"
+        },
+        {
           "label": "Aktiveer \"Wys antwoord\" knoppie"
         },
         {

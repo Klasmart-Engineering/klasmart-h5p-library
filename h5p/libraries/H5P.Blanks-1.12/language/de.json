@@ -23,6 +23,7 @@
       "field": {
         "label": "Textzeile",
         "placeholder": "Berlin ist die Hauptstadt von *Deutschland*.",
+        "description": "",
         "important": {
           "description": "<ul><li>Lücken werden mit einem Sternchen (*) vor und hinter dem richtigen Wort markiert.</li><li>Alternative Antworten können jeweils mit einem Schrägstrich (/) angefügt werden.</li><li>Du kannst einen Tipp mit einem Doppelpunkt (:) davor hinzufügen.</li></ul>",
           "example": "H5P-Inhalte können mit einem *Browser/Web-Browser:Etwas, das du jeden Tag nutzt* betrachtet werden."
@@ -134,6 +135,9 @@
         },
         {
           "label": "Setzt die Lücken jeweils in eine eigene Zeile"
+        },
+        {
+          "label": "Enable dynamic blank size"
         },
         {
           "label": "Bestätigungsdialog beim Klicken auf \"Überprüfen\" anzeigen",

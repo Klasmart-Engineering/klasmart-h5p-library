@@ -408,7 +408,7 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
     if (parameters.lookNFeel) {
       // If the contrast between the chosen color and white is too low we invert the shades to create good contrast
       invertShades = (parameters.lookNFeel.themeColor &&
-                      getContrast(parameters.lookNFeel.themeColor) < 1.7 ? -1 : 1);
+        getContrast(parameters.lookNFeel.themeColor) < 1.7 ? -1 : 1);
       var backImage = (parameters.lookNFeel.cardBack ? H5P.getPath(parameters.lookNFeel.cardBack.path, id) : null);
       cardStyles = MemoryGame.Card.determineStyles(parameters.lookNFeel.themeColor, invertShades, backImage);
     }
@@ -521,11 +521,11 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
 
         // Add status bar
         var $status = $('<dl class="h5p-status">' +
-                        '<dt>' + parameters.l10n.timeSpent + ':</dt>' +
-                        '<dd class="h5p-time-spent"><time role="timer" datetime="PT0M0S">0:00</time><span class="h5p-memory-hidden-read">.</span></dd>' +
-                        '<dt>' + parameters.l10n.cardTurns + ':</dt>' +
-                        '<dd class="h5p-card-turns">0<span class="h5p-memory-hidden-read">.</span></dd>' +
-                        '</dl>').appendTo($bottom);
+          '<dt>' + parameters.l10n.timeSpent + ':</dt>' +
+          '<dd class="h5p-time-spent"><time role="timer" datetime="PT0M0S">0:00</time><span class="h5p-memory-hidden-read">.</span></dd>' +
+          '<dt>' + parameters.l10n.cardTurns + ':</dt>' +
+          '<dd class="h5p-card-turns">0<span class="h5p-memory-hidden-read">.</span></dd>' +
+          '</dl>').appendTo($bottom);
 
         self.timer = new MemoryGame.Timer(
           $status.find('time')[0],
@@ -600,9 +600,6 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
 
           if (numFlipped === self.cards.length) {
             finished({ skipXAPI: true });
-          }
-          else {
-            self.timer.play();
           }
         }
       }, 0);
@@ -802,10 +799,10 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
   };
 
   /**
-	 * Get top DOM Window object.
-	 * @param {Window} [startWindow=window] Window to start looking from.
-	 * @return {Window|null} Top window.
-	 */
+   * Get top DOM Window object.
+   * @param {Window} [startWindow=window] Window to start looking from.
+   * @return {Window|null} Top window.
+   */
   MemoryGame.prototype.getTopWindow = function (startWindow) {
     let sameOrigin;
     startWindow = startWindow || window;
@@ -822,7 +819,7 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
       return null;
     }
 
-    if (startWindow.parent === startWindow || ! startWindow.parent) {
+    if (startWindow.parent === startWindow || !startWindow.parent) {
       return startWindow;
     }
 
@@ -838,8 +835,8 @@ H5P.MemoryGame = (function (EventDispatcher, $) {
    */
   var getContrast = function (color) {
     return 255 / ((parseInt(color.substr(1, 2), 16) * 299 +
-                   parseInt(color.substr(3, 2), 16) * 587 +
-                   parseInt(color.substr(5, 2), 16) * 144) / 1000);
+      parseInt(color.substr(3, 2), 16) * 587 +
+      parseInt(color.substr(5, 2), 16) * 144) / 1000);
   };
 
   return MemoryGame;

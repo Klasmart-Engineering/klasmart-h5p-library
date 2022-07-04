@@ -402,6 +402,8 @@ H5P.SingleChoiceSet = (function ($, UI, Question, SingleChoice, SolutionView, Re
       return;
     }
 
+    this.addButtons();
+
     var feedbackText = determineOverallFeedback(self.options.overallFeedback, score / self.options.choices.length)
       .replace(':numcorrect', score)
       .replace(':maxscore', self.options.choices.length.toString());

@@ -22,7 +22,7 @@
         "lint": "eslint -c .eslintrc.js --ext .ts src --quiet",
         "release": "standard-version",
         "uninstall": "rm -rf node_modules && rm -rf dist",
-        "watch:custom": "webpack --watch"
+        "watch:custom": "cross-env NODE_ENV='development' webpack --watch"
     },
     "dependencies": {
         "@kl-engineering/kidsloop-nodejs-logger": "^0.3.2",

@@ -46,6 +46,17 @@ H5P.ImageSlider = (function ($) {
       return slide.imageSlide && slide.imageSlide.params && slide.imageSlide.params.image && slide.imageSlide.params.image.params && slide.imageSlide.params.image.params.file;
     });
 
+    var displayLimits = (
+      self.isRoot() &&
+      H5P.KLDisplay && H5P.KLDisplay.computeDisplayLimitsKLL
+    ) ?
+      H5P.KLDisplay.computeDisplayLimitsKLL(self.$container.get(0)) :
+      null;
+
+    if (displayLimits && this.options.aspectRatioMode === 'notFixed') {
+      this.options.aspectRatioMode = 'auto';
+    }
+
     this.determineAspectRatio();
 
     for (var i = 0; i < this.options.imageSlides.length; i++) {
@@ -77,6 +88,25 @@ H5P.ImageSlider = (function ($) {
         }
       }
       else {
+
+        // Try to detect limit imposed by KLL platform
+        var displayLimits = (
+          self.isRoot() &&
+          H5P.KLDisplay && H5P.KLDisplay.computeDisplayLimitsKLL
+        ) ?
+          H5P.KLDisplay.computeDisplayLimitsKLL(self.$container.get(0)) :
+          null;
+
+        // Limit height if applicable
+        var slideHeight = this.$slides.get(0).offsetHeight;
+        if (displayLimits && slideHeight > 0) {
+          if (displayLimits.height < slideHeight) {
+            self.$container.css('max-width', (displayLimits.height - self.$progressBar.get(0).offsetHeight) * self.aspectRatio + 'px');
+            self.$container.css('max-height', displayLimits.height + 'px');
+            self.$container.css('margin', 'auto');
+          }
+        }
+
         if (self.aspectRatio && self.$slides) {
           self.$slides.height(self.$slides.width() / self.aspectRatio);
         }
@@ -226,6 +256,11 @@ H5P.ImageSlider = (function ($) {
   C.prototype.enterFullScreen = function() {
     this.updateNavButtons();
     this.updateProgressBar();
+
+    // Reset KLDisplay height limiter
+    this.$container.css('max-width', '');
+    this.$container.css('max-height', '');
+    this.$container.css('margin', '');
   };
 
   /**

@@ -42,8 +42,8 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
     }
 
     if (contentData && contentData.previousState !== undefined &&
-        contentData.previousState.progress !== undefined &&
-        contentData.previousState.answers) {
+      contentData.previousState.progress !== undefined &&
+      contentData.previousState.answers) {
       this.progress = contentData.previousState.progress || this.progress;
       this.answers = contentData.previousState.answers || this.answers;
 
@@ -91,31 +91,31 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
     this.summaries = that.options.summaries;
 
     // Prevent the score bar from interrupting the progress counter
-    this.setBehaviour({disableReadSpeaker: true});
+    this.setBehaviour({ disableReadSpeaker: true });
 
     // Required questiontype contract function
-    this.showSolutions = function() {
+    this.showSolutions = function () {
       // intentionally left blank, no solution view exists
     };
 
     // Required questiontype contract function
-    this.getMaxScore = function() {
+    this.getMaxScore = function () {
       return this.summaries ? this.summaries.length : 0;
     };
 
-    this.getScore = function() {
+    this.getScore = function () {
       var self = this;
 
       // count single correct answers
-      return self.summaries ? self.summaries.reduce(function(result, panel, index){
+      return self.summaries ? self.summaries.reduce(function (result, panel, index) {
         var userResponse = self.userResponses[index] || [];
 
         return result + (self.correctOnFirstTry(userResponse) ? 1 : 0);
       }, 0) : 0;
     };
 
-    this.getTitle = function() {
-      return H5P.createTitle((this.contentData && this.contentData.metadata && this.contentData.metadata.title) ? this.contentData.metadata.title: 'Summary');
+    this.getTitle = function () {
+      return H5P.createTitle((this.contentData && this.contentData.metadata && this.contentData.metadata.title) ? this.contentData.metadata.title : 'Summary');
     };
 
     this.getCurrentState = function () {
@@ -130,16 +130,33 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
   Summary.prototype.constructor = Summary;
 
   /**
+   * Register retry button
+   */
+
+  Summary.prototype.addButtons = function () {
+    var self = this;
+
+    if (this.options.behaviour) {
+      this.addButton('try-again', this.retryButtonLabel, function () {
+        self.resetTask();
+      });
+    }
+
+  };
+
+  /**
    * Registers DOM elements before they are attached.
    * Called from H5P.Question.
    */
   Summary.prototype.registerDomElements = function () {
     // Register task content area
     this.setContent(this.createQuestion());
+    this.hideButton("try-button");
+
   };
 
   // Function for attaching the multichoice to a DOM element.
-  Summary.prototype.createQuestion = function() {
+  Summary.prototype.createQuestion = function () {
     var that = this;
     var id = 0; // element counter
     // variable to capture currently focused option.
@@ -180,7 +197,7 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
         that.dataBitMap[panelIndex][id] = summaryIndex;
 
         // checks the answer and updates the user response array
-        if(that.answers[panelIndex] && (that.answers[panelIndex].indexOf(id) !== -1)){
+        if (that.answers[panelIndex] && (that.answers[panelIndex].indexOf(id) !== -1)) {
           this.storeUserResponse(panelIndex, summaryIndex);
         }
 
@@ -192,7 +209,7 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
       }
 
       // if we have progressed passed this point, the success pattern must also be saved
-      if(panelIndex < that.progress){
+      if (panelIndex < that.progress) {
         this.storeUserResponse(panelIndex, 0);
       }
 
@@ -207,16 +224,16 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
 
     // Create content panels
     var $summary_container = $('<div class="summary-container"></div>');
-    var $summary_list = $('<ul role="list" aria-labelledby="answerListHeading-'+that.summaryId+'"></ul>');
+    var $summary_list = $('<ul role="list" aria-labelledby="answerListHeading-' + that.summaryId + '"></ul>');
     var $evaluation = $('<div class="summary-evaluation"></div>');
-    var $evaluation_content = $('<div id="questionDesc-'+that.summaryId+'" class="summary-evaluation-content">' + that.options.intro + '</div>');
+    var $evaluation_content = $('<div id="questionDesc-' + that.summaryId + '" class="summary-evaluation-content">' + that.options.intro + '</div>');
     var $score = $('<div class="summary-score"></div>');
     var $options = $('<div class="summary-options"></div>');
     var $progress = $('<div class="summary-progress" aria-live="polite"></div>');
     var $progressNumeric = $('<div class="summary-progress-numeric" aria-hidden="true"></div>');
     var options_padding = parseInt($options.css('paddingLeft'));
     // content div added for readspeaker that indicates list of correct answers.
-    var $answersListHeading = $('<div id="answerListHeading-'+that.summaryId+'" class="h5p-hidden-read">' + that.options.labelCorrectAnswers + '</div>');
+    var $answersListHeading = $('<div id="answerListHeading-' + that.summaryId + '" class="h5p-hidden-read">' + that.options.labelCorrectAnswers + '</div>');
 
     if (this.score) {
       $score.html(that.options.scoreLabel + ' ' + this.score).show();
@@ -247,7 +264,7 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
       var nodeId = Number($el.attr('data-bit'));
       var panelId = Number($el.parent().data('panel'));
       var isRadioClicked = $el.attr('aria-checked');
-      if(isRadioClicked == 'true') return;
+      if (isRadioClicked == 'true') return;
 
       if (that.errorCounts[panelId] === undefined) {
         that.errorCounts[panelId] = 0;
@@ -265,7 +282,7 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
         var summary = $summary_list.position();
         var $answer = $('<li role="listitem">' + $el.html() + '</li>');
 
-        $progressNumeric.html(that.options.solvedLabel + ' '  + (panelId + 1) + '/' + that.summaries.length);
+        $progressNumeric.html(that.options.solvedLabel + ' ' + (panelId + 1) + '/' + that.summaries.length);
 
         var interpolatedProgressText = that.options.progressText
           .replace(':num', panelId + 1)
@@ -278,9 +295,9 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
         $summary_list.append($answer);
 
         // Move into position over clicked element
-        $answer.css({display: 'block', width: $el.css('width'), height: $el.css('height')});
-        $answer.css({position: 'absolute', top: position.top, left: position.left});
-        $answer.css({backgroundColor: '#9dd8bb', border: ''});
+        $answer.css({ display: 'block', width: $el.css('width'), height: $el.css('height') });
+        $answer.css({ position: 'absolute', top: position.top, left: position.left });
+        $answer.css({ backgroundColor: '#9dd8bb', border: '' });
 
         // Emit screenshot
         if (H5P && H5P.KLScreenshot) {
@@ -297,9 +314,9 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
         }
 
         setTimeout(function () {
-          $answer.css({backgroundColor: ''});
+          $answer.css({ backgroundColor: '' });
         }, 1);
-        $answer.animate({backgroundColor: '#eee'}, 'slow');
+        $answer.animate({ backgroundColor: '#eee' }, 'slow');
         $summary_container.addClass('has-results');
         // change aria-hidden property as when correct answer is added inside list at top
         $summary_container.attr("aria-hidden", "false");
@@ -329,7 +346,7 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
             width: '+=' + (options_padding * 2) + 'px'
           },
           {
-            complete: function() {
+            complete: function () {
               // Remove position (becomes inline);
               $(this).css('position', '').css({
                 width: '',
@@ -365,6 +382,8 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
 
                   that.doFinalEvaluation();
                 }
+                that.addButtons();
+                that.showButton("try-again");
                 that.trigger('resize');
               });
             }
@@ -433,11 +452,11 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
       }
 
       // added aria-labelledby property for readspeaker to read, when first option receive focus
-      var $page = $('<ul aria-labelledby="questionDesc-'+that.summaryId+'" role="radiogroup" class="h5p-panel" data-panel="' + i + '"></ul>');
+      var $page = $('<ul aria-labelledby="questionDesc-' + that.summaryId + '" role="radiogroup" class="h5p-panel" data-panel="' + i + '"></ul>');
 
 
       // Create initial tip for first summary-list if tip is available
-      if (i==0 && element.tip !== undefined && element.tip.trim().length > 0) {
+      if (i == 0 && element.tip !== undefined && element.tip.trim().length > 0) {
         $evaluation_content.append(H5P.JoubelUI.createTip(element.tip, {
           tipLabel: that.options.tipButtonLabel
         }));
@@ -458,19 +477,19 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
         }
 
         var $node = $('' +
-          '<li role="radio" aria-checked="false" data-name="'+j+'" data-bit="' + element.summaries[j].id + '" class="' + summaryLineClass + '">' +
-            element.summaries[j].text +
+          '<li role="radio" aria-checked="false" data-name="' + j + '" data-bit="' + element.summaries[j].id + '" class="' + summaryLineClass + '">' +
+          element.summaries[j].text +
           '</li>');
         // added tabindex = 0 for the first option to avoid accessing rest of the options via TAB
         (j == 0) ? $node.attr("tabindex", "0") : $node.attr("tabindex", "-1");
 
-        $node.on('focus', function() {
+        $node.on('focus', function () {
           var ind = $(this).attr('data-name');
           setFocusIndex(ind);
         });
 
         // function captures the index of currently focused option
-        var setFocusIndex = function(idx) {
+        var setFocusIndex = function (idx) {
           currentFocusedOption = idx;
         };
 
@@ -480,7 +499,7 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
           continue;
         }
 
-        $node.click(function() {
+        $node.click(function () {
           selectedAlt($(this));
         }).keydown(function (e) {
           switch (e.which) {
@@ -518,7 +537,7 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
     }
     else {
       // Show first panel
-      $('.h5p-panel:eq(' + (that.progress) + ')', that.$myDom).css({display: 'block'});
+      $('.h5p-panel:eq(' + (that.progress) + ')', that.$myDom).css({ display: 'block' });
       if (that.progress) {
         that.offset = ($('.summary-claim-unclicked:visible:first', that.$myDom).outerHeight() * that.errorCounts.length);
       }
@@ -561,22 +580,22 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
   Summary.prototype.gotoPreviousOption = function (that, currentFocusedOption) {
     this.currentFocusedOption = currentFocusedOption;
     var totOptions = that.summaries[that.progress].summary.length;
-    var prevRadioEle = $("ul[data-panel="+that.progress+"] li[role='radio']", this.$myDom);
+    var prevRadioEle = $("ul[data-panel=" + that.progress + "] li[role='radio']", this.$myDom);
 
     //prevRadioEle.removeAttr("tabindex");
     prevRadioEle.attr("tabindex", "-1");
     this.currentFocusedOption--;
 
-    if(this.currentFocusedOption < 0) {
-        var num = totOptions - 1;
-        prevRadioEle.eq(num).attr("tabindex", "0");
-        prevRadioEle.eq(num).focus();
-      }
-      else {
-        prevRadioEle.eq(this.currentFocusedOption).attr("tabindex", "0");
-        prevRadioEle.eq(this.currentFocusedOption).focus();
-      }
-    };
+    if (this.currentFocusedOption < 0) {
+      var num = totOptions - 1;
+      prevRadioEle.eq(num).attr("tabindex", "0");
+      prevRadioEle.eq(num).focus();
+    }
+    else {
+      prevRadioEle.eq(this.currentFocusedOption).attr("tabindex", "0");
+      prevRadioEle.eq(this.currentFocusedOption).focus();
+    }
+  };
 
   /**
    * Handles moving the focus from the current option to the next option and changes tabindex accorindgly
@@ -585,13 +604,13 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
   Summary.prototype.gotoNextOption = function (that, currentFocusedOption) {
     this.currentFocusedOption = currentFocusedOption;
     var totOptions = that.summaries[that.progress].summary.length;
-    var nextRadioEle = $("ul[data-panel="+that.progress+"] li[role='radio']", this.$myDom);
+    var nextRadioEle = $("ul[data-panel=" + that.progress + "] li[role='radio']", this.$myDom);
 
     //nextRadioEle.removeAttr("tabindex");
     nextRadioEle.attr("tabindex", "-1");
     this.currentFocusedOption++;
 
-    if(this.currentFocusedOption == totOptions) {
+    if (this.currentFocusedOption == totOptions) {
       nextRadioEle.eq(0).attr("tabindex", "0");
       nextRadioEle.eq(0).focus();
     }
@@ -631,8 +650,8 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
     this.setFeedback(summary, score, maxScore, scoreBarLabel);
 
     // Only read out the score after the progress is read
-    setTimeout(function() {
-      that.setBehaviour({disableReadSpeaker: false});
+    setTimeout(function () {
+      that.setBehaviour({ disableReadSpeaker: false });
       that.readFeedback();
       that.read(scoreBarLabel);
     }, 3000);
@@ -659,6 +678,7 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
     this.createQuestion();
     contentWrapper.appendChild(this.$myDom[0]);
     this.removeFeedback();
+    this.hideButton("try-again");
   };
 
   /**
@@ -671,7 +691,7 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
   Summary.prototype.adjustTargetHeight = function (container, elements, el) {
     var new_height = parseInt(elements.outerHeight()) + parseInt(el.outerHeight()) + parseInt(el.css('marginBottom')) + parseInt(el.css('marginTop'));
     if (new_height > parseInt(container.css('height'))) {
-      container.animate({height: new_height});
+      container.animate({ height: new_height });
     }
   };
 
@@ -680,7 +700,7 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
    *
    * @returns {number}
    */
-  Summary.prototype.countErrors = function() {
+  Summary.prototype.countErrors = function () {
     var error_count = 0;
 
     // Count boards without errors
@@ -704,7 +724,7 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
    * @return {{ choices: []}}
    */
   Summary.prototype.getXApiChoices = function (answers) {
-    var choices = answers.map(function(answer, index){
+    var choices = answers.map(function (answer, index) {
       return XApiEventBuilder.createChoice(index.toString(), answer);
     });
 
@@ -721,7 +741,7 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
    */
   Summary.prototype.storeUserResponse = function (questionIndex, answerIndex) {
     var self = this;
-    if(self.userResponses[questionIndex] === undefined){
+    if (self.userResponses[questionIndex] === undefined) {
       self.userResponses[questionIndex] = [];
     }
 
@@ -744,7 +764,7 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
    * @param {number} [index]
    */
   Summary.prototype.stopStopWatch = function (index) {
-    if(this.stopWatches[index]){
+    if (this.stopWatches[index]) {
       this.stopWatches[index].stop();
     }
   };
@@ -757,7 +777,7 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
    * @return {number}
    */
   Summary.prototype.timePassedInStopWatch = function (index) {
-    if(this.stopWatches[index] !== undefined){
+    if (this.stopWatches[index] !== undefined) {
       return this.stopWatches[index].passedTime();
     }
     else {
@@ -773,10 +793,10 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
    */
   Summary.prototype.getTotalPassedTime = function () {
     return this.stopWatches
-      .filter(function(watch){
+      .filter(function (watch) {
         return watch !== undefined;
       })
-      .reduce(function(sum, watch){
+      .reduce(function (sum, watch) {
         return sum + watch.passedTime();
       }, 0);
   };
@@ -819,7 +839,7 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
       .build();
   };
 
-  Summary.prototype.correctOnFirstTry = function(userAnswer){
+  Summary.prototype.correctOnFirstTry = function (userAnswer) {
     return (userAnswer.length === 1) && userAnswer[0] === 0;
   };
 
@@ -828,18 +848,18 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
    *
    * @return {object}
    */
-  Summary.prototype.getXAPIData = function(){
+  Summary.prototype.getXAPIData = function () {
     var self = this;
 
     // create array with userAnswer
-    var children = self.summaries.map(function(panel, index) {
-        var userResponse = self.userResponses[index] || [];
-        var duration = self.timePassedInStopWatch(index);
-        var event = self.createXApiAnsweredEvent(panel, userResponse, index, duration);
+    var children = self.summaries.map(function (panel, index) {
+      var userResponse = self.userResponses[index] || [];
+      var duration = self.timePassedInStopWatch(index);
+      var event = self.createXApiAnsweredEvent(panel, userResponse, index, duration);
 
-        return {
-          statement: event.data.statement
-        };
+      return {
+        statement: event.data.statement
+      };
     });
 
     var result = XApiEventBuilder.createResult()
@@ -877,7 +897,7 @@ H5P.Summary = (function ($, Question, XApiEventBuilder, StopWatch) {
   Summary.prototype.getParentAttribute = function (attributeName) {
     var self = this;
 
-    if(self.parent !== undefined){
+    if (self.parent !== undefined) {
       return self.parent[attributeName];
     }
   };

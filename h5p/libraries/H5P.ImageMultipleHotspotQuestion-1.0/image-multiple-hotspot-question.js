@@ -546,11 +546,11 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
           );
         }
       }, 1000); // Allow results to display
+    }
 
-      if (!params.skipXAPI) {
-        // Trigger xAPI completed event
-        this.trigger(this.getXAPIAnswerEvent());
-      }
+    if (!params.skipXAPI) {
+      // Trigger xAPI completed event
+      this.trigger(this.getXAPIAnswerEvent());
     }
   };
 
@@ -687,8 +687,35 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
    * Resize image and wrapper
    */
   ImageMultipleHotspotQuestion.prototype.resize = function () {
+    this.resizeHeight();
     this.resizeHotspotFeedback();
     this.resizeCorrectHotspotFeedback();
+  };
+
+  /**
+   * Resize to fix introduction and image into limited height.
+   */
+  ImageMultipleHotspotQuestion.prototype.resizeHeight = function () {
+    if (!this.$img || this.$img.length === 0 || this.$img.get(0).naturalHeight === 0) {
+      return;
+    }
+
+    // Try to detect limit imposed by KLL platform
+    const displayLimits = (
+      this.isRoot() &&
+      H5P.KLDisplay && H5P.KLDisplay.computeDisplayLimitsKLL
+    ) ?
+      H5P.KLDisplay.computeDisplayLimitsKLL(this.$wrapper.closest('.h5p-container').get(0)) :
+      null;
+
+    if (displayLimits) {
+      const introductionHeight = this.$wrapper.closest('.h5p-container').find('.h5p-question-introduction').outerHeight(true);
+      const maxWidth = (displayLimits.height - introductionHeight) * this.$img.get(0).naturalWidth / this.$img.get(0).naturalHeight;
+      this.$imageWrapper.css('max-width', maxWidth + 'px');
+    }
+    else {
+      this.$imageWrapper.css('max-width', '');
+    }
   };
 
   /**

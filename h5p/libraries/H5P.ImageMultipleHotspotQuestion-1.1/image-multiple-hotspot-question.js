@@ -552,6 +552,7 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
       // Trigger xAPI completed event
       this.trigger(this.getXAPIAnswerEvent());
     }
+    this.showButton('retry-button');
   };
 
   /**
@@ -727,7 +728,7 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
       return;
     }
 
-    for ( let i = 0; i < this.correctHotspotFeedback.length; i++) {
+    for (let i = 0; i < this.correctHotspotFeedback.length; i++) {
       // Calculate positions
       const posX = (this.correctHotspotFeedback[i].percentagePosX * (this.$imageWrapper.width() / 100)) - this.correctHotspotFeedback[i].pixelOffsetX;
       const posY = (this.correctHotspotFeedback[i].percentagePosY * (this.$imageWrapper.height() / 100)) - this.correctHotspotFeedback[i].pixelOffsetY;
@@ -766,7 +767,7 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
    * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-6}
    */
   ImageMultipleHotspotQuestion.prototype.getXAPIData = function () {
-    return ({statement: this.getXAPIAnswerEvent().data.statement});
+    return ({ statement: this.getXAPIAnswerEvent().data.statement });
   };
 
   /**
@@ -801,8 +802,8 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
    */
   ImageMultipleHotspotQuestion.prototype.getxAPIDefinition = function () {
     return {
-      name: {'en-US': this.getTitle()},
-      description: {'en-US': this.getDescription()},
+      name: { 'en-US': this.getTitle() },
+      description: { 'en-US': this.getDescription() },
       type: 'http://adlnet.gov/expapi/activities/cmi.interaction',
       interactionType: 'choice'
     };

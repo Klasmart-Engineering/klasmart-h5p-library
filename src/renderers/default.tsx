@@ -6,52 +6,52 @@ import { IEditorModel } from '@lumieducation/h5p-server';
 
 // tslint:disable-next-line: function-name
 function Editor(props: any): any {
-    // console.log(props.model.integration)
-    return (
-        <html>
-            <head>
-                <meta charSet="utf-8" />
+  // console.log(props.model.integration)
+  return (
+    <html>
+      <head>
+        <meta charSet="utf-8" />
 
-                <script
-                    dangerouslySetInnerHTML={{
-                        __html: `window.H5PIntegration = ${JSON.stringify(
-                            props.model.integration,
-                            null,
-                            2
-                        )}`
-                    }}
-                />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.H5PIntegration = ${JSON.stringify(
+              props.model.integration,
+              null,
+              2
+            )}`
+          }}
+        />
 
-                {props.model.styles.map((style, index) => (
-                    <link rel="stylesheet" href={style} key={index} />
-                ))}
+        {props.model.styles.map((style, index) => (
+          <link rel="stylesheet" href={style} key={index} />
+        ))}
 
-                {props.model.scripts.map((script, index) => (
-                    <script src={script} key={index} />
-                ))}
-            </head>
-            <body>
-                <form
-                    method="post"
-                    encType="multipart/form-data"
-                    id="h5p-content-form"
-                >
-                    <div id="post-body-content">
-                        <div className="h5p-create">
-                            <div className="h5p-editor"></div>
-                        </div>
-                    </div>
-                    <input
-                        type="submit"
-                        name="submit"
-                        value="Create"
-                        className="button button-primary button-large"
-                    />
-                </form>
-            </body>
-            <script
-                dangerouslySetInnerHTML={{
-                    __html: `var ns = H5PEditor;
+        {props.model.scripts.map((script, index) => (
+          <script src={script} key={index} />
+        ))}
+      </head>
+      <body>
+        <form
+          method="post"
+          encType="multipart/form-data"
+          id="h5p-content-form"
+        >
+          <div id="post-body-content">
+            <div className="h5p-create">
+              <div className="h5p-editor"></div>
+            </div>
+          </div>
+          <input
+            type="submit"
+            name="submit"
+            value="Create"
+            className="button button-primary button-large"
+          />
+        </form>
+      </body>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `var ns = H5PEditor;
 
             (function($) {
                 H5PEditor.init = function() {
@@ -108,7 +108,7 @@ function Editor(props: any): any {
                                 // $type.change();
                             },
                             type: 'GET',
-                            url: '${props.model.urlGenerator.parameters()}/' + H5PEditor.contentId + window.location.search
+                            url: (H5PEditor.contentId !== undefined  ) ? '${props.model.urlGenerator.parameters()}/' + H5PEditor.contentId + window.location.search : ""
                         });
                     }
                     $create.show();
@@ -376,11 +376,11 @@ function Editor(props: any): any {
 
                 $(document).ready(H5PEditor.init);
             })(H5P.jQuery);`
-                }}
-            />
-        </html>
-    );
+        }}
+      />
+    </html>
+  );
 }
 
 export default (model: IEditorModel): string =>
-    `${ReactDOMServer.renderToString(<Editor model={model} />)}`;
+  `${ReactDOMServer.renderToString(<Editor model={model} />)}`;

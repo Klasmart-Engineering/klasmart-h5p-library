@@ -228,7 +228,7 @@ H5P.ImageHotspots = (function ($, EventDispatcher) {
       this.isRoot() &&
       H5P.KLDisplay && H5P.KLDisplay.computeDisplayLimitsKLL
     ) ?
-      H5P.KLDisplay.computeDisplayLimitsKLL(this.containerH5P) :
+      H5P.KLDisplay.computeDisplayLimitsKLL(self.$container.get(0)) :
       null;
 
     // If fullscreen & standalone

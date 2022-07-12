@@ -224,11 +224,18 @@ H5P.ImageHotspots = (function ($, EventDispatcher) {
       self.$container.css('width', '');
     }
 
+    const displayLimits = (
+      this.isRoot() &&
+      H5P.KLDisplay && H5P.KLDisplay.computeDisplayLimitsKLL
+    ) ?
+      H5P.KLDisplay.computeDisplayLimitsKLL(this.containerH5P) :
+      null;
+
     // If fullscreen & standalone
-    if (this.isRoot() && H5P.isFullscreen) {
+    if (this.isRoot() && (H5P.isFullscreen || displayLimits)) {
       // If fullscreen, we have both a max width and max height.
-      if (!forceImageHeight && height > containerHeight) {
-        height = containerHeight;
+      if (!forceImageHeight && height > (displayLimits.height || containerHeight)) {
+        height = displayLimits.height || containerHeight;
         width = Math.floor((height/self.options.image.height) * self.options.image.width);
       }
 

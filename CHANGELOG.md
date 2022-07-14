@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.17.2 (2022-07-14)
+
+
+### Bug Fixes
+
+* **H5P-696:** Speak the words H5P should record the audio and score accordingly ([51f660e](https://github.com/KL-Engineering/kidsloop-h5p-library/commits/51f660e14c6a9e5015d72f4a907d39a42dd8cd92))
+
 ### 2.17.1 (2022-06-28)
 
 ## 2.17.0 (2022-06-28)

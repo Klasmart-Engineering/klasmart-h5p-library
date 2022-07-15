@@ -1,6 +1,4 @@
 import html2canvas from 'html2canvas';
-
-
 export default class KLScreenshot {
 
   /**
@@ -18,12 +16,11 @@ export default class KLScreenshot {
    * @param {H5PContent} instance H5P instance.
    * @param {HTMLElement} [element=document.body] DOM element.
    */
-
-
   async takeScreenshot(instance, element = document.body) {
     if (!H5P.KLFileExporter) {
       return; // Cannot export
     }
+
     if (!instance) {
       instance = (Array.isArray(H5P?.instances) && H5P.instances.length) ? H5P.instances[0] : null;
     }
@@ -34,35 +31,39 @@ export default class KLScreenshot {
 
     const canvas = await html2canvas(element);
     canvas.toBlob((blob) => {
-      var index = document.querySelector(".h5p-footer-slide-count-current").innerHTML;
+      let index = document.querySelector('.h5p-footer-slide-count-current').innerHTML;
       index = parseInt(index);
-      var url = URL.createObjectURL(blob);
-      if (localStorage.getItem("screenshots")) {
-        var result = localStorage.getItem("screenshots");
-        result = JSON.parse(result);
-      } else {
-        var result = [];
-      }
-      var check = false;
-      result.forEach(item => {
-        if (item.id === index) {
-          check = true;
+      let url = URL.createObjectURL(blob);
+      let result = [];
+      try {
+        if (localStorage.getItem('cp_slides_screenshots_with_id')) {
+          result = localStorage.getItem('cp_slides_screenshots_with_id');
+          result = JSON.parse(result);
         }
-      });
-      if (!check) {
-        result.push({ id: index, url: url });
+        let check = false;
+        result.forEach(item => {
+          if (item.id === index) {
+            check = true;
+            return false;
+          }
+        });
+        if (!check) {
+          result.push({ id: index, url: url });
+        }
+        result = JSON.stringify(result);
+        localStorage.setItem('cp_slides_screenshots_with_id', result);
       }
-      result = JSON.stringify(result);
-      localStorage.setItem("screenshots", result);
+      catch (error) {
+        console.log('Couldn\'t read local storage', error);
+      }
+
       this.triggerFileExport(
         instance,
         { type: 'image/jpeg', blob: blob }
       );
     }, 'image/jpeg', this.imageQuality);
   }
-
 }
-
 
 /** @constant {number} Default image quality */
 KLScreenshot.IMAGE_QUALITY = .9;

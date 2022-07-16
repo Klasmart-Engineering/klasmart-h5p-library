@@ -709,7 +709,7 @@ H5P.ImageMultipleHotspotQuestion = (function ($, Question) {
       null;
 
     if (displayLimits) {
-      const introductionHeight = this.$wrapper.closest('.h5p-container').find('.h5p-question-introduction').outerHeight(true);
+      const introductionHeight = this.$wrapper.closest('.h5p-container').find('.h5p-question-introduction').outerHeight(true) || 0;
       const maxWidth = (displayLimits.height - introductionHeight) * this.$img.get(0).naturalWidth / this.$img.get(0).naturalHeight;
       this.$imageWrapper.css('max-width', maxWidth + 'px');
     }

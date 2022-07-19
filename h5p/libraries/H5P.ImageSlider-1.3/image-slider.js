@@ -265,6 +265,8 @@ H5P.ImageSlider = (function ($) {
    * Many layout changes are handled on resize.
    */
   C.prototype.exitFullScreen = function() {
+    const that = this;
+
     for (var i = 0; i < this.imageSlides.length; i++) {
       this.imageSlides[i].resetAspectRatio();
     }
@@ -273,7 +275,7 @@ H5P.ImageSlider = (function ($) {
 
     // Needs time to get out of fullscreen mode
     setTimeout(function() {
-      this.trigger('resize');
+      that.trigger('resize');
     }, 200);
   };
 

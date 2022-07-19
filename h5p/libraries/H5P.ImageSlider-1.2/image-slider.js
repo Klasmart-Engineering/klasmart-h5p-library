@@ -270,6 +270,11 @@ H5P.ImageSlider = (function ($) {
     }
     this.updateNavButtons();
     this.updateProgressBar();
+
+    // Needs time to get out of fullscreen mode
+    setTimeout(function() {
+      this.trigger('resize');
+    }, 200);
   };
 
   /**

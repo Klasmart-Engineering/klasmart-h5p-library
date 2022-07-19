@@ -46,14 +46,10 @@ H5P.ImageSlider = (function ($) {
       return slide.imageSlide && slide.imageSlide.params && slide.imageSlide.params.image && slide.imageSlide.params.image.params && slide.imageSlide.params.image.params.file;
     });
 
-    var displayLimits = (
-      self.isRoot() &&
-      H5P.KLDisplay && H5P.KLDisplay.computeDisplayLimitsKLL
-    ) ?
-      H5P.KLDisplay.computeDisplayLimitsKLL(self.$container.get(0)) :
-      null;
-
-    if (displayLimits && this.options.aspectRatioMode === 'notFixed') {
+    if (
+      self.isRoot() && H5P.KLDisplay &&
+      this.options.aspectRatioMode === 'notFixed'
+    ) {
       this.options.aspectRatioMode = 'auto';
     }
 

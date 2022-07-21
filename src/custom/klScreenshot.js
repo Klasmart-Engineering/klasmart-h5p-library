@@ -31,33 +31,7 @@ export default class KLScreenshot {
 
     const canvas = await html2canvas(element);
     canvas.toBlob((blob) => {
-      let index = document.querySelector('.h5p-footer-slide-count-current').innerHTML;
-      index = parseInt(index);
-      let url = URL.createObjectURL(blob);
-      let result = [];
-      try {
-        if (localStorage.getItem('cp_slides_screenshots_with_id')) {
-          result = localStorage.getItem('cp_slides_screenshots_with_id');
-          result = JSON.parse(result);
-        }
-        let check = false;
-        result.forEach(item => {
-          if (item.id === index) {
-            check = true;
-            return false;
-          }
-        });
-        if (!check) {
-          result.push({ id: index, url: url });
-        }
-        result = JSON.stringify(result);
-        localStorage.setItem('cp_slides_screenshots_with_id', result);
-      }
-      catch (error) {
-        console.log('Couldn\'t read local storage', error);
-      }
-
-      this.triggerFileExport(
+      H5P.KLFileExporter.triggerFileExport(
         instance,
         { type: 'image/jpeg', blob: blob }
       );
